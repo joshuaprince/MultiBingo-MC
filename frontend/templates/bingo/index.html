@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Bingo</title>
+</head>
+<body>
+  <div class="player-name">
+    Your Name:<br>
+    <input id="player-name-input" type="text" size="40"><br>
+  </div>
+  <div class="room-name">
+    Type a Room Code:<br>
+    <input id="room-name-input" type="text" size="40"><br>
+    <input id="room-name-submit" type="button" value="Enter">
+  </div>
+
+  <script>
+    document.querySelector('#room-name-input').focus();
+    document.querySelector('#room-name-input').onkeyup = function(e) {
+      if (e.keyCode === 13) {  // enter, return
+        document.querySelector('#room-name-submit').click();
+      }
+    };
+
+    document.querySelector('#room-name-submit').onclick = function(e) {
+      var playerName = document.querySelector('#player-name-input').value;
+      var roomName = document.querySelector('#room-name-input').value;
+      window.location = '/game/' + roomName + '?name=' + playerName;
+    };
+  </script>
+</body>
+</html>

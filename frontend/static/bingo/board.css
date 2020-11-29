@@ -1,0 +1,7 @@
+table.bingo-board {
+  border: 1px solid black;
+}
+
+td.bingo-square.mark-1 {
+  background: greenyellow;
+}

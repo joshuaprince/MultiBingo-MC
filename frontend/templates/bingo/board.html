@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bingo : {{ game_code }}</title>
+  <link rel="stylesheet" href="{% static 'bingo/board.css' %}"></head>
+<body>
+  <div hidden id="game-code">{{ game_code }}</div>
+  <table class="bingo-board">
+    {% for board_row in board %}
+    <tr>
+      {% for square in board_row %}
+      <td id="square-{{ square.position }}" class="bingo-square">{{ square.text }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  <script src="{% static 'bingo/board.js' %}"></script>
+</body>
+</html>

@@ -4,7 +4,7 @@ from django.dispatch import receiver
 
 
 class Board(models.Model):
-    seed = models.CharField(max_length=128)
+    seed = models.SlugField(max_length=128)
 
     def __str__(self):
         return self.seed
@@ -29,6 +29,9 @@ def build_board(instance, **kwargs):
 
 
 class PlayerBoard(models.Model):
+    """
+    A player's set of markings on a particular game board.
+    """
     class Marking(models.IntegerChoices):
         UNMARKED = 0
         MARKED = 1

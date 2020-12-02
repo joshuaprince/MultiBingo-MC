@@ -11,8 +11,9 @@ boardSocket.onmessage = e => {
 }
 
 boardSocket.onclose = e => {
-  alert("Lost connection to server. Refresh the page.")
   console.error("Board socket was closed: " + e);
+  alert("Lost connection to server. Click OK to refresh the page.");
+  location.reload();
 }
 
 document.querySelectorAll('.board-primary .bingo-square').forEach(square => square.onclick = e => {

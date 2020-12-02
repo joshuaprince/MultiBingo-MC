@@ -1,48 +1,53 @@
 import json
 
-from channels.db import database_sync_to_async
-from channels.generic.websocket import JsonWebsocketConsumer
+from channels.db import database_sync_to_async as db_acc
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 from backend.models import PlayerBoard, Board
 
 
-class BoardChangeConsumer(JsonWebsocketConsumer):
+class BoardChangeConsumer(AsyncJsonWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.game_code = None
         self.board_obj = None
 
-    def connect(self):
+    async def connect(self):
         self.game_code = self.scope['url_route']['kwargs']['game_code']
-        self.board_obj = Board.objects.get(seed=self.game_code)
+        self.board_obj = await db_acc(Board.objects.get)(seed=self.game_code)
 
-        self.accept()
-        self.send_board_states()
+        await self.accept()
+        board_states = await self.get_board_states()
+        await self.send(text_data=json.dumps(board_states))
 
-    def receive(self, text_data: str = None, **kwargs):
+    async def receive(self, text_data: str = None, **kwargs):
         text_data_json = json.loads(text_data)
         player_name = text_data_json['player_name']
         pos = int(text_data_json['position'])
         to_state = int(text_data_json['to_state'])
 
-        player_board_obj, created = \
-            PlayerBoard.objects.get_or_create(board=self.board_obj, player_name=player_name)
+        await self.mark_square(player_name, pos, to_state)
 
-        player_board_obj.mark_square(pos, to_state)
-        player_board_obj.save()
+        board_states = await self.get_board_states()
+        await self.send(text_data=json.dumps(board_states))
 
-        print(f"Updated board for {player_name}")
-
-        self.send_board_states()
-
-    def disconnect(self, code):
+    async def disconnect(self, code):
         pass
 
-    def send_board_states(self):
+    @db_acc
+    def get_board_states(self):
         pboards = PlayerBoard.objects.filter(board=self.board_obj)
         data = [{
             'player_name': pb.player_name,
             'board': pb.squares,
         } for pb in pboards]
+        return data
 
-        self.send(text_data=json.dumps(data))
+    @db_acc
+    def mark_square(self, player: str, pos: int, to_state: int):
+        player_board_obj, created = \
+            PlayerBoard.objects.get_or_create(board=self.board_obj, player_name=player)
+        player_board_obj.mark_square(pos, to_state)
+        player_board_obj.save()
+        print(f"Updated board for {player}")
+

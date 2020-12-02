@@ -39,6 +39,7 @@ class PlayerBoard(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     player_name = models.CharField(max_length=5)  # TODO max_length
     squares = models.CharField(max_length=25, default=('0' * 25))
+    disconnected_at = models.DateTimeField(null=True)
 
     def __str__(self):
         return str(self.board) + " : " + self.player_name

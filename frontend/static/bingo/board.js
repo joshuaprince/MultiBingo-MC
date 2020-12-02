@@ -3,7 +3,8 @@ if (!player_name) {
   window.location = window.location + '?name=' + new_player_name;
 }
 
-const boardSocket = new WebSocket('ws://' + window.location.host + '/ws/board/' + game_code);
+const boardSocket = new WebSocket(
+  'ws://' + window.location.host + '/ws/board/' + game_code + '/' + player_name);
 boardSocket.onmessage = e => {
   const data = JSON.parse(e.data);
   build_secondary_boards(data);
@@ -20,7 +21,6 @@ document.querySelectorAll('.board-primary .bingo-square').forEach(square => squa
   const rex = /square-(\d+)/;
   const pos = parseInt(rex.exec(e.currentTarget.className)[1]);
   boardSocket.send(JSON.stringify({
-    player_name: player_name,
     action: "board_mark",
     position: pos,
     to_state: 1

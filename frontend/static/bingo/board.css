@@ -27,6 +27,14 @@ table.bingo-board {
   background: greenyellow;
 }
 
+.bingo-square.mark-2 {
+  background: lightskyblue;
+}
+
+.bingo-square.mark-3 {
+  background: palevioletred;
+}
+
 /* Primary board */
 div.board-primary {
   display: flex;

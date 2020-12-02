@@ -34,7 +34,9 @@ class PlayerBoard(models.Model):
     """
     class Marking(models.IntegerChoices):
         UNMARKED = 0
-        MARKED = 1
+        MARKED_GREEN = 1
+        MARKED_BLUE = 2
+        MARKED_RED = 3
 
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     player_name = models.CharField(max_length=5)  # TODO max_length

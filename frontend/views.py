@@ -4,7 +4,7 @@ import string
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 
-from backend.models import Board
+from backend.models import Board, PlayerBoard
 
 
 def index(request):
@@ -36,5 +36,6 @@ def board(request, game_code):
         'game_code': game_code,
         'player_name': player_name,
         'board': squares,
+        'num_mark_colors': len(PlayerBoard.Marking)
     }
     return render(request, 'bingo/board.html', context=context)

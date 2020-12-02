@@ -17,14 +17,31 @@ boardSocket.onclose = e => {
   location.reload();
 }
 
-document.querySelectorAll('.board-primary .bingo-square').forEach(square => square.onclick = e => {
-  const rex = /square-(\d+)/;
-  const pos = parseInt(rex.exec(e.currentTarget.className)[1]);
-  boardSocket.send(JSON.stringify({
-    action: "board_mark",
-    position: pos,
-    to_state: 1
-  }))
+document.querySelectorAll('.board-primary .bingo-square').forEach(square => {
+  square.onmousedown = e => {
+    e.preventDefault();
+    const rex_sq = /square-(\d+)/;
+    const pos = parseInt(rex_sq.exec(e.currentTarget.className)[1]);
+
+    const rex_mark = /mark-(\d+)/;
+    const rex_mark_result = rex_mark.exec(e.currentTarget.className);
+    const curr_mark = rex_mark_result ? parseInt(rex_mark_result[1]) : 0;
+
+    // right click to unmark, left click to cycle colors
+    const target_mark = e.which === 3 ? 0 : (curr_mark + 1) % num_mark_colors;
+
+    boardSocket.send(JSON.stringify({
+      action: "board_mark",
+      position: pos,
+      to_state: target_mark,
+    }));
+
+    return false;
+  };
+  square.oncontextmenu = e => {
+    e.preventDefault();
+    return false;
+  };
 });
 
 function build_secondary_boards(data) {

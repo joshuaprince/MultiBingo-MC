@@ -1,31 +1,37 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <title>Bingo</title>
+  <link rel="stylesheet" href="{% static 'bingo/index.css' %}">
 </head>
 <body>
+  <h1>Minecraft Bingo</h1>
   <div class="player-name">
-    Your Name:<br>
-    <input id="player-name-input" type="text" size="40"><br>
+    <label for="player-name-input">Your Name:</label><br>
+    <input id="player-name-input" type="text"><br>
   </div>
   <div class="room-name">
-    Type a Room Code:<br>
-    <input id="room-name-input" type="text" size="40"><br>
-    <input id="room-name-submit" type="button" value="Enter">
+    <label for="room-name-input">Room Code:</label><br>
+    <input id="room-name-input" type="text" placeholder="{{ room_placeholder }}"><br>
   </div>
+  <input id="room-name-submit" type="button" value="Enter">
 
   <script>
     document.querySelector('#room-name-input').focus();
-    document.querySelector('#room-name-input').onkeyup = function(e) {
+    document.querySelector('input').onkeyup = function(e) {
       if (e.keyCode === 13) {  // enter, return
         document.querySelector('#room-name-submit').click();
       }
     };
 
     document.querySelector('#room-name-submit').onclick = function(e) {
-      var playerName = document.querySelector('#player-name-input').value;
-      var roomName = document.querySelector('#room-name-input').value;
+      const playerName = document.querySelector('#player-name-input').value;
+      let roomName = document.querySelector('#room-name-input').value;
+      if (!roomName) {
+        roomName = document.querySelector('#room-name-input').placeholder;
+      }
       window.location = '/game/' + roomName + '?name=' + playerName;
     };
   </script>

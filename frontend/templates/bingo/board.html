@@ -5,17 +5,43 @@
   <meta charset="UTF-8">
   <title>Bingo : {{ game_code }}</title>
   <link rel="stylesheet" href="{% static 'bingo/board.css' %}"></head>
+  <script>
+    const game_code = "{{ game_code }}";
+    let player_name = "{{ player_name }}"
+  </script>
 <body>
-  <div hidden id="game-code">{{ game_code }}</div>
-  <table class="bingo-board">
-    {% for board_row in board %}
-    <tr>
-      {% for square in board_row %}
-      <td id="square-{{ square.position }}" class="bingo-square">{{ square.text }}</td>
+  <h1 class="room-name">{{ game_code }}</h1>
+  <div class="board-primary">
+    <table class="bingo-table board-name-{{ player_name }}">
+      {% for board_row in board %}
+      <tr>
+        {% for square in board_row %}
+        <td>
+          <div class="bingo-square square-{{ square.position }}">{{ square.text }}</div>
+        </td>
+        {% endfor %}
+      </tr>
       {% endfor %}
-    </tr>
-    {% endfor %}
-  </table>
+    </table>
+    <h1 class="player-name">{{ player_name }}</h1>
+  </div>
+  <div class="boards-secondary"></div>
+  <template id="board-secondary-template">
+    <div class="board-secondary">
+      <table class="bingo-table">
+        {% for board_row in board %}
+        <tr>
+          {% for square in board_row %}
+          <td>
+            <div class="bingo-square square-{{ square.position }}" title="{{ square.text }}"></div>
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+      <h2 class="player-name"></h2>
+    </div>
+  </template>
   <script src="{% static 'bingo/board.js' %}"></script>
 </body>
 </html>

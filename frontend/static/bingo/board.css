@@ -1,7 +1,63 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: sans-serif;
+}
+
+/* Generic board rules */
+table.bingo-table, table.bingo-table th, table.bingo-table td {
+  border: 1px solid black;
+}
+
+div.bingo-square {
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 table.bingo-board {
   border: 1px solid black;
 }
 
-td.bingo-square.mark-1 {
+.bingo-square.mark-1 {
   background: greenyellow;
+}
+
+/* Primary board */
+div.board-primary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board-primary td {
+  width: 10vw;
+  height: 10vw;
+}
+
+.board-primary .bingo-square {
+  cursor: pointer;
+}
+
+/* Secondary boards */
+.board-secondary td {
+  width: 2vw;
+  height: 2vw;
+}
+
+.board-secondary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+div.boards-secondary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

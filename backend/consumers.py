@@ -1,11 +1,12 @@
 import json
 
-from channels.generic.websocket import WebsocketConsumer
+from channels.db import database_sync_to_async
+from channels.generic.websocket import JsonWebsocketConsumer
 
 from backend.models import PlayerBoard, Board
 
 
-class BoardChangeConsumer(WebsocketConsumer):
+class BoardChangeConsumer(JsonWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.game_code = None
@@ -16,8 +17,9 @@ class BoardChangeConsumer(WebsocketConsumer):
         self.board_obj = Board.objects.get(seed=self.game_code)
 
         self.accept()
+        self.send_board_states()
 
-    def receive(self, text_data: str = None, bytes_data=None):
+    def receive(self, text_data: str = None, **kwargs):
         text_data_json = json.loads(text_data)
         player_name = text_data_json['player_name']
         pos = int(text_data_json['position'])

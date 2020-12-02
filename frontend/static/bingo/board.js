@@ -41,16 +41,17 @@ function build_secondary_boards(data) {
     }
 
     const clone = template.content.cloneNode(true);
-    clone.querySelector('.bingo-table').classList.add('board-name-' + pboard['player_name']);
+    clone.querySelector('.board-secondary').classList.add('board-name-' + pboard['player_name']);
     clone.querySelector('.player-name').innerHTML = pboard['player_name'];
+    clone.querySelector('.board-secondary').classList.toggle('disconnected', !!pboard['disconnected_at'])
     anchor.appendChild(clone);
   }
 }
 
 function mark_all_boards(data) {
   for (pboard of data) {
-    const table_node = document.querySelector('.board-name-' + pboard['player_name']);
-    mark_board(pboard['board'], table_node);
+    const board_node = document.querySelector('.board-name-' + pboard['player_name']);
+    mark_board(pboard['board'], board_node);
   }
 }
 

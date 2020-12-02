@@ -1,7 +1,10 @@
 import json
+from datetime import timedelta
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from django.db.models import Q
+from django.utils import timezone
 
 from backend.models import PlayerBoard, Board
 
@@ -36,25 +39,53 @@ class BoardChangeConsumer(AsyncJsonWebsocketConsumer):
         )
 
         await self.accept()
-        await self.send_boards()
-
-    async def receive(self, text_data: str = None, **kwargs):
-        text_data_json = json.loads(text_data)
-        pos = int(text_data_json['position'])
-        to_state = int(text_data_json['to_state'])
-
-        await mark_square(self.player_board_id, pos, to_state)
+        await mark_disconnected(self.player_board_id, False)
         await self.channel_layer.group_send(
             self.game_code, {
                 'type': 'send_boards'
             }
         )
 
+        print(f"{self.player_name} joined game {self.game_code}.")
+
+    async def receive(self, text_data: str = None, **kwargs):
+        broadcast_boards = False
+        text_data_json = json.loads(text_data)
+        action = text_data_json.get('action')
+
+        if action == 'board_mark':
+            pos = int(text_data_json['position'])
+            to_state = int(text_data_json['to_state'])
+            await self.rx_mark_board(pos, to_state)
+            broadcast_boards = True
+
+        if broadcast_boards:
+            await self.channel_layer.group_send(
+                self.game_code, {
+                    'type': 'send_boards'
+                }
+            )
+        else:
+            # only send to the client that sent this message (i.e. for a ping)
+            await self.send_boards()
+
+    async def rx_mark_board(self, pos, to_state):
+        await mark_square(self.player_board_id, pos, to_state)
+        await mark_disconnected(self.player_board_id, False)
+
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
             self.game_code,
             self.channel_name
         )
+
+        await mark_disconnected(self.player_board_id, True)
+        await self.channel_layer.group_send(
+            self.game_code, {
+                'type': 'send_boards'
+            }
+        )
+        print(f"{self.player_name} disconnected from game {self.game_code}.")
 
     async def send_boards(self, event=None):
         board_states = await get_board_states(self.board_id)
@@ -63,10 +94,16 @@ class BoardChangeConsumer(AsyncJsonWebsocketConsumer):
 
 @database_sync_to_async
 def get_board_states(board_id: int):
-    pboards = PlayerBoard.objects.filter(board_id=board_id)
+    # Only sends board states of players who are not disconnected
+    recent_dc_time = timezone.now() - timedelta(minutes=1)
+    pboards = PlayerBoard.objects.filter(
+        Q(disconnected_at=None) | Q(disconnected_at__gt=recent_dc_time),
+        board_id=board_id
+    )
     data = [{
         'player_name': pb.player_name,
         'board': pb.squares,
+        'disconnected_at': pb.disconnected_at.isoformat() if pb.disconnected_at else None,
     } for pb in pboards]
     return data
 
@@ -94,5 +131,7 @@ def mark_square(player_board_id: int, pos: int, to_state: int):
 
 
 @database_sync_to_async
-def mark_disconnected(player_board_id: int):
+def mark_disconnected(player_board_id: int, disconnected: bool):
     player_board_obj = PlayerBoard.objects.get(pk=player_board_id)
+    player_board_obj.disconnected_at = timezone.now() if disconnected else None
+    player_board_obj.save()

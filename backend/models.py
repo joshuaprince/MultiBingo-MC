@@ -39,7 +39,7 @@ class PlayerBoard(models.Model):
         MARKED_RED = 3
 
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
-    player_name = models.CharField(blank=False, max_length=5)
+    player_name = models.CharField(blank=False, max_length=128)
     squares = models.CharField(max_length=25, default=('0' * 25))
     disconnected_at = models.DateTimeField(null=True)
 

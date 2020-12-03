@@ -5,16 +5,15 @@
   <meta charset="UTF-8">
   <title>Bingo : {{ game_code }}</title>
   <link rel="stylesheet" href="{% static 'bingo/board.css' %}"></head>
-  <script>
-    const game_code = "{{ game_code }}";
-    const num_mark_colors = "{{ num_mark_colors }}";
-    let player_name = "{{ player_name }}";
-  </script>
+  {{ game_code|json_script:'game_code' }}
+  {{ num_mark_colors|json_script:'num_mark_colors' }}
+  {{ player_id|json_script:'player_id' }}
+  {{ player_name|json_script:'player_name' }}
 <body>
   <h1 class="room-name">{{ game_code }}</h1>
   {% if player_name %}
   <div class="board-primary">
-    <table class="bingo-table board-name-{{ player_name }}">
+    <table class="bingo-table board-player-{{ player_id }}">
       {% for board_row in board %}
       <tr>
         {% for square in board_row %}

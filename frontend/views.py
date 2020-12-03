@@ -22,6 +22,7 @@ def board(request, game_code):
     if created:
         print(f"Created a new board with game code {game_code}")
 
+    player_board_obj = None
     if player_name:
         try:
             player_board_obj, created = PlayerBoard.objects.get_or_create(
@@ -43,6 +44,7 @@ def board(request, game_code):
 
     context = {
         'game_code': game_code,
+        'player_id': player_board_obj.pk if player_board_obj else None,
         'player_name': player_name,
         'board': squares,
         'num_mark_colors': len(PlayerBoard.Marking)

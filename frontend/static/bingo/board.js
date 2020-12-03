@@ -1,3 +1,8 @@
+// Get variables from Django json_script tags in template
+const game_code = JSON.parse(document.getElementById('game_code').textContent);
+const num_mark_colors = JSON.parse(document.getElementById('num_mark_colors').textContent);
+const player_id = JSON.parse(document.getElementById('player_id').textContent);
+const player_name = JSON.parse(document.getElementById('player_name').textContent);
 
 const boardSocket = new WebSocket(
   'ws://' + window.location.host + '/ws/board/' + game_code +
@@ -55,7 +60,7 @@ function build_secondary_boards(data) {
     }
 
     const clone = template.content.cloneNode(true);
-    clone.querySelector('.board-secondary').classList.add('board-name-' + pboard['player_name']);
+    clone.querySelector('.board-secondary').classList.add('board-player-' + pboard['player_id']);
     clone.querySelector('.player-name').innerHTML = pboard['player_name'];
     clone.querySelector('.board-secondary').classList.toggle('disconnected', !!pboard['disconnected_at'])
     anchor.appendChild(clone);
@@ -64,7 +69,7 @@ function build_secondary_boards(data) {
 
 function mark_all_boards(data) {
   for (pboard of data) {
-    const board_node = document.querySelector('.board-name-' + pboard['player_name']);
+    const board_node = document.querySelector('.board-player-' + pboard['player_id']);
     mark_board(pboard['board'], board_node);
   }
 }

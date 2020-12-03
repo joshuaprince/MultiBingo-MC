@@ -4,21 +4,39 @@ const num_mark_colors = JSON.parse(document.getElementById('num_mark_colors').te
 const player_id = JSON.parse(document.getElementById('player_id').textContent);
 const player_name = JSON.parse(document.getElementById('player_name').textContent);
 
-const boardSocket = new WebSocket(
-  'ws://' + window.location.host + '/ws/board/' + game_code +
-  '/' + player_name + (player_name ? '/' : ''));
-boardSocket.onmessage = e => {
-  const data = JSON.parse(e.data);
-  build_secondary_boards(data);
-  mark_all_boards(data);
+/* WebSocket stuff */
+let boardSocket;
+const connectingPopup = document.getElementsByClassName('connecting-popup')[0];
+function connect() {
+  boardSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/board/' + game_code +
+    '/' + player_name + (player_name ? '/' : ''));
+
+  boardSocket.onmessage = e => {
+    const data = JSON.parse(e.data);
+    build_secondary_boards(data);
+    mark_all_boards(data);
+  }
+
+  boardSocket.onopen = e => {
+    connectingPopup.hidden = true;
+  }
+
+  boardSocket.onclose = e => {
+    console.log("Board socket was closed, retrying in 1 second. ");
+    setTimeout(connect, 1000);
+    connectingPopup.hidden = false;
+  }
+
+  boardSocket.onerror = e => {
+    console.error("Board socket encountered error: " + e.message);
+    boardSocket.close();
+  }
 }
 
-boardSocket.onclose = e => {
-  console.error("Board socket was closed: " + e);
-  alert("Lost connection to server. Click OK to refresh the page.");
-  location.reload();
-}
+connect();
 
+/* Board marking stuff */
 document.querySelectorAll('.board-primary .bingo-square').forEach(square => {
   square.onmousedown = e => {
     e.preventDefault();

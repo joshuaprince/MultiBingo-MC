@@ -8,10 +8,11 @@
   <script>
     const game_code = "{{ game_code }}";
     const num_mark_colors = "{{ num_mark_colors }}";
-    let player_name = "{{ player_name }}"
+    let player_name = "{{ player_name }}";
   </script>
 <body>
   <h1 class="room-name">{{ game_code }}</h1>
+  {% if player_name %}
   <div class="board-primary">
     <table class="bingo-table board-name-{{ player_name }}">
       {% for board_row in board %}
@@ -26,6 +27,11 @@
     </table>
     <h1 class="player-name">{{ player_name }}</h1>
   </div>
+  {% else %}
+  <div class="player-name">
+    <input id="player-name-input" type="text" placeholder="Enter your name to join..."><br>
+  </div>
+  {% endif %}
   <div class="boards-secondary"></div>
   <template id="board-secondary-template">
     <div class="board-secondary">

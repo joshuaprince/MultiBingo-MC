@@ -1,7 +1,7 @@
 import random
 import string
 
-from django.http import HttpResponseBadRequest
+from django.core.exceptions import ValidationError
 from django.shortcuts import render
 
 from backend.models import Board, PlayerBoard
@@ -17,13 +17,22 @@ def index(request):
 
 def board(request, game_code):
     player_name = request.GET.get('name', '')
-    if player_name and not player_name.isalnum():
-        return HttpResponseBadRequest('Your name must only consist of letters and numbers.')
 
     board_obj, created = Board.objects.prefetch_related('square_set').get_or_create(seed=game_code)
-
     if created:
         print(f"Created a new board with game code {game_code}")
+
+    if player_name:
+        try:
+            player_board_obj, created = PlayerBoard.objects.get_or_create(
+                board_id=board_obj.pk,
+                player_name=player_name
+            )
+            if created:
+                print(f"Created a new player board with game code {game_code}, player {player_name}")
+        except ValidationError:
+            print(f"Player name {player_name} raised ValidationError")
+            player_name = ''
 
     squares = []
     for row in range(5):

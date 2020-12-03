@@ -4,7 +4,7 @@ from django.dispatch import receiver
 
 
 class Board(models.Model):
-    seed = models.SlugField(max_length=128)
+    seed = models.SlugField(unique=True, blank=False, max_length=128)
 
     def __str__(self):
         return self.seed
@@ -39,12 +39,15 @@ class PlayerBoard(models.Model):
         MARKED_RED = 3
 
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
-    player_name = models.CharField(max_length=5)  # TODO max_length
+    player_name = models.CharField(blank=False, max_length=5)
     squares = models.CharField(max_length=25, default=('0' * 25))
     disconnected_at = models.DateTimeField(null=True)
 
     def __str__(self):
         return str(self.board) + " : " + self.player_name
+
+    class Meta:
+        unique_together = ['board', 'player_name']
 
     def mark_square(self, pos, to_state: Marking):
         self.squares = \

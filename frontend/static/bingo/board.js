@@ -1,10 +1,7 @@
-if (!player_name) {
-  const new_player_name = prompt("Enter your name:");
-  window.location = window.location + '?name=' + new_player_name;
-}
 
 const boardSocket = new WebSocket(
-  'ws://' + window.location.host + '/ws/board/' + game_code + '/' + player_name);
+  'ws://' + window.location.host + '/ws/board/' + game_code +
+  '/' + player_name + (player_name ? '/' : ''));
 boardSocket.onmessage = e => {
   const data = JSON.parse(e.data);
   build_secondary_boards(data);
@@ -83,4 +80,15 @@ function mark_board(squares, node) {
     });
     sq.classList.add('mark-' + squares.charAt(i));
   }
+}
+
+/* Player name input */
+const playerNameInputNode = document.querySelector('input#player-name-input');
+if (playerNameInputNode) {
+playerNameInputNode.onkeyup = function (e) {
+    if (e.keyCode === 13) {  // enter, return
+      const playerName = e.target.value;
+      window.location = window.location + '?name=' + playerName;
+    }
+  };
 }

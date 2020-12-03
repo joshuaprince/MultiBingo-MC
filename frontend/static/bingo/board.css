@@ -73,3 +73,16 @@ div.boards-secondary {
 .board-secondary.disconnected .player-name {
   color: gray;
 }
+
+/* Player name input */
+div.player-name {
+  margin: 5px;
+  width: 50%;
+}
+
+.player-name input {
+  min-width: 100%;
+  max-width: 100%;
+  font-size: large;
+}
+

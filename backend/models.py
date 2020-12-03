@@ -54,3 +54,11 @@ class PlayerBoard(models.Model):
             self.squares[:pos] + \
             str(to_state) + \
             self.squares[pos+1:]
+
+    def to_json(self):
+        return {
+            'player_id': self.pk,
+            'player_name': self.player_name,
+            'board': self.squares,
+            'disconnected_at': self.disconnected_at.isoformat() if self.disconnected_at else None,
+        }

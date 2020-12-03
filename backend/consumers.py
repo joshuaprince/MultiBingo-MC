@@ -99,13 +99,7 @@ def get_board_states(board_id: int):
         Q(disconnected_at=None) | Q(disconnected_at__gt=recent_dc_time),
         board_id=board_id
     )
-    data = [{
-        'player_id': pb.pk,
-        'player_name': pb.player_name,
-        'board': pb.squares,
-        'disconnected_at': pb.disconnected_at.isoformat() if pb.disconnected_at else None,
-    } for pb in pboards]
-    return data
+    return [pb.to_json for pb in pboards]
 
 
 @database_sync_to_async

@@ -99,12 +99,12 @@ def get_board_states(board_id: int):
         Q(disconnected_at=None) | Q(disconnected_at__gt=recent_dc_time),
         board_id=board_id
     )
-    return [pb.to_json for pb in pboards]
+    return [pb.to_json() for pb in pboards]
 
 
 @database_sync_to_async
 def get_board_and_player_board(game_code: str, player: Optional[str]) -> (Board, PlayerBoard):
-    board = Board.objects.filter(seed=game_code).first()
+    board = Board.objects.filter(game_code=game_code).first()
     if not board:
         return None, None
 

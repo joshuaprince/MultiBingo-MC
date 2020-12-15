@@ -47,6 +47,10 @@ div.board-primary {
   height: 10vw;
 }
 
+.board-primary td.square-tooltip {
+  border-style: dashed;
+}
+
 .board-primary .bingo-square {
   cursor: pointer;
 }

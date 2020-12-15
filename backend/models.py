@@ -2,18 +2,33 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from generation import BoardGenerator, Difficulty
+
 
 class Board(models.Model):
-    seed = models.SlugField(unique=True, blank=False, max_length=128)
+    game_code = models.SlugField(unique=True, max_length=128)
+
+    seed = models.SlugField(max_length=128)
+    """If blank, goals will not be auto-generated on this board."""
+
+    difficulty = models.IntegerField(choices=[(i, i.value) for i in Difficulty])
 
     def __str__(self):
-        return self.seed
+        return self.game_code
+
+    def generate_goals(self):
+        """
+        Populate all squares with goals based on the seed.
+        :return:
+        """
+        ...
 
 
 class Square(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     position = models.IntegerField()
     text = models.CharField(max_length=256)
+    tooltip = models.CharField(max_length=512)
 
     def __str__(self):
         return str(self.board) + " #" + str(self.position)
@@ -23,9 +38,12 @@ class Square(models.Model):
 
 
 @receiver(post_save, sender=Board)
-def build_board(instance, **kwargs):
+def build_board(instance: Board, **kwargs):
     for i in range(25):
-        Square.objects.create(board=instance, position=i, text=f"Square {i}")
+        Square.objects.create(board=instance, position=i)
+
+    if instance.seed:
+        instance.generate_goals()
 
 
 class PlayerBoard(models.Model):

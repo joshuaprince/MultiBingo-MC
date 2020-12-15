@@ -25,7 +25,7 @@ SECRET_KEY = 'qn+e-fai7lli06x5#-4z^h$zqj^&lvcfq16#vzbuqf1g!v4g2!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'apt.jtprince.com']
 
 
 # Application definition

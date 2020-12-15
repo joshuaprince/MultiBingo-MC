@@ -17,8 +17,11 @@
       {% for board_row in board %}
       <tr>
         {% for square in board_row %}
-        <td>
-          <div class="bingo-square square-{{ square.position }}">{{ square.text }}</div>
+        <td{% if square.tooltip %} class="square-tooltip"{% endif %}>
+          <div class="bingo-square square-{{ square.position }}"
+               title="{{ square.tooltip }}">
+            {{ square.text }}
+          </div>
         </td>
         {% endfor %}
       </tr>
@@ -39,7 +42,7 @@
         <tr>
           {% for square in board_row %}
           <td>
-            <div class="bingo-square square-{{ square.position }}" title="{{ square.text }}"></div>
+            <div class="bingo-square square-{{ square.position }}" title="{{ square.text }}" ></div>
           </td>
           {% endfor %}
         </tr>

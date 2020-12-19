@@ -104,7 +104,7 @@ def parse_xml(filename=GOAL_XML):
         difficulty = int(e_goal.get('difficulty'))
         GOALS[difficulty].append(new_goal)
 
-    _add_placeholder_goals()  # TODO remove
+    # _add_placeholder_goals()  # TODO remove
 
 
 def _add_placeholder_goals():

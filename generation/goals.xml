@@ -1,47 +1,1711 @@
-<MCBingoGoals version="0.0.1">
+<?xml version="1.0" ?>
+<MCBingoGoals version="0">
 
-  <Goal difficulty="2" id="cobblestone"> <!-- Basic collection -->
+  <Goal difficulty="0" id="">
     <Description>$var Cobblestone</Description>
     <Variable min="32" max="64"/>
-    <ItemTrigger>
-      <ItemMatch>
-        <Name>minecraft:cobblestone</Name>
-        <Quantity>$var</Quantity>
-      </ItemMatch>
-    </ItemTrigger>
   </Goal>
 
-  <Goal difficulty="2" id="poppiesdandelions"> <!-- Multiple different -->
-    <Description>$quantpoppy Poppies &amp; $quantdand Dandelions</Description>
-    <Variable name="quantpoppy" min="5" max="25"/>
-    <Variable name="quantdand" min="5" max="25"/>
-    <ItemTrigger needed="all">
-      <ItemMatch>
-        <Name>minecraft:poppy</Name>
-        <Quantity>$quantpoppy</Quantity>
-      </ItemMatch>
-      <ItemMatch>
-        <Name>minecraft:dandelion</Name>
-        <Quantity>$quantdand</Quantity>
-      </ItemMatch>
-    </ItemTrigger>
+  <Goal difficulty="0" id="">
+    <Description>$var Dirt</Description>
+    <Variable min="32" max="64"/>
   </Goal>
 
-  <Goal difficulty="2" id="stairs"> <!-- Multiple different regex -->
-    <Description>$needed Different Stairs</Description>
-    <ItemTrigger needed-min="2" needed-max="4">
-      <ItemMatch>
-        <Name>minecraft:.*_stairs</Name>
-      </ItemMatch>
-    </ItemTrigger>
+  <Goal difficulty="0" id="">
+    <Description>$var Oak Wood Planks</Description>
+    <Variable min="32" max="64"/>
   </Goal>
 
-  <Goal difficulty="2" id="5pickaxes">
-    <Description>5 Different Pickaxes</Description>
-    <ItemTrigger needed="5">
-      <ItemMatch>
-        <Name>minecraft:.*_pickaxe</Name>
-      </ItemMatch>
-    </ItemTrigger>
+  <Goal difficulty="0" id="">
+    <Description>$var Spruce Wood Planks</Description>
+    <Variable min="32" max="64"/>
   </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Birch Wood Planks</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Dark Oak Wood Planks</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Acacia Wood Planks</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Oak Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Spruce Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Birch Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Dark Oak Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Acacia Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Redstone</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Lava Bucket</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Milk Bucket</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Water Bucket</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Bucket of Fish</Description>
+    <Tooltip>Can be any of the types of Fish</Tooltip>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Andesite</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Granite</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Diorite</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Iron Block</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Gold Block</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var1 Poppies &amp; $var2 Dandelions</Description>
+    <Variable name="var1" min="5" max="25"/>
+    <Variable name="var2" min="5" max="25"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Level $var</Description>
+    <Variable min="5" max="7"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Note Blocks</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Leaves</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Build a $var1x$var2x$var3 leaf cube</Description>
+    <Tooltip>You can choose what shall be the width/length/height.</Tooltip>
+    <Variable name="var1" min="2" max="4"/>
+    <Variable name="var2" min="2" max="4"/>
+    <Variable name="var3" min="2" max="4"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var colours of Wool</Description>
+    <Variable min="2" max="4"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Snowballs</Description>
+    <Variable min="8" max="16"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Different Slabs</Description>
+    <Variable min="2" max="4"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Different Stairs</Description>
+    <Variable min="2" max="4"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Diamond</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Rotten Flesh</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stone</Description>
+    <Tooltip>NOT Cobblestone</Tooltip>
+    <Variable min="10" max="32"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Bread</Description>
+    <Variable min="1" max="5"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Hay Bale</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Flower Pot</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Feathers</Description>
+    <Variable min="2" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Sleep in a bed</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Charcoal</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Coal</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>Fishing Rod</Description>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Apples</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Sticks</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Kelp</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Oak Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Spruce Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Birch Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Dark Oak Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Acacia Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Oak Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Spruce Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Birch Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Dark Oak Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Acacia Wood</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Oak Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Spruce Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Birch Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Dark Oak Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Stripped Acacia Logs</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Raw Cod</Description>
+    <Variable min="2" max="10"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Raw Salmon</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="0" id="">
+    <Description>$var Different Edible Items</Description>
+    <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
+    <Variable min="2" max="3"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Different Fish</Description>
+    <Variable min="2" max="4"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Grow a Tree in the Nether</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Colours of Terracotta</Description>
+    <Variable min="4" max="7"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Mushroom Stew</Description>
+    <Variable min="1" max="5"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Shoot a Button with an Arrow</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Book and Quill</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Flint</Description>
+    <Variable min="16" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Cake</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Pumpkin Pie</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Fish a Treasure and a Junk item</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Coarse Dirt</Description>
+    <Variable min="16" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Clocks</Description>
+    <Variable min="2" max="3"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Iron Blocks</Description>
+    <Variable min="2" max="4"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Gold Blocks</Description>
+    <Variable min="2" max="3"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Golden Apple</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Bookshelves</Description>
+    <Variable min="2" max="4"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Never wear Chestplates</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Never use a Shield</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Jukebox</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Build a glass cube and fill the inner with lava</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Moss Stone</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Cacti</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var TNT</Description>
+    <Variable min="1" max="3"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Level $var</Description>
+    <Variable min="8" max="15"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Create a Snow Golem</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Note Blocks</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Ink Sacks</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Bread</Description>
+    <Variable min="6" max="10"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Hay Bales</Description>
+    <Variable min="2" max="3"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var colours of Wool</Description>
+    <Variable min="5" max="8"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Pistons</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Full Iron Armour</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Full Leather Armour</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Full Gold Armour</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Cauldron with Water</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Complete a Map</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Soul Sand</Description>
+    <Variable min="16" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Pumpkins</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Carved Pumpkins</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Vines</Description>
+    <Variable min="10" max="30"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Different Slabs</Description>
+    <Variable min="5" max="7"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Every type of Sword</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Every type of Pickaxe</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Brick Blocks</Description>
+    <Variable min="16" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Nether Brick Blocks</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Arrows</Description>
+    <Variable min="16" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>(Try to) Sleep in the Nether</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Fermented Spider Eye</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Different Stairs</Description>
+    <Variable min="5" max="7"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Ender Pearls</Description>
+    <Variable min="2" max="3"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>16 Chicken Eggs</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Hang up 3 Different 4x4 Paintings</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Bone Blocks</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>2 Creepers in the same Boat</Description>
+    <Tooltip>The 2 Creepers must be in the same boat at the same time</Tooltip>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Trade with a Villager</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Different Pattern / Colour Shields</Description>
+    <Variable min="2" max="3"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Dead Bush</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Grass</Description>
+    <Tooltip>The plant, NOT the block</Tooltip>
+    <Variable min="15" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Cyan Dye</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Light Gray Dye and Light Blue Dye</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Magenta Dye</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Rose Red</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Orange Dye</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Dandelion Yellow</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Cactus Green</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Pink Dye</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Purple Dye</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Lime Dye</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Never Sleep</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Grow a Huge Mushroom</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Water Bucket, Lava Bucket and Milk Bucket</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Different Flowers</Description>
+    <Variable min="3" max="6"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Colours of Concrete</Description>
+    <Variable min="3" max="6"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Colours of Glazed Terracotta</Description>
+    <Variable min="3" max="6"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Colours of Beds</Description>
+    <Variable min="3" max="6"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Finish where you spawned using a Compass</Description>
+    <Tooltip>Be stood close enough to spin your compass within a couple blocks at the end of the game</Tooltip>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Build a Redstone AND Gate</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stone</Description>
+    <Tooltip>NOT Cobblestone</Tooltip>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Kill $var Animals with only fire</Description>
+    <Variable min="4" max="8"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Kill a Creeper with only fire</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Iron Nuggets</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Gold Nuggets</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Rotten Flesh</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Redstone</Description>
+    <Variable min="16" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Golden Carrot</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Rotten Flesh, Spider Eye, Bone, Gunpowder and Ender Pearl</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Feathers</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Lily Pads</Description>
+    <Variable min="2" max="10"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Sticks</Description>
+    <Variable min="65" max="128"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Wear 4 different colour Leather Armour at the same time</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Oak Wood Planks</Description>
+    <Variable min="65" max="128"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Spruce Wood Planks</Description>
+    <Variable min="65" max="128"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Birch Wood Planks</Description>
+    <Variable min="65" max="128"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Dark Oak Wood Planks</Description>
+    <Variable min="65" max="128"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Acacia Wood Planks</Description>
+    <Variable min="65" max="128"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Oak Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Spruce Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Birch Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Dark Oak Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Acacia Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Oak Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Spruce Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Birch Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Dark Oak Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Acacia Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Oak Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Spruce Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Birch Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Dark Oak Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Acacia Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Oak Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Spruce Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Birch Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Dark Oak Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Stripped Acacia Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Seagrass</Description>
+    <Variable min="15" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Tropical Fish</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Pufferfish</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Raw Cod</Description>
+    <Variable min="15" max="32"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Raw Salmon</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Never use a Fishing Rod</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Never use a Boat</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Get a Fish into Nether</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Dried Kelp Blocks</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>Drown a Zombie</Description>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Gunpowder</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Spider Eyes</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="1" id="">
+    <Description>$var Different Edible Items</Description>
+    <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
+    <Variable min="4" max="5"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Wither Skull</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Different Edible Items</Description>
+    <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
+    <Variable min="6" max="7"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Different Gold Items</Description>
+    <Variable min="3" max="5"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Beetroot Soup</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Emerald</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Tame a Horse</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Place a Cactus in a Flower Pot</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Detonate a TNT-Minecart</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Magma Blocks</Description>
+    <Variable min="10" max="30"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Skull Charge Banner</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Damaged Anvil</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Melons (Slices)</Description>
+    <Variable min="16" max="64"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Sleep inside a village</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Kill a Skeleton with it's own Arrow</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Never wear any Armour</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Get a Skeleton's Bow</Description>
+    <Tooltip>Get the rare Bow item drop from a Skeleton</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Diamond Block</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Lapis Lazuli Blocks</Description>
+    <Variable min="2" max="3"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Destroy a Monster Spawner</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Different Saplings</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Tame a Wolf</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>6 Fire Charges</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Magma Cream</Description>
+    <Variable min="1" max="3"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Create an Iron Golem</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Eye of Ender</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Rabbit Stew</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Fire Resistance</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Healing</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Poison</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Harming</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Regeneration</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Slowness</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Strength</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Swiftness</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Weakness</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Leaping</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of Slow Falling</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Potion of the Turtle Master</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Finish by jumping from top to bottom of the world</Description>
+    <Tooltip>Dig a hole to bedrock and build to 256 Y (height limit), then jump from top to bottom at the end of the game</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Vegetarian</Description>
+    <Tooltip>Never eat meat, including fish</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Carnivore</Description>
+    <Tooltip>Only eat meat</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Kill yourself with your own arrow</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Get a '... while trying to escape ...' Death message</Description>
+    <Tooltip>Example: 'PLAYER' drowned while trying to escape a Skeleton</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Set fire to a Villager's House</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Finish on top of the world</Description>
+    <Tooltip>Build up to 256 Y (the height limit) and stand on the top at the end of the game</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Kill a hostile mob with Gravel/Sand</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Put a Carpet on a Llama</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Activate a $var1x$var2 Nether Portal (not counting corners)</Description>
+    <Tooltip>Width/height of the obsidian frame, disregarding corners (or in other words, width/height of the - once activated - purple portal area).</Tooltip>
+    <Variable name="var1" min="4" max="6"/>
+    <Variable name="var2" min="4" max="6"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Obsidian</Description>
+    <Variable min="5" max="15"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Iron Blocks</Description>
+    <Variable min="5" max="7"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Gold Blocks</Description>
+    <Variable min="3" max="4"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Daylight Sensor</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Enchanted Golden Sword</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var colours of Wool</Description>
+    <Variable min="8" max="11"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Colours of Terracotta</Description>
+    <Variable min="8" max="11"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Colours of Glazed Terracotta</Description>
+    <Variable min="7" max="10"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Colours of Concrete</Description>
+    <Variable min="7" max="10"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Colours of Beds</Description>
+    <Variable min="7" max="10"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Power a Redstone Lamp</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Different Flowers</Description>
+    <Variable min="7" max="10"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Put a Pigman in Water</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Place an Iron, Gold and Diamond block on top of each other</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Kill a hostile mob with an Anvil</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Never Die</Description>
+    <Tooltip>No death allowed, including if immediately caused by completing the last goal (e.g. inadvertently dying to the explosion of &quot;Detonate a TNT-Minecart&quot;)</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Level $var</Description>
+    <Variable min="16" max="26"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Different Seeds</Description>
+    <Tooltip>Includes: Beetroot Seeds, Melon Seeds, Nether Wart, Pumpkin Seeds and (Wheat) Seeds. As per the 'A Seedy Place' advancement.</Tooltip>
+    <Variable min="2" max="3"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Wear 4 Different Armour types at the same time</Description>
+    <Tooltip>Example: GOLD shoes, LEATHER Trousers, IRON Chestplate and DIAMOND Helmet</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Fill a Hopper with 320 items</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Red Nether Brick Blocks</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Spectral Arrows</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Activate a Nether Portal inside of a Village</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Rotten Flesh</Description>
+    <Variable min="33" max="64"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Ink Sacks</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Slimeballs</Description>
+    <Variable min="2" max="6"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Use a lead on a Rabbit</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Firework Star</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Hang a mob with a lead</Description>
+    <Tooltip>Suspend a mob in mid air using a fence and a lead</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Blaze Rod</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Ghast Tear</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Never use Coal</Description>
+    <Tooltip>Never use Coal for any crafting recipes, fuel in a furnace or trades, CAN use Charcoal</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Glowstone Dust</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Item Frames</Description>
+    <Variable min="10" max="32"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Different Diamond Items</Description>
+    <Variable min="2" max="3"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Blow up an End Crystal</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Prismarine Crystals</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Dig straight down to Bedrock from Sea level (1x1 hole)</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Never use a Sword</Description>
+    <Tooltip>Never use a Sword for Combat or Block Breaking. Holding or crafting is fine.</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Deplete an Iron Sword</Description>
+    <Tooltip>Use an Iron Sword until it breaks, if you are unsure if you did check the Statistics screen!</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Full Diamond Armour</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Saddle</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Give a mob a Hat</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Clean a Pattern off a Banner</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Heart of the Sea</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Phantom Membrane</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Turtle Shell</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Add a Marker to a Map</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Water Bucket, Lava Bucket, Milk Bucket, Bucket of Fish</Description>
+    <Tooltip>Can be any of the types of Fish</Tooltip>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Leash a Dolphin to a Fence</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Dried Kelp Blocks</Description>
+    <Variable min="21" max="32"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Gunpowder</Description>
+    <Variable min="6" max="15"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Spider Eyes</Description>
+    <Variable min="6" max="15"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>$var Ender Pearls</Description>
+    <Variable min="4" max="6"/>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Never use an Axe</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Enchant an item</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Complete a full size Map</Description>
+  </Goal>
+
+  <Goal difficulty="2" id="">
+    <Description>Blue Shield with White Flower Charge</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Grass Block</Description>
+    <Tooltip>If you don't have Silk Touch I know a guy who might pick one up for you...</Tooltip>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Create an Enchantment requiring level 10+</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Milk a Mooshroom</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Shear a Mooshroom</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Sea Lanterns</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Sponge</Description>
+    <Tooltip>DRY Sponge, not a wet one</Tooltip>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Bounce on a Slime Block</Description>
+    <Tooltip>Get a Slime Block, place it on the ground and give it a good old bouncin' on</Tooltip>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Listen to a Music Disc</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Different Flowers</Description>
+    <Variable min="11" max="14"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Diamond Blocks</Description>
+    <Variable min="3" max="5"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Get a Zombie Pigman's Sword</Description>
+    <Tooltip>Get the rare Golden Sword item drop from a Pigman</Tooltip>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Finish by launching Fireworks of $var Different Colours</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Nametag an Enderman</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Kill yourself with an Ender Pearl</Description>
+    <Tooltip>Need to die to the damage taken from USING a pearl (not subsequent fall/other damage)</Tooltip>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Finish on top of a Blaze spawner</Description>
+    <Tooltip>Stand on top of a Blaze spawner at the end of the game</Tooltip>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var colours of Wool</Description>
+    <Variable min="12" max="15"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Colours of Terracotta</Description>
+    <Variable min="12" max="15"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Colours of Glazed Terracotta</Description>
+    <Variable min="11" max="14"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Colours of Concrete</Description>
+    <Variable min="11" max="14"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Colours of Beds</Description>
+    <Variable min="11" max="14"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Poison a Parrot</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Tame a Parrot</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Kill an Iron Golem</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Ice Block on top of a Magma Block</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Level $var</Description>
+    <Variable min="27" max="37"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Build a $var1x$var2x$var3 Ice cube</Description>
+    <Tooltip>You can choose what shall be the width/length/height.</Tooltip>
+    <Variable name="var1" min="2" max="4"/>
+    <Variable name="var2" min="2" max="4"/>
+    <Variable name="var3" min="2" max="4"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Different Seeds</Description>
+    <Tooltip>Includes: Beetroot Seeds, Melon Seeds, Nether Wart, Pumpkin Seeds and (Wheat) Seeds. As per the 'A Seedy Place' advancement.</Tooltip>
+    <Variable min="4" max="5"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Finish on top of a stairway to Heaven</Description>
+    <Tooltip>Using Stairs, build up to 256 Y (the height limit) and stand on the top at the end of the game (If you need to jump over a block it's not a finished stairway)</Tooltip>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Never place Torches</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Get a Ghast into the Overworld</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Enchanted Golden Apple</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Tame an Ocelot</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Tame a Donkey</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Never wear Armour or use Shields</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Kill a mob that is wearing Full Iron Armour</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Enchant 5 different items</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Never use Buckets</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Conduit</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var types of Dead Coral Blocks</Description>
+    <Variable min="2" max="5"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Sea Pickles</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Trident</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Get a '... didn't want to live in the same world as ...' Death message</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Cookie</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>Grow a Full Jungle Tree</Description>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Prismarine Shards</Description>
+    <Variable min="2" max="10"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Jungle Logs</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Jungle Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Stripped Jungle Wood</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="3" id="">
+    <Description>$var Stripped Jungle Logs</Description>
+    <Variable min="11" max="20"/>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>$var Different Ores (Silk Touch)</Description>
+    <Tooltip>Coal, Diamond, Emerald, Gold, Iron, Lapis Lazuli, Nether Quatz and Redstone ores are your choices</Tooltip>
+    <Variable min="4" max="6"/>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>$var Different Potions</Description>
+    <Tooltip>Splash variants count! Even Lingering if you want to get crazy</Tooltip>
+    <Variable min="7" max="9"/>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Cure a Zombie Villager</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Every type of Chestplate</Description>
+    <Tooltip>Leather, Gold, Iron, Diamond and yes, even Chainmail</Tooltip>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Nether Star</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Dragon Egg</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Any hostile mob head OTHER than a Wither Skeleton's</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>$var Popped Chorus Fruit</Description>
+    <Variable min="5" max="10"/>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Every colour of Dye</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Level $var</Description>
+    <Variable min="38" max="50"/>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Fill a Double Chest with 3456 items</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>$var Tipped Arrows</Description>
+    <Variable min="16" max="32"/>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Place 1 of each Mineral block on top of each other</Description>
+    <Tooltip>Coal, Iron, Gold, Diamond, Redstone, Lapis, Emerald and Quartz blocks</Tooltip>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Save yourself with a Totem of Undying</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Sleep in a Woodland Mansion</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>$var Mycelium</Description>
+    <Variable min="10" max="32"/>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Get a villager into The End</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>$var Dragon's Breath</Description>
+    <Variable min="2" max="10"/>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>5 types of Coral Blocks</Description>
+    <Tooltip>The alive stuff, not the Dead Coral Blocks</Tooltip>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>$var Blue Ice</Description>
+    <Variable min="32" max="64"/>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Fully power a Conduit</Description>
+  </Goal>
+
+  <Goal difficulty="4" id="">
+    <Description>Never Craft Sticks</Description>
+  </Goal>
+
 </MCBingoGoals>

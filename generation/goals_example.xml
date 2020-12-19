@@ -1,0 +1,47 @@
+<MCBingoGoals version="0.0.1">
+
+  <Goal difficulty="2" id="cobblestone"> <!-- Basic collection -->
+    <Description>$var Cobblestone</Description>
+    <Variable min="32" max="64"/>
+    <ItemTrigger>
+      <ItemMatch>
+        <Name>minecraft:cobblestone</Name>
+        <Quantity>$var</Quantity>
+      </ItemMatch>
+    </ItemTrigger>
+  </Goal>
+
+  <Goal difficulty="2" id="poppiesdandelions"> <!-- Multiple different -->
+    <Description>$quantpoppy Poppies &amp; $quantdand Dandelions</Description>
+    <Variable name="quantpoppy" min="5" max="25"/>
+    <Variable name="quantdand" min="5" max="25"/>
+    <ItemTrigger needed="all">
+      <ItemMatch>
+        <Name>minecraft:poppy</Name>
+        <Quantity>$quantpoppy</Quantity>
+      </ItemMatch>
+      <ItemMatch>
+        <Name>minecraft:dandelion</Name>
+        <Quantity>$quantdand</Quantity>
+      </ItemMatch>
+    </ItemTrigger>
+  </Goal>
+
+  <Goal difficulty="2" id="stairs"> <!-- Multiple different regex -->
+    <Description>$needed Different Stairs</Description>
+    <ItemTrigger needed-min="2" needed-max="4">
+      <ItemMatch>
+        <Name>minecraft:.*_stairs</Name>
+      </ItemMatch>
+    </ItemTrigger>
+  </Goal>
+
+  <Goal difficulty="2" id="5pickaxes">
+    <Description>5 Different Pickaxes</Description>
+    <ItemTrigger needed="5">
+      <ItemMatch>
+        <Name>minecraft:.*_pickaxe</Name>
+      </ItemMatch>
+    </ItemTrigger>
+  </Goal>
+</MCBingoGoals>

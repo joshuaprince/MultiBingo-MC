@@ -32,6 +32,10 @@ def json_to_xml(inf, outf):
                 e_tooltip = SubElement(e_goal, 'Tooltip')
                 e_tooltip.text = goal['tooltiptext']
 
+            if goal.get('frequency'):
+                e_tooltip = SubElement(e_goal, 'Infrequency')
+                e_tooltip.text = str(goal['frequency'])
+
             for varname, (mini, maxi) in variables.items():
                 e_var = SubElement(e_goal, 'Variable')
                 if varname != 'var':

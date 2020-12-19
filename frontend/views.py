@@ -20,7 +20,7 @@ def board(request, game_code):
 
     board_obj, created = Board.objects.prefetch_related('square_set').get_or_create(
         game_code=game_code,
-        defaults={'seed': game_code}
+        defaults={'seed': game_code, 'difficulty': 2}
     )
     if created:
         print(f"Created a new board with game code {game_code}")

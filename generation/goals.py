@@ -3,24 +3,23 @@ from random import Random
 from typing import Dict, List
 from xml.etree import ElementTree
 
-from .difficulty import Difficulty
-
-
-GOAL_XML = './goals.xml'
-GOALS = {dif.value: [] for dif in Difficulty}
+GOAL_XML = './generation/goals.xml'
+NUM_DIFFICULTIES = 5
+GOALS = {i: [] for i in range(NUM_DIFFICULTIES)}
 
 
 class Goal:
     """
     An abstract Goal "template" that contains variable ranges.
     """
-    def __init__(self):
+    def __init__(self, id: str):
+        self.id = id
         self.description_template = ""
         self.tooltip_template = ""
         self.variable_ranges = {}  # type: Dict[str, tuple]
 
     def __str__(self):
-        return self.description_template
+        return f"({self.id}) {self.description_template}"
 
 
 class ConcreteGoal:
@@ -39,6 +38,15 @@ class ConcreteGoal:
 
     def tooltip(self) -> str:
         return self._replace_vars(self.goal.tooltip_template)
+
+    def xml_id(self) -> str:
+        """
+        XML ID contains the ID of the goal and serialized versions of any variables.
+        Example: "stairs:::needed:3::othervar:5"
+        """
+        goal_id = self.goal.id
+        vars_str = '::'.join(':'.join([k, str(v)]) for k, v in self.variables.items())
+        return ':::'.join([goal_id, vars_str])
 
     def _replace_vars(self, inp: str) -> str:
         """
@@ -81,7 +89,7 @@ def get_goals(rand: Random, difficulty_counts: tuple) -> List[ConcreteGoal]:
 def parse_xml(filename=GOAL_XML):
     etree = ElementTree.parse(filename)
     for e_goal in etree.getroot():
-        new_goal = Goal()
+        new_goal = Goal(e_goal.get('id'))
         if e_goal.find('Description') is not None:
             new_goal.description_template = e_goal.find('Description').text
         if e_goal.find('Tooltip') is not None:
@@ -95,3 +103,19 @@ def parse_xml(filename=GOAL_XML):
 
         difficulty = int(e_goal.get('difficulty'))
         GOALS[difficulty].append(new_goal)
+
+    _add_placeholder_goals()  # TODO remove
+
+
+def _add_placeholder_goals():
+    """
+    Add goals that will placehold until there are 25 of each difficulty
+    """
+    for dif in range(NUM_DIFFICULTIES):
+        for i in range(25):
+            new_goal = Goal(f'placeholder_dif{dif}_{i}')
+            new_goal.description_template = f'D{dif} Placeholder goal {i}'
+            GOALS[dif].append(new_goal)
+
+
+parse_xml(GOAL_XML)

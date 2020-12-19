@@ -1,6 +1,6 @@
 <MCBingoGoals version="0.0.1">
 
-  <Goal difficulty="0"> <!-- Basic collection -->
+  <Goal difficulty="2" id="cobblestone"> <!-- Basic collection -->
     <Description>$var Cobblestone</Description>
     <Variable min="32" max="64"/>
     <ItemTrigger>
@@ -11,7 +11,7 @@
     </ItemTrigger>
   </Goal>
 
-  <Goal difficulty="0"> <!-- Multiple different -->
+  <Goal difficulty="2" id="poppiesdandelions"> <!-- Multiple different -->
     <Description>$quantpoppy Poppies &amp; $quantdand Dandelions</Description>
     <Variable name="quantpoppy" min="5" max="25"/>
     <Variable name="quantdand" min="5" max="25"/>
@@ -27,7 +27,7 @@
     </ItemTrigger>
   </Goal>
 
-  <Goal difficulty="0"> <!-- Multiple different regex -->
+  <Goal difficulty="2" id="stairs"> <!-- Multiple different regex -->
     <Description>$needed Different Stairs</Description>
     <ItemTrigger needed-min="2" needed-max="4">
       <ItemMatch>
@@ -36,7 +36,7 @@
     </ItemTrigger>
   </Goal>
 
-  <Goal difficulty="0">
+  <Goal difficulty="2" id="5pickaxes">
     <Description>5 Different Pickaxes</Description>
     <ItemTrigger needed="5">
       <ItemMatch>

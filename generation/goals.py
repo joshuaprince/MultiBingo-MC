@@ -16,7 +16,7 @@ class Goal:
         self.id = id
         self.description_template = ""
         self.tooltip_template = ""
-        self.infrequency = 1.0
+        self.weight = 1.0
         self.variable_ranges = {}  # type: Dict[str, tuple]
 
     def __str__(self):
@@ -75,21 +75,11 @@ def get_goals(rand: Random, difficulty_counts: tuple) -> List[ConcreteGoal]:
                 raise IndexError(f"Ran out of goals of difficulty {diff}")
 
             # Pick a random goal at this difficulty
-            goal_selected = False
-            for failsafe in range(1000):
-                goal_idx = rand.randint(0, len(this_difficulty_goals_list) - 1)
-                goal_candidate = this_difficulty_goals_list[goal_idx]
-                # Roll to skip this goal based on an infrequency value.
-                # With an infrequency value of x, there is a 1 in x chance that it is selected.
-                if rand.random() < 1 / goal_candidate.infrequency:
-                    goal_selected = True
-                    break
-
-            if not goal_selected:
-                raise IndexError(f"Generating board, failsafe was triggered.")
+            weights = [goal.weight for goal in this_difficulty_goals_list]
+            goal_idx = rand.choices(range(len(this_difficulty_goals_list)), weights=weights)[0]
 
             # Append it to our returned list
-            ret.append(ConcreteGoal(goal_candidate, rand))
+            ret.append(ConcreteGoal(this_difficulty_goals_list[goal_idx], rand))
 
             # Remove the goal from the template list so it does not get duplicated
             this_difficulty_goals_list.pop(goal_idx)
@@ -107,8 +97,8 @@ def parse_xml(filename=GOAL_XML):
             new_goal.description_template = e_goal.find('Description').text
         if e_goal.find('Tooltip') is not None:
             new_goal.tooltip_template = e_goal.find('Tooltip').text
-        if e_goal.find('Infrequency') is not None:
-            new_goal.infrequency = float(e_goal.find('Infrequency').text)
+        if e_goal.find('Weight') is not None:
+            new_goal.weight = float(e_goal.find('Weight').text)
 
         for e_var in e_goal.findall('Variable'):
             name = e_var.get('name') or 'var'

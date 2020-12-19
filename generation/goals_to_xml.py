@@ -33,8 +33,8 @@ def json_to_xml(inf, outf):
                 e_tooltip.text = goal['tooltiptext']
 
             if goal.get('frequency'):
-                e_tooltip = SubElement(e_goal, 'Infrequency')
-                e_tooltip.text = str(goal['frequency'])
+                e_tooltip = SubElement(e_goal, 'Weight')
+                e_tooltip.text = str(round(1 / goal['frequency'], 2))
 
             for varname, (mini, maxi) in variables.items():
                 e_var = SubElement(e_goal, 'Variable')

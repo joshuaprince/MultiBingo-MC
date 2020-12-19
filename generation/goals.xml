@@ -12,117 +12,117 @@
 
   <Goal difficulty="0" id="">
     <Description>$var Oak Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Spruce Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Birch Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Dark Oak Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Acacia Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Oak Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Spruce Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Birch Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Dark Oak Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Acacia Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Redstone</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>Lava Bucket</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>Milk Bucket</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>Water Bucket</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>Bucket of Fish</Description>
     <Tooltip>Can be any of the types of Fish</Tooltip>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Andesite</Description>
-    <Infrequency>3</Infrequency>
+    <Weight>0.33</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Granite</Description>
-    <Infrequency>3</Infrequency>
+    <Weight>0.33</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Diorite</Description>
-    <Infrequency>3</Infrequency>
+    <Weight>0.33</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>Iron Block</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>Gold Block</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
   </Goal>
 
   <Goal difficulty="0" id="">
@@ -133,13 +133,13 @@
 
   <Goal difficulty="0" id="">
     <Description>Level $var</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="5" max="7"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Note Blocks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="5"/>
   </Goal>
 
@@ -158,7 +158,7 @@
 
   <Goal difficulty="0" id="">
     <Description>$var colours of Wool</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="2" max="4"/>
   </Goal>
 
@@ -169,13 +169,13 @@
 
   <Goal difficulty="0" id="">
     <Description>$var Different Slabs</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="4"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Different Stairs</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="4"/>
   </Goal>
 
@@ -185,26 +185,26 @@
 
   <Goal difficulty="0" id="">
     <Description>$var Rotten Flesh</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stone</Description>
     <Tooltip>NOT Cobblestone</Tooltip>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="10" max="32"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Bread</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="1" max="5"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>Hay Bale</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
   </Goal>
 
   <Goal difficulty="0" id="">
@@ -213,7 +213,7 @@
 
   <Goal difficulty="0" id="">
     <Description>$var Feathers</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="10"/>
   </Goal>
 
@@ -242,7 +242,7 @@
 
   <Goal difficulty="0" id="">
     <Description>$var Sticks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="32" max="64"/>
   </Goal>
 
@@ -253,110 +253,110 @@
 
   <Goal difficulty="0" id="">
     <Description>$var Oak Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Spruce Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Birch Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Dark Oak Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Acacia Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Oak Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Spruce Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Birch Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Dark Oak Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Acacia Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Oak Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Spruce Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Birch Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Dark Oak Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Acacia Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Raw Cod</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Raw Salmon</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="5"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Different Edible Items</Description>
     <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="3"/>
   </Goal>
 
@@ -371,7 +371,7 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Colours of Terracotta</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="4" max="7"/>
   </Goal>
 
@@ -417,13 +417,13 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Iron Blocks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="4"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Gold Blocks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="3"/>
   </Goal>
 
@@ -469,7 +469,7 @@
 
   <Goal difficulty="1" id="">
     <Description>Level $var</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="8" max="15"/>
   </Goal>
 
@@ -479,31 +479,31 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Note Blocks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Ink Sacks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Bread</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="6" max="10"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Hay Bales</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="3"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var colours of Wool</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="5" max="8"/>
   </Goal>
 
@@ -514,17 +514,17 @@
 
   <Goal difficulty="1" id="">
     <Description>Full Iron Armour</Description>
-    <Infrequency>3</Infrequency>
+    <Weight>0.33</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Full Leather Armour</Description>
-    <Infrequency>3</Infrequency>
+    <Weight>0.33</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Full Gold Armour</Description>
-    <Infrequency>3</Infrequency>
+    <Weight>0.33</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
@@ -557,7 +557,7 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Different Slabs</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="5" max="7"/>
   </Goal>
 
@@ -594,13 +594,13 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Different Stairs</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="5" max="7"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Ender Pearls</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="3"/>
   </Goal>
 
@@ -643,52 +643,52 @@
 
   <Goal difficulty="1" id="">
     <Description>Cyan Dye</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Light Gray Dye and Light Blue Dye</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Magenta Dye</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Rose Red</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Orange Dye</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Dandelion Yellow</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Cactus Green</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Pink Dye</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Purple Dye</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Lime Dye</Description>
-    <Infrequency>10</Infrequency>
+    <Weight>0.1</Weight>
   </Goal>
 
   <Goal difficulty="1" id="">
@@ -705,25 +705,25 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Different Flowers</Description>
-    <Infrequency>3</Infrequency>
+    <Weight>0.33</Weight>
     <Variable min="3" max="6"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Colours of Concrete</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="3" max="6"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Colours of Glazed Terracotta</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="3" max="6"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Colours of Beds</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="3" max="6"/>
   </Goal>
 
@@ -739,7 +739,7 @@
   <Goal difficulty="1" id="">
     <Description>$var Stone</Description>
     <Tooltip>NOT Cobblestone</Tooltip>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="32" max="64"/>
   </Goal>
 
@@ -764,13 +764,13 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Rotten Flesh</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Redstone</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="16" max="64"/>
   </Goal>
 
@@ -784,7 +784,7 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Feathers</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="32" max="64"/>
   </Goal>
 
@@ -795,7 +795,7 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Sticks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="65" max="128"/>
   </Goal>
 
@@ -805,151 +805,151 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Oak Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Spruce Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Birch Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Dark Oak Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Acacia Wood Planks</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Oak Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Spruce Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Birch Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Dark Oak Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Acacia Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Oak Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Spruce Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Birch Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Dark Oak Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Acacia Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Oak Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Spruce Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Birch Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Dark Oak Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Acacia Wood</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Oak Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Spruce Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Birch Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Dark Oak Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Acacia Logs</Description>
-    <Infrequency>25</Infrequency>
+    <Weight>0.04</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
@@ -970,13 +970,13 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Raw Cod</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="15" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Raw Salmon</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
@@ -1003,20 +1003,20 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Gunpowder</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="5"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Spider Eyes</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="5"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Different Edible Items</Description>
     <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="4" max="5"/>
   </Goal>
 
@@ -1027,7 +1027,7 @@
   <Goal difficulty="2" id="">
     <Description>$var Different Edible Items</Description>
     <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="6" max="7"/>
   </Goal>
 
@@ -1093,7 +1093,7 @@
 
   <Goal difficulty="2" id="">
     <Description>Diamond Block</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
@@ -1137,62 +1137,62 @@
 
   <Goal difficulty="2" id="">
     <Description>Potion of Fire Resistance</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Healing</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Poison</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Harming</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Regeneration</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Slowness</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Strength</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Swiftness</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Weakness</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Leaping</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of Slow Falling</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Potion of the Turtle Master</Description>
-    <Infrequency>12</Infrequency>
+    <Weight>0.08</Weight>
   </Goal>
 
   <Goal difficulty="2" id="">
@@ -1250,13 +1250,13 @@
 
   <Goal difficulty="2" id="">
     <Description>$var Iron Blocks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="5" max="7"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Gold Blocks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="3" max="4"/>
   </Goal>
 
@@ -1270,31 +1270,31 @@
 
   <Goal difficulty="2" id="">
     <Description>$var colours of Wool</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="8" max="11"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Colours of Terracotta</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="8" max="11"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Colours of Glazed Terracotta</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="7" max="10"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Colours of Concrete</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="7" max="10"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Colours of Beds</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="7" max="10"/>
   </Goal>
 
@@ -1304,7 +1304,7 @@
 
   <Goal difficulty="2" id="">
     <Description>$var Different Flowers</Description>
-    <Infrequency>3</Infrequency>
+    <Weight>0.33</Weight>
     <Variable min="7" max="10"/>
   </Goal>
 
@@ -1327,7 +1327,7 @@
 
   <Goal difficulty="2" id="">
     <Description>Level $var</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="16" max="26"/>
   </Goal>
 
@@ -1362,13 +1362,13 @@
 
   <Goal difficulty="2" id="">
     <Description>$var Rotten Flesh</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="33" max="64"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Ink Sacks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
@@ -1424,7 +1424,7 @@
 
   <Goal difficulty="2" id="">
     <Description>$var Prismarine Crystals</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="5"/>
   </Goal>
 
@@ -1490,19 +1490,19 @@
 
   <Goal difficulty="2" id="">
     <Description>$var Gunpowder</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="6" max="15"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Spider Eyes</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="6" max="15"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Ender Pearls</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="4" max="6"/>
   </Goal>
 
@@ -1533,12 +1533,12 @@
 
   <Goal difficulty="3" id="">
     <Description>Milk a Mooshroom</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>Shear a Mooshroom</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
   </Goal>
 
   <Goal difficulty="3" id="">
@@ -1562,13 +1562,13 @@
 
   <Goal difficulty="3" id="">
     <Description>$var Different Flowers</Description>
-    <Infrequency>3</Infrequency>
+    <Weight>0.33</Weight>
     <Variable min="11" max="14"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Diamond Blocks</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="3" max="5"/>
   </Goal>
 
@@ -1598,42 +1598,42 @@
 
   <Goal difficulty="3" id="">
     <Description>$var colours of Wool</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="12" max="15"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Colours of Terracotta</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="12" max="15"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Colours of Glazed Terracotta</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="11" max="14"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Colours of Concrete</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="11" max="14"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Colours of Beds</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="11" max="14"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>Poison a Parrot</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>Tame a Parrot</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
   </Goal>
 
   <Goal difficulty="3" id="">
@@ -1646,7 +1646,7 @@
 
   <Goal difficulty="3" id="">
     <Description>Level $var</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="27" max="37"/>
   </Goal>
 
@@ -1737,31 +1737,31 @@
 
   <Goal difficulty="3" id="">
     <Description>$var Prismarine Shards</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="2" max="10"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Jungle Logs</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Jungle Wood</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Stripped Jungle Wood</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Stripped Jungle Logs</Description>
-    <Infrequency>4</Infrequency>
+    <Weight>0.25</Weight>
     <Variable min="11" max="20"/>
   </Goal>
 
@@ -1809,7 +1809,7 @@
 
   <Goal difficulty="4" id="">
     <Description>Level $var</Description>
-    <Infrequency>2</Infrequency>
+    <Weight>0.5</Weight>
     <Variable min="38" max="50"/>
   </Goal>
 

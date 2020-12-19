@@ -4,7 +4,7 @@ body {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  font-family: sans-serif;
+  font-family: minecraftFont, sans-serif;
 }
 
 /* Generic board rules */
@@ -17,8 +17,12 @@ div.bingo-square {
   overflow: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  text-align: center;
   justify-content: center;
+}
+
+div.bingo-text {
+  padding: 10px;
 }
 
 table.bingo-table tr {
@@ -56,11 +60,18 @@ div.board-primary {
   max-width: 100%;
 }
 
-.board-primary td.square-tooltip {
-  border-style: dashed;
+.board-primary .bingo-tooltip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
 }
 
 .board-primary .bingo-square {
+  position: relative;
+}
+
+.board-primary.active .bingo-square {
   cursor: pointer;
 }
 
@@ -94,15 +105,12 @@ div.boards-secondary {
 }
 
 /* Player name input */
-div.player-name {
-  margin: 5px;
-  width: 50%;
-}
-
-.player-name input {
-  min-width: 100%;
-  max-width: 100%;
-  font-size: large;
+#player-name-input {
+  margin-top: 20px;
+  font-size: 30px;
+  font-family: minecraftFont, sans-serif;
+  width: 100%;
+  text-align: center;
 }
 
 /* Connecting spinner */

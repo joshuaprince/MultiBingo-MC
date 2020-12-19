@@ -121,7 +121,6 @@ def mark_square(player_board_id: int, pos: int, to_state: int):
     player_board_obj = PlayerBoard.objects.get(pk=player_board_id)
     player_board_obj.mark_square(pos, to_state)
     player_board_obj.save()
-    print(f"Updated board for {player_board_obj.player_name}")
 
 
 @database_sync_to_async

@@ -4,36 +4,48 @@
 <head>
   <meta charset="UTF-8">
   <title>Bingo : {{ game_code }}</title>
+  <style>
+    @font-face {
+        font-family: minecraftFont;
+        src: url({% static 'bingo/Minecraftia.ttf' %});
+    }
+  </style>
   <link rel="stylesheet" href="{% static 'bingo/board.css' %}"></head>
+
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+
   {{ game_code|json_script:'game_code' }}
   {{ num_mark_colors|json_script:'num_mark_colors' }}
   {{ player_id|json_script:'player_id' }}
   {{ player_name|json_script:'player_name' }}
 <body>
-  {% if player_name %}
-  <div class="board-primary">
+  <div class="board-primary {% if player_name %}active{% endif %}">
     <h1 class="room-name">{{ game_code }}</h1>
     <table class="bingo-table board-player-{{ player_id }}">
       {% for board_row in board %}
       <tr>
         {% for square in board_row %}
-        <td{% if square.tooltip %} class="square-tooltip"{% endif %}>
-          <div class="bingo-square square-{{ square.position }}"
-               title="{{ square.tooltip }}">
-            {{ square.text }}
+        <td>
+          <div class="bingo-square square-{{ square.position }}">
+            {% if square.tooltip %}
+            <div class="bingo-tooltip" data-tooltip="{{ square.tooltip }}">?</div>
+            {% endif %}
+            <div class="bingo-text">
+              {{ square.text }}
+            </div>
           </div>
         </td>
         {% endfor %}
       </tr>
       {% endfor %}
     </table>
+    {% if player_name %}
     <h1 class="player-name">{{ player_name }}</h1>
-  </div>
-  {% else %}
-  <div class="player-name">
+    {% else %}
     <input id="player-name-input" type="text" placeholder="Enter your name to join..."><br>
+    {% endif %}
   </div>
-  {% endif %}
   <div class="boards-secondary"></div>
   <template id="board-secondary-template">
     <div class="board-secondary">
@@ -42,7 +54,9 @@
         <tr>
           {% for square in board_row %}
           <td>
-            <div class="bingo-square square-{{ square.position }}" title="{{ square.text }}" ></div>
+            <div class="bingo-square square-{{ square.position }} bingo-tooltip"
+                 data-tooltip="{{ square.text }}">
+            </div>
           </td>
           {% endfor %}
         </tr>

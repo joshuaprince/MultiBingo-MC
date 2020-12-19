@@ -83,6 +83,8 @@ function build_secondary_boards(data) {
     clone.querySelector('.board-secondary').classList.toggle('disconnected', !!pboard['disconnected_at'])
     anchor.appendChild(clone);
   }
+
+  update_tooltips();
 }
 
 function mark_all_boards(data) {
@@ -115,3 +117,13 @@ playerNameInputNode.onkeyup = function (e) {
     }
   };
 }
+
+/* Tooltips */
+function update_tooltips() {
+  tippy('.bingo-tooltip', {
+    content(reference) {
+      return reference.getAttribute('data-tooltip');
+    }
+  });
+}
+update_tooltips();

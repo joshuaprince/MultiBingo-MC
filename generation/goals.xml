@@ -13,66 +13,77 @@
   <Goal difficulty="0" id="">
     <Description>$var Oak Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>OakPlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Spruce Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>SprucePlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Birch Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>BirchPlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Dark Oak Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>DarkOakPlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Acacia Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>AcaciaPlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Oak Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>OakLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Spruce Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>SpruceLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Birch Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>BirchLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Dark Oak Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>DarkOakLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Acacia Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>AcaciaLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Redstone</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Redstone</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
@@ -118,11 +129,13 @@
   <Goal difficulty="0" id="">
     <Description>Iron Block</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>IronBlocks</Antisynergy>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>Gold Block</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>GoldBlocks</Antisynergy>
   </Goal>
 
   <Goal difficulty="0" id="">
@@ -134,12 +147,14 @@
   <Goal difficulty="0" id="">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Level</Antisynergy>
     <Variable min="5" max="7"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Note Blocks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>NoteBlocks</Antisynergy>
     <Variable min="2" max="5"/>
   </Goal>
 
@@ -159,6 +174,7 @@
   <Goal difficulty="0" id="">
     <Description>$var colours of Wool</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>WoolColour</Antisynergy>
     <Variable min="2" max="4"/>
   </Goal>
 
@@ -170,12 +186,14 @@
   <Goal difficulty="0" id="">
     <Description>$var Different Slabs</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Slabs</Antisynergy>
     <Variable min="2" max="4"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Different Stairs</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Stairs</Antisynergy>
     <Variable min="2" max="4"/>
   </Goal>
 
@@ -186,6 +204,7 @@
   <Goal difficulty="0" id="">
     <Description>$var Rotten Flesh</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>RotFlesh</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
@@ -193,18 +212,21 @@
     <Description>$var Stone</Description>
     <Tooltip>NOT Cobblestone</Tooltip>
     <Weight>0.5</Weight>
+    <Antisynergy>Stone</Antisynergy>
     <Variable min="10" max="32"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Bread</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Bread</Antisynergy>
     <Variable min="1" max="5"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>Hay Bale</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>HayBale</Antisynergy>
   </Goal>
 
   <Goal difficulty="0" id="">
@@ -214,6 +236,7 @@
   <Goal difficulty="0" id="">
     <Description>$var Feathers</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Feathers</Antisynergy>
     <Variable min="2" max="10"/>
   </Goal>
 
@@ -243,6 +266,7 @@
   <Goal difficulty="0" id="">
     <Description>$var Sticks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Sticks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
 
@@ -254,102 +278,119 @@
   <Goal difficulty="0" id="">
     <Description>$var Oak Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>OakWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Spruce Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>SpruceWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Birch Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>BirchWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Dark Oak Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>DarkOakWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Acacia Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>AcaciaWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Oak Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedOakWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Spruce Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedSpruceWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Birch Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedBirchWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Dark Oak Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedDarkOakWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Acacia Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedAcaciaWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Oak Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedOakLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Spruce Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedSpruceLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Birch Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedBirchLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Dark Oak Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedDarkOakLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Stripped Acacia Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedAcaciaLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Raw Cod</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>RawCod</Antisynergy>
     <Variable min="2" max="10"/>
   </Goal>
 
   <Goal difficulty="0" id="">
     <Description>$var Raw Salmon</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>RawSalmon</Antisynergy>
     <Variable min="2" max="5"/>
   </Goal>
 
@@ -357,6 +398,7 @@
     <Description>$var Different Edible Items</Description>
     <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
     <Weight>0.5</Weight>
+    <Antisynergy>EdibleItems</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
 
@@ -372,6 +414,7 @@
   <Goal difficulty="1" id="">
     <Description>$var Colours of Terracotta</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>TerracottaColour</Antisynergy>
     <Variable min="4" max="7"/>
   </Goal>
 
@@ -418,12 +461,14 @@
   <Goal difficulty="1" id="">
     <Description>$var Iron Blocks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>IronBlocks</Antisynergy>
     <Variable min="2" max="4"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Gold Blocks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>GoldBlocks</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
 
@@ -470,6 +515,7 @@
   <Goal difficulty="1" id="">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Level</Antisynergy>
     <Variable min="8" max="15"/>
   </Goal>
 
@@ -480,30 +526,36 @@
   <Goal difficulty="1" id="">
     <Description>$var Note Blocks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>NoteBlocks</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Ink Sacks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>InkSacks</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Bread</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Bread</Antisynergy>
     <Variable min="6" max="10"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Hay Bales</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>HayBale</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
+
 
   <Goal difficulty="1" id="">
     <Description>$var colours of Wool</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>WoolColour</Antisynergy>
     <Variable min="5" max="8"/>
   </Goal>
 
@@ -533,6 +585,7 @@
 
   <Goal difficulty="1" id="">
     <Description>Complete a Map</Description>
+    <Antisynergy>CompleteMap</Antisynergy>
   </Goal>
 
   <Goal difficulty="1" id="">
@@ -558,6 +611,7 @@
   <Goal difficulty="1" id="">
     <Description>$var Different Slabs</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Slabs</Antisynergy>
     <Variable min="5" max="7"/>
   </Goal>
 
@@ -595,12 +649,14 @@
   <Goal difficulty="1" id="">
     <Description>$var Different Stairs</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Stairs</Antisynergy>
     <Variable min="5" max="7"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Ender Pearls</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>EnderPearl</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
 
@@ -701,35 +757,41 @@
 
   <Goal difficulty="1" id="">
     <Description>Water Bucket, Lava Bucket and Milk Bucket</Description>
+    <Antisynergy>BucketTypes</Antisynergy>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Different Flowers</Description>
     <Weight>0.33</Weight>
+    <Antisynergy>Flowers</Antisynergy>
     <Variable min="3" max="6"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Colours of Concrete</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>ConcreteColour</Antisynergy>
     <Variable min="3" max="6"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Colours of Glazed Terracotta</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>GlazedColour</Antisynergy>
     <Variable min="3" max="6"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Colours of Beds</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>BedColour</Antisynergy>
     <Variable min="3" max="6"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>Finish where you spawned using a Compass</Description>
     <Tooltip>Be stood close enough to spin your compass within a couple blocks at the end of the game</Tooltip>
+    <Antisynergy>Finish</Antisynergy>
   </Goal>
 
   <Goal difficulty="1" id="">
@@ -740,6 +802,7 @@
     <Description>$var Stone</Description>
     <Tooltip>NOT Cobblestone</Tooltip>
     <Weight>0.5</Weight>
+    <Antisynergy>Stone</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
 
@@ -765,12 +828,14 @@
   <Goal difficulty="1" id="">
     <Description>$var Rotten Flesh</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>RotFlesh</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Redstone</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Redstone</Antisynergy>
     <Variable min="16" max="64"/>
   </Goal>
 
@@ -785,6 +850,7 @@
   <Goal difficulty="1" id="">
     <Description>$var Feathers</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Feathers</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
 
@@ -796,6 +862,7 @@
   <Goal difficulty="1" id="">
     <Description>$var Sticks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Sticks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
 
@@ -806,150 +873,175 @@
   <Goal difficulty="1" id="">
     <Description>$var Oak Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>OakPlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Spruce Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>SprucePlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Birch Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>BirchPlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Dark Oak Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>DarkOakPlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Acacia Wood Planks</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>AcaciaPlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Oak Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>OakLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Spruce Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>SpruceLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Birch Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>BirchLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Dark Oak Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>DarkOakLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Acacia Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>AcaciaLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Oak Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>OakWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Spruce Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>SpruceWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Birch Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>BirchWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Dark Oak Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>DarkOakWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Acacia Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>AcaciaWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Oak Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedOakWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Spruce Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedSpruceWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Birch Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedBirchWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Dark Oak Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedDarkOakWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Acacia Wood</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedAcaciaWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Oak Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedOakLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Spruce Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedSpruceLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Birch Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedBirchLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Dark Oak Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedDarkOakLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Stripped Acacia Logs</Description>
     <Weight>0.04</Weight>
+    <Antisynergy>StrippedAcaciaLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
@@ -971,12 +1063,14 @@
   <Goal difficulty="1" id="">
     <Description>$var Raw Cod</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>RawCod</Antisynergy>
     <Variable min="15" max="32"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Raw Salmon</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>RawSalmon</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
@@ -994,6 +1088,7 @@
 
   <Goal difficulty="1" id="">
     <Description>$var Dried Kelp Blocks</Description>
+    <Antisynergy>KelpBlocks</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
 
@@ -1004,12 +1099,14 @@
   <Goal difficulty="1" id="">
     <Description>$var Gunpowder</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Gunpowder</Antisynergy>
     <Variable min="2" max="5"/>
   </Goal>
 
   <Goal difficulty="1" id="">
     <Description>$var Spider Eyes</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>SpiderEye</Antisynergy>
     <Variable min="2" max="5"/>
   </Goal>
 
@@ -1017,6 +1114,7 @@
     <Description>$var Different Edible Items</Description>
     <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
     <Weight>0.5</Weight>
+    <Antisynergy>EdibleItems</Antisynergy>
     <Variable min="4" max="5"/>
   </Goal>
 
@@ -1028,6 +1126,7 @@
     <Description>$var Different Edible Items</Description>
     <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
     <Weight>0.5</Weight>
+    <Antisynergy>EdibleItems</Antisynergy>
     <Variable min="6" max="7"/>
   </Goal>
 
@@ -1094,6 +1193,7 @@
   <Goal difficulty="2" id="">
     <Description>Diamond Block</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>DiamondBlock</Antisynergy>
   </Goal>
 
   <Goal difficulty="2" id="">
@@ -1198,16 +1298,19 @@
   <Goal difficulty="2" id="">
     <Description>Finish by jumping from top to bottom of the world</Description>
     <Tooltip>Dig a hole to bedrock and build to 256 Y (height limit), then jump from top to bottom at the end of the game</Tooltip>
+    <Antisynergy>Finish</Antisynergy>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Vegetarian</Description>
     <Tooltip>Never eat meat, including fish</Tooltip>
+    <Antisynergy>Food</Antisynergy>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>Carnivore</Description>
     <Tooltip>Only eat meat</Tooltip>
+    <Antisynergy>Food</Antisynergy>
   </Goal>
 
   <Goal difficulty="2" id="">
@@ -1226,6 +1329,7 @@
   <Goal difficulty="2" id="">
     <Description>Finish on top of the world</Description>
     <Tooltip>Build up to 256 Y (the height limit) and stand on the top at the end of the game</Tooltip>
+    <Antisynergy>Finish</Antisynergy>
   </Goal>
 
   <Goal difficulty="2" id="">
@@ -1251,12 +1355,14 @@
   <Goal difficulty="2" id="">
     <Description>$var Iron Blocks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>IronBlocks</Antisynergy>
     <Variable min="5" max="7"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Gold Blocks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>GoldBlocks</Antisynergy>
     <Variable min="3" max="4"/>
   </Goal>
 
@@ -1271,30 +1377,35 @@
   <Goal difficulty="2" id="">
     <Description>$var colours of Wool</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>WoolColour</Antisynergy>
     <Variable min="8" max="11"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Colours of Terracotta</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>TerracottaColour</Antisynergy>
     <Variable min="8" max="11"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Colours of Glazed Terracotta</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>GlazedColour</Antisynergy>
     <Variable min="7" max="10"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Colours of Concrete</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>ConcreteColour</Antisynergy>
     <Variable min="7" max="10"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Colours of Beds</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>BedColour</Antisynergy>
     <Variable min="7" max="10"/>
   </Goal>
 
@@ -1305,6 +1416,7 @@
   <Goal difficulty="2" id="">
     <Description>$var Different Flowers</Description>
     <Weight>0.33</Weight>
+    <Antisynergy>Flowers</Antisynergy>
     <Variable min="7" max="10"/>
   </Goal>
 
@@ -1328,12 +1440,14 @@
   <Goal difficulty="2" id="">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Level</Antisynergy>
     <Variable min="16" max="26"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Different Seeds</Description>
     <Tooltip>Includes: Beetroot Seeds, Melon Seeds, Nether Wart, Pumpkin Seeds and (Wheat) Seeds. As per the 'A Seedy Place' advancement.</Tooltip>
+    <Antisynergy>Seeds</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
 
@@ -1363,12 +1477,14 @@
   <Goal difficulty="2" id="">
     <Description>$var Rotten Flesh</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>RotFlesh</Antisynergy>
     <Variable min="33" max="64"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Ink Sacks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>InkSacks</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
 
@@ -1477,6 +1593,7 @@
   <Goal difficulty="2" id="">
     <Description>Water Bucket, Lava Bucket, Milk Bucket, Bucket of Fish</Description>
     <Tooltip>Can be any of the types of Fish</Tooltip>
+    <Antisynergy>BucketTypes</Antisynergy>
   </Goal>
 
   <Goal difficulty="2" id="">
@@ -1485,24 +1602,28 @@
 
   <Goal difficulty="2" id="">
     <Description>$var Dried Kelp Blocks</Description>
+    <Antisynergy>KelpBlocks</Antisynergy>
     <Variable min="21" max="32"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Gunpowder</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Gunpowder</Antisynergy>
     <Variable min="6" max="15"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Spider Eyes</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>SpiderEye</Antisynergy>
     <Variable min="6" max="15"/>
   </Goal>
 
   <Goal difficulty="2" id="">
     <Description>$var Ender Pearls</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>EnderPearl</Antisynergy>
     <Variable min="4" max="6"/>
   </Goal>
 
@@ -1516,6 +1637,7 @@
 
   <Goal difficulty="2" id="">
     <Description>Complete a full size Map</Description>
+    <Antisynergy>CompleteMap</Antisynergy>
   </Goal>
 
   <Goal difficulty="2" id="">
@@ -1563,12 +1685,14 @@
   <Goal difficulty="3" id="">
     <Description>$var Different Flowers</Description>
     <Weight>0.33</Weight>
+    <Antisynergy>Flowers</Antisynergy>
     <Variable min="11" max="14"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Diamond Blocks</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>DiamondBlock</Antisynergy>
     <Variable min="3" max="5"/>
   </Goal>
 
@@ -1579,6 +1703,7 @@
 
   <Goal difficulty="3" id="">
     <Description>Finish by launching Fireworks of $var Different Colours</Description>
+    <Antisynergy>Finish</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
 
@@ -1594,35 +1719,41 @@
   <Goal difficulty="3" id="">
     <Description>Finish on top of a Blaze spawner</Description>
     <Tooltip>Stand on top of a Blaze spawner at the end of the game</Tooltip>
+    <Antisynergy>Finish</Antisynergy>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var colours of Wool</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>WoolColour</Antisynergy>
     <Variable min="12" max="15"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Colours of Terracotta</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>TerracottaColour</Antisynergy>
     <Variable min="12" max="15"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Colours of Glazed Terracotta</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>GlazedColour</Antisynergy>
     <Variable min="11" max="14"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Colours of Concrete</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>ConcreteColour</Antisynergy>
     <Variable min="11" max="14"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>$var Colours of Beds</Description>
     <Weight>0.25</Weight>
+    <Antisynergy>BedColour</Antisynergy>
     <Variable min="11" max="14"/>
   </Goal>
 
@@ -1647,6 +1778,7 @@
   <Goal difficulty="3" id="">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Level</Antisynergy>
     <Variable min="27" max="37"/>
   </Goal>
 
@@ -1661,12 +1793,14 @@
   <Goal difficulty="3" id="">
     <Description>$var Different Seeds</Description>
     <Tooltip>Includes: Beetroot Seeds, Melon Seeds, Nether Wart, Pumpkin Seeds and (Wheat) Seeds. As per the 'A Seedy Place' advancement.</Tooltip>
+    <Antisynergy>Seeds</Antisynergy>
     <Variable min="4" max="5"/>
   </Goal>
 
   <Goal difficulty="3" id="">
     <Description>Finish on top of a stairway to Heaven</Description>
     <Tooltip>Using Stairs, build up to 256 Y (the height limit) and stand on the top at the end of the game (If you need to jump over a block it's not a finished stairway)</Tooltip>
+    <Antisynergy>Finish</Antisynergy>
   </Goal>
 
   <Goal difficulty="3" id="">
@@ -1810,6 +1944,7 @@
   <Goal difficulty="4" id="">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
+    <Antisynergy>Level</Antisynergy>
     <Variable min="38" max="50"/>
   </Goal>
 

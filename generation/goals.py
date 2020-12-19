@@ -5,7 +5,7 @@ from xml.etree import ElementTree
 
 GOAL_XML = './generation/goals.xml'
 NUM_DIFFICULTIES = 5
-GOALS = {i: [] for i in range(NUM_DIFFICULTIES)}
+GOALS: Dict[int, List['Goal']] = {i: [] for i in range(NUM_DIFFICULTIES)}
 
 
 class Goal:
@@ -17,6 +17,7 @@ class Goal:
         self.description_template = ""
         self.tooltip_template = ""
         self.weight = 1.0
+        self.antisynergy = None
         self.variable_ranges = {}  # type: Dict[str, tuple]
 
     def __str__(self):
@@ -77,12 +78,17 @@ def get_goals(rand: Random, difficulty_counts: tuple) -> List[ConcreteGoal]:
             # Pick a random goal at this difficulty
             weights = [goal.weight for goal in this_difficulty_goals_list]
             goal_idx = rand.choices(range(len(this_difficulty_goals_list)), weights=weights)[0]
+            goal = this_difficulty_goals_list[goal_idx]
 
             # Append it to our returned list
-            ret.append(ConcreteGoal(this_difficulty_goals_list[goal_idx], rand))
+            ret.append(ConcreteGoal(goal, rand))
 
-            # Remove the goal from the template list so it does not get duplicated
-            this_difficulty_goals_list.pop(goal_idx)
+            # Remove the goal and its antisynergies from the template list so none come up again
+            if goal.antisynergy:
+                for df in goals_copy.keys():
+                    goals_copy[df] = [g for g in goals_copy[df] if g.antisynergy != goal.antisynergy]
+            else:
+                this_difficulty_goals_list.pop(goal_idx)
 
     rand.shuffle(ret)
 
@@ -99,6 +105,8 @@ def parse_xml(filename=GOAL_XML):
             new_goal.tooltip_template = e_goal.find('Tooltip').text
         if e_goal.find('Weight') is not None:
             new_goal.weight = float(e_goal.find('Weight').text)
+        if e_goal.find('Antisynergy') is not None:
+            new_goal.antisynergy = e_goal.find('Antisynergy').text
 
         for e_var in e_goal.findall('Variable'):
             name = e_var.get('name') or 'var'

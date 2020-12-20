@@ -25,7 +25,7 @@ SECRET_KEY = 'qn+e-fai7lli06x5#-4z^h$zqj^&lvcfq16#vzbuqf1g!v4g2!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', 'apt.jtprince.com']
+ALLOWED_HOSTS = ['localhost', 'bingo.jtprince.com']
 
 
 # Application definition

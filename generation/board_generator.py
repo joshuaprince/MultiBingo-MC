@@ -36,4 +36,12 @@ class BoardGenerator:
             num_vhard = self.rand.randint(15, 19)
             return 0, 0, 0, (25 - num_vhard), num_vhard
 
+        # The Even spread
+        if self.board_difficulty == 8:
+            return 5, 5, 5, 5, 5
+
+        # The Josh spread
+        if self.board_difficulty == 9:
+            return 2, 5, 8, 6, 4
+
         raise ValueError(f"Unknown board difficulty: {self.board_difficulty}")

@@ -132,3 +132,5 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+SECURE_WEBSOCKET = False

@@ -1,4 +1,5 @@
 // Get variables from Django json_script tags in template
+const secure_websocket = JSON.parse(document.getElementById('secure_websocket').textContent);
 const game_code = JSON.parse(document.getElementById('game_code').textContent);
 const num_mark_colors = JSON.parse(document.getElementById('num_mark_colors').textContent);
 const player_id = JSON.parse(document.getElementById('player_id').textContent);
@@ -8,9 +9,13 @@ const player_name = JSON.parse(document.getElementById('player_name').textConten
 let boardSocket;
 const connectingPopup = document.getElementsByClassName('connecting-popup')[0];
 function connect() {
-  boardSocket = new WebSocket(
-    'ws://' + window.location.host + '/ws/board/' + game_code +
-    '/' + player_name + (player_name ? '/' : ''));
+  const protocol = secure_websocket ? 'wss' : 'ws';
+  const wsUrl = protocol + '://'
+      + window.location.host + '/ws/board/'
+      + game_code + '/'
+      + (player_name ? (player_name + '/') : '');
+
+  boardSocket = new WebSocket(wsUrl);
 
   boardSocket.onmessage = e => {
     const data = JSON.parse(e.data);

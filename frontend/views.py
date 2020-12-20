@@ -1,6 +1,7 @@
 import random
 import string
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
 
@@ -52,6 +53,7 @@ def board(request, game_code):
             squares[row].append(board_obj.square_set.get(position=pos))
 
     context = {
+        'secure_websocket': settings.SECURE_WEBSOCKET,
         'game_code': game_code,
         'player_id': player_board_obj.pk if player_board_obj else None,
         'player_name': player_name,

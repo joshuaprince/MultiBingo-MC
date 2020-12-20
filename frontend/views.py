@@ -50,6 +50,7 @@ def board(request, game_code):
         'player_id': player_board_obj.pk if player_board_obj else None,
         'player_name': player_name,
         'board': squares,
+        'obscured': board_obj.obscured,
         'num_mark_colors': len(PlayerBoard.Marking)
     }
     return render(request, 'bingo/board.html', context=context)

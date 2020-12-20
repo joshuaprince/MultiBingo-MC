@@ -14,8 +14,15 @@ function connect() {
 
   boardSocket.onmessage = e => {
     const data = JSON.parse(e.data);
-    build_secondary_boards(data);
-    mark_all_boards(data);
+
+    const obscured = data['obscured'];
+    const pboards = data['pboards'];
+
+    if (!obscured) {
+      reveal_boards();
+    }
+    build_secondary_boards(pboards);
+    mark_all_boards(pboards);
   }
 
   boardSocket.onopen = e => {
@@ -107,10 +114,18 @@ function mark_board(squares, node) {
   }
 }
 
+function reveal_boards() {
+  document.querySelector('.reveal-controls')?.remove();
+  document.querySelectorAll('.obscured').forEach(e => {
+    e.classList.remove('obscured');
+    e.classList.add('obscurable');
+  });
+}
+
 /* Player name input */
 const playerNameInputNode = document.querySelector('input#player-name-input');
 if (playerNameInputNode) {
-playerNameInputNode.onkeyup = function (e) {
+  playerNameInputNode.onkeyup = function (e) {
     if (e.keyCode === 13) {  // enter, return
       const playerName = e.target.value;
       window.location = window.location + '?name=' + playerName;
@@ -118,12 +133,23 @@ playerNameInputNode.onkeyup = function (e) {
   };
 }
 
+/* Reveal button */
+const revealButtonNode = document.querySelector('div.reveal-controls');
+if (revealButtonNode) {
+  revealButtonNode.onclick = function (e) {
+    boardSocket.send(JSON.stringify({
+      action: "reveal_board",
+    }));
+  };
+}
+
 /* Tooltips */
 function update_tooltips() {
+  /* disable if the board is obscured */
+  const disable = !!document.querySelector('.board-primary.obscured');
   tippy('.bingo-tooltip', {
-    content(reference) {
-      return reference.getAttribute('data-tooltip');
-    }
+    content: reference => reference.getAttribute('data-tooltip'),
+    trigger: disable ? 'manual' : undefined,
   });
 }
 update_tooltips();

@@ -13,6 +13,8 @@ class Board(models.Model):
 
     difficulty = models.IntegerField()
 
+    obscured = models.BooleanField(default=True)
+
     def __str__(self):
         return self.game_code
 
@@ -91,5 +93,6 @@ class PlayerBoard(models.Model):
             'player_id': self.pk,
             'player_name': self.player_name,
             'board': self.squares,
+            'obscured': self.board.obscured,
             'disconnected_at': self.disconnected_at.isoformat() if self.disconnected_at else None,
         }

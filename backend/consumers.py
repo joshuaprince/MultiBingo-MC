@@ -57,6 +57,10 @@ class BoardChangeConsumer(AsyncJsonWebsocketConsumer):
             await self.rx_mark_board(pos, to_state)
             broadcast_boards = True
 
+        if action == 'reveal_board':
+            await self.rx_reveal_board()
+            broadcast_boards = True
+
         if broadcast_boards:
             await self.send_boards_all_consumers()
         else:
@@ -66,6 +70,9 @@ class BoardChangeConsumer(AsyncJsonWebsocketConsumer):
     async def rx_mark_board(self, pos, to_state):
         await mark_square(self.player_board_id, pos, to_state)
         await mark_disconnected(self.player_board_id, False)
+
+    async def rx_reveal_board(self):
+        await reveal_board(self.board_id)
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
@@ -99,7 +106,11 @@ def get_board_states(board_id: int):
         Q(disconnected_at=None) | Q(disconnected_at__gt=recent_dc_time),
         board_id=board_id
     )
-    return [pb.to_json() for pb in pboards]
+    data = {
+        'obscured': pboards.first().board.obscured,
+        'pboards': [pb.to_json() for pb in pboards],
+    }
+    return data
 
 
 @database_sync_to_async
@@ -114,6 +125,17 @@ def get_board_and_player_board(game_code: str, player: Optional[str]) -> (Board,
         player_board_obj = None
 
     return board, player_board_obj
+
+
+@database_sync_to_async
+def reveal_board(board_id: str, revealed: bool = True):
+    board = Board.objects.filter(pk=board_id).first()
+    if not board:
+        print("Tried to reveal nonexisting board ID: " + board_id)
+        return
+
+    board.obscured = not revealed
+    board.save()
 
 
 @database_sync_to_async

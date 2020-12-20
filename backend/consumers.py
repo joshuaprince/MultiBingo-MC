@@ -102,12 +102,13 @@ class BoardChangeConsumer(AsyncJsonWebsocketConsumer):
 def get_board_states(board_id: int):
     # Only sends board states of players who are not disconnected
     recent_dc_time = timezone.now() - timedelta(minutes=1)
+    board_obj = Board.objects.filter(pk=board_id).first()
     pboards = PlayerBoard.objects.filter(
         Q(disconnected_at=None) | Q(disconnected_at__gt=recent_dc_time),
         board_id=board_id
     )
     data = {
-        'obscured': pboards.first().board.obscured,
+        'obscured': board_obj.obscured,
         'pboards': [pb.to_json() for pb in pboards],
     }
     return data

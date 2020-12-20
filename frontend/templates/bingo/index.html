@@ -32,7 +32,7 @@
       if (!roomName) {
         roomName = document.querySelector('#room-name-input').placeholder;
       }
-      window.location = '/game/' + roomName + '?name=' + playerName;
+      window.location = '/game/' + roomName + (playerName ? ('?name=' + playerName) : '');
     };
   </script>
 </body>

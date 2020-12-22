@@ -32,7 +32,7 @@
             {% if square.tooltip %}
             <div class="bingo-tooltip" data-tooltip="{{ square.tooltip }}">?</div>
             {% endif %}
-            <div class="bingo-text">
+            <div class="bingo-text{% if square.text|length > 40 %} small{% endif %}">
               {{ square.text }}
             </div>
           </div>

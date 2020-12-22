@@ -14,7 +14,6 @@ table.bingo-table, table.bingo-table th, table.bingo-table td {
 
 div.bingo-square {
   height: 100%;
-  overflow: auto;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -23,6 +22,10 @@ div.bingo-square {
 
 div.bingo-text {
   padding: 10px;
+}
+
+div.bingo-text.small {
+  font-size: small;
 }
 
 table.bingo-table tr {

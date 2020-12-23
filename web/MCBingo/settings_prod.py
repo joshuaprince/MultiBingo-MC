@@ -5,7 +5,7 @@ from .settings_base import *
 DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', 'bingo.jtprince.com']
-SECURE_WEBSOCKET = False
+SECURE_WEBSOCKET = True
 
 
 # Database

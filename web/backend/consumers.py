@@ -7,7 +7,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.db.models import Q
 from django.utils import timezone
 
-from backend.models import PlayerBoard, Board
+from web.backend.models import PlayerBoard, Board
 
 
 class BoardChangeConsumer(AsyncJsonWebsocketConsumer):

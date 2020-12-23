@@ -1,7 +1,7 @@
 import json
 from django.core.management import BaseCommand
 
-from backend.models import Board
+from web.backend.models import Board
 
 
 class Command(BaseCommand):

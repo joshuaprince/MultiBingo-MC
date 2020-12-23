@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
 
-from backend.models import Board, PlayerBoard
+from web.backend.models import Board, PlayerBoard
 
 
 def index(request):

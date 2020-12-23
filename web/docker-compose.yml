@@ -13,12 +13,14 @@ services:
     networks:
       - backend
   web:
-    build: .
+    build:
+      context: ..
+      dockerfile: web/Dockerfile
     ports:
       - "8000:8000"
     networks:
       - backend
-      - frontnd
+      - frontend
     depends_on:
       - db
       - redis

@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+archivesBaseName = 'Bingo'
+
+group 'com.jtprince.bingo'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://papermc.io/repo/repository/maven-public/'
+    }
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
+    compile 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+processResources {
+    filesMatching("plugin.yml") {
+      expand(project.properties)
+    }
+}

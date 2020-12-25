@@ -1,0 +1,11 @@
+name: MCBingo
+version: ${version}
+author: Joshua Prince
+website: "jtprince.com"
+main: com.jtprince.bingo.plugin.MCBingoPlugin
+api-version: "1.13"
+load: STARTUP
+commands:
+  bingo:
+    description: Minecraft bingo commands.
+    usage: /bingo

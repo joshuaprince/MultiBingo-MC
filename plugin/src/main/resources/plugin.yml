@@ -8,4 +8,4 @@ load: STARTUP
 commands:
   bingo:
     description: Minecraft bingo commands.
-    usage: /bingo
+    usage: /bingo {generate [world]} {go [world]}

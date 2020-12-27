@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'MCBingo.urls'
+ROOT_URLCONF = 'web.MCBingo.urls'
 
 TEMPLATES = [
     {

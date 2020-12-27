@@ -21,7 +21,7 @@ public class WorldManager implements Listener {
         this.plugin = plugin;
     }
 
-    public boolean createWorlds(String worldCode) {
+    public WorldSet createWorlds(String worldCode, String seed) {
         WorldCreator wc_overworld = WorldCreator.name("world_bingo_" + worldCode + "_overworld");
         WorldCreator wc_nether = WorldCreator.name("world_bingo_" + worldCode + "_nether");
         WorldCreator wc_end = WorldCreator.name("world_bingo_" + worldCode + "_the_end");
@@ -30,13 +30,13 @@ public class WorldManager implements Listener {
         wc_nether.copy(plugin.getServer().getWorlds().get(1));
         wc_end.copy(plugin.getServer().getWorlds().get(2));
 
-        wc_overworld.seed(worldCode.hashCode());
-        wc_nether.seed(worldCode.hashCode());
-        wc_end.seed(worldCode.hashCode());
+        wc_overworld.seed(seed.hashCode());
+        wc_nether.seed(seed.hashCode());
+        wc_end.seed(seed.hashCode());
 
         WorldSet ws = new WorldSet(wc_overworld.createWorld(), wc_nether.createWorld(), wc_end.createWorld());
         this.worldSetMap.put(worldCode, ws);
-        return true;
+        return ws;
     }
 
     public boolean putInWorld(Player p, String worldCode) {

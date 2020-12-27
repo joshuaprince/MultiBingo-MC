@@ -74,7 +74,7 @@ public class MCBingoPlugin extends JavaPlugin {
         this.getServer().broadcastMessage("Generating worlds for new game " + worldCode);
 
         ArrayList<Player> players = new ArrayList<>(this.getServer().getOnlinePlayers());
-        this.currentGame.prepareWorldSets(players);
+        this.currentGame.prepare(players);
 
         String playerList = players.stream().map(Player::getName).collect(Collectors.joining(", "));
         this.getServer().broadcastMessage("Worlds are generated for the following players: " + playerList);

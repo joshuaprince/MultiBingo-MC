@@ -4,6 +4,8 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +22,12 @@ public class BingoGame {
         this.playerWorldSetMap = new HashMap<>();
     }
 
-    public void prepareWorldSets(Iterable<Player> players) {
+    public void prepare(Iterable<Player> players) {
+        this.prepareWorldSets(players);
+        this.connectWebSocket();
+    }
+
+    protected void prepareWorldSets(Iterable<Player> players) {
         for (Player p : players) {
             WorldManager.WorldSet ws = this.plugin.worldManager.createWorlds(
                 gameCode + "_" + p.getName(), gameCode);
@@ -31,6 +38,9 @@ public class BingoGame {
     public void start() {
         this.wipeAdvancements();
         this.teleportPlayersToWorlds();
+        if (this.wsClient != null) {
+            this.wsClient.sendRevealBoard();
+        }
     }
 
     protected void teleportPlayersToWorlds() {
@@ -44,5 +54,18 @@ public class BingoGame {
     protected void wipeAdvancements() {
         CommandSender sender = this.plugin.getServer().getConsoleSender();
         this.plugin.getServer().dispatchCommand(sender, "advancement revoke @a everything");
+    }
+
+    protected void connectWebSocket() {
+        URI uri = null;
+        try {
+            uri = new URI("ws://localhost:8000/ws/board-plugin/" + gameCode + "/");
+        } catch (URISyntaxException e) {
+            this.plugin.getServer().getLogger().severe("Failed to connect to websocket");
+        }
+
+        this.wsClient = new BingoWebSocketClient(this, uri);
+        this.wsClient.connect();
+        this.plugin.getServer().getLogger().info("Successfully connected to websocket for game " + this.gameCode);
     }
 }

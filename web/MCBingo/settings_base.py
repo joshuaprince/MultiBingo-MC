@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'web.MCBingo.urls'
+ROOT_URLCONF = 'MCBingo.urls'
 
 TEMPLATES = [
     {
@@ -110,7 +110,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ASGI_APPLICATION = 'MCBingo.asgi.application'
+ASGI_APPLICATION = 'web.MCBingo.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

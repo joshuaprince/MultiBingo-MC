@@ -1,9 +1,10 @@
+import os
 from copy import deepcopy
 from random import Random
 from typing import Dict, List
 from xml.etree import ElementTree
 
-GOAL_XML = 'generation/goals.xml'
+GOAL_XML = os.path.join(os.path.dirname(__file__), 'goals.xml')
 NUM_DIFFICULTIES = 5
 GOALS: Dict[int, List['Goal']] = {i: [] for i in range(NUM_DIFFICULTIES)}
 

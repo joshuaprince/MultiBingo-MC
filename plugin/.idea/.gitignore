@@ -2,7 +2,7 @@
 /shelf/
 /workspace.xml
 # Datasource local storage ignored files
-/../../../../../../:\Users\Joshua\PycharmProjects\MCBingo\.idea/dataSources/
+/../../../../../../../:\Users\Joshua\Code\MCBingo\plugin\.idea/dataSources/
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/

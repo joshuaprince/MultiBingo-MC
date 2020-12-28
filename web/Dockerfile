@@ -6,7 +6,6 @@ WORKDIR /code
 COPY ./web/requirements.txt /code
 RUN pip install -r requirements.txt
 
-COPY ./generation /code/generation
 COPY ./web /code/web
 RUN chmod +x /code/web/docker-entrypoint.sh
 

@@ -3,9 +3,12 @@ package com.jtprince.bingo.plugin;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.net.URI;
 import java.util.Collection;
@@ -19,6 +22,7 @@ public class BingoGame {
     protected BingoWebSocketClient wsClient;
 
     protected final Map<Player, WorldManager.WorldSet> playerWorldSetMap;
+    protected int countdown;
 
     public BingoGame(MCBingoPlugin plugin, String gameCode) {
         this.plugin = plugin;
@@ -42,7 +46,21 @@ public class BingoGame {
         }
     }
 
-    protected void prepareWorldSets(Iterable<Player> players) {
+    public void start() {
+        this.wipePlayers(this.playerWorldSetMap.keySet());
+        this.teleportPlayersToWorlds(this.playerWorldSetMap.keySet());
+
+        // Countdown is from 7, but only numbers from 5 and below are displayed
+        if (this.wsClient != null) {
+            this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin,
+                this.wsClient::sendRevealBoard, 7 * 20);
+        }
+        this.countdown = 7;
+        this.applyStartingEffects(this.playerWorldSetMap.keySet(), 7 * 20);
+        this.doCountdown();
+    }
+
+    protected void prepareWorldSets(Collection<Player> players) {
         for (Player p : players) {
             WorldManager.WorldSet ws = this.plugin.worldManager.createWorlds(
                 gameCode + "_" + p.getName(), gameCode);
@@ -50,25 +68,28 @@ public class BingoGame {
         }
     }
 
-    public void start() {
-        this.wipeAdvancements();
-        this.teleportPlayersToWorlds();
-        if (this.wsClient != null) {
-            this.wsClient.sendRevealBoard();
-        }
-    }
-
-    protected void teleportPlayersToWorlds() {
-        for (Player p : playerWorldSetMap.keySet()) {
+    protected void teleportPlayersToWorlds(Collection<Player> players) {
+        for (Player p : players) {
             World overworld = this.playerWorldSetMap.get(p).getWorld(World.Environment.NORMAL);
             overworld.setTime(0);
             p.teleport(overworld.getSpawnLocation());
         }
     }
 
-    protected void wipeAdvancements() {
-        CommandSender sender = this.plugin.getServer().getConsoleSender();
-        this.plugin.getServer().dispatchCommand(sender, "advancement revoke @a everything");
+    protected void wipePlayers(Collection<Player> players) {
+        CommandSender console = this.plugin.getServer().getConsoleSender();
+
+        for (Player p : players) {
+            p.setHealth(20.0);
+            p.setFoodLevel(20);
+            p.setSaturation(5.0f);
+            for (PotionEffect e : p.getActivePotionEffects()) {
+                p.removePotionEffect(e.getType());
+            }
+        }
+
+        this.plugin.getServer().dispatchCommand(console, "advancement revoke @a everything");
+        this.plugin.getServer().dispatchCommand(console, "clear @a");
     }
 
     protected void connectWebSocket() {
@@ -78,7 +99,7 @@ public class BingoGame {
         this.plugin.getServer().getLogger().info("Successfully connected to websocket for game " + this.gameCode);
     }
 
-    protected void sendGameLinksToPlayers(Iterable<Player> players) {
+    protected void sendGameLinksToPlayers(Collection<Player> players) {
         for (Player p : players) {
             TextComponent t = new TextComponent("Test!");
             t.setText("Click here to open the board!");
@@ -96,5 +117,27 @@ public class BingoGame {
         btn.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bingo start " + this.gameCode));
         t.addExtra(btn);
         p.sendMessage(t);
+    }
+
+    protected void doCountdown() {
+        if (this.countdown <= 5 && this.countdown > 0) {
+            for (Player p : this.playerWorldSetMap.keySet()) {
+                p.sendTitle(this.countdown + "", null, 2, 16, 2);
+                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 4.0f, 4.0f);
+            }
+        }
+        this.countdown--;
+        if (this.countdown > 0) {
+            this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this::doCountdown, 20);
+        }
+    }
+
+    protected void applyStartingEffects(Collection<Player> players, int ticks) {
+        for (Player p : players) {
+            p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, ticks, 1));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, ticks, 6));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, ticks, 128));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, ticks, 5));
+        }
     }
 }

@@ -1,7 +1,7 @@
 import os
 from copy import deepcopy
 from random import Random
-from typing import Dict, List
+from typing import Dict, List, Optional
 from xml.etree import ElementTree
 
 GOAL_XML = os.path.join(os.path.dirname(__file__), 'goals.xml')
@@ -29,12 +29,13 @@ class ConcreteGoal:
     """
     A goal on a board whose variables are set.
     """
-    def __init__(self, goal: Goal, rand: Random):
+    def __init__(self, goal: Goal, rand: Optional[Random]):
         self.goal = goal
         self.variables = {}
 
-        for k, (mini, maxi) in self.goal.variable_ranges.items():
-            self.variables[k] = rand.randint(mini, maxi)
+        if rand:
+            for k, (mini, maxi) in self.goal.variable_ranges.items():
+                self.variables[k] = rand.randint(mini, maxi)
 
     def description(self) -> str:
         return self._replace_vars(self.goal.description_template)
@@ -50,6 +51,33 @@ class ConcreteGoal:
         goal_id = self.goal.id
         vars_str = '::'.join(':'.join([k, str(v)]) for k, v in self.variables.items())
         return ':::'.join([goal_id, vars_str])
+
+    @staticmethod
+    def from_xml_id(xml_id: str) -> 'ConcreteGoal':
+        goal_id, vars_str = xml_id.split(':::')
+
+        # Find goal in GOALS
+        the_goal = None
+        for dif in range(NUM_DIFFICULTIES):
+            for goal in GOALS[dif]:
+                if goal.id == goal_id:
+                    the_goal = goal
+        if the_goal is None:
+            raise RuntimeError(f"Goal ID {goal_id} does not exist in the loaded XML.")
+
+        cg = ConcreteGoal(the_goal, None)
+
+        vars_from_xml = {}  # Map of (variable, value) in this XML definition
+        if vars_str:
+            for var_str in vars_str.split('::'):
+                k, v = var_str.split(':')
+                vars_from_xml[k] = v
+
+        # By iterating twice, ensure that only variables associated with this Goal are in this CG
+        for goal_var, _ in cg.goal.variable_ranges.items():
+            cg.variables[goal_var] = vars_from_xml[goal_var]
+
+        return cg
 
     def _replace_vars(self, inp: str) -> str:
         """
@@ -98,8 +126,17 @@ def get_goals(rand: Random, difficulty_counts: tuple) -> List[ConcreteGoal]:
 
 def parse_xml(filename=GOAL_XML):
     etree = ElementTree.parse(filename)
+    goal_ids = set()  # just used for ID duplication checking
     for e_goal in etree.getroot():
-        new_goal = Goal(e_goal.get('id'))
+        gid = e_goal.get('id')
+        if gid:
+            if gid in goal_ids:
+                raise ValueError(f"Duplicated goal ID {gid} in goal XML definition")
+            else:
+                goal_ids.add(gid)
+
+        new_goal = Goal(gid)
+
         if e_goal.find('Description') is not None:
             new_goal.description_template = e_goal.find('Description').text
         if e_goal.find('Tooltip') is not None:

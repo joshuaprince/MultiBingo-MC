@@ -12,7 +12,7 @@ Goals are stored in `goals.xml`. An example Goals XML:
     <Tooltip>Gather cobblestone in your inventory.</Tooltip>
     <Variable min="32" max="64"/>
   </Goal>
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="poppies_dandelions">
     <Description>$var1 Poppies &amp; $var2 Dandelions</Description>
     <Variable name="var1" min="5" max="25"/>
     <Variable name="var2" min="5" max="25"/>

@@ -1,2005 +1,1636 @@
 <?xml version="1.0" ?>
 <MCBingoGoals version="0">
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_cobbl_stone61314">
     <Description>$var Cobblestone</Description>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_dirt_15835">
     <Description>$var Dirt</Description>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_oak_w_lanks45311">
     <Description>$var Oak Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>OakPlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_spruc_lanks26850">
     <Description>$var Spruce Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>SprucePlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_birch_lanks14733">
     <Description>$var Birch Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>BirchPlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_dark__lanks17277">
     <Description>$var Dark Oak Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>DarkOakPlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_acaci_lanks60549">
     <Description>$var Acacia Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>AcaciaPlanks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_oak_logs_16469">
     <Description>$var Oak Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>OakLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_spruc__logs26609">
     <Description>$var Spruce Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>SpruceLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_birch_logs_50758">
     <Description>$var Birch Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>BirchLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_dark___logs57206">
     <Description>$var Dark Oak Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>DarkOakLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_acaci__logs78800">
     <Description>$var Acacia Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>AcaciaLogs</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_redstone_58977">
     <Description>$var Redstone</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Redstone</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_lava__ucket65498">
     <Description>Lava Bucket</Description>
     <Weight>0.25</Weight>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_milk__ucket48520">
     <Description>Milk Bucket</Description>
     <Weight>0.25</Weight>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_water_ucket25390">
     <Description>Water Bucket</Description>
     <Weight>0.25</Weight>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_bucke__fish17118">
     <Description>Bucket of Fish</Description>
     <Tooltip>Can be any of the types of Fish</Tooltip>
     <Weight>0.25</Weight>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_andesite_63407">
     <Description>$var Andesite</Description>
     <Weight>0.33</Weight>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_granite_55425">
     <Description>$var Granite</Description>
     <Weight>0.33</Weight>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_diorite_72542">
     <Description>$var Diorite</Description>
     <Weight>0.33</Weight>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_iron_block_38707">
     <Description>Iron Block</Description>
     <Weight>0.5</Weight>
     <Antisynergy>IronBlocks</Antisynergy>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_gold_block_99285">
     <Description>Gold Block</Description>
     <Weight>0.5</Weight>
     <Antisynergy>GoldBlocks</Antisynergy>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_poppi_lions77471">
     <Description>$var1 Poppies &amp; $var2 Dandelions</Description>
     <Variable name="var1" min="5" max="25"/>
     <Variable name="var2" min="5" max="25"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_level__71448">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="5" max="7"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_note__locks88772">
     <Description>$var Note Blocks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>NoteBlocks</Antisynergy>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_leaves_56255">
     <Description>$var Leaves</Description>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_build__cube83917">
     <Description>Build a $var1x$var2x$var3 leaf cube</Description>
     <Tooltip>You can choose what shall be the width/length/height.</Tooltip>
     <Variable name="var1" min="2" max="4"/>
     <Variable name="var2" min="2" max="4"/>
     <Variable name="var3" min="2" max="4"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
-    <Description>$var colours of Wool</Description>
+  <Goal difficulty="0" id="jm_color__wool43700">
+    <Description>$var colors of Wool</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>WoolColour</Antisynergy>
+    <Antisynergy>WoolColor</Antisynergy>
     <Variable min="2" max="4"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_snowballs_57030">
     <Description>$var Snowballs</Description>
     <Variable min="8" max="16"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_diffe_slabs26134">
     <Description>$var Different Slabs</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Slabs</Antisynergy>
     <Variable min="2" max="4"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_diffe_tairs89053">
     <Description>$var Different Stairs</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Stairs</Antisynergy>
     <Variable min="2" max="4"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_diamond_39703">
     <Description>Diamond</Description>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_rotte_flesh91888">
     <Description>$var Rotten Flesh</Description>
     <Weight>0.5</Weight>
     <Antisynergy>RotFlesh</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_stone_10333">
     <Description>$var Stone</Description>
     <Tooltip>NOT Cobblestone</Tooltip>
     <Weight>0.5</Weight>
     <Antisynergy>Stone</Antisynergy>
     <Variable min="10" max="32"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_bread_89948">
     <Description>$var Bread</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Bread</Antisynergy>
     <Variable min="1" max="5"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_hay_bale_10572">
     <Description>Hay Bale</Description>
     <Weight>0.5</Weight>
     <Antisynergy>HayBale</Antisynergy>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_flower_pot_30803">
     <Description>Flower Pot</Description>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_feathers_65533">
     <Description>$var Feathers</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Feathers</Antisynergy>
     <Variable min="2" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_sleep_a_bed24483">
     <Description>Sleep in a bed</Description>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_charcoal_45616">
     <Description>$var Charcoal</Description>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_coal_66615">
     <Description>$var Coal</Description>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_fishi_g_rod62290">
     <Description>Fishing Rod</Description>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_apples_33561">
     <Description>$var Apples</Description>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_sticks_92564">
     <Description>$var Sticks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Sticks</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_kelp_67238">
     <Description>$var Kelp</Description>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_oak_wood_36305">
     <Description>$var Oak Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>OakWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_spruc__wood98918">
     <Description>$var Spruce Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>SpruceWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_birch_wood_81111">
     <Description>$var Birch Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>BirchWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_dark___wood39672">
     <Description>$var Dark Oak Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>DarkOakWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_acaci__wood17787">
     <Description>$var Acacia Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>AcaciaWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__wood74957">
     <Description>$var Stripped Oak Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedOakWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__wood32552">
     <Description>$var Stripped Spruce Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedSpruceWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__wood48166">
     <Description>$var Stripped Birch Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedBirchWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__wood13112">
     <Description>$var Stripped Dark Oak Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedDarkOakWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__wood99382">
     <Description>$var Stripped Acacia Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedAcaciaWood</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__logs16086">
     <Description>$var Stripped Oak Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedOakLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__logs89749">
     <Description>$var Stripped Spruce Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedSpruceLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__logs67575">
     <Description>$var Stripped Birch Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedBirchLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__logs69423">
     <Description>$var Stripped Dark Oak Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedDarkOakLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_strip__logs51642">
     <Description>$var Stripped Acacia Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedAcaciaLog</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_raw_cod_28505">
     <Description>$var Raw Cod</Description>
     <Weight>0.5</Weight>
     <Antisynergy>RawCod</Antisynergy>
     <Variable min="2" max="10"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_raw_salmon_36908">
     <Description>$var Raw Salmon</Description>
     <Weight>0.5</Weight>
     <Antisynergy>RawSalmon</Antisynergy>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="0" id="">
+  <Goal difficulty="0" id="jm_diffe_items36661">
     <Description>$var Different Edible Items</Description>
     <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
     <Weight>0.5</Weight>
     <Antisynergy>EdibleItems</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_diffe__fish70981">
     <Description>$var Different Fish</Description>
     <Variable min="2" max="4"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_grow__ether38694">
     <Description>Grow a Tree in the Nether</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
-    <Description>$var Colours of Terracotta</Description>
+  <Goal difficulty="1" id="jm_color_cotta87385">
+    <Description>$var Colors of Terracotta</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>TerracottaColour</Antisynergy>
+    <Antisynergy>TerracottaColor</Antisynergy>
     <Variable min="4" max="7"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_mushr__stew38338">
     <Description>$var Mushroom Stew</Description>
     <Variable min="1" max="5"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_shoot_arrow55477">
     <Description>Shoot a Button with an Arrow</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_book__quill34457">
     <Description>Book and Quill</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_flint_57555">
     <Description>$var Flint</Description>
     <Variable min="16" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_cake_94191">
     <Description>Cake</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_pumpk_n_pie51200">
     <Description>Pumpkin Pie</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_fish___item58137">
     <Description>Fish a Treasure and a Junk item</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_coars__dirt90305">
     <Description>$var Coarse Dirt</Description>
     <Variable min="16" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_clocks_39949">
     <Description>$var Clocks</Description>
     <Variable min="2" max="3"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_iron__locks76322">
     <Description>$var Iron Blocks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>IronBlocks</Antisynergy>
     <Variable min="2" max="4"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_gold__locks70668">
     <Description>$var Gold Blocks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>GoldBlocks</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_golde_apple84926">
     <Description>Golden Apple</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_books_elves28862">
     <Description>$var Bookshelves</Description>
     <Variable min="2" max="4"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_never_lates77348">
     <Description>Never wear Chestplates</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_never_hield82710">
     <Description>Never use a Shield</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_jukebox_85703">
     <Description>Jukebox</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_build__lava73820">
     <Description>Build a glass cube and fill the inner with lava</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_moss_stone_70679">
     <Description>$var Moss Stone</Description>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_cacti_76819">
     <Description>$var Cacti</Description>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_tnt_75840">
     <Description>$var TNT</Description>
     <Variable min="1" max="3"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_level__53191">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="8" max="15"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_creat_golem39717">
     <Description>Create a Snow Golem</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_note__locks35190">
     <Description>$var Note Blocks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>NoteBlocks</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_ink_sacks_24885">
     <Description>$var Ink Sacks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>InkSacks</Antisynergy>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_bread_17581">
     <Description>$var Bread</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Bread</Antisynergy>
     <Variable min="6" max="10"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_hay_bales_81764">
     <Description>$var Hay Bales</Description>
     <Weight>0.5</Weight>
     <Antisynergy>HayBale</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
-
-
-  <Goal difficulty="1" id="">
-    <Description>$var colours of Wool</Description>
+  <Goal difficulty="1" id="jm_color__wool85379">
+    <Description>$var colors of Wool</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>WoolColour</Antisynergy>
+    <Antisynergy>WoolColor</Antisynergy>
     <Variable min="5" max="8"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_pistons_78275">
     <Description>$var Pistons</Description>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_full__rmour19395">
     <Description>Full Iron Armour</Description>
     <Weight>0.33</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_full__rmour61455">
     <Description>Full Leather Armour</Description>
     <Weight>0.33</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_full__rmour20905">
     <Description>Full Gold Armour</Description>
     <Weight>0.33</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_cauld_water24040">
     <Description>Cauldron with Water</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_compl_a_map49710">
     <Description>Complete a Map</Description>
     <Antisynergy>CompleteMap</Antisynergy>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_soul_sand_70871">
     <Description>$var Soul Sand</Description>
     <Variable min="16" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_pumpkins_88557">
     <Description>$var Pumpkins</Description>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_carve_pkins83365">
     <Description>$var Carved Pumpkins</Description>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_vines_37686">
     <Description>$var Vines</Description>
     <Variable min="10" max="30"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_diffe_slabs11731">
     <Description>$var Different Slabs</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Slabs</Antisynergy>
     <Variable min="5" max="7"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_every_sword27996">
     <Description>Every type of Sword</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_every_ckaxe12562">
     <Description>Every type of Pickaxe</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_brick_locks17277">
     <Description>$var Brick Blocks</Description>
     <Variable min="16" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_nethe_locks68589">
     <Description>$var Nether Brick Blocks</Description>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_arrows_74515">
     <Description>$var Arrows</Description>
     <Variable min="16" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_(try__ether11982">
     <Description>(Try to) Sleep in the Nether</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_ferme_r_eye29013">
     <Description>Fermented Spider Eye</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_diffe_tairs49775">
     <Description>$var Different Stairs</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Stairs</Antisynergy>
     <Variable min="5" max="7"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_ender_earls56142">
     <Description>$var Ender Pearls</Description>
     <Weight>0.5</Weight>
     <Antisynergy>EnderPearl</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_16_ch__eggs84614">
     <Description>16 Chicken Eggs</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_hang__tings65698">
     <Description>Hang up 3 Different 4x4 Paintings</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_bone__locks73338">
     <Description>$var Bone Blocks</Description>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_2_cre__boat97078">
     <Description>2 Creepers in the same Boat</Description>
     <Tooltip>The 2 Creepers must be in the same boat at the same time</Tooltip>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_trade_lager37854">
     <Description>Trade with a Villager</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
-    <Description>$var Different Pattern / Colour Shields</Description>
+  <Goal difficulty="1" id="jm_diffe_ields36241">
+    <Description>$var Different Pattern / Color Shields</Description>
     <Variable min="2" max="3"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_dead_bush_22856">
     <Description>Dead Bush</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_grass_84152">
     <Description>$var Grass</Description>
     <Tooltip>The plant, NOT the block</Tooltip>
     <Variable min="15" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_cyan_dye_81188">
     <Description>Cyan Dye</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_light_e_dye98941">
     <Description>Light Gray Dye and Light Blue Dye</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_magen_a_dye88310">
     <Description>Magenta Dye</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_rose_red_98030">
     <Description>Rose Red</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_orange_dye_38248">
     <Description>Orange Dye</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_dande_ellow82196">
     <Description>Dandelion Yellow</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_cactu_green67253">
     <Description>Cactus Green</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_pink_dye_44183">
     <Description>Pink Dye</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_purple_dye_57537">
     <Description>Purple Dye</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_lime_dye_71862">
     <Description>Lime Dye</Description>
     <Weight>0.1</Weight>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_never_sleep35022">
     <Description>Never Sleep</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_grow__hroom76894">
     <Description>Grow a Huge Mushroom</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_water_ucket49775">
     <Description>Water Bucket, Lava Bucket and Milk Bucket</Description>
     <Antisynergy>BucketTypes</Antisynergy>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_diffe_owers94788">
     <Description>$var Different Flowers</Description>
     <Weight>0.33</Weight>
     <Antisynergy>Flowers</Antisynergy>
     <Variable min="3" max="6"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
-    <Description>$var Colours of Concrete</Description>
+  <Goal difficulty="1" id="jm_color_crete34401">
+    <Description>$var Colors of Concrete</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>ConcreteColour</Antisynergy>
+    <Antisynergy>ConcreteColor</Antisynergy>
     <Variable min="3" max="6"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
-    <Description>$var Colours of Glazed Terracotta</Description>
+  <Goal difficulty="1" id="jm_color_cotta98756">
+    <Description>$var Colors of Glazed Terracotta</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>GlazedColour</Antisynergy>
+    <Antisynergy>GlazedColor</Antisynergy>
     <Variable min="3" max="6"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
-    <Description>$var Colours of Beds</Description>
+  <Goal difficulty="1" id="jm_color__beds40914">
+    <Description>$var Colors of Beds</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>BedColour</Antisynergy>
+    <Antisynergy>BedColor</Antisynergy>
     <Variable min="3" max="6"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_finis_mpass80384">
     <Description>Finish where you spawned using a Compass</Description>
     <Tooltip>Be stood close enough to spin your compass within a couple blocks at the end of the game</Tooltip>
     <Antisynergy>Finish</Antisynergy>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_build__gate55495">
     <Description>Build a Redstone AND Gate</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_stone_18573">
     <Description>$var Stone</Description>
     <Tooltip>NOT Cobblestone</Tooltip>
     <Weight>0.5</Weight>
     <Antisynergy>Stone</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_kill___fire74777">
     <Description>Kill $var Animals with only fire</Description>
     <Variable min="4" max="8"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_kill___fire35764">
     <Description>Kill a Creeper with only fire</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_iron__ggets47265">
     <Description>$var Iron Nuggets</Description>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_gold__ggets96909">
     <Description>$var Gold Nuggets</Description>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_rotte_flesh63201">
     <Description>$var Rotten Flesh</Description>
     <Weight>0.5</Weight>
     <Antisynergy>RotFlesh</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_redstone_47624">
     <Description>$var Redstone</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Redstone</Antisynergy>
     <Variable min="16" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_golde_arrot67899">
     <Description>Golden Carrot</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_rotte_pearl46889">
     <Description>Rotten Flesh, Spider Eye, Bone, Gunpowder and Ender Pearl</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_feathers_68879">
     <Description>$var Feathers</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Feathers</Antisynergy>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_lily_pads_74996">
     <Description>$var Lily Pads</Description>
     <Variable min="2" max="10"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_sticks_67978">
     <Description>$var Sticks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Sticks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
-    <Description>Wear 4 different colour Leather Armour at the same time</Description>
+  <Goal difficulty="1" id="jm_wear___time25605">
+    <Description>Wear 4 different color Leather Armour at the same time</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_oak_w_lanks46489">
     <Description>$var Oak Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>OakPlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_spruc_lanks41337">
     <Description>$var Spruce Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>SprucePlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_birch_lanks63509">
     <Description>$var Birch Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>BirchPlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_dark__lanks73788">
     <Description>$var Dark Oak Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>DarkOakPlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_acaci_lanks45632">
     <Description>$var Acacia Wood Planks</Description>
     <Weight>0.04</Weight>
     <Antisynergy>AcaciaPlanks</Antisynergy>
     <Variable min="65" max="128"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_oak_logs_15794">
     <Description>$var Oak Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>OakLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_spruc__logs94127">
     <Description>$var Spruce Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>SpruceLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_birch_logs_20610">
     <Description>$var Birch Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>BirchLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_dark___logs44434">
     <Description>$var Dark Oak Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>DarkOakLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_acaci__logs86307">
     <Description>$var Acacia Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>AcaciaLogs</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_oak_wood_21469">
     <Description>$var Oak Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>OakWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_spruc__wood92390">
     <Description>$var Spruce Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>SpruceWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_birch_wood_91986">
     <Description>$var Birch Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>BirchWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_dark___wood65613">
     <Description>$var Dark Oak Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>DarkOakWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_acaci__wood43032">
     <Description>$var Acacia Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>AcaciaWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__wood24599">
     <Description>$var Stripped Oak Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedOakWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__wood37138">
     <Description>$var Stripped Spruce Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedSpruceWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__wood41582">
     <Description>$var Stripped Birch Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedBirchWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__wood52772">
     <Description>$var Stripped Dark Oak Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedDarkOakWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__wood23712">
     <Description>$var Stripped Acacia Wood</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedAcaciaWood</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__logs88255">
     <Description>$var Stripped Oak Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedOakLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__logs95000">
     <Description>$var Stripped Spruce Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedSpruceLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__logs42907">
     <Description>$var Stripped Birch Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedBirchLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__logs14925">
     <Description>$var Stripped Dark Oak Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedDarkOakLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_strip__logs81059">
     <Description>$var Stripped Acacia Logs</Description>
     <Weight>0.04</Weight>
     <Antisynergy>StrippedAcaciaLog</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_seagrass_95576">
     <Description>$var Seagrass</Description>
     <Variable min="15" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_tropi__fish66163">
     <Description>$var Tropical Fish</Description>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_pufferfish_20856">
     <Description>$var Pufferfish</Description>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_raw_cod_77990">
     <Description>$var Raw Cod</Description>
     <Weight>0.5</Weight>
     <Antisynergy>RawCod</Antisynergy>
     <Variable min="15" max="32"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_raw_salmon_31570">
     <Description>$var Raw Salmon</Description>
     <Weight>0.5</Weight>
     <Antisynergy>RawSalmon</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_never_g_rod73476">
     <Description>Never use a Fishing Rod</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_never__boat85417">
     <Description>Never use a Boat</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_get_a_ether66387">
     <Description>Get a Fish into Nether</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_dried_locks68459">
     <Description>$var Dried Kelp Blocks</Description>
     <Antisynergy>KelpBlocks</Antisynergy>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_drown_ombie36996">
     <Description>Drown a Zombie</Description>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_gunpowder_30570">
     <Description>$var Gunpowder</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Gunpowder</Antisynergy>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_spide__eyes84349">
     <Description>$var Spider Eyes</Description>
     <Weight>0.5</Weight>
     <Antisynergy>SpiderEye</Antisynergy>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="1" id="">
+  <Goal difficulty="1" id="jm_diffe_items75244">
     <Description>$var Different Edible Items</Description>
     <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
     <Weight>0.5</Weight>
     <Antisynergy>EdibleItems</Antisynergy>
     <Variable min="4" max="5"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_withe_skull95034">
     <Description>Wither Skull</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_diffe_items12523">
     <Description>$var Different Edible Items</Description>
     <Tooltip>Raw and cooked variants count as one (e.g. Raw Beef and Steak)</Tooltip>
     <Weight>0.5</Weight>
     <Antisynergy>EdibleItems</Antisynergy>
     <Variable min="6" max="7"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_diffe_items64271">
     <Description>$var Different Gold Items</Description>
     <Variable min="3" max="5"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_beetr__soup41484">
     <Description>Beetroot Soup</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_emerald_76989">
     <Description>Emerald</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_tame__horse50063">
     <Description>Tame a Horse</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_place_r_pot79183">
     <Description>Place a Cactus in a Flower Pot</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_deton_ecart39576">
     <Description>Detonate a TNT-Minecart</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_magma_locks26810">
     <Description>$var Magma Blocks</Description>
     <Variable min="10" max="30"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_skull_anner15742">
     <Description>Skull Charge Banner</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_damag_anvil45308">
     <Description>Damaged Anvil</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_melon_ices)23476">
     <Description>$var Melons (Slices)</Description>
     <Variable min="16" max="64"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_sleep_llage18859">
     <Description>Sleep inside a village</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_kill__arrow18771">
     <Description>Kill a Skeleton with it's own Arrow</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_never_rmour42273">
     <Description>Never wear any Armour</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_get_a_s_bow67104">
     <Description>Get a Skeleton's Bow</Description>
     <Tooltip>Get the rare Bow item drop from a Skeleton</Tooltip>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_diamo_block84077">
     <Description>Diamond Block</Description>
     <Weight>0.5</Weight>
     <Antisynergy>DiamondBlock</Antisynergy>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_lapis_locks20078">
     <Description>$var Lapis Lazuli Blocks</Description>
     <Variable min="2" max="3"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_destr_awner87999">
     <Description>Destroy a Monster Spawner</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_diffe_lings17310">
     <Description>$var Different Saplings</Description>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_tame___wolf12580">
     <Description>Tame a Wolf</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_6_fir_arges12920">
     <Description>6 Fire Charges</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_magma_cream19435">
     <Description>$var Magma Cream</Description>
     <Variable min="1" max="3"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_creat_golem39114">
     <Description>Create an Iron Golem</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_eye_o_ender84173">
     <Description>Eye of Ender</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_rabbi__stew73142">
     <Description>Rabbit Stew</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_tance35580">
     <Description>Potion of Fire Resistance</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_aling50542">
     <Description>Potion of Healing</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_oison52997">
     <Description>Potion of Poison</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_rming22273">
     <Description>Potion of Harming</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_ation30051">
     <Description>Potion of Regeneration</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_wness68646">
     <Description>Potion of Slowness</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_ength34133">
     <Description>Potion of Strength</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_tness59827">
     <Description>Potion of Swiftness</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_kness50036">
     <Description>Potion of Weakness</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_aping54733">
     <Description>Potion of Leaping</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_lling71539">
     <Description>Potion of Slow Falling</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_potio_aster45569">
     <Description>Potion of the Turtle Master</Description>
     <Weight>0.08</Weight>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_finis_world38213">
     <Description>Finish by jumping from top to bottom of the world</Description>
     <Tooltip>Dig a hole to bedrock and build to 256 Y (height limit), then jump from top to bottom at the end of the game</Tooltip>
     <Antisynergy>Finish</Antisynergy>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_vegetarian_67077">
     <Description>Vegetarian</Description>
     <Tooltip>Never eat meat, including fish</Tooltip>
     <Antisynergy>Food</Antisynergy>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_carnivore_30882">
     <Description>Carnivore</Description>
     <Tooltip>Only eat meat</Tooltip>
     <Antisynergy>Food</Antisynergy>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_kill__arrow54591">
     <Description>Kill yourself with your own arrow</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_get_a_ssage56197">
     <Description>Get a '... while trying to escape ...' Death message</Description>
     <Tooltip>Example: 'PLAYER' drowned while trying to escape a Skeleton</Tooltip>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_set_f_house38684">
     <Description>Set fire to a Villager's House</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_finis_world64558">
     <Description>Finish on top of the world</Description>
     <Tooltip>Build up to 256 Y (the height limit) and stand on the top at the end of the game</Tooltip>
     <Antisynergy>Finish</Antisynergy>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_kill__/sand52146">
     <Description>Kill a hostile mob with Gravel/Sand</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_put_a_llama70211">
     <Description>Put a Carpet on a Llama</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_activ_ners)43493">
     <Description>Activate a $var1x$var2 Nether Portal (not counting corners)</Description>
     <Tooltip>Width/height of the obsidian frame, disregarding corners (or in other words, width/height of the - once activated - purple portal area).</Tooltip>
     <Variable name="var1" min="4" max="6"/>
     <Variable name="var2" min="4" max="6"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_obsidian_91246">
     <Description>$var Obsidian</Description>
     <Variable min="5" max="15"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_iron__locks63935">
     <Description>$var Iron Blocks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>IronBlocks</Antisynergy>
     <Variable min="5" max="7"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_gold__locks36411">
     <Description>$var Gold Blocks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>GoldBlocks</Antisynergy>
     <Variable min="3" max="4"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_dayli_ensor19665">
     <Description>Daylight Sensor</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_encha_sword53260">
     <Description>Enchanted Golden Sword</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
-    <Description>$var colours of Wool</Description>
+  <Goal difficulty="2" id="jm_color__wool98793">
+    <Description>$var colors of Wool</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>WoolColour</Antisynergy>
+    <Antisynergy>WoolColor</Antisynergy>
     <Variable min="8" max="11"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
-    <Description>$var Colours of Terracotta</Description>
+  <Goal difficulty="2" id="jm_color_cotta74947">
+    <Description>$var Colors of Terracotta</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>TerracottaColour</Antisynergy>
+    <Antisynergy>TerracottaColor</Antisynergy>
     <Variable min="8" max="11"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
-    <Description>$var Colours of Glazed Terracotta</Description>
+  <Goal difficulty="2" id="jm_color_cotta87923">
+    <Description>$var Colors of Glazed Terracotta</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>GlazedColour</Antisynergy>
+    <Antisynergy>GlazedColor</Antisynergy>
     <Variable min="7" max="10"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
-    <Description>$var Colours of Concrete</Description>
+  <Goal difficulty="2" id="jm_color_crete21705">
+    <Description>$var Colors of Concrete</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>ConcreteColour</Antisynergy>
+    <Antisynergy>ConcreteColor</Antisynergy>
     <Variable min="7" max="10"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
-    <Description>$var Colours of Beds</Description>
+  <Goal difficulty="2" id="jm_color__beds26481">
+    <Description>$var Colors of Beds</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>BedColour</Antisynergy>
+    <Antisynergy>BedColor</Antisynergy>
     <Variable min="7" max="10"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_power__lamp92092">
     <Description>Power a Redstone Lamp</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_diffe_owers65618">
     <Description>$var Different Flowers</Description>
     <Weight>0.33</Weight>
     <Antisynergy>Flowers</Antisynergy>
     <Variable min="7" max="10"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_put_a_water70691">
     <Description>Put a Pigman in Water</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_place_other96044">
     <Description>Place an Iron, Gold and Diamond block on top of each other</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_kill__anvil29958">
     <Description>Kill a hostile mob with an Anvil</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_never_die_37813">
     <Description>Never Die</Description>
     <Tooltip>No death allowed, including if immediately caused by completing the last goal (e.g. inadvertently dying to the explosion of &quot;Detonate a TNT-Minecart&quot;)</Tooltip>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_level__62503">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="16" max="26"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_diffe_seeds78120">
     <Description>$var Different Seeds</Description>
     <Tooltip>Includes: Beetroot Seeds, Melon Seeds, Nether Wart, Pumpkin Seeds and (Wheat) Seeds. As per the 'A Seedy Place' advancement.</Tooltip>
     <Antisynergy>Seeds</Antisynergy>
     <Variable min="2" max="3"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_wear___time78018">
     <Description>Wear 4 Different Armour types at the same time</Description>
     <Tooltip>Example: GOLD shoes, LEATHER Trousers, IRON Chestplate and DIAMOND Helmet</Tooltip>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_fill__items58011">
     <Description>Fill a Hopper with 320 items</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_red_n_locks65011">
     <Description>$var Red Nether Brick Blocks</Description>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_spect_rrows66498">
     <Description>$var Spectral Arrows</Description>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_activ_llage72436">
     <Description>Activate a Nether Portal inside of a Village</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_rotte_flesh27125">
     <Description>$var Rotten Flesh</Description>
     <Weight>0.5</Weight>
     <Antisynergy>RotFlesh</Antisynergy>
     <Variable min="33" max="64"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_ink_sacks_79449">
     <Description>$var Ink Sacks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>InkSacks</Antisynergy>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_slimeballs_13595">
     <Description>$var Slimeballs</Description>
     <Variable min="2" max="6"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_use_a_abbit23802">
     <Description>Use a lead on a Rabbit</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_firew__star89450">
     <Description>Firework Star</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_hang___lead40092">
     <Description>Hang a mob with a lead</Description>
     <Tooltip>Suspend a mob in mid air using a fence and a lead</Tooltip>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_blaze_rod_30540">
     <Description>Blaze Rod</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_ghast_tear_42382">
     <Description>Ghast Tear</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_never__coal44187">
     <Description>Never use Coal</Description>
     <Tooltip>Never use Coal for any crafting recipes, fuel in a furnace or trades, CAN use Charcoal</Tooltip>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_glows__dust57861">
     <Description>$var Glowstone Dust</Description>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_item__rames57883">
     <Description>$var Item Frames</Description>
     <Variable min="10" max="32"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_diffe_items89302">
     <Description>$var Different Diamond Items</Description>
     <Variable min="2" max="3"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_blow__ystal33796">
     <Description>Blow up an End Crystal</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_prism_stals60686">
     <Description>$var Prismarine Crystals</Description>
     <Weight>0.5</Weight>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_dig_s_hole)50067">
     <Description>Dig straight down to Bedrock from Sea level (1x1 hole)</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_never_sword96977">
     <Description>Never use a Sword</Description>
     <Tooltip>Never use a Sword for Combat or Block Breaking. Holding or crafting is fine.</Tooltip>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_deple_sword77323">
     <Description>Deplete an Iron Sword</Description>
     <Tooltip>Use an Iron Sword until it breaks, if you are unsure if you did check the Statistics screen!</Tooltip>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_full__rmour52363">
     <Description>Full Diamond Armour</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_saddle_99307">
     <Description>Saddle</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_give__a_hat33286">
     <Description>Give a mob a Hat</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_clean_anner65935">
     <Description>Clean a Pattern off a Banner</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_heart_e_sea60342">
     <Description>Heart of the Sea</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_phant_brane70845">
     <Description>Phantom Membrane</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_turtl_shell59551">
     <Description>Turtle Shell</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_add_a_a_map27949">
     <Description>Add a Marker to a Map</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_water__fish70000">
     <Description>Water Bucket, Lava Bucket, Milk Bucket, Bucket of Fish</Description>
     <Tooltip>Can be any of the types of Fish</Tooltip>
     <Antisynergy>BucketTypes</Antisynergy>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_leash_fence96708">
     <Description>Leash a Dolphin to a Fence</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_dried_locks32099">
     <Description>$var Dried Kelp Blocks</Description>
     <Antisynergy>KelpBlocks</Antisynergy>
     <Variable min="21" max="32"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_gunpowder_23496">
     <Description>$var Gunpowder</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Gunpowder</Antisynergy>
     <Variable min="6" max="15"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_spide__eyes16779">
     <Description>$var Spider Eyes</Description>
     <Weight>0.5</Weight>
     <Antisynergy>SpiderEye</Antisynergy>
     <Variable min="6" max="15"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_ender_earls32085">
     <Description>$var Ender Pearls</Description>
     <Weight>0.5</Weight>
     <Antisynergy>EnderPearl</Antisynergy>
     <Variable min="4" max="6"/>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_never_n_axe38071">
     <Description>Never use an Axe</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_encha__item90383">
     <Description>Enchant an item</Description>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_compl_e_map18056">
     <Description>Complete a full size Map</Description>
     <Antisynergy>CompleteMap</Antisynergy>
   </Goal>
-
-  <Goal difficulty="2" id="">
+  <Goal difficulty="2" id="jm_blue__harge63619">
     <Description>Blue Shield with White Flower Charge</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_grass_block99235">
     <Description>Grass Block</Description>
     <Tooltip>If you don't have Silk Touch I know a guy who might pick one up for you...</Tooltip>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_creat_l_10+37096">
     <Description>Create an Enchantment requiring level 10+</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_milk__hroom54237">
     <Description>Milk a Mooshroom</Description>
     <Weight>0.5</Weight>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_shear_hroom22251">
     <Description>Shear a Mooshroom</Description>
     <Weight>0.5</Weight>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_sea_l_terns55362">
     <Description>$var Sea Lanterns</Description>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_sponge_94208">
     <Description>Sponge</Description>
     <Tooltip>DRY Sponge, not a wet one</Tooltip>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_bounc_block84104">
     <Description>Bounce on a Slime Block</Description>
     <Tooltip>Get a Slime Block, place it on the ground and give it a good old bouncin' on</Tooltip>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_liste__disc48575">
     <Description>Listen to a Music Disc</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_diffe_owers75184">
     <Description>$var Different Flowers</Description>
     <Weight>0.33</Weight>
     <Antisynergy>Flowers</Antisynergy>
     <Variable min="11" max="14"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_diamo_locks42298">
     <Description>$var Diamond Blocks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>DiamondBlock</Antisynergy>
     <Variable min="3" max="5"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_get_a_sword46885">
     <Description>Get a Zombie Pigman's Sword</Description>
     <Tooltip>Get the rare Golden Sword item drop from a Pigman</Tooltip>
   </Goal>
-
-  <Goal difficulty="3" id="">
-    <Description>Finish by launching Fireworks of $var Different Colours</Description>
+  <Goal difficulty="3" id="jm_finis_olors82408">
+    <Description>Finish by launching Fireworks of $var Different Colors</Description>
     <Antisynergy>Finish</Antisynergy>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_namet_erman76175">
     <Description>Nametag an Enderman</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_kill__pearl58251">
     <Description>Kill yourself with an Ender Pearl</Description>
     <Tooltip>Need to die to the damage taken from USING a pearl (not subsequent fall/other damage)</Tooltip>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_finis_awner33018">
     <Description>Finish on top of a Blaze spawner</Description>
     <Tooltip>Stand on top of a Blaze spawner at the end of the game</Tooltip>
     <Antisynergy>Finish</Antisynergy>
   </Goal>
-
-  <Goal difficulty="3" id="">
-    <Description>$var colours of Wool</Description>
+  <Goal difficulty="3" id="jm_color__wool63529">
+    <Description>$var colors of Wool</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>WoolColour</Antisynergy>
+    <Antisynergy>WoolColor</Antisynergy>
     <Variable min="12" max="15"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
-    <Description>$var Colours of Terracotta</Description>
+  <Goal difficulty="3" id="jm_color_cotta62698">
+    <Description>$var Colors of Terracotta</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>TerracottaColour</Antisynergy>
+    <Antisynergy>TerracottaColor</Antisynergy>
     <Variable min="12" max="15"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
-    <Description>$var Colours of Glazed Terracotta</Description>
+  <Goal difficulty="3" id="jm_color_cotta97199">
+    <Description>$var Colors of Glazed Terracotta</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>GlazedColour</Antisynergy>
+    <Antisynergy>GlazedColor</Antisynergy>
     <Variable min="11" max="14"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
-    <Description>$var Colours of Concrete</Description>
+  <Goal difficulty="3" id="jm_color_crete77789">
+    <Description>$var Colors of Concrete</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>ConcreteColour</Antisynergy>
+    <Antisynergy>ConcreteColor</Antisynergy>
     <Variable min="11" max="14"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
-    <Description>$var Colours of Beds</Description>
+  <Goal difficulty="3" id="jm_color__beds71251">
+    <Description>$var Colors of Beds</Description>
     <Weight>0.25</Weight>
-    <Antisynergy>BedColour</Antisynergy>
+    <Antisynergy>BedColor</Antisynergy>
     <Variable min="11" max="14"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_poiso_arrot19646">
     <Description>Poison a Parrot</Description>
     <Weight>0.5</Weight>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_tame__arrot29264">
     <Description>Tame a Parrot</Description>
     <Weight>0.5</Weight>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_kill__golem79568">
     <Description>Kill an Iron Golem</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_ice_b_block23255">
     <Description>Ice Block on top of a Magma Block</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_level__50255">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="27" max="37"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_build__cube73579">
     <Description>Build a $var1x$var2x$var3 Ice cube</Description>
     <Tooltip>You can choose what shall be the width/length/height.</Tooltip>
     <Variable name="var1" min="2" max="4"/>
     <Variable name="var2" min="2" max="4"/>
     <Variable name="var3" min="2" max="4"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_diffe_seeds75176">
     <Description>$var Different Seeds</Description>
     <Tooltip>Includes: Beetroot Seeds, Melon Seeds, Nether Wart, Pumpkin Seeds and (Wheat) Seeds. As per the 'A Seedy Place' advancement.</Tooltip>
     <Antisynergy>Seeds</Antisynergy>
     <Variable min="4" max="5"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_finis_eaven51421">
     <Description>Finish on top of a stairway to Heaven</Description>
     <Tooltip>Using Stairs, build up to 256 Y (the height limit) and stand on the top at the end of the game (If you need to jump over a block it's not a finished stairway)</Tooltip>
     <Antisynergy>Finish</Antisynergy>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_never_rches51018">
     <Description>Never place Torches</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_get_a_world65687">
     <Description>Get a Ghast into the Overworld</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_encha_apple57773">
     <Description>Enchanted Golden Apple</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_tame__celot19643">
     <Description>Tame an Ocelot</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_tame__onkey63865">
     <Description>Tame a Donkey</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_never_ields14785">
     <Description>Never wear Armour or use Shields</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_kill__rmour36188">
     <Description>Kill a mob that is wearing Full Iron Armour</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_encha_items79670">
     <Description>Enchant 5 different items</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_never_ckets96909">
     <Description>Never use Buckets</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_conduit_64317">
     <Description>Conduit</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_types_locks74323">
     <Description>$var types of Dead Coral Blocks</Description>
     <Variable min="2" max="5"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_sea_p_ckles65302">
     <Description>$var Sea Pickles</Description>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_trident_67535">
     <Description>Trident</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_get_a_ssage98260">
     <Description>Get a '... didn't want to live in the same world as ...' Death message</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_cookie_35513">
     <Description>Cookie</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_grow___tree94140">
     <Description>Grow a Full Jungle Tree</Description>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_prism_hards93385">
     <Description>$var Prismarine Shards</Description>
     <Weight>0.5</Weight>
     <Variable min="2" max="10"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_jungl__logs44714">
     <Description>$var Jungle Logs</Description>
     <Weight>0.25</Weight>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_jungl__wood16298">
     <Description>$var Jungle Wood</Description>
     <Weight>0.25</Weight>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_strip__wood79825">
     <Description>$var Stripped Jungle Wood</Description>
     <Weight>0.25</Weight>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="3" id="">
+  <Goal difficulty="3" id="jm_strip__logs73159">
     <Description>$var Stripped Jungle Logs</Description>
     <Weight>0.25</Weight>
     <Variable min="11" max="20"/>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_diffe_ouch)17144">
     <Description>$var Different Ores (Silk Touch)</Description>
     <Tooltip>Coal, Diamond, Emerald, Gold, Iron, Lapis Lazuli, Nether Quatz and Redstone ores are your choices</Tooltip>
     <Variable min="4" max="6"/>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_diffe_tions30049">
     <Description>$var Different Potions</Description>
     <Tooltip>Splash variants count! Even Lingering if you want to get crazy</Tooltip>
     <Variable min="7" max="9"/>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_cure__lager66266">
     <Description>Cure a Zombie Villager</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_every_plate42772">
     <Description>Every type of Chestplate</Description>
     <Tooltip>Leather, Gold, Iron, Diamond and yes, even Chainmail</Tooltip>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_nethe__star64732">
     <Description>Nether Star</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_dragon_egg_23516">
     <Description>Dragon Egg</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_any_h_ton's12533">
     <Description>Any hostile mob head OTHER than a Wither Skeleton's</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_poppe_fruit68567">
     <Description>$var Popped Chorus Fruit</Description>
     <Variable min="5" max="10"/>
   </Goal>
-
-  <Goal difficulty="4" id="">
-    <Description>Every colour of Dye</Description>
+  <Goal difficulty="4" id="jm_every_f_dye12855">
+    <Description>Every color of Dye</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_level__27398">
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="38" max="50"/>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_fill__items73968">
     <Description>Fill a Double Chest with 3456 items</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_tippe_rrows70283">
     <Description>$var Tipped Arrows</Description>
     <Variable min="16" max="32"/>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_place_other86344">
     <Description>Place 1 of each Mineral block on top of each other</Description>
     <Tooltip>Coal, Iron, Gold, Diamond, Redstone, Lapis, Emerald and Quartz blocks</Tooltip>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_save__dying24854">
     <Description>Save yourself with a Totem of Undying</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_sleep_nsion59042">
     <Description>Sleep in a Woodland Mansion</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_mycelium_19913">
     <Description>$var Mycelium</Description>
     <Variable min="10" max="32"/>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_get_a_e_end18985">
     <Description>Get a villager into The End</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_drago_reath89362">
     <Description>$var Dragon's Breath</Description>
     <Variable min="2" max="10"/>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_5_typ_locks56466">
     <Description>5 types of Coral Blocks</Description>
     <Tooltip>The alive stuff, not the Dead Coral Blocks</Tooltip>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_blue_ice_42991">
     <Description>$var Blue Ice</Description>
     <Variable min="32" max="64"/>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_fully_nduit86611">
     <Description>Fully power a Conduit</Description>
   </Goal>
-
-  <Goal difficulty="4" id="">
+  <Goal difficulty="4" id="jm_never_ticks40530">
     <Description>Never Craft Sticks</Description>
   </Goal>
-
 </MCBingoGoals>

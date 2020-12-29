@@ -79,9 +79,12 @@ board to all players.
 
 ## Server to Client API
 
-The server only sends packets with one format to the Client. This packet is
-sent when anything in the game's state changes, or as a response to any 
-incoming message on a socket. Example:
+### Player Boards
+
+This packet is sent to all connected clients (both players and plugins) when
+anything in the game's state changes, or as a response to any incoming message
+on a socket. Example:
+
 ```json
 {
   "obscured": true,
@@ -111,3 +114,42 @@ representation of the squares the player has marked, with the index in the
 returned string representing the position of each square and its value the
 marking state. `disconnected_at` is an ISO datetime if the player disconnected
 from the game, or null if the plyer is still connected.
+
+### Goals
+
+This packet is sent as soon as a Plugin websocket is opened. It describes all
+goals that the plugin should listen for and report back to the server when 
+accomplished.
+
+```json
+{
+  "goals": [
+    {
+      "id": "cobblestone",
+      "position": 0,
+      "variables": {
+        "var": 32
+      }
+    },
+    {
+      "id": "poppies_dandelions",
+      "position": 1,
+      "variables": {
+        "var1": 10,
+        "var2": 20
+      }
+    }
+  ]
+}
+```
+
+`goals` is a list of 25 Goal objects, each corresponding to a square on the 
+board. Each Goal object consists of:
+- An `id` field, which corresponds to the goal ID in goals.xml.
+- A `position` field, which is an integer from 0 through 24 with the 
+  position of this goal on the board.
+- An optional `variables` object, which lists any variables present on this 
+  goal.
+
+The plugin backend maintains an identical goals.xml that allows it to determine
+the circumstances to award each goal ID.

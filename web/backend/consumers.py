@@ -7,7 +7,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.db.models import Q
 from django.utils import timezone
 
-from web.backend.models import PlayerBoard, Board
+from web.backend.models import PlayerBoard, Board, Square
 
 
 class PlayerWebConsumer(AsyncJsonWebsocketConsumer):
@@ -121,6 +121,7 @@ class PluginBackendConsumer(AsyncJsonWebsocketConsumer):
         )
 
         await self.accept()
+        await self.send_board_xml_to_ws()
 
         print(f"Plugin Backend joined game {self.game_code}.")
 
@@ -170,6 +171,12 @@ class PluginBackendConsumer(AsyncJsonWebsocketConsumer):
     async def send_boards_to_ws(self, event=None):
         board_states = await get_board_states(self.board_id)
         await self.send(text_data=json.dumps(board_states))
+
+    async def send_board_xml_to_ws(self):
+        board_goals = await get_board_goals(self.board_id)
+        await self.send(text_data=json.dumps({
+            'goals': board_goals
+        }))
 
 
 @database_sync_to_async
@@ -236,3 +243,9 @@ def mark_disconnected(player_board_id: int, disconnected: bool):
     player_board_obj = PlayerBoard.objects.get(pk=player_board_id)
     player_board_obj.disconnected_at = timezone.now() if disconnected else None
     player_board_obj.save()
+
+
+@database_sync_to_async
+def get_board_goals(board_id: int):
+    squares = Square.objects.filter(board_id=board_id).order_by('position')
+    return [sq.to_json() for sq in squares]

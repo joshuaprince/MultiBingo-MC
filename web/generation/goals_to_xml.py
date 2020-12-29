@@ -7,6 +7,7 @@ https://github.com/Joshimuz/mcbingo) to the XML goal file that is parsed in this
 import json
 import re
 import sys
+from random import Random
 from typing import Dict
 from xml.dom import minidom
 from xml.etree.ElementTree import Element, tostring, SubElement
@@ -22,11 +23,12 @@ def json_to_xml(inf, outf):
         for goal in goals:  # for each goal of this difficulty
             e_goal = SubElement(e_root, 'Goal')
             e_goal.set('difficulty', str(dif))
-            e_goal.set('id', '')
 
             desc, variables = _parse_description(goal['name'])
             e_desc = SubElement(e_goal, 'Description')
             e_desc.text = desc
+
+            e_goal.set('id', _generate_id(desc, dif))
 
             if goal.get('tooltiptext'):
                 e_tooltip = SubElement(e_goal, 'Tooltip')
@@ -79,9 +81,26 @@ def _parse_description(name: str) -> (str, Dict[str, tuple]):
     return name, ranges
 
 
+def _generate_id(description: str, difficulty: int):
+    """
+    Repeatably random method for generating a unique ID for each goal
+    """
+    description = description.replace(' ', '_').lower()
+    description = re.sub(r'\$[0-9a-zA-Z]+_?', '', description)  # eliminate $var strings
+
+    rand = Random(description + str(difficulty))
+    uniq = str(rand.randint(10000, 99999))
+
+    if len(description) <= 10:
+        return 'jm_' + description + '_' + uniq
+    else:
+        return 'jm_' + description[:5] + '_' + description[-5:] + uniq
+
+
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         print(f"Usage: {sys.argv[0]} [infile.json] [outfile.xml]")
+        exit(1)
 
     with open(sys.argv[1], 'r') as infile:
         with open(sys.argv[2], 'w') as outfile:

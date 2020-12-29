@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from generation.goals import ConcreteGoal
 from web.generation import BoardGenerator
 
 
@@ -49,6 +50,14 @@ class Square(models.Model):
 
     class Meta:
         unique_together = ['board', 'position']
+
+    def to_json(self):
+        cg = ConcreteGoal.from_xml_id(self.xml_id)
+        return {
+            'id': cg.goal.id,
+            'position': self.position,
+            'variables': cg.variables,
+        }
 
 
 @receiver(post_save, sender=Board)

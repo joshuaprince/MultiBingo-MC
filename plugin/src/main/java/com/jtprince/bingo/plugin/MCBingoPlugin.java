@@ -75,14 +75,9 @@ public class MCBingoPlugin extends JavaPlugin {
 
     protected boolean commandPrepare(CommandSender sender, String worldCode) {
         this.currentGame = new BingoGame(this, worldCode);
-        this.getServer().broadcastMessage("Generating worlds for new game " + worldCode);
 
         ArrayList<Player> players = new ArrayList<>(this.getServer().getOnlinePlayers());
         this.currentGame.prepare(players);
-
-        String playerList = players.stream().map(Player::getName).collect(Collectors.joining(", "));
-        this.getServer().broadcastMessage("Worlds are generated for the following players: " + playerList);
-        sender.sendMessage("Type /bingo start to start the game.");
 
         return true;
     }

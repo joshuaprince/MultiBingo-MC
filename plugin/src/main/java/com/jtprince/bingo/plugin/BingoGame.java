@@ -8,8 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BingoGame {
     protected final MCBingoPlugin plugin;
@@ -24,10 +26,20 @@ public class BingoGame {
         this.playerWorldSetMap = new HashMap<>();
     }
 
-    public void prepare(Iterable<Player> players) {
+    public void prepare(Collection<Player> players) {
+        this.plugin.getServer().broadcastMessage("Worlds are being generated for a new Bingo game " + this.gameCode + ".");
+        this.plugin.getServer().broadcastMessage("This may cause the server to lag!");
+
         this.prepareWorldSets(players);
         this.connectWebSocket();
+
+        String playerList = players.stream().map(Player::getName).collect(Collectors.joining(", "));
+        this.plugin.getServer().broadcastMessage("Bingo worlds finished generating for: " + playerList);
         this.sendGameLinksToPlayers(players);
+
+        for (Player p : players) {
+            this.sendStartButton(p);
+        }
     }
 
     protected void prepareWorldSets(Iterable<Player> players) {
@@ -75,5 +87,14 @@ public class BingoGame {
             t.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()));
             p.sendMessage(t);
         }
+    }
+
+    protected void sendStartButton(Player p) {
+        TextComponent t = new TextComponent("Click here to start the game: ");
+        TextComponent btn = new TextComponent("[START]");
+        btn.setColor(ChatColor.GOLD);
+        btn.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bingo start " + this.gameCode));
+        t.addExtra(btn);
+        p.sendMessage(t);
     }
 }

@@ -11,7 +11,7 @@ class Board(models.Model):
     seed = models.SlugField(max_length=128)
     """If blank, goals will not be auto-generated on this board."""
 
-    difficulty = models.IntegerField()
+    difficulty = models.IntegerField(default=2)
 
     obscured = models.BooleanField(default=True)
 
@@ -54,6 +54,10 @@ class Square(models.Model):
 @receiver(post_save, sender=Board)
 def build_board(instance: Board, created: bool, **kwargs):
     if created:
+        # If the game code ends with a number, it specifies the game's difficulty.
+        if instance.game_code[-1].isdigit():
+            instance.difficulty = int(instance.game_code[-1])
+
         for i in range(25):
             Square.objects.create(board=instance, position=i)
 

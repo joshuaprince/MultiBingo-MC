@@ -107,7 +107,8 @@ class PluginBackendConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.game_code = self.scope['url_route']['kwargs']['game_code']
 
-        board_obj, _ = await get_board_and_player_board(self.game_code, None)
+        board_obj, _ = await get_board_and_player_board(self.game_code, None,
+                                                        can_create_board=True)
         if not board_obj:
             print(f"Error getting plugin board: {self.game_code}")
             return  # reject connection
@@ -192,8 +193,10 @@ def get_board_and_player_board(game_code: str, player: Optional[str],
                                can_create_board: bool = False) -> (Board, PlayerBoard):
     board = Board.objects.filter(game_code=game_code).first()
     if not board:
-        # TODO Implement can_create_board
-        return None, None
+        if can_create_board:
+            board = Board.objects.create(game_code=game_code, seed=game_code)
+        else:
+            return None, None
 
     if player:
         player_board_obj = PlayerBoard.objects.filter(board_id=board.pk, player_name=player).first()

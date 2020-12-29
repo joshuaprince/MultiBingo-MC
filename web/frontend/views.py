@@ -1,7 +1,6 @@
 import random
 import string
 
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
 
@@ -19,15 +18,9 @@ def index(request):
 def board(request, game_code):
     player_name = request.GET.get('name', '')
 
-    # If the game code ends with a number, it specifies the game's difficulty.
-    # TODO better way of doing this.
-    default_difficulty = 2
-    if game_code[-1].isdigit():
-        default_difficulty = int(game_code[-1])
-
     board_obj, created = Board.objects.prefetch_related('square_set').get_or_create(
         game_code=game_code,
-        defaults={'seed': game_code, 'difficulty': default_difficulty}
+        defaults={'seed': game_code}
     )
     if created:
         print(f"Created a new board with game code {game_code}")

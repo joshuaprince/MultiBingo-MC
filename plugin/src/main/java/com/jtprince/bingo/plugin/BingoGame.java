@@ -1,11 +1,13 @@
 package com.jtprince.bingo.plugin;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ public class BingoGame {
     public void prepare(Iterable<Player> players) {
         this.prepareWorldSets(players);
         this.connectWebSocket();
+        this.sendGameLinksToPlayers(players);
     }
 
     protected void prepareWorldSets(Iterable<Player> players) {
@@ -57,15 +60,20 @@ public class BingoGame {
     }
 
     protected void connectWebSocket() {
-        URI uri = null;
-        try {
-            uri = new URI("ws://localhost:8000/ws/board-plugin/" + gameCode + "/");
-        } catch (URISyntaxException e) {
-            this.plugin.getServer().getLogger().severe("Failed to connect to websocket");
-        }
-
+        URI uri = plugin.getWebsocketUrl(this.gameCode);
         this.wsClient = new BingoWebSocketClient(this, uri);
         this.wsClient.connect();
         this.plugin.getServer().getLogger().info("Successfully connected to websocket for game " + this.gameCode);
+    }
+
+    protected void sendGameLinksToPlayers(Iterable<Player> players) {
+        for (Player p : players) {
+            TextComponent t = new TextComponent("Test!");
+            t.setText("Click here to open the board!");
+            t.setColor(ChatColor.AQUA);
+            URI url = this.plugin.getGameUrl(this.gameCode, p);
+            t.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()));
+            p.sendMessage(t);
+        }
     }
 }

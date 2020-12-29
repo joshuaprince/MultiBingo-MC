@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -17,6 +19,8 @@ public class MCBingoPlugin extends JavaPlugin {
     public void onEnable() {
         worldManager = new WorldManager(this);
         this.getServer().getPluginManager().registerEvents(worldManager, this);
+
+        this.saveDefaultConfig();
     }
 
     @Override
@@ -92,5 +96,33 @@ public class MCBingoPlugin extends JavaPlugin {
         this.currentGame.start();
 
         return true;
+    }
+
+    URI getWebsocketUrl(String gameCode) {
+        String template = this.getConfig().getString("urls.websocket");
+        if (template == null) {
+            this.getLogger().severe("No websocket URL is configured!");
+            return null;
+        }
+        try {
+            return new URI(template.replace("$code", gameCode));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    URI getGameUrl(String gameCode, Player p) {
+        String template = this.getConfig().getString("urls.game_player");
+        if (template == null) {
+            this.getLogger().severe("No game_player URL is configured!");
+            return null;
+        }
+        try {
+            return new URI(template.replace("$code", gameCode).replace("$player", p.getName()));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

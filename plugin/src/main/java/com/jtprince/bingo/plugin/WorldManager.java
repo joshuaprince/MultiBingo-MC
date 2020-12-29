@@ -127,7 +127,9 @@ public class WorldManager implements Listener {
         }
 
         WorldSet ws = findWorldSet(event.getPlayer().getWorld());
-        event.setRespawnLocation(ws.getWorld(Environment.NORMAL).getSpawnLocation());
+        if (ws != null) {
+            event.setRespawnLocation(ws.getWorld(Environment.NORMAL).getSpawnLocation());
+        }
     }
 
     protected WorldSet findWorldSet(World world) {

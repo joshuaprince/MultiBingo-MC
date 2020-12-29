@@ -5,7 +5,6 @@ from .settings_base import *
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
-SECURE_WEBSOCKET = False
 
 
 # Database

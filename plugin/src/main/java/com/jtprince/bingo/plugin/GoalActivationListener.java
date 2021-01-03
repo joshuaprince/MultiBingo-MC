@@ -3,15 +3,16 @@ package com.jtprince.bingo.plugin;
 import org.bukkit.Location;
 import org.bukkit.TreeType;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Contract;
@@ -153,15 +154,18 @@ public class GoalActivationListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBlockExplosion(BlockExplodeEvent event) {
-        if (ignore(event.getBlock().getWorld())) {
+    public void onBlockInteract(PlayerInteractEvent event) {
+        if (ignore(event.getPlayer())) {
             return;
         }
 
-        // Nether bed
-        if (event.getBlock().getWorld().getEnvironment() == World.Environment.NETHER
-            && event.getBlock().getType().getKey().toString().contains("_bed")) {
-            this.autoActivation.impulseGoal(event.getBlock().getWorld(), "jm_try__nether11982");
+        Block block = event.getClickedBlock();
+        if (block != null) {
+            // Nether bed
+            if (block.getWorld().getEnvironment() == World.Environment.NETHER
+                && block.getType().getKey().toString().contains("_bed")) {
+                this.autoActivation.impulseGoal(event.getPlayer(), "jm_try__nether11982");
+            }
         }
     }
 }

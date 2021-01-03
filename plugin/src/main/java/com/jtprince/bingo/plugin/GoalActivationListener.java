@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
@@ -48,17 +49,17 @@ public class GoalActivationListener implements Listener {
      * Return whether to ignore event in this world, because it is not part of a game.
      */
     protected boolean ignore(World world) {
-        for (WorldManager.WorldSet ws : autoActivation.game.playerWorldSetMap.values()) {
-            for (World w : ws.map.values()) {
-                if (w.equals(world)) {
-                    return false;
-                }
-            }
+        if (world == null) {
+            return true;
         }
 
-        this.autoActivation.game.plugin.getLogger().fine(
-            "ActivationListener ignored world " + world.getName());
-        return true;
+        Player p = this.autoActivation.game.getPlayerInWorld(world);
+
+        if (p == null) {
+            this.autoActivation.game.plugin.getLogger().fine(
+                "ActivationListener ignored world " + world.getName());
+        }
+        return (p == null);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -148,6 +149,19 @@ public class GoalActivationListener implements Listener {
         if (event.getEntity() instanceof Player &&
                 ActivationHelpers.inVillage(event.getBlocks().get(0).getLocation())) {
             this.autoActivation.impulseGoal((Player) event.getEntity(), "jm_activ_llage72436");
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onBlockExplosion(BlockExplodeEvent event) {
+        if (ignore(event.getBlock().getWorld())) {
+            return;
+        }
+
+        // Nether bed
+        if (event.getBlock().getWorld().getEnvironment() == World.Environment.NETHER
+            && event.getBlock().getType().getKey().toString().contains("_bed")) {
+            this.autoActivation.impulseGoal(event.getBlock().getWorld(), "jm_try__nether11982");
         }
     }
 }

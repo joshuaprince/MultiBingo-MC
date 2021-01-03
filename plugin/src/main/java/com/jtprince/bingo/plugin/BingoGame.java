@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.util.Collection;
@@ -138,5 +139,24 @@ public class BingoGame {
             p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, ticks, 128));
             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, ticks, 5));
         }
+    }
+
+    /**
+     * Find which player is associated to a world.
+     * @param world The world to check.
+     * @return The player, or null if this world is not part of this game.
+     */
+    public Player getPlayerInWorld(@NotNull World world) {
+        for (Player p : this.playerWorldSetMap.keySet()) {
+            WorldManager.WorldSet worldSet = this.playerWorldSetMap.get(p);
+            for (World w : worldSet.map.values()) {
+                if (w.equals(world)) {
+                    return p;
+                }
+            }
+        }
+
+        this.plugin.getLogger().finer("getPlayerInWorld did not find a player for " + world.getName());
+        return null;
     }
 }

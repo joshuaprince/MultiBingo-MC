@@ -701,8 +701,9 @@
       <Quantity>$var</Quantity>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="1" id="jm_(try__ether11982">
+  <Goal difficulty="1" id="jm_try__nether11982">
     <Description>(Try to) Sleep in the Nether</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_ferme_r_eye29013">
     <Description>Fermented Spider Eye</Description>

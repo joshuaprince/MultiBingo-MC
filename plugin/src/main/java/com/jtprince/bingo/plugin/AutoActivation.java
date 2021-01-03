@@ -1,5 +1,6 @@
 package com.jtprince.bingo.plugin;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class AutoActivation {
@@ -26,6 +27,15 @@ public class AutoActivation {
                 this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
             }
         }
+    }
+
+    /**
+     * Activate a square for the player that is associated to this world if it exists on the board.
+     * @param world World that contains this player.
+     * @param goal The goal ID to activate.
+     */
+    public void impulseGoal(World world, String goal) {
+        impulseGoal(this.game.getPlayerInWorld(world), goal);
     }
 
     /**

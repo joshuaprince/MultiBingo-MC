@@ -63,11 +63,19 @@ div.board-primary {
   max-width: 100%;
 }
 
-.board-primary .bingo-tooltip {
+.board-primary .bingo-tooltip:not(.autoactivated-a) {
   position: absolute;
   top: 0;
   right: 0;
   padding: 10px;
+}
+
+.board-primary .bingo-tooltip.autoactivated-a {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 5px;
+  font-size: x-small;
 }
 
 .board-primary .bingo-square {

@@ -23,6 +23,7 @@ class Goal:
         self.weight = 1.0
         self.antisynergy = None
         self.variable_ranges = {}  # type: Dict[str, tuple]
+        self.is_autoactivated = False
         self.triggers_xml = []  # type: List[Element]
 
     def __str__(self):
@@ -178,6 +179,9 @@ def parse_xml(filename=GOAL_XML):
             new_goal.variable_ranges[name] = (mini, maxi)
 
         new_goal.triggers_xml = e_goal.findall('ItemTrigger')
+
+        if len(e_goal.findall('ItemTrigger')) > 0 or len(e_goal.findall('Auto')) > 0:
+            new_goal.is_autoactivated = True
 
         difficulty = int(e_goal.get('difficulty'))
         GOALS[difficulty].append(new_goal)

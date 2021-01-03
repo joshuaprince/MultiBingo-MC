@@ -51,6 +51,10 @@ class Square(models.Model):
     class Meta:
         unique_together = ['board', 'position']
 
+    def is_autoactivated(self):
+        cg = ConcreteGoal.from_xml_id(self.xml_id)
+        return cg.goal.is_autoactivated
+
     def to_json(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
         return {

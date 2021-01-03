@@ -34,6 +34,10 @@
             <div class="bingo-text{% if square.text|length > 40 %} small{% endif %}">
               {{ square.text }}
             </div>
+            {% if square.is_autoactivated %}
+            <div class="autoactivated-a bingo-tooltip"
+                 data-tooltip="This square will be activated automatically.">A</div>
+            {% endif %}
           </div>
         </td>
         {% endfor %}

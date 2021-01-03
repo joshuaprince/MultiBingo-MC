@@ -45,6 +45,7 @@ public class BingoWebSocketClient extends WebSocketClient {
             squares[i] = cg;
         }
 
+        this.game.plugin.getLogger().info("Successfully received board.");
         this.game.squares = squares;
     }
 

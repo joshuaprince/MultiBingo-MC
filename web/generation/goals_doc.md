@@ -73,3 +73,109 @@ should appear roughly one quarter as often as a goal with weight of 1.0.s
 No two goals with the same antisynergy will appear on the same board. This is
 useful for goals with similar requirements, so that boards are a bit more
 varied.
+
+#### `<ItemTrigger>`
+Defines that this goal can be automatically activated by a Plugin backend by 
+obtaining certain items in the player's inventory. See below for more details.
+
+## Item Triggers
+Item triggers specify that a goal should be satisfied by acquiring 
+certain items in the player's inventory. Examples:
+```xml
+<!-- Basic single item -->
+<ItemTrigger>
+  <Name>minecraft:diamond</Name>
+</ItemTrigger>
+
+<!-- Basic item stack of greater quantity than 1 -->
+<Variable min="32" max="64"/>
+<ItemTrigger>
+  <Name>minecraft:cobblestone</Name>
+  <Quantity>$var</Quantity>
+</ItemTrigger>
+
+<!-- Multiple different items -->
+<ItemTrigger needed="3">
+  <Name>minecraft:water_bucket</Name>
+  <Name>minecraft:lava_bucket</Name>
+  <Name>minecraft:milk_bucket</Name>
+</ItemTrigger>
+
+<!-- Variable number of different items -->
+<Variable min="2" max="4"/>
+<ItemTrigger needed="$var">
+  <Name>minecraft:diamond_helmet</Name>
+  <Name>minecraft:diamond_chestplate</Name>
+  <Name>minecraft:diamond_leggings</Name>
+  <Name>minecraft:diamond_boots</Name>
+</ItemTrigger>
+
+<!-- Regular expression of multiple unique items -->
+<Variable min="2" max="4"/>
+<ItemTrigger needed="$var">
+  <Name>minecraft:.*_stairs</Name>
+</ItemTrigger>
+```
+
+#### `<ItemTrigger>`
+The root ItemTrigger node defines a set of items that must be acquired to 
+trigger this goal. It has an optional `needed` attribute; this specifies the 
+number of Item Matches needed to trigger this goal. If unspecified, `needed` 
+behaves as if it were set to 1 (any item match triggers the goal). `needed` 
+may reference a variable in the Goal definition.
+
+#### `<Name>`
+The Name tag is used to match an item by namespaced identifier. It is 
+applied as a regular expression against the item stacks in a player's 
+inventory, so any regex is allowed.
+
+#### `<Quantity>`
+The Quantity tag is optional, and specifies that only an item stack with 
+this many or greater items in it can satisfy the goal.
+
+### Item Match Groups
+An Item Match Group allows for more complex item requirements. The `<Name>` 
+and `<Quantity>` tags are valid within an item match group, but the group 
+may limit how many unique item names can count towards a goal.
+
+```xml
+<!-- Unique items where different items count as 1 -->
+<ItemTrigger needed="2">
+  <ItemMatchGroup max-matches="1">
+    <Name>minecraft:cod</Name>
+    <Name>minecraft:cooked_cod</Name>
+    <Name>minecraft:cod_bucket</Name>
+  </ItemMatchGroup>
+  <ItemMatchGroup max-matches="1">
+    <Name>minecraft:salmon</Name>
+    <Name>minecraft:cooked_salmon</Name>
+    <Name>minecraft:salmon_bucket</Name>
+  </ItemMatchGroup>
+</ItemTrigger>
+```
+
+In the above example, we want the player to have to collect a cod and a 
+salmon. But we also want to allow these to be in any form - raw, cooked, or 
+bucket. If we just specify the 6 item names, the player could collect 2 cod, 
+cook one, and satisfy the goal. By adding `max-matches="1"` to two separate 
+item groups, only 1 item in each group can count toward the needed 2.
+
+```xml
+<!-- Different items with different quantities -->
+<Variable name="quantpoppy" min="5" max="25"/>
+<Variable name="quantdand" min="26" max="40"/>
+<ItemTrigger needed="2">
+  <ItemMatchGroup>
+    <Name>minecraft:poppy</Name>
+    <Quantity>$quantpoppy</Quantity>
+  </ItemMatchGroup>
+  <ItemMatchGroup>
+    <Name>minecraft:dandelion</Name>
+    <Quantity>$quantdand</Quantity>
+  </ItemMatchGroup>
+</ItemTrigger>
+```
+
+Item match groups can also be used when different quantities of different 
+items are needed. Here, the player will need to collect somewhere between 5 
+and 25 poppies, and somewhere between 26 and 40 dandelions.

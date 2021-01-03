@@ -1,7 +1,7 @@
 import os
 from copy import deepcopy
 from random import Random
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, OrderedDict
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
@@ -68,7 +68,13 @@ class ConcreteGoal:
         for goal_trigger_element in self.goal.triggers_xml:
             xml_str = ElementTree.tostring(goal_trigger_element, encoding='unicode')
             xml_str_derefd = self._replace_vars(xml_str)
-            triggers_list.append(xmltodict.parse(xml_str_derefd, force_list=True))
+            xml_dict = xmltodict.parse(xml_str_derefd, force_list=True)  # type: OrderedDict
+
+            # Slight mangling to handle the fact that force_list above forces the root to be a list
+            #  (even though there is only ever 1 root)
+            root_key = list(xml_dict)[0]
+            root_val = xml_dict[root_key][0]
+            triggers_list.append({root_key: root_val})
         return triggers_list
 
     @staticmethod

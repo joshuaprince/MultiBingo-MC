@@ -15,7 +15,7 @@ public class ItemTrigger {
     final ArrayList<ItemMatchGroup> matchGroups = new ArrayList<>();
 
     public ItemTrigger(JSONObject json) {
-        JSONObject itemTriggerJson = (JSONObject) ((JSONArray) json.get("ItemTrigger")).get(0);
+        JSONObject itemTriggerJson = (JSONObject) json.get("ItemTrigger");
 
         String needed = (String) itemTriggerJson.get("@needed");
         if (needed != null) {

@@ -142,17 +142,24 @@ accomplished.
       "triggers": [
         {
           "ItemTrigger": {
-            "@needed": "2",
-            "ItemMatch": [
+            "@needed": "4",
+            "Name": [
+              "minecraft:water_bucket",
+              "minecraft:lava_bucket",
+              "minecraft:milk_bucket"
+            ],
+            "ItemMatchGroup": [
               {
-                "Name": "minecraft:dandelion",
-                "Quantity": "24"
-              },
-              {
-                "Name": "minecraft:dandelion",
-                "Quantity": "24"
+                "@max-matches": "1",
+                "Name": [
+                  "minecraft:cod_bucket",
+                  "minecraft:salmon_bucket",
+                  "minecraft:pufferfish_bucket",
+                  "minecraft:tropical_fish_bucket"
+                ]
               }
-            ]
+            ],
+            "Quantity": ["1"]
           }
         }
       ]

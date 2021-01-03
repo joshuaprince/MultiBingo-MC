@@ -57,6 +57,7 @@ class Square(models.Model):
             'id': cg.goal.id,
             'position': self.position,
             'variables': cg.variables,
+            'triggers': cg.triggers(),
         }
 
 

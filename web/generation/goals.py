@@ -3,6 +3,9 @@ from copy import deepcopy
 from random import Random
 from typing import Dict, List, Optional
 from xml.etree import ElementTree
+from xml.etree.ElementTree import Element
+
+import xmltodict
 
 GOAL_XML = os.path.join(os.path.dirname(__file__), 'goals.xml')
 NUM_DIFFICULTIES = 5
@@ -20,6 +23,7 @@ class Goal:
         self.weight = 1.0
         self.antisynergy = None
         self.variable_ranges = {}  # type: Dict[str, tuple]
+        self.triggers_xml = []  # type: List[Element]
 
     def __str__(self):
         return f"({self.id}) {self.description_template}"
@@ -30,6 +34,13 @@ class ConcreteGoal:
     A goal on a board whose variables are set.
     """
     def __init__(self, goal: Goal, rand: Optional[Random]):
+        """
+        :param goal: Goal that this ConcreteGoal references.
+        :param rand: Random element used to set variables. If None, variables will not be
+                     automatically set. This should only be used if the variables are being set
+                     manually after creation of the ConcreteGoal (such as if being parsed from an
+                     XML ID)
+        """
         self.goal = goal
         self.variables = {}
 
@@ -51,6 +62,14 @@ class ConcreteGoal:
         goal_id = self.goal.id
         vars_str = '::'.join(':'.join([k, str(v)]) for k, v in self.variables.items())
         return ':::'.join([goal_id, vars_str])
+
+    def triggers(self) -> List[dict]:
+        triggers_list = []
+        for goal_trigger_element in self.goal.triggers_xml:
+            xml_str = ElementTree.tostring(goal_trigger_element, encoding='unicode')
+            xml_str_derefd = self._replace_vars(xml_str)
+            triggers_list.append(xmltodict.parse(xml_str_derefd, force_list='ItemMatch',))
+        return triggers_list
 
     @staticmethod
     def from_xml_id(xml_id: str) -> 'ConcreteGoal':
@@ -151,6 +170,8 @@ def parse_xml(filename=GOAL_XML):
             mini = int(e_var.get('min'))
             maxi = int(e_var.get('max'))
             new_goal.variable_ranges[name] = (mini, maxi)
+
+        new_goal.triggers_xml = e_goal.findall('ItemTrigger')
 
         difficulty = int(e_goal.get('difficulty'))
         GOALS[difficulty].append(new_goal)

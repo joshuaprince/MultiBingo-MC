@@ -116,10 +116,20 @@
     <Weight>0.5</Weight>
     <Antisynergy>GoldBlocks</Antisynergy>
   </Goal>
+  <!--
+    This is the original version of this goal from Joshimuz's bingo.
+    It is replaced with a version where both poppies and dandelions require the same number.
+    This is to make automatic activation work; the spec currently doesn't support something like
+    the original.
   <Goal difficulty="0" id="jm_poppi_lions77471">
     <Description>$var1 Poppies &amp; $var2 Dandelions</Description>
     <Variable name="var1" min="5" max="25"/>
     <Variable name="var2" min="5" max="25"/>
+  </Goal>
+  -->
+  <Goal difficulty="0" id="mcb_poppies_dandelions">
+    <Description>$var Poppies &amp; $var Dandelions</Description>
+    <Variable min="5" max="25"/>
   </Goal>
   <Goal difficulty="0" id="jm_level__71448">
     <Description>Level $var</Description>

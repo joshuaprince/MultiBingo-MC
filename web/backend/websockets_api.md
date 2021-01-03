@@ -129,7 +129,8 @@ accomplished.
       "position": 0,
       "variables": {
         "var": 32
-      }
+      },
+      "triggers": []
     },
     {
       "id": "poppies_dandelions",
@@ -137,7 +138,24 @@ accomplished.
       "variables": {
         "var1": 10,
         "var2": 20
-      }
+      },
+      "triggers": [
+        {
+          "ItemTrigger": {
+            "@needed": "2",
+            "ItemMatch": [
+              {
+                "Name": "minecraft:dandelion",
+                "Quantity": "24"
+              },
+              {
+                "Name": "minecraft:dandelion",
+                "Quantity": "24"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
@@ -150,6 +168,7 @@ board. Each Goal object consists of:
   position of this goal on the board.
 - An optional `variables` object, which lists any variables present on this 
   goal.
-
-The plugin backend maintains an identical goals.xml that allows it to determine
-the circumstances to award each goal ID.
+- An optional `triggers` list, which describes any automated trigger criteria
+  that the plugin can use to automatically trigger goals. This list is 
+  passed exactly as it is specified in the XML, converted to JSON as 
+  specified by [xmltodict](https://pypi.org/project/xmltodict/).

@@ -28,8 +28,9 @@
   </Goal>
 
   <Goal difficulty="2" id="stairs"> <!-- Multiple different regex -->
-    <Description>$needed Different Stairs</Description>
-    <ItemTrigger needed-min="2" needed-max="4">
+    <Description>$var Different Stairs</Description>
+    <Variable min="2" max="4"/>
+    <ItemTrigger needed="$var">
       <ItemMatch>
         <Name>minecraft:.*_stairs</Name>
       </ItemMatch>

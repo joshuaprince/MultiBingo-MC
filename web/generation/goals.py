@@ -68,7 +68,7 @@ class ConcreteGoal:
         for goal_trigger_element in self.goal.triggers_xml:
             xml_str = ElementTree.tostring(goal_trigger_element, encoding='unicode')
             xml_str_derefd = self._replace_vars(xml_str)
-            triggers_list.append(xmltodict.parse(xml_str_derefd, force_list='ItemMatch',))
+            triggers_list.append(xmltodict.parse(xml_str_derefd, force_list=True))
         return triggers_list
 
     @staticmethod

@@ -17,10 +17,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BingoGame {
-    protected final MCBingoPlugin plugin;
-    protected final String gameCode;
-    protected BingoWebSocketClient wsClient;
+    final MCBingoPlugin plugin;
+    final AutoActivation autoActivation;
+    BingoWebSocketClient wsClient;
+    ConcreteGoal[] squares;
 
+    protected final String gameCode;
     protected final Map<Player, WorldManager.WorldSet> playerWorldSetMap;
     protected int countdown;
 
@@ -28,6 +30,7 @@ public class BingoGame {
         this.plugin = plugin;
         this.gameCode = gameCode;
         this.playerWorldSetMap = new HashMap<>();
+        this.autoActivation = new AutoActivation(this);
     }
 
     public void prepare(Collection<Player> players) {

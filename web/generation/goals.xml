@@ -3,6 +3,10 @@
   <Goal difficulty="0" id="jm_cobbl_stone61314">
     <Description>$var Cobblestone</Description>
     <Variable min="32" max="64"/>
+    <ItemTrigger>
+      <Name>minecraft:cobblestone</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="0" id="jm_dirt_15835">
     <Description>$var Dirt</Description>
@@ -352,6 +356,26 @@
   <Goal difficulty="1" id="jm_diffe__fish70981">
     <Description>$var Different Fish</Description>
     <Variable min="2" max="4"/>
+    <ItemTrigger needed="$var">
+      <ItemMatchGroup max-matches="1">
+        <Name>minecraft:cod</Name>
+        <Name>minecraft:cooked_cod</Name>
+        <Name>minecraft:cod_bucket</Name>
+      </ItemMatchGroup>
+      <ItemMatchGroup max-matches="1">
+        <Name>minecraft:salmon</Name>
+        <Name>minecraft:cooked_salmon</Name>
+        <Name>minecraft:salmon_bucket</Name>
+      </ItemMatchGroup>
+      <ItemMatchGroup max-matches="1">
+        <Name>minecraft:pufferfish</Name>
+        <Name>minecraft:pufferfish_bucket</Name>
+      </ItemMatchGroup>
+      <ItemMatchGroup max-matches="1">
+        <Name>minecraft:tropical_fish</Name>
+        <Name>minecraft:tropical_fish_bucket</Name>
+      </ItemMatchGroup>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="1" id="jm_grow__ether38694">
     <Description>Grow a Tree in the Nether</Description>
@@ -938,6 +962,9 @@
   </Goal>
   <Goal difficulty="2" id="jm_withe_skull95034">
     <Description>Wither Skull</Description>
+    <ItemTrigger>
+      <Name>minecraft:wither_skeleton_skull</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_diffe_items12523">
     <Description>$var Different Edible Items</Description>
@@ -1226,22 +1253,37 @@
     <Weight>0.5</Weight>
     <Antisynergy>RotFlesh</Antisynergy>
     <Variable min="33" max="64"/>
+    <ItemTrigger>
+      <Name>minecraft:rotten_flesh</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_ink_sacks_79449">
     <Description>$var Ink Sacks</Description>
     <Weight>0.5</Weight>
     <Antisynergy>InkSacks</Antisynergy>
     <Variable min="16" max="32"/>
+    <ItemTrigger>
+      <Name>minecraft:ink_sac</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_slimeballs_13595">
     <Description>$var Slimeballs</Description>
     <Variable min="2" max="6"/>
+    <ItemTrigger>
+      <Name>minecraft:slime_ball</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_use_a_abbit23802">
     <Description>Use a lead on a Rabbit</Description>
   </Goal>
   <Goal difficulty="2" id="jm_firew__star89450">
     <Description>Firework Star</Description>
+    <ItemTrigger>
+      <Name>minecraft:firework_star</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_hang___lead40092">
     <Description>Hang a mob with a lead</Description>
@@ -1249,9 +1291,15 @@
   </Goal>
   <Goal difficulty="2" id="jm_blaze_rod_30540">
     <Description>Blaze Rod</Description>
+    <ItemTrigger>
+      <Name>minecraft:blaze_rod</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_ghast_tear_42382">
     <Description>Ghast Tear</Description>
+    <ItemTrigger>
+      <Name>minecraft:ghast_tear</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_never__coal44187">
     <Description>Never use Coal</Description>
@@ -1260,14 +1308,34 @@
   <Goal difficulty="2" id="jm_glows__dust57861">
     <Description>$var Glowstone Dust</Description>
     <Variable min="32" max="64"/>
+    <ItemTrigger>
+      <Name>minecraft:glowstone_dust</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_item__rames57883">
     <Description>$var Item Frames</Description>
     <Variable min="10" max="32"/>
+    <ItemTrigger>
+      <Name>minecraft:item_frame</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_diffe_items89302">
     <Description>$var Different Diamond Items</Description>
     <Variable min="2" max="3"/>
+    <ItemTrigger needed="$var">
+      <Name>minecraft:diamond_axe</Name>
+      <Name>minecraft:diamond_boots</Name>
+      <Name>minecraft:diamond_chestplate</Name>
+      <Name>minecraft:diamond_helmet</Name>
+      <Name>minecraft:diamond_hoe</Name>
+      <Name>minecraft:diamond_horse_armor</Name>
+      <Name>minecraft:diamond_leggings</Name>
+      <Name>minecraft:diamond_pickaxe</Name>
+      <Name>minecraft:diamond_shovel</Name>
+      <Name>minecraft:diamond_sword</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_blow__ystal33796">
     <Description>Blow up an End Crystal</Description>
@@ -1276,6 +1344,10 @@
     <Description>$var Prismarine Crystals</Description>
     <Weight>0.5</Weight>
     <Variable min="2" max="5"/>
+    <ItemTrigger>
+      <Name>minecraft:prismarine_crystals</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_dig_s_hole)50067">
     <Description>Dig straight down to Bedrock from Sea level (1x1 hole)</Description>
@@ -1290,9 +1362,18 @@
   </Goal>
   <Goal difficulty="2" id="jm_full__rmour52363">
     <Description>Full Diamond Armour</Description>
+    <ItemTrigger needed="4">
+      <Name>minecraft:diamond_helmet</Name>
+      <Name>minecraft:diamond_chestplate</Name>
+      <Name>minecraft:diamond_leggings</Name>
+      <Name>minecraft:diamond_boots</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_saddle_99307">
     <Description>Saddle</Description>
+    <ItemTrigger>
+      <Name>minecraft:saddle</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_give__a_hat33286">
     <Description>Give a mob a Hat</Description>
@@ -1302,12 +1383,21 @@
   </Goal>
   <Goal difficulty="2" id="jm_heart_e_sea60342">
     <Description>Heart of the Sea</Description>
+    <ItemTrigger>
+      <Name>minecraft:heart_of_the_sea</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_phant_brane70845">
     <Description>Phantom Membrane</Description>
+    <ItemTrigger>
+      <Name>minecraft:phantom_membrane</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_turtl_shell59551">
     <Description>Turtle Shell</Description>
+    <ItemTrigger>
+      <Name>minecraft:turtle_helmet</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_add_a_a_map27949">
     <Description>Add a Marker to a Map</Description>
@@ -1316,6 +1406,17 @@
     <Description>Water Bucket, Lava Bucket, Milk Bucket, Bucket of Fish</Description>
     <Tooltip>Can be any of the types of Fish</Tooltip>
     <Antisynergy>BucketTypes</Antisynergy>
+    <ItemTrigger needed="4">
+      <Name>minecraft:water_bucket</Name>
+      <Name>minecraft:lava_bucket</Name>
+      <Name>minecraft:milk_bucket</Name>
+      <ItemMatchGroup max-matches="1">
+        <Name>minecraft:cod_bucket</Name>
+        <Name>minecraft:salmon_bucket</Name>
+        <Name>minecraft:pufferfish_bucket</Name>
+        <Name>minecraft:tropical_fish_bucket</Name>
+      </ItemMatchGroup>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_leash_fence96708">
     <Description>Leash a Dolphin to a Fence</Description>
@@ -1324,24 +1425,40 @@
     <Description>$var Dried Kelp Blocks</Description>
     <Antisynergy>KelpBlocks</Antisynergy>
     <Variable min="21" max="32"/>
+    <ItemTrigger>
+      <Name>minecraft:dried_kelp_block</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_gunpowder_23496">
     <Description>$var Gunpowder</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Gunpowder</Antisynergy>
     <Variable min="6" max="15"/>
+    <ItemTrigger>
+      <Name>minecraft:gunpowder</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_spide__eyes16779">
     <Description>$var Spider Eyes</Description>
     <Weight>0.5</Weight>
     <Antisynergy>SpiderEye</Antisynergy>
     <Variable min="6" max="15"/>
+    <ItemTrigger>
+      <Name>minecraft:spider_eye</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_ender_earls32085">
     <Description>$var Ender Pearls</Description>
     <Weight>0.5</Weight>
     <Antisynergy>EnderPearl</Antisynergy>
     <Variable min="4" max="6"/>
+    <ItemTrigger>
+      <Name>minecraft:ender_pearl</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_never_n_axe38071">
     <Description>Never use an Axe</Description>

@@ -171,4 +171,5 @@ board. Each Goal object consists of:
 - An optional `triggers` list, which describes any automated trigger criteria
   that the plugin can use to automatically trigger goals. This list is 
   passed exactly as it is specified in the XML, converted to JSON as 
-  specified by [xmltodict](https://pypi.org/project/xmltodict/).
+  specified by [xmltodict](https://pypi.org/project/xmltodict/) where all 
+  objects are converted to lists (force_list=True).

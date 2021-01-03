@@ -218,6 +218,7 @@
   </Goal>
   <Goal difficulty="0" id="jm_sleep_a_bed24483">
     <Description>Sleep in a bed</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="0" id="jm_charcoal_45616">
     <Description>$var Charcoal</Description>
@@ -379,6 +380,7 @@
   </Goal>
   <Goal difficulty="1" id="jm_grow__ether38694">
     <Description>Grow a Tree in the Nether</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_color_cotta87385">
     <Description>$var Colors of Terracotta</Description>
@@ -731,7 +733,7 @@
     <Description>16 Chicken Eggs</Description>
     <ItemTrigger>
       <Name>minecraft:egg</Name>
-      <Quantity>$var</Quantity>
+      <Quantity>16</Quantity>
     </ItemTrigger>
   </Goal>
   <Goal difficulty="1" id="jm_hang__tings65698">
@@ -844,9 +846,11 @@
   </Goal>
   <Goal difficulty="1" id="jm_never_sleep35022">
     <Description>Never Sleep</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_grow__hroom76894">
     <Description>Grow a Huge Mushroom</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_water_ucket49775">
     <Description>Water Bucket, Lava Bucket and Milk Bucket</Description>
@@ -1554,6 +1558,7 @@
   </Goal>
   <Goal difficulty="2" id="jm_sleep_llage18859">
     <Description>Sleep inside a village</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_kill__arrow18771">
     <Description>Kill a Skeleton with it's own Arrow</Description>
@@ -1880,6 +1885,7 @@
   </Goal>
   <Goal difficulty="2" id="jm_activ_llage72436">
     <Description>Activate a Nether Portal inside of a Village</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_rotte_flesh27125">
     <Description>$var Rotten Flesh</Description>
@@ -2287,6 +2293,7 @@
   </Goal>
   <Goal difficulty="3" id="jm_grow___tree94140">
     <Description>Grow a Full Jungle Tree</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="3" id="jm_prism_hards93385">
     <Description>$var Prismarine Shards</Description>

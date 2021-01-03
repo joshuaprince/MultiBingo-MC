@@ -2,9 +2,6 @@ package com.jtprince.bingo.plugin;
 
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class AutoActivation {
     final BingoGame game;
     final GoalActivationListener listener;
@@ -20,7 +17,15 @@ public class AutoActivation {
      * @param goal The goal ID to activate.
      */
     public void impulseGoal(Player player, String goal) {
+        if (this.game.wsClient == null || this.game.squares == null) {
+            return;
+        }
 
+        for (ConcreteGoal cg : this.game.squares) {
+            if (goal.equals(cg.id)) {
+                this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
+            }
+        }
     }
 
     /**
@@ -30,7 +35,15 @@ public class AutoActivation {
      * @param goal The goal ID to "de"activate.
      */
     public void impulseGoalNegative(Player player, String goal) {
+        if (this.game.wsClient == null || this.game.squares == null) {
+            return;
+        }
 
+        for (ConcreteGoal cg : this.game.squares) {
+            if (goal.equals(cg.id)) {
+                this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 3);
+            }
+        }
     }
 
     /**
@@ -38,30 +51,33 @@ public class AutoActivation {
      * made some amount of progress towards a variable goal. If the variable passed is equal to or
      * greater than the goal's set variable, this goal will be activated.
      *
-     * Convenience method for impulseGoalVariables where the goal only has one variable named "var".
+     * Only works for single-variable goals, where the goal is named $var!
      * @param player Player to activate for.
      * @param goal The goal ID to activate.
      * @param var The player's current progress towards this goal. The goal will only activate if
      *            this is greater than or equal to the goal's set variable.
      */
-    public boolean impulseGoal(Player player, String goal, int var) {
-        HashMap<String, Integer> varMap = new HashMap<>();
-        varMap.put("var", var);
-        return this.impulseGoal(player, goal, varMap);
-    }
+    public void impulseGoal(Player player, String goal, int var) {
+        if (this.game.wsClient == null || this.game.squares == null) {
+            return;
+        }
 
-    /**
-     * Consider marking a goal as complete if it exists on the board, indicating that the player has
-     * made some amount of progress towards a variable goal. If the variable passed is equal to or
-     * greater than the goal's set variable, this goal will be activated.
-     * @param player Player to activate for.
-     * @param goal The goal ID to activate.
-     * @param varMap A mapping of variable names to the values that this player has acquired. If
-     *               ALL entries in this map are greater than or equal to the goal's set variables,
-     *               the goal will activate.
-     */
-    public boolean impulseGoal(Player player, String goal, Map<String, Integer> varMap) {
-        return true;
+        String varName = "var";
+
+        for (ConcreteGoal cg : this.game.squares) {
+            if (goal.equals(cg.id)) {
+                Integer varValue = cg.variables.get(varName);
+                if (varValue == null) {
+                    this.game.plugin.getLogger().warning(
+                        "Cannot impulse unknown variable " + varName + " on " + cg.id);
+                    continue;
+                }
+
+                if (var >= varValue) {
+                    this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
+                }
+            }
+        }
     }
 
     public void impulseInventory(Player player) {

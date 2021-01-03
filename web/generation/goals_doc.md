@@ -78,6 +78,10 @@ varied.
 Defines that this goal can be automatically activated by a Plugin backend by 
 obtaining certain items in the player's inventory. See below for more details.
 
+#### `<Auto/>`
+This tag does nothing. It simply serves as a flag to indicate that automatic 
+activation has been manually implemented for this goal.
+
 ## Item Triggers
 Item triggers specify that a goal should be satisfied by acquiring 
 certain items in the player's inventory. Examples:

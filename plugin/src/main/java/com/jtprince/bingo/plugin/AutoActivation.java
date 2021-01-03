@@ -65,7 +65,7 @@ public class AutoActivation {
     }
 
     public void impulseInventory(Player player) {
-        if (this.game.wsClient == null) {
+        if (this.game.wsClient == null || this.game.squares == null) {
             return;
         }
 

@@ -1745,6 +1745,9 @@
   </Goal>
   <Goal difficulty="2" id="jm_dayli_ensor19665">
     <Description>Daylight Sensor</Description>
+    <ItemTrigger>
+      <Name>minecraft:daylight_detector</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_encha_sword53260">
     <Description>Enchanted Golden Sword</Description>

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class BingoGame {
     final MCBingoPlugin plugin;
     final AutoActivation autoActivation;
-    BingoWebSocketClient wsClient;
+    final BingoWebSocketClient wsClient;
     ConcreteGoal[] squares;
 
     protected final String gameCode;
@@ -31,6 +31,9 @@ public class BingoGame {
         this.gameCode = gameCode;
         this.playerWorldSetMap = new HashMap<>();
         this.autoActivation = new AutoActivation(this);
+
+        URI uri = plugin.getWebsocketUrl(this.gameCode);
+        this.wsClient = new BingoWebSocketClient(this, uri);
     }
 
     public void prepare(Collection<Player> players) {
@@ -38,7 +41,7 @@ public class BingoGame {
         this.plugin.getServer().broadcastMessage("This may cause the server to lag!");
 
         this.prepareWorldSets(players);
-        this.connectWebSocket();
+        this.wsClient.connect();
 
         String playerList = players.stream().map(Player::getName).collect(Collectors.joining(", "));
         this.plugin.getServer().broadcastMessage("Bingo worlds finished generating for: " + playerList);
@@ -93,13 +96,6 @@ public class BingoGame {
 
         this.plugin.getServer().dispatchCommand(console, "advancement revoke @a everything");
         this.plugin.getServer().dispatchCommand(console, "clear @a");
-    }
-
-    protected void connectWebSocket() {
-        URI uri = plugin.getWebsocketUrl(this.gameCode);
-        this.wsClient = new BingoWebSocketClient(this, uri);
-        this.wsClient.connect();
-        this.plugin.getServer().getLogger().info("Successfully connected to websocket for game " + this.gameCode);
     }
 
     protected void sendGameLinksToPlayers(Collection<Player> players) {

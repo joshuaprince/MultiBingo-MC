@@ -21,16 +21,16 @@ public class BingoGame {
     final MCBingoPlugin plugin;
     final AutoActivation autoActivation;
     final BingoWebSocketClient wsClient;
-    ConcreteGoal[] squares;
+    final GameBoard gameBoard = new GameBoard();
 
     protected final String gameCode;
-    protected final Map<Player, WorldManager.WorldSet> playerWorldSetMap;
+    protected final Map<Player, WorldManager.WorldSet> playerWorldSetMap = new HashMap<>();
+    protected final Map<Player, PlayerBoard> playerBoardMap = new HashMap<>();
     protected int countdown;
 
     public BingoGame(MCBingoPlugin plugin, String gameCode) {
         this.plugin = plugin;
         this.gameCode = gameCode;
-        this.playerWorldSetMap = new HashMap<>();
         this.autoActivation = new AutoActivation(this);
 
         URI uri = plugin.getWebsocketUrl(this.gameCode);
@@ -42,6 +42,7 @@ public class BingoGame {
         this.plugin.getServer().broadcastMessage("This may cause the server to lag!");
 
         this.prepareWorldSets(players);
+        this.preparePlayerBoards(players);
         this.wsClient.connect();
 
         String playerList = players.stream().map(Player::getName).collect(Collectors.joining(", "));
@@ -72,6 +73,12 @@ public class BingoGame {
             WorldManager.WorldSet ws = this.plugin.worldManager.createWorlds(
                 gameCode + "_" + p.getName(), gameCode);
             this.playerWorldSetMap.put(p, ws);
+        }
+    }
+
+    protected void preparePlayerBoards(Collection<Player> players) {
+        for (Player p : players) {
+            this.playerBoardMap.put(p, new PlayerBoard(p, this));
         }
     }
 
@@ -157,6 +164,16 @@ public class BingoGame {
         }
 
         this.plugin.getLogger().finer("getPlayerInWorld did not find a player for " + world.getName());
+        return null;
+    }
+
+    public Player getPlayerByName(String name) {
+        for (Player p : this.playerBoardMap.keySet()) {
+            if (p.getName().equals(name)) {
+                return p;
+            }
+        }
+
         return null;
     }
 }

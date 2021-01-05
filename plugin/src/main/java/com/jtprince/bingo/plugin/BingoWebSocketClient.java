@@ -1,5 +1,6 @@
 package com.jtprince.bingo.plugin;
 
+import org.bukkit.entity.Player;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.simple.JSONArray;
@@ -59,7 +60,20 @@ public class BingoWebSocketClient extends WebSocketClient {
         }
 
         this.game.plugin.getLogger().info("Received board for game " + this.game.gameCode);
-        this.game.squares = squares;
+        this.game.gameBoard.setSquares(squares);
+    }
+
+    protected void receivePlayerBoards(JSONArray playerBoards) {
+        for (Object obj : playerBoards) {
+            JSONObject json = (JSONObject) obj;
+            String playerName = (String) json.get("player_name");
+            Player player = this.game.getPlayerByName(playerName);
+            if (player != null) {
+                String board = (String) json.get("board");
+                PlayerBoard pb = this.game.playerBoardMap.get(player);
+                pb.update(board);
+            }
+        }
     }
 
     @Override
@@ -82,6 +96,11 @@ public class BingoWebSocketClient extends WebSocketClient {
         JSONArray goals = (JSONArray) obj.get("goals");
         if (goals != null) {
             this.receiveGoals(goals);
+        }
+
+        JSONArray pboards = (JSONArray) obj.get("pboards");
+        if (pboards != null) {
+            this.receivePlayerBoards(pboards);
         }
     }
 

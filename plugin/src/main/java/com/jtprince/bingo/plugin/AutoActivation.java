@@ -18,11 +18,7 @@ public class AutoActivation {
      * @param goal The goal ID to activate.
      */
     public void impulseGoal(Player player, String goal) {
-        if (this.game.wsClient == null || this.game.squares == null) {
-            return;
-        }
-
-        for (ConcreteGoal cg : this.game.squares) {
+        for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             if (goal.equals(cg.id)) {
                 this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
             }
@@ -45,11 +41,7 @@ public class AutoActivation {
      * @param goal The goal ID to "de"activate.
      */
     public void impulseGoalNegative(Player player, String goal) {
-        if (this.game.wsClient == null || this.game.squares == null) {
-            return;
-        }
-
-        for (ConcreteGoal cg : this.game.squares) {
+        for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             if (goal.equals(cg.id)) {
                 this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 3);
             }
@@ -68,13 +60,9 @@ public class AutoActivation {
      *            this is greater than or equal to the goal's set variable.
      */
     public void impulseGoal(Player player, String goal, int var) {
-        if (this.game.wsClient == null || this.game.squares == null) {
-            return;
-        }
-
         String varName = "var";
 
-        for (ConcreteGoal cg : this.game.squares) {
+        for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             if (goal.equals(cg.id)) {
                 Integer varValue = cg.variables.get(varName);
                 if (varValue == null) {
@@ -91,11 +79,7 @@ public class AutoActivation {
     }
 
     public void impulseInventory(Player player) {
-        if (this.game.wsClient == null || this.game.squares == null) {
-            return;
-        }
-
-        for (ConcreteGoal cg : this.game.squares) {
+        for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             for (ItemTrigger trigger : cg.itemTriggers) {
                 if (trigger.isSatisfied(player.getInventory())) {
                     this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);

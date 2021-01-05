@@ -9,12 +9,14 @@ import java.util.Map;
 
 public class ConcreteGoal {
     public final String id;
+    public final String text;
     public final int position;
     public final Map<String, Integer> variables = new HashMap<>();
     public final ArrayList<ItemTrigger> itemTriggers = new ArrayList<>();
 
     public ConcreteGoal(JSONObject obj) {
         this.id = (String) obj.get("id");
+        this.text = (String) obj.get("text");
         this.position = ((Long) obj.get("position")).intValue();
 
         JSONObject vars = (JSONObject) obj.get("variables");

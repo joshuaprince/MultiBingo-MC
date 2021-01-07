@@ -57,6 +57,7 @@ public class MCBingoPlugin extends JavaPlugin {
     }
 
     protected boolean commandGenerate(CommandSender sender, String worldCode) {
+        // TODO consider deletion or format messages
         sender.sendMessage("Generating worlds...");
         worldManager.createWorlds(worldCode, worldCode);
         sender.sendMessage("Worlds generated! Type /bingo go " + worldCode + " to go there.");
@@ -64,6 +65,7 @@ public class MCBingoPlugin extends JavaPlugin {
     }
 
     protected boolean commandGo(CommandSender sender, String worldCode) {
+        // TODO consider deletion or format messages
         if (!(sender instanceof Player)) {
             sender.sendMessage("You must be a player to use this command.");
             return true;
@@ -84,6 +86,7 @@ public class MCBingoPlugin extends JavaPlugin {
 
     protected boolean commandStart(CommandSender sender) {
         if (this.currentGame == null) {
+            // TODO format message
             sender.sendMessage("No game is prepared! Use /bingo prepare <gameID>");
             return true;
         }

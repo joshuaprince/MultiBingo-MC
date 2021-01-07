@@ -58,18 +58,19 @@ public class PlayerBoard {
             return;
         }
 
-        String announcement = null;
+        Boolean invalidated = null;  // null => no announcement
         if (toState == COMPLETE) {
-            announcement = player.getName() + " has marked " + game.gameBoard.getText(position);
+            invalidated = false;
         }
 
         if (toState == INVALIDATED) {
-            announcement = player.getName() + " has INVALIDATED " + game.gameBoard.getText(position);
+            invalidated = true;
         }
 
-        if (announcement != null) {
+        if (invalidated != null) {
             this.announcedPositions.add(position);
-            this.game.plugin.getServer().broadcastMessage(announcement);
+            ConcreteGoal square = this.game.gameBoard.getSquare(position);
+            this.game.messages.announcePlayerMarking(this.player, square, invalidated);
         }
     }
 }

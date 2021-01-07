@@ -59,6 +59,7 @@ class Square(models.Model):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
         return {
             'id': cg.goal.id,
+            'text': self.text,
             'position': self.position,
             'variables': cg.variables,
             'triggers': cg.triggers(),

@@ -1,8 +1,5 @@
 package com.jtprince.bingo.plugin;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -19,6 +16,7 @@ import java.util.stream.Collectors;
 
 public class BingoGame {
     final MCBingoPlugin plugin;
+    final Messages messages;
     final AutoActivation autoActivation;
     final BingoWebSocketClient wsClient;
     final GameBoard gameBoard = new GameBoard();
@@ -31,6 +29,7 @@ public class BingoGame {
     public BingoGame(MCBingoPlugin plugin, String gameCode) {
         this.plugin = plugin;
         this.gameCode = gameCode;
+        this.messages = new Messages(this);
         this.autoActivation = new AutoActivation(this);
 
         URI uri = plugin.getWebsocketUrl(this.gameCode);
@@ -38,20 +37,13 @@ public class BingoGame {
     }
 
     public void prepare(Collection<Player> players) {
-        this.plugin.getServer().broadcastMessage("Worlds are being generated for a new Bingo game " + this.gameCode + ".");
-        this.plugin.getServer().broadcastMessage("This may cause the server to lag!");
+        this.messages.announcePreparingGame();
 
         this.prepareWorldSets(players);
         this.preparePlayerBoards(players);
         this.wsClient.connect();
 
-        String playerList = players.stream().map(Player::getName).collect(Collectors.joining(", "));
-        this.plugin.getServer().broadcastMessage("Bingo worlds finished generating for: " + playerList);
-        this.sendGameLinksToPlayers(players);
-
-        for (Player p : players) {
-            this.sendStartButton(p);
-        }
+        this.messages.announceGameReady(players);
     }
 
     public void start() {
@@ -104,26 +96,6 @@ public class BingoGame {
 
         this.plugin.getServer().dispatchCommand(console, "advancement revoke @a everything");
         this.plugin.getServer().dispatchCommand(console, "clear @a");
-    }
-
-    protected void sendGameLinksToPlayers(Collection<Player> players) {
-        for (Player p : players) {
-            TextComponent t = new TextComponent("Test!");
-            t.setText("Click here to open the board!");
-            t.setColor(ChatColor.AQUA);
-            URI url = this.plugin.getGameUrl(this.gameCode, p);
-            t.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()));
-            p.sendMessage(t);
-        }
-    }
-
-    protected void sendStartButton(Player p) {
-        TextComponent t = new TextComponent("Click here to start the game: ");
-        TextComponent btn = new TextComponent("[START]");
-        btn.setColor(ChatColor.GOLD);
-        btn.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bingo start " + this.gameCode));
-        t.addExtra(btn);
-        p.sendMessage(t);
     }
 
     protected void doCountdown() {

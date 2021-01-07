@@ -24,7 +24,7 @@ public class GameBoard {
         return Arrays.asList(squares);
     }
 
-    public String getText(int position) {
-        return this.squares[position].text;
+    public ConcreteGoal getSquare(int position) {
+        return this.squares[position];
     }
 }

@@ -18,10 +18,10 @@ public class AutoActivation {
      * @param goal The goal ID to activate.
      */
     public void impulseGoal(Player player, String goal) {
+        debugLog("Impulsing goal " + goal);
         for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             if (goal.equals(cg.id)) {
                 this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
-                debugLog("Impulsed goal " + cg.id);
             }
         }
     }
@@ -42,10 +42,10 @@ public class AutoActivation {
      * @param goal The goal ID to "de"activate.
      */
     public void impulseGoalNegative(Player player, String goal) {
+        debugLog("Impulsing negative goal " + goal);
         for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             if (goal.equals(cg.id)) {
                 this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 3);
-                debugLog("Impulsed negative goal " + cg.id);
             }
         }
     }
@@ -62,6 +62,7 @@ public class AutoActivation {
      *            this is greater than or equal to the goal's set variable.
      */
     public void impulseGoal(Player player, String goal, int var) {
+        debugLog("Impulsing var goal " + goal);
         String varName = "var";
 
         for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
@@ -75,7 +76,6 @@ public class AutoActivation {
 
                 if (var >= varValue) {
                     this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
-                    debugLog("Impulsed var goal " + cg.id);
                }
             }
         }

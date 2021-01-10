@@ -1693,11 +1693,13 @@
     <Description>Vegetarian</Description>
     <Tooltip>Never eat meat, including fish</Tooltip>
     <Antisynergy>Food</Antisynergy>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_carnivore_30882">
     <Description>Carnivore</Description>
     <Tooltip>Only eat meat</Tooltip>
     <Antisynergy>Food</Antisynergy>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_kill__arrow54591">
     <Description>Kill yourself with your own arrow</Description>
@@ -1846,6 +1848,7 @@
   <Goal difficulty="2" id="jm_never_die_37813">
     <Description>Never Die</Description>
     <Tooltip>No death allowed, including if immediately caused by completing the last goal (e.g. inadvertently dying to the explosion of &quot;Detonate a TNT-Minecart&quot;)</Tooltip>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_level__62503">
     <Description>Level $var</Description>
@@ -1949,6 +1952,7 @@
   <Goal difficulty="2" id="jm_never__coal44187">
     <Description>Never use Coal</Description>
     <Tooltip>Never use Coal for any crafting recipes, fuel in a furnace or trades, CAN use Charcoal</Tooltip>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_glows__dust57861">
     <Description>$var Glowstone Dust</Description>
@@ -2001,6 +2005,7 @@
   <Goal difficulty="2" id="jm_never_sword96977">
     <Description>Never use a Sword</Description>
     <Tooltip>Never use a Sword for Combat or Block Breaking. Holding or crafting is fine.</Tooltip>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_deple_sword77323">
     <Description>Deplete an Iron Sword</Description>
@@ -2108,6 +2113,8 @@
   </Goal>
   <Goal difficulty="2" id="jm_never_n_axe38071">
     <Description>Never use an Axe</Description>
+    <Tooltip>Never use an Axe for Combat or Block Breaking. Holding or crafting is fine.</Tooltip>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_encha__item90383">
     <Description>Enchant an item</Description>
@@ -2252,6 +2259,7 @@
   </Goal>
   <Goal difficulty="3" id="jm_never_rches51018">
     <Description>Never place Torches</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="3" id="jm_get_a_world65687">
     <Description>Get a Ghast into the Overworld</Description>
@@ -2277,6 +2285,7 @@
   </Goal>
   <Goal difficulty="3" id="jm_never_ckets96909">
     <Description>Never use Buckets</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="3" id="jm_conduit_64317">
     <Description>Conduit</Description>
@@ -2407,5 +2416,6 @@
   </Goal>
   <Goal difficulty="4" id="jm_never_ticks40530">
     <Description>Never Craft Sticks</Description>
+    <Auto/>
   </Goal>
 </MCBingoGoals>

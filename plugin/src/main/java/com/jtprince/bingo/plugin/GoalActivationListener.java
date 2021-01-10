@@ -11,15 +11,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.Contract;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -217,6 +227,151 @@ public class GoalActivationListener implements Listener {
                 && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never__boat85417");
             }
+
+            // Never use buckets
+            if (event.getItem().getType().getKey().toString().contains("bucket")
+                && (event.getAction() == Action.RIGHT_CLICK_AIR
+                || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+                this.autoActivation.impulseGoal(event.getPlayer(), "jm_never_ckets96909");
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onDirectDamageEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player)) {
+            return;
+        }
+
+        Player damager = (Player) event.getDamager();
+        if (ignore(damager)) {
+            return;
+        }
+
+        ItemStack mainHand = damager.getInventory().getItemInMainHand();
+        if (mainHand.getType() != Material.AIR) {
+            // Never use a sword
+            if (mainHand.getType().getKey().toString().contains("_sword")) {
+                this.autoActivation.impulseGoalNegative(damager, "jm_never_sword96977");
+            }
+
+            // Never use an axe
+            if (mainHand.getType().getKey().toString().contains("_axe")) {
+                this.autoActivation.impulseGoalNegative(damager, "jm_never_n_axe38071");
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onBreakBlock(BlockBreakEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        if (event.getPlayer().getInventory().getItemInMainHand().getType() != Material.AIR) {
+            ItemStack tool = event.getPlayer().getInventory().getItemInMainHand();
+
+            // Never use a sword
+            if (tool.getType().getKey().toString().contains("_sword")) {
+                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_sword96977");
+            }
+
+            // Never use an axe
+            if (tool.getType().getKey().toString().contains("_axe")) {
+                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_n_axe38071");
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlaceBlock(BlockPlaceEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        // Never place torches
+        Material[] torches = {
+            Material.TORCH, Material.WALL_TORCH, Material.SOUL_TORCH, Material.SOUL_WALL_TORCH,
+            Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH
+        };
+        if (Arrays.stream(torches).anyMatch(m -> event.getBlock().getType() == m)) {
+            this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_rches51018");
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onConsume(PlayerItemConsumeEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        Material[] meats = {
+            Material.CHICKEN, Material.COOKED_CHICKEN, Material.COD, Material.COOKED_COD,
+            Material.BEEF, Material.COOKED_BEEF, Material.MUTTON, Material.COOKED_MUTTON,
+            Material.RABBIT, Material.COOKED_RABBIT, Material.SALMON, Material.COOKED_SALMON,
+            Material.PORKCHOP, Material.COOKED_PORKCHOP, Material.TROPICAL_FISH, Material.PUFFERFISH,
+            Material.RABBIT_STEW, Material.ROTTEN_FLESH
+        };
+
+        if (Arrays.stream(meats).anyMatch(f -> event.getItem().getType() == f)) {
+            this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_vegetarian_67077");
+        } else {
+            this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_carnivore_30882");
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        if (ignore(event.getEntity())) {
+            return;
+        }
+
+        this.autoActivation.impulseGoalNegative(event.getEntity(), "jm_never_die_37813");
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onCraft(CraftItemEvent event) {
+        if (ignore(event.getWhoClicked())) {
+            return;
+        }
+
+        Player p = (Player) event.getWhoClicked();
+
+        if (event.getRecipe().getResult().getType() == Material.STICK) {
+            this.autoActivation.impulseGoalNegative(p, "jm_never_ticks40530");
+        }
+
+        if (event.getRecipe() instanceof ShapedRecipe) {
+            ShapedRecipe r = (ShapedRecipe) event.getRecipe();
+
+            // Never use coal
+            if (r.getIngredientMap().values().stream().anyMatch(i -> i.getType() == Material.COAL)) {
+                this.autoActivation.impulseGoalNegative(p, "jm_never__coal44187");
+            }
+        }
+
+        if (event.getRecipe() instanceof ShapelessRecipe) {
+            ShapelessRecipe r = (ShapelessRecipe) event.getRecipe();
+
+            // Never use coal
+            if (r.getIngredientList().stream().anyMatch(i -> i.getType() == Material.COAL)) {
+                this.autoActivation.impulseGoalNegative(p, "jm_never__coal44187");
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onFurnaceStartBurning(FurnaceBurnEvent event) {
+        if (ignore(event.getBlock().getWorld())) {
+            return;
+        }
+
+        Player p = this.autoActivation.game.getPlayerInWorld(event.getBlock().getWorld());
+
+        // Never use coal
+        if (event.getFuel().getType() == Material.COAL
+            || event.getFuel().getType() == Material.COAL_BLOCK) {
+            this.autoActivation.impulseGoalNegative(p, "jm_never__coal44187");
         }
     }
 }

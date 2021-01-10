@@ -345,7 +345,8 @@ public class GoalActivationListener implements Listener {
             ShapedRecipe r = (ShapedRecipe) event.getRecipe();
 
             // Never use coal
-            if (r.getIngredientMap().values().stream().anyMatch(i -> i.getType() == Material.COAL)) {
+            if (r.getIngredientMap().values().stream().anyMatch(i -> i != null
+                                                                && i.getType() == Material.COAL)) {
                 this.autoActivation.impulseGoalNegative(p, "jm_never__coal44187");
             }
         }
@@ -354,7 +355,8 @@ public class GoalActivationListener implements Listener {
             ShapelessRecipe r = (ShapelessRecipe) event.getRecipe();
 
             // Never use coal
-            if (r.getIngredientList().stream().anyMatch(i -> i.getType() == Material.COAL)) {
+            if (r.getIngredientList().stream().anyMatch(i -> i != null
+                                                        && i.getType() == Material.COAL)) {
                 this.autoActivation.impulseGoalNegative(p, "jm_never__coal44187");
             }
         }

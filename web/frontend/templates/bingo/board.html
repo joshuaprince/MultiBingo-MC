@@ -10,7 +10,8 @@
         src: url({% static 'bingo/Minecraftia.ttf' %});
     }
   </style>
-  <link rel="stylesheet" href="{% static 'bingo/board.css' %}"></head>
+  <link rel="stylesheet" href="{% static 'bingo/board.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'bingo/favicon.png' %}">
 
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
@@ -19,6 +20,7 @@
   {{ num_mark_colors|json_script:'num_mark_colors' }}
   {{ player_id|json_script:'player_id' }}
   {{ player_name|json_script:'player_name' }}
+</head>
 <body>
   <div class="board-primary{% if player_name %} active{% endif %}{% if obscured %} obscured{% endif %}">
     <h1 class="room-name">{{ game_code }}</h1>

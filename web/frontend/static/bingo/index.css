@@ -6,6 +6,10 @@ body {
   font-family: sans-serif;
 }
 
+.logo {
+  max-width: 400px;
+}
+
 div.player-name, div.room-name {
   margin: 5px;
   width: 50%;

@@ -484,6 +484,7 @@
   </Goal>
   <Goal difficulty="1" id="jm_never_lates77348">
     <Description>Never wear Chestplates</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_never_hield82710">
     <Description>Never use a Shield</Description>
@@ -1326,6 +1327,7 @@
   </Goal>
   <Goal difficulty="1" id="jm_never_g_rod73476">
     <Description>Never use a Fishing Rod</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_never__boat85417">
     <Description>Never use a Boat</Description>
@@ -1566,6 +1568,7 @@
   </Goal>
   <Goal difficulty="2" id="jm_never_rmour42273">
     <Description>Never wear any Armour</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_get_a_s_bow67104">
     <Description>Get a Skeleton's Bow</Description>

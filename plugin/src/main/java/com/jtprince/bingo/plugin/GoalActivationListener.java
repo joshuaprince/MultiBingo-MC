@@ -1,6 +1,7 @@
 package com.jtprince.bingo.plugin;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -9,15 +10,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class GoalActivationListener implements Listener {
     protected final AutoActivation autoActivation;
@@ -71,6 +75,18 @@ public class GoalActivationListener implements Listener {
 
         Player p = (Player) event.getPlayer();
         this.autoActivation.impulseInventory(p);
+
+        ItemStack[] armor = p.getInventory().getArmorContents();
+        if (armor[2] != null) {
+            // chestplate slot
+            this.autoActivation.impulseGoalNegative(p, "jm_never_lates77348");
+        }
+        if (Arrays.stream(armor).anyMatch(Objects::nonNull)) {
+            this.autoActivation.impulseGoalNegative(p, "jm_never_rmour42273");
+
+            // never armor or shields
+            this.autoActivation.impulseGoalNegative(p, "jm_never_ields14785");
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -160,11 +176,32 @@ public class GoalActivationListener implements Listener {
         }
 
         Block block = event.getClickedBlock();
-        if (block != null) {
-            // Nether bed
-            if (block.getWorld().getEnvironment() == World.Environment.NETHER
-                && block.getType().getKey().toString().contains("_bed")) {
-                this.autoActivation.impulseGoal(event.getPlayer(), "jm_try__nether11982");
+        if (block == null) {
+            // Handled by onInteract
+            return;
+        }
+
+        // Nether bed
+        if (block.getWorld().getEnvironment() == World.Environment.NETHER
+            && block.getType().getKey().toString().contains("_bed")
+            && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            this.autoActivation.impulseGoal(event.getPlayer(), "jm_try__nether11982");
+        }
+    }
+
+    // No ignoreCancelled because Bukkit cancels air interact events for some reason...
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onInteract(PlayerInteractEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        if (event.getItem() != null) {
+            // Never use a fishing rod
+            if (event.getItem().getType() == Material.FISHING_ROD
+                && (event.getAction() == Action.RIGHT_CLICK_AIR
+                || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_g_rod73476");
             }
         }
     }

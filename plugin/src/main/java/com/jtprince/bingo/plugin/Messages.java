@@ -68,7 +68,7 @@ public class Messages {
         BaseComponent[] components;
         if (!invalidated) {
             components = new ComponentBuilder()
-                .append(HEADER)
+                .append(HEADER, ComponentBuilder.FormatRetention.NONE)
                 .append(player.getName())
                 .append(" has marked ")
                 .append(goal.text).color(ChatColor.GREEN)
@@ -76,7 +76,7 @@ public class Messages {
                 .create();
         } else {
             components = new ComponentBuilder()
-                .append(HEADER)
+                .append(HEADER, ComponentBuilder.FormatRetention.NONE)
                 .append(player.getName())
                 .append(" has invalidated ")
                 .append(goal.text).color(ChatColor.RED)

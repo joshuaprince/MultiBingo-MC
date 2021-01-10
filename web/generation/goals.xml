@@ -488,6 +488,7 @@
   </Goal>
   <Goal difficulty="1" id="jm_never_hield82710">
     <Description>Never use a Shield</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_jukebox_85703">
     <Description>Jukebox</Description>
@@ -1331,6 +1332,7 @@
   </Goal>
   <Goal difficulty="1" id="jm_never__boat85417">
     <Description>Never use a Boat</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_get_a_ether66387">
     <Description>Get a Fish into Nether</Description>
@@ -2265,6 +2267,7 @@
   </Goal>
   <Goal difficulty="3" id="jm_never_ields14785">
     <Description>Never wear Armour or use Shields</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="3" id="jm_kill__rmour36188">
     <Description>Kill a mob that is wearing Full Iron Armour</Description>

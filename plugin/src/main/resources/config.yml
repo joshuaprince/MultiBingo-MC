@@ -1,3 +1,4 @@
 urls:
   websocket: 'ws://localhost:8000/ws/board-plugin/$code/'
   game_player: 'http://localhost:8000/game/$code/?name=$player'
+debug: false

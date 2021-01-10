@@ -83,7 +83,6 @@ public class GoalActivationListener implements Listener {
         }
         if (Arrays.stream(armor).anyMatch(Objects::nonNull)) {
             this.autoActivation.impulseGoalNegative(p, "jm_never_rmour42273");
-
             // never armor or shields
             this.autoActivation.impulseGoalNegative(p, "jm_never_ields14785");
         }
@@ -202,6 +201,21 @@ public class GoalActivationListener implements Listener {
                 && (event.getAction() == Action.RIGHT_CLICK_AIR
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
                 this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_g_rod73476");
+            }
+
+            // Never use a shield
+            if (event.getItem().getType() == Material.SHIELD
+                && (event.getAction() == Action.RIGHT_CLICK_AIR
+                || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_hield82710");
+                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_ields14785");
+            }
+
+            // Never use (place) boats
+            // Boat placement calls RIGHT_CLICK_BLOCK on the water it is placed on
+            if (event.getItem().getType().getKey().toString().contains("_boat")
+                && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never__boat85417");
             }
         }
     }

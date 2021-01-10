@@ -9,9 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
 
 public class MCBingoPlugin extends JavaPlugin {
+    boolean debug = false;
     WorldManager worldManager;
     BingoGame currentGame;
 
@@ -19,6 +20,11 @@ public class MCBingoPlugin extends JavaPlugin {
     public void onEnable() {
         worldManager = new WorldManager(this);
         this.getServer().getPluginManager().registerEvents(worldManager, this);
+
+        if (this.getConfig().getBoolean("debug", false)) {
+            this.getLogger().setLevel(Level.FINER);
+            this.debug = true;
+        }
 
         this.saveDefaultConfig();
     }

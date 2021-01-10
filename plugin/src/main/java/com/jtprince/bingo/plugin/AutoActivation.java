@@ -21,6 +21,7 @@ public class AutoActivation {
         for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             if (goal.equals(cg.id)) {
                 this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
+                debugLog("Impulsed goal " + cg.id);
             }
         }
     }
@@ -44,6 +45,7 @@ public class AutoActivation {
         for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             if (goal.equals(cg.id)) {
                 this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 3);
+                debugLog("Impulsed negative goal " + cg.id);
             }
         }
     }
@@ -73,7 +75,8 @@ public class AutoActivation {
 
                 if (var >= varValue) {
                     this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
-                }
+                    debugLog("Impulsed var goal " + cg.id);
+               }
             }
         }
     }
@@ -82,9 +85,18 @@ public class AutoActivation {
         for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             for (ItemTrigger trigger : cg.itemTriggers) {
                 if (trigger.isSatisfied(player.getInventory())) {
+                    debugLog("Impulsed item " + cg.id);
                     this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
                 }
             }
+        }
+    }
+
+    protected void debugLog(String msg) {
+        if (this.game.plugin.debug) {
+            this.game.plugin.getLogger().info(msg);
+        } else {
+            this.game.plugin.getLogger().finer(msg);
         }
     }
 }

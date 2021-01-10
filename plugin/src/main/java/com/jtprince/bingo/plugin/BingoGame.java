@@ -12,9 +12,9 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class BingoGame {
+    protected State state = State.CREATED;
     final MCBingoPlugin plugin;
     final Messages messages;
     final AutoActivation autoActivation;
@@ -37,6 +37,7 @@ public class BingoGame {
     }
 
     public void prepare(Collection<Player> players) {
+        this.state = State.PREPARING;
         this.messages.announcePreparingGame();
 
         this.prepareWorldSets(players);
@@ -44,10 +45,12 @@ public class BingoGame {
         this.wsClient.connect();
 
         this.messages.announceGameReady(players);
+        this.state = State.READY;
     }
 
     public void start() {
         this.wipePlayers(this.playerWorldSetMap.keySet());
+        this.applyStartingEffects(this.playerWorldSetMap.keySet(), 7 * 20);
         this.teleportPlayersToWorlds(this.playerWorldSetMap.keySet());
 
         // Countdown is from 7, but only numbers from 5 and below are displayed
@@ -56,8 +59,8 @@ public class BingoGame {
                 this.wsClient::sendRevealBoard, 7 * 20);
         }
         this.countdown = 7;
-        this.applyStartingEffects(this.playerWorldSetMap.keySet(), 7 * 20);
         this.doCountdown();
+        this.state = State.RUNNING;
     }
 
     protected void prepareWorldSets(Collection<Player> players) {
@@ -147,5 +150,13 @@ public class BingoGame {
         }
 
         return null;
+    }
+
+    public enum State {
+        CREATED,
+        PREPARING,
+        READY,
+        RUNNING,
+        DONE
     }
 }

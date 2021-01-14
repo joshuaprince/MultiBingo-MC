@@ -67,10 +67,9 @@ public class BingoWebSocketClient extends WebSocketClient {
         for (Object obj : playerBoards) {
             JSONObject json = (JSONObject) obj;
             String playerName = (String) json.get("player_name");
-            Player player = this.game.getPlayerByName(playerName);
-            if (player != null) {
+            PlayerBoard pb = this.game.getPlayerBoard(playerName);
+            if (pb != null) {
                 String board = (String) json.get("board");
-                PlayerBoard pb = this.game.playerBoardMap.get(player);
                 pb.update(board);
             }
         }

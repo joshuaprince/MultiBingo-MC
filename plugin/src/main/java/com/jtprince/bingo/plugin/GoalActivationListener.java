@@ -29,7 +29,6 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.Contract;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -52,7 +51,7 @@ public class GoalActivationListener implements Listener {
         }
 
         Player p = (Player) player;
-        boolean ret = !autoActivation.game.playerWorldSetMap.containsKey(p);
+        boolean ret = !autoActivation.game.getPlayers().contains(p);
         if (ret) {
             this.autoActivation.game.plugin.getLogger().fine(
                 "ActivationListener ignored player " + player.getName());

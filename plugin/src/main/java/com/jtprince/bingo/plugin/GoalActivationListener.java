@@ -20,7 +20,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 
 import java.lang.reflect.InvocationTargetException;
@@ -55,6 +54,13 @@ public class GoalActivationListener implements Listener {
     public Set<ConcreteGoal> registerGoals(Collection<ConcreteGoal> goals) {
         Map<Class<? extends Event>, List<MethodTrigger>> newEventListenerMap = new HashMap<>();
         Set<ConcreteGoal> listenedGoals = new HashSet<>();
+
+        // Register all goals with ItemTriggers
+        for (ConcreteGoal cg : goals) {
+            if (cg.itemTriggers.size() > 0) {
+                listenedGoals.add(cg);
+            }
+        }
 
         // Register goals with Method triggers
         for (Method method : GoalListener.class.getDeclaredMethods()) {
@@ -130,10 +136,11 @@ public class GoalActivationListener implements Listener {
     }
 
     /**
-     * Return whether to ignore event associated with this player, because they are not part of a game.
+     * Return whether to ignore event associated with this player, because they are not part of
+     * a game.
      */
     @Contract("null -> true")
-    protected boolean ignore(LivingEntity player) {
+    private boolean ignore(LivingEntity player) {
         if (!(player instanceof Player)) {
             return true;
         }
@@ -150,7 +157,7 @@ public class GoalActivationListener implements Listener {
     /**
      * Return whether to ignore event in this world, because it is not part of a game.
      */
-    protected boolean ignore(World world) {
+    private boolean ignore(World world) {
         if (world == null) {
             return true;
         }
@@ -172,17 +179,7 @@ public class GoalActivationListener implements Listener {
 
         Player p = (Player) event.getPlayer();
         this.autoActivation.impulseInventory(p);
-
-        ItemStack[] armor = p.getInventory().getArmorContents();
-        /*if (armor[2] != null) {
-            // chestplate slot
-            this.autoActivation.impulseGoalNegative(p, "jm_never_lates77348");
-        }
-        if (Arrays.stream(armor).anyMatch(Objects::nonNull)) {
-            this.autoActivation.impulseGoalNegative(p, "jm_never_rmour42273");
-            // never armor or shields
-            this.autoActivation.impulseGoalNegative(p, "jm_never_ields14785");
-        }*/
+        this.trigger(event, p);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -195,6 +192,7 @@ public class GoalActivationListener implements Listener {
         // 1 tick later so the item is in the player's inventory
         this.autoActivation.game.plugin.getServer().getScheduler().scheduleSyncDelayedTask(
             this.autoActivation.game.plugin, () -> this.autoActivation.impulseInventory(p), 1);
+        this.trigger(event, p);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

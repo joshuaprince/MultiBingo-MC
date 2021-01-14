@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -22,6 +23,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class GoalListener {
     @Retention(RetentionPolicy.RUNTIME)
@@ -124,6 +126,21 @@ public class GoalListener {
         // See also CraftItemEvent variant
         return event.getFuel().getType() == Material.COAL
             || event.getFuel().getType() == Material.COAL_BLOCK;
+    }
+
+    @BingoListener(extraGoals = {"jm_never_ields14785"})
+    public static boolean jm_never_rmour42273(InventoryCloseEvent event) {
+        // Never use armor
+        // Never use armor or shields
+        Player p = (Player) event.getPlayer();
+        return Arrays.stream(p.getInventory().getArmorContents()).anyMatch(Objects::nonNull);
+    }
+
+    @BingoListener
+    public static boolean jm_never_lates77348(InventoryCloseEvent event) {
+        // Never wear chestplates
+        Player p = (Player) event.getPlayer();
+        return p.getInventory().getArmorContents()[2] != null;
     }
 
     @BingoListener(extraGoals = {"jm_never_sleep35022"})

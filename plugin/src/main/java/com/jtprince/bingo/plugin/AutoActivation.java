@@ -15,8 +15,7 @@ public class AutoActivation {
         for (ConcreteGoal cg : this.game.gameBoard.getSquares()) {
             for (ItemTrigger trigger : cg.itemTriggers) {
                 if (trigger.isSatisfied(player.getInventory())) {
-                    // debugLog("Impulsed item " + cg.id);  // TODO
-                    this.game.wsClient.sendMarkSquare(player.getName(), cg.position, 1);
+                    cg.impulse(player);
                 }
             }
         }

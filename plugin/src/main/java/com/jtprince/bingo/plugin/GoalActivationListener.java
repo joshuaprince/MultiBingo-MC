@@ -1,16 +1,12 @@
 package com.jtprince.bingo.plugin;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.TreeType;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -25,20 +21,112 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.Contract;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.logging.Level;
 
 public class GoalActivationListener implements Listener {
     protected final AutoActivation autoActivation;
+
+    private static class MethodTrigger {
+        ConcreteGoal goal;
+        Method method;
+    }
+
+    /* Maps i.e. StructureGrowEvent -> [jm_mushroom_grow(), jm_tree_grow()] */
+    private Map<Class<? extends Event>, List<MethodTrigger>> activeEventListenerMap = new HashMap<>();
 
     public GoalActivationListener(AutoActivation aa) {
         this.autoActivation = aa;
         this.autoActivation.game.plugin.getServer().getPluginManager().registerEvents(this,
             this.autoActivation.game.plugin);
+    }
+
+    /**
+     * Given a list of Goals on the board, create listeners that will respond when the player does
+     * something in game that would activate each of those goals.
+     * @param goals List of ConcreteGoals on the board.
+     * @return A Set of which ConcreteGoals will be auto-activated.
+     */
+    @SuppressWarnings("unchecked")  // Reflection + generics is lots of fun...
+    public Set<ConcreteGoal> registerGoals(Collection<ConcreteGoal> goals) {
+        Map<Class<? extends Event>, List<MethodTrigger>> newEventListenerMap = new HashMap<>();
+        Set<ConcreteGoal> listenedGoals = new HashSet<>();
+
+        // Register goals with Method triggers
+        for (Method method : GoalListener.class.getDeclaredMethods()) {
+            GoalListener.BingoListener anno = method.getAnnotation(GoalListener.BingoListener.class);
+            if (anno == null) {
+                continue;
+            }
+
+            // TODO Sanity check each method - return type, params, static, etc
+
+            // Find all goals that this method can track
+            Set<String> goalsTrackedByMethod = new HashSet<>();
+            goalsTrackedByMethod.add(method.getName());
+            goalsTrackedByMethod.addAll(Arrays.asList(anno.extraGoals()));
+
+            // Find any squares on the board that should be triggered by this method.
+            for (ConcreteGoal cg : goals) {
+                if (!goalsTrackedByMethod.contains(cg.id)) {
+                    continue;
+                }
+
+                // The square represented by cg should be triggered by this method.
+                listenedGoals.add(cg);
+
+                // FIXME Move me outside of the inner for loop
+                Class<?> expectedType = method.getParameterTypes()[0];
+                if (!Event.class.isAssignableFrom(expectedType)) {
+                    this.autoActivation.game.plugin.getLogger().severe(
+                        "Parameter in Listener method " + method.getName() + " is not an Event.");
+                }
+
+                Class<? extends Event> expectedEventType = (Class<? extends Event>) expectedType;
+
+                if (!newEventListenerMap.containsKey(expectedEventType)) {
+                    newEventListenerMap.put(expectedEventType, new ArrayList<>());
+                }
+
+                MethodTrigger gal = new MethodTrigger();
+                gal.goal = cg;
+                gal.method = method;
+                newEventListenerMap.get(expectedEventType).add(gal);
+            }
+        }
+
+        this.activeEventListenerMap = newEventListenerMap;
+        return listenedGoals;
+    }
+
+    private void trigger(Event event, Player player) {
+        List<MethodTrigger> methods = activeEventListenerMap.get(event.getClass());
+        if (methods == null) {
+            return;
+        }
+
+        for (MethodTrigger gal : methods) {
+            boolean activate;
+            try {
+                activate = (boolean) gal.method.invoke(null, event);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                this.autoActivation.game.plugin.getLogger().log(Level.SEVERE,
+                    "Failed to pass " + event.getClass().getName() + " to listeners", e);
+                return;
+            }
+
+            if (activate) {
+                gal.goal.impulse(player);
+            }
+        }
+    }
+
+    private void trigger(Event event, World world) {
+        this.trigger(event, this.autoActivation.game.getPlayerInWorld(world));
     }
 
     /**
@@ -86,7 +174,7 @@ public class GoalActivationListener implements Listener {
         this.autoActivation.impulseInventory(p);
 
         ItemStack[] armor = p.getInventory().getArmorContents();
-        if (armor[2] != null) {
+        /*if (armor[2] != null) {
             // chestplate slot
             this.autoActivation.impulseGoalNegative(p, "jm_never_lates77348");
         }
@@ -94,7 +182,7 @@ public class GoalActivationListener implements Listener {
             this.autoActivation.impulseGoalNegative(p, "jm_never_rmour42273");
             // never armor or shields
             this.autoActivation.impulseGoalNegative(p, "jm_never_ields14785");
-        }
+        }*/
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -115,21 +203,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        if (event.getPlayer().getWorld().getTime() > 1000) {
-            // player did not sleep through the night
-            return;
-        }
-
-        // Just sleep in a bed
-        this.autoActivation.impulseGoal(event.getPlayer(), "jm_sleep_a_bed24483");
-        this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_sleep35022");
-
-        Location playerLoc = event.getPlayer().getLocation();
-
-        // Sleep in a village
-        if (ActivationHelpers.inVillage(playerLoc)) {
-            this.autoActivation.impulseGoal(event.getPlayer(), "jm_sleep_llage18859");
-        }
+        this.trigger(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -138,30 +212,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        TreeType[] trees = {
-            TreeType.ACACIA, TreeType.BIG_TREE, TreeType.BIRCH, TreeType.COCOA_TREE,
-            TreeType.DARK_OAK, TreeType.JUNGLE, TreeType.JUNGLE_BUSH, TreeType.MEGA_REDWOOD,
-            TreeType.REDWOOD, TreeType.SMALL_JUNGLE, TreeType.SWAMP, TreeType.TALL_BIRCH,
-            TreeType.TALL_REDWOOD, TreeType.TREE
-        };
-
-        TreeType[] mushrooms = {TreeType.BROWN_MUSHROOM, TreeType.RED_MUSHROOM};
-
-        // Grow a tree in the nether
-        if (event.getPlayer().getWorld().getEnvironment() == World.Environment.NETHER &&
-                Arrays.stream(trees).anyMatch(t -> t == event.getSpecies())) {
-            this.autoActivation.impulseGoal(event.getPlayer(), "jm_grow__ether38694");
-        }
-
-        // Grow a huge mushroom
-        if (Arrays.stream(mushrooms).anyMatch(t -> t == event.getSpecies())) {
-            this.autoActivation.impulseGoal(event.getPlayer(), "jm_grow__hroom76894");
-        }
-
-        // Grow a full jungle tree
-        if (event.getSpecies() == TreeType.JUNGLE) {
-            this.autoActivation.impulseGoal(event.getPlayer(), "jm_grow___tree94140");
-        }
+        this.trigger(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -170,11 +221,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        // Portal in village
-        if (event.getEntity() instanceof Player &&
-                ActivationHelpers.inVillage(event.getBlocks().get(0).getLocation())) {
-            this.autoActivation.impulseGoal((Player) event.getEntity(), "jm_activ_llage72436");
-        }
+        this.trigger(event, event.getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -183,18 +230,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        Block block = event.getClickedBlock();
-        if (block == null) {
-            // Handled by onInteract
-            return;
-        }
-
-        // Nether bed
-        if (block.getWorld().getEnvironment() == World.Environment.NETHER
-            && block.getType().getKey().toString().contains("_bed")
-            && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            this.autoActivation.impulseGoal(event.getPlayer(), "jm_try__nether11982");
-        }
+        this.trigger(event, event.getPlayer());
     }
 
     // No ignoreCancelled because Bukkit cancels air interact events for some reason...
@@ -204,36 +240,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        if (event.getItem() != null) {
-            // Never use a fishing rod
-            if (event.getItem().getType() == Material.FISHING_ROD
-                && (event.getAction() == Action.RIGHT_CLICK_AIR
-                || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_g_rod73476");
-            }
-
-            // Never use a shield
-            if (event.getItem().getType() == Material.SHIELD
-                && (event.getAction() == Action.RIGHT_CLICK_AIR
-                || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_hield82710");
-                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_ields14785");
-            }
-
-            // Never use (place) boats
-            // Boat placement calls RIGHT_CLICK_BLOCK on the water it is placed on
-            if (event.getItem().getType().getKey().toString().contains("_boat")
-                && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never__boat85417");
-            }
-
-            // Never use buckets
-            if (event.getItem().getType().getKey().toString().contains("bucket")
-                && (event.getAction() == Action.RIGHT_CLICK_AIR
-                || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-                this.autoActivation.impulseGoal(event.getPlayer(), "jm_never_ckets96909");
-            }
-        }
+        this.trigger(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -247,18 +254,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        ItemStack mainHand = damager.getInventory().getItemInMainHand();
-        if (mainHand.getType() != Material.AIR) {
-            // Never use a sword
-            if (mainHand.getType().getKey().toString().contains("_sword")) {
-                this.autoActivation.impulseGoalNegative(damager, "jm_never_sword96977");
-            }
-
-            // Never use an axe
-            if (mainHand.getType().getKey().toString().contains("_axe")) {
-                this.autoActivation.impulseGoalNegative(damager, "jm_never_n_axe38071");
-            }
-        }
+        this.trigger(event, damager);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -267,19 +263,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        if (event.getPlayer().getInventory().getItemInMainHand().getType() != Material.AIR) {
-            ItemStack tool = event.getPlayer().getInventory().getItemInMainHand();
-
-            // Never use a sword
-            if (tool.getType().getKey().toString().contains("_sword")) {
-                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_sword96977");
-            }
-
-            // Never use an axe
-            if (tool.getType().getKey().toString().contains("_axe")) {
-                this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_n_axe38071");
-            }
-        }
+        this.trigger(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -288,14 +272,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        // Never place torches
-        Material[] torches = {
-            Material.TORCH, Material.WALL_TORCH, Material.SOUL_TORCH, Material.SOUL_WALL_TORCH,
-            Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH
-        };
-        if (Arrays.stream(torches).anyMatch(m -> event.getBlock().getType() == m)) {
-            this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_never_rches51018");
-        }
+        this.trigger(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -304,19 +281,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        Material[] meats = {
-            Material.CHICKEN, Material.COOKED_CHICKEN, Material.COD, Material.COOKED_COD,
-            Material.BEEF, Material.COOKED_BEEF, Material.MUTTON, Material.COOKED_MUTTON,
-            Material.RABBIT, Material.COOKED_RABBIT, Material.SALMON, Material.COOKED_SALMON,
-            Material.PORKCHOP, Material.COOKED_PORKCHOP, Material.TROPICAL_FISH, Material.PUFFERFISH,
-            Material.RABBIT_STEW, Material.ROTTEN_FLESH
-        };
-
-        if (Arrays.stream(meats).anyMatch(f -> event.getItem().getType() == f)) {
-            this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_vegetarian_67077");
-        } else {
-            this.autoActivation.impulseGoalNegative(event.getPlayer(), "jm_carnivore_30882");
-        }
+        this.trigger(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -325,7 +290,7 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        this.autoActivation.impulseGoalNegative(event.getEntity(), "jm_never_die_37813");
+        this.trigger(event, event.getEntity());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -336,29 +301,7 @@ public class GoalActivationListener implements Listener {
 
         Player p = (Player) event.getWhoClicked();
 
-        if (event.getRecipe().getResult().getType() == Material.STICK) {
-            this.autoActivation.impulseGoalNegative(p, "jm_never_ticks40530");
-        }
-
-        if (event.getRecipe() instanceof ShapedRecipe) {
-            ShapedRecipe r = (ShapedRecipe) event.getRecipe();
-
-            // Never use coal
-            if (r.getIngredientMap().values().stream().anyMatch(i -> i != null
-                                                                && i.getType() == Material.COAL)) {
-                this.autoActivation.impulseGoalNegative(p, "jm_never__coal44187");
-            }
-        }
-
-        if (event.getRecipe() instanceof ShapelessRecipe) {
-            ShapelessRecipe r = (ShapelessRecipe) event.getRecipe();
-
-            // Never use coal
-            if (r.getIngredientList().stream().anyMatch(i -> i != null
-                                                        && i.getType() == Material.COAL)) {
-                this.autoActivation.impulseGoalNegative(p, "jm_never__coal44187");
-            }
-        }
+        this.trigger(event, p);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -367,12 +310,6 @@ public class GoalActivationListener implements Listener {
             return;
         }
 
-        Player p = this.autoActivation.game.getPlayerInWorld(event.getBlock().getWorld());
-
-        // Never use coal
-        if (event.getFuel().getType() == Material.COAL
-            || event.getFuel().getType() == Material.COAL_BLOCK) {
-            this.autoActivation.impulseGoalNegative(p, "jm_never__coal44187");
-        }
+        this.trigger(event, event.getBlock().getWorld());
     }
 }

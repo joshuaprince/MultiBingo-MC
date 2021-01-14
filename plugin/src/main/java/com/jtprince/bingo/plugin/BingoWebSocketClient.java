@@ -55,7 +55,7 @@ public class BingoWebSocketClient extends WebSocketClient {
         ConcreteGoal[] squares = new ConcreteGoal[25];
         for (int i = 0; i < 25; i++) {
             JSONObject goal = (JSONObject) goalsJson.get(i);
-            ConcreteGoal cg = new ConcreteGoal(goal);
+            ConcreteGoal cg = new ConcreteGoal(this.game, goal);
             squares[i] = cg;
         }
 

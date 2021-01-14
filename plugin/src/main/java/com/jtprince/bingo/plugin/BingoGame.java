@@ -18,7 +18,7 @@ public class BingoGame {
     final Messages messages;
     final AutoActivation autoActivation;
     final BingoWebSocketClient wsClient;
-    final GameBoard gameBoard = new GameBoard();
+    final GameBoard gameBoard;
 
     public final String gameCode;
     private final Map<UUID, WorldManager.WorldSet> playerWorldSetMap = new HashMap<>();
@@ -30,6 +30,7 @@ public class BingoGame {
         this.gameCode = gameCode;
         this.messages = new Messages(this);
         this.autoActivation = new AutoActivation(this);
+        this.gameBoard = new GameBoard(this);
 
         URI uri = plugin.getWebsocketUrl(this.gameCode);
         this.wsClient = new BingoWebSocketClient(this, uri);

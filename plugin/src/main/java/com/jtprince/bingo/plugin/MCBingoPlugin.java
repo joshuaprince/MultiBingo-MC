@@ -1,5 +1,9 @@
 package com.jtprince.bingo.plugin;
 
+import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.executors.CommandExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,16 +21,38 @@ public class MCBingoPlugin extends JavaPlugin {
     BingoGame currentGame;
 
     @Override
-    public void onEnable() {
-        worldManager = new WorldManager(this);
-        this.getServer().getPluginManager().registerEvents(worldManager, this);
-
+    public void onLoad() {
         if (this.getConfig().getBoolean("debug", false)) {
+            this.getLogger().info("Debug mode is enabled.");
             this.getLogger().setLevel(Level.FINER);
             this.debug = true;
         }
 
+        CommandAPI.onLoad(this.debug);
+    }
+
+    @Override
+    public void onEnable() {
+        CommandAPI.onEnable(this);
+
+        worldManager = new WorldManager(this);
+        this.getServer().getPluginManager().registerEvents(worldManager, this);
+        this.registerCommands();
+
         this.saveDefaultConfig();
+    }
+
+    private void registerCommands() {
+        CommandAPICommand prepareCmd = new CommandAPICommand("prepare")
+            .withArguments(new StringArgument("gameCode"))
+            .executes((CommandExecutor) (sender, args) -> commandPrepare(sender, (String) args[0]));
+        CommandAPICommand startCmd = new CommandAPICommand("start")
+            .executes((CommandExecutor) (sender, args) -> commandStart(sender));
+
+        new CommandAPICommand("bingo")
+            .withSubcommand(prepareCmd)
+            .withSubcommand(startCmd)
+            .register();
     }
 
     @Override
@@ -93,7 +119,7 @@ public class MCBingoPlugin extends JavaPlugin {
     protected boolean commandStart(CommandSender sender) {
         if (this.currentGame == null) {
             // TODO format message
-            sender.sendMessage("No game is prepared! Use /bingo prepare <gameID>");
+            sender.sendMessage("No game is prepared! Use /bingo prepare <gameCode>");
             return true;
         }
 

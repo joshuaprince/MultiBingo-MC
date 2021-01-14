@@ -57,7 +57,7 @@ public class Messages {
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(url.toString())))
                 .append(" ", ComponentBuilder.FormatRetention.NONE)
                 .append("[START]").underlined(true).color(ChatColor.GREEN)
-                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bingo start " + game.gameCode))
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bingo start"))
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Start Game")))
                 .create();
             p.sendMessage(components);

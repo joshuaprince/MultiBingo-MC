@@ -175,7 +175,7 @@ class PluginBackendConsumer(AsyncJsonWebsocketConsumer):
     async def send_board_xml_to_ws(self):
         board_goals = await get_board_goals(self.board_id)
         await self.send(text_data=json.dumps({
-            'goals': board_goals
+            'squares': board_goals
         }))
 
 

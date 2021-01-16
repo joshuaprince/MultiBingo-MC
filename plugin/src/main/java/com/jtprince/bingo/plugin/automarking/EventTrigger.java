@@ -1,9 +1,11 @@
-package com.jtprince.bingo.plugin;
+package com.jtprince.bingo.plugin.automarking;
 
+import com.jtprince.bingo.plugin.Square;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -22,12 +24,61 @@ import org.bukkit.inventory.ShapelessRecipe;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Arrays;
-import java.util.Objects;
+import java.lang.reflect.Method;
+import java.util.*;
 
-public class GoalListener {
+/**
+ * Container class that maps a Square on a board to a Method that can check if that square should be
+ * activated when a Bukkit Event is fired.
+ */
+public class EventTrigger {
+    final Square square;
+    final Method method;
+    final Class<? extends Event> eventType;
+
+    private EventTrigger(Square square, Method method, Class<? extends Event> eventType) {
+        this.square = square;
+        this.method = method;
+        this.eventType = eventType;
+    }
+
+    @SuppressWarnings("unchecked")  // Reflection + generics is lots of fun...
+    public static ArrayList<EventTrigger> createEventTriggers(Square square) {
+        ArrayList<EventTrigger> ret = new ArrayList<>();
+
+        // Register goals with Method triggers
+        for (Method method : EventTrigger.class.getDeclaredMethods()) {
+            EventTrigger.EventTriggerListener anno = method.getAnnotation(EventTrigger.EventTriggerListener.class);
+            if (anno == null) {
+                continue;
+            }
+
+            // TODO Sanity check each method - return type, params, static, etc
+
+            // Find all goals that this method can track
+            Set<String> goalsTrackedByMethod = new HashSet<>();
+            goalsTrackedByMethod.add(method.getName());
+            goalsTrackedByMethod.addAll(Arrays.asList(anno.extraGoals()));
+            if (!goalsTrackedByMethod.contains(square.goalId)) {
+                continue;
+            }
+
+            // Determine which Event to listen for and register this Square in a new EventTrigger.
+            Class<?> expectedType = method.getParameterTypes()[0];
+            if (!Event.class.isAssignableFrom(expectedType)) {
+                square.game.plugin.getLogger().severe(
+                    "Parameter in Listener method " + method.getName() + " is not an Event.");
+                continue;
+            }
+            Class<? extends Event> expectedEventType = (Class<? extends Event>) expectedType;
+            ret.add(new EventTrigger(square, method, expectedEventType));
+        }
+
+        return ret;
+    }
+
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface BingoListener {
+    public @interface EventTriggerListener {
         String[] extraGoals() default {};
     }
 
@@ -57,36 +108,36 @@ public class GoalListener {
 
     /* Listeners */
 
-    @BingoListener
-    public static boolean jm_never_sword96977(BlockBreakEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_sword96977(BlockBreakEvent event) {
         // Never use a sword
         // See also EntityDamageByEntityEvent variant
         return event.getPlayer().getInventory().getItemInMainHand()
             .getType().getKey().toString().contains("_sword");
     }
 
-    @BingoListener
-    public static boolean jm_never_n_axe38071(BlockBreakEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_n_axe38071(BlockBreakEvent event) {
         // Never use an axe
         // See also EntityDamageByEntityEvent variant
         return event.getPlayer().getInventory().getItemInMainHand()
             .getType().getKey().toString().contains("_axe");
     }
 
-    @BingoListener
-    public static boolean jm_never_rches51018(BlockPlaceEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_rches51018(BlockPlaceEvent event) {
         // Never place torches
         return Arrays.stream(torches).anyMatch(m -> event.getBlock().getType() == m);
     }
 
-    @BingoListener
-    public static boolean jm_never_ticks40530(CraftItemEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_ticks40530(CraftItemEvent event) {
         // Never craft sticks
         return event.getRecipe().getResult().getType() == Material.STICK;
     }
 
-    @BingoListener
-    public static boolean jm_never__coal44187(CraftItemEvent event) {
+    @EventTriggerListener
+    static boolean jm_never__coal44187(CraftItemEvent event) {
         // Never use coal
         // See also FurnaceBurnEvent variant
         if (event.getRecipe() instanceof ShapedRecipe) {
@@ -104,66 +155,66 @@ public class GoalListener {
         else return false;
     }
 
-    @BingoListener
-    public static boolean jm_never_sword96977(EntityDamageByEntityEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_sword96977(EntityDamageByEntityEvent event) {
         // Never use a sword
         // See also BlockBreakEvent variant
         return ((Player) event.getDamager()).getInventory().getItemInMainHand()
             .getType().getKey().toString().contains("_sword");
     }
 
-    @BingoListener
-    public static boolean jm_never_n_axe38071(EntityDamageByEntityEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_n_axe38071(EntityDamageByEntityEvent event) {
         // Never use an axe
         // See also BlockBreakEvent variant
         return ((Player) event.getDamager()).getInventory().getItemInMainHand()
             .getType().getKey().toString().contains("_axe");
     }
 
-    @BingoListener
-    public static boolean jm_never__coal44187(FurnaceBurnEvent event) {
+    @EventTriggerListener
+    static boolean jm_never__coal44187(FurnaceBurnEvent event) {
         // Never use coal
         // See also CraftItemEvent variant
         return event.getFuel().getType() == Material.COAL
             || event.getFuel().getType() == Material.COAL_BLOCK;
     }
 
-    @BingoListener(extraGoals = {"jm_never_ields14785"})
-    public static boolean jm_never_rmour42273(InventoryCloseEvent event) {
+    @EventTriggerListener(extraGoals = {"jm_never_ields14785"})
+    static boolean jm_never_rmour42273(InventoryCloseEvent event) {
         // Never use armor
         // Never use armor or shields
         Player p = (Player) event.getPlayer();
         return Arrays.stream(p.getInventory().getArmorContents()).anyMatch(Objects::nonNull);
     }
 
-    @BingoListener
-    public static boolean jm_never_lates77348(InventoryCloseEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_lates77348(InventoryCloseEvent event) {
         // Never wear chestplates
         Player p = (Player) event.getPlayer();
         return p.getInventory().getArmorContents()[2] != null;
     }
 
-    @BingoListener(extraGoals = {"jm_never_sleep35022"})
-    public static boolean jm_sleep_a_bed24483(PlayerBedLeaveEvent event) {
+    @EventTriggerListener(extraGoals = {"jm_never_sleep35022"})
+    static boolean jm_sleep_a_bed24483(PlayerBedLeaveEvent event) {
         // Just sleep
         return event.getPlayer().getWorld().getTime() < 1000;
     }
 
-    @BingoListener
-    public static boolean jm_sleep_llage18859(PlayerBedLeaveEvent event) {
+    @EventTriggerListener
+    static boolean jm_sleep_llage18859(PlayerBedLeaveEvent event) {
         // Sleep in a village
         return jm_sleep_a_bed24483(event)
             && ActivationHelpers.inVillage(event.getPlayer().getLocation());
     }
 
-    @BingoListener
-    public static boolean jm_never_die_37813(PlayerDeathEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_die_37813(PlayerDeathEvent event) {
         // Never die
         return true;
     }
 
-    @BingoListener
-    public static boolean jm_try__nether11982(PlayerInteractEvent event) {
+    @EventTriggerListener
+    static boolean jm_try__nether11982(PlayerInteractEvent event) {
         // Nether bed
         return event.getClickedBlock() != null
             && event.getClickedBlock().getWorld().getEnvironment() == World.Environment.NETHER
@@ -171,8 +222,8 @@ public class GoalListener {
             && event.getAction() == Action.RIGHT_CLICK_BLOCK;
     }
 
-    @BingoListener
-    public static boolean jm_never_g_rod73476(PlayerInteractEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_g_rod73476(PlayerInteractEvent event) {
         // Never use a fishing rod
         return event.getItem() != null
             && event.getItem().getType() == Material.FISHING_ROD
@@ -180,8 +231,8 @@ public class GoalListener {
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK);
     }
 
-    @BingoListener(extraGoals = {"jm_never_ields14785"})
-    public static boolean jm_never_hield82710(PlayerInteractEvent event) {
+    @EventTriggerListener(extraGoals = {"jm_never_ields14785"})
+    static boolean jm_never_hield82710(PlayerInteractEvent event) {
         // Never use a shield
         return event.getItem() != null
             && event.getItem().getType() == Material.SHIELD
@@ -189,8 +240,8 @@ public class GoalListener {
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK);
     }
 
-    @BingoListener
-    public static boolean jm_never__boat85417(PlayerInteractEvent event) {
+    @EventTriggerListener
+    static boolean jm_never__boat85417(PlayerInteractEvent event) {
         // Never use (place) boats
         // Boat placement calls RIGHT_CLICK_BLOCK on the water it is placed on
         // TODO also check Interact Entity event for when player gets in boat
@@ -199,8 +250,8 @@ public class GoalListener {
             && event.getAction() == Action.RIGHT_CLICK_BLOCK;
     }
 
-    @BingoListener
-    public static boolean jm_never_ckets96909(PlayerInteractEvent event) {
+    @EventTriggerListener
+    static boolean jm_never_ckets96909(PlayerInteractEvent event) {
         // Never use buckets
         return event.getItem() != null
             && event.getItem().getType().getKey().toString().contains("bucket")
@@ -208,39 +259,39 @@ public class GoalListener {
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK);
     }
 
-    @BingoListener
-    public static boolean jm_carnivore_30882(PlayerItemConsumeEvent event) {
+    @EventTriggerListener
+    static boolean jm_carnivore_30882(PlayerItemConsumeEvent event) {
         // Only eat meat (i.e. trigger if NOT meat)
         return Arrays.stream(meats).noneMatch(f -> event.getItem().getType() == f);
     }
 
-    @BingoListener
-    public static boolean jm_vegetarian_67077(PlayerItemConsumeEvent event) {
+    @EventTriggerListener
+    static boolean jm_vegetarian_67077(PlayerItemConsumeEvent event) {
         // Never eat meat (i.e. trigger if meat)
         return Arrays.stream(meats).anyMatch(f -> event.getItem().getType() == f);
     }
 
-    @BingoListener
-    public static boolean jm_grow__ether38694(StructureGrowEvent event) {
+    @EventTriggerListener
+    static boolean jm_grow__ether38694(StructureGrowEvent event) {
         // Grow a tree in the nether
         return event.getWorld().getEnvironment() == World.Environment.NETHER
             && Arrays.stream(trees).anyMatch(t -> t == event.getSpecies());
     }
 
-    @BingoListener
-    public static boolean jm_grow__hroom76894(StructureGrowEvent event) {
+    @EventTriggerListener
+    static boolean jm_grow__hroom76894(StructureGrowEvent event) {
         // Grow a huge mushroom
         return Arrays.stream(mushrooms).anyMatch(t -> t == event.getSpecies());
     }
 
-    @BingoListener
-    public static boolean jm_grow___tree94140(StructureGrowEvent event) {
+    @EventTriggerListener
+    static boolean jm_grow___tree94140(StructureGrowEvent event) {
         // Grow a full jungle tree
         return event.getSpecies() == TreeType.JUNGLE;
     }
 
-    @BingoListener
-    public static boolean jm_activ_llage72436(PortalCreateEvent event) {
+    @EventTriggerListener
+    static boolean jm_activ_llage72436(PortalCreateEvent event) {
         // Portal in village
         return event.getEntity() instanceof Player
             && ActivationHelpers.inVillage(event.getBlocks().get(0).getLocation());

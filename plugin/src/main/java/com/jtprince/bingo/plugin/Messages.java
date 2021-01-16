@@ -64,7 +64,7 @@ public class Messages {
         }
     }
 
-    public void announcePlayerMarking(Player player, ConcreteGoal goal, boolean invalidated) {
+    public void announcePlayerMarking(Player player, Square goal, boolean invalidated) {
         BaseComponent[] components;
         if (!invalidated) {
             components = new ComponentBuilder()

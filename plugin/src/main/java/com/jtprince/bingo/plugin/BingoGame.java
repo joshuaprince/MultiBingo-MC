@@ -1,5 +1,6 @@
 package com.jtprince.bingo.plugin;
 
+import com.jtprince.bingo.plugin.automarking.AutoMarking;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -13,13 +14,13 @@ import java.net.URI;
 import java.util.*;
 
 public class BingoGame {
-    protected State state = State.CREATED;
-    final MCBingoPlugin plugin;
-    final Messages messages;
-    final AutoActivation autoActivation;
-    final BingoWebSocketClient wsClient;
-    final GameBoard gameBoard;
+    public final MCBingoPlugin plugin;
+    public final Messages messages;
+    public final AutoMarking autoMarking;
+    public final BingoWebSocketClient wsClient;
+    public final GameBoard gameBoard;
 
+    protected State state = State.CREATED;
     public final String gameCode;
     private final Map<UUID, WorldManager.WorldSet> playerWorldSetMap = new HashMap<>();
     private final Map<UUID, PlayerBoard> playerBoardMap = new HashMap<>();
@@ -29,7 +30,7 @@ public class BingoGame {
         this.plugin = plugin;
         this.gameCode = gameCode;
         this.messages = new Messages(this);
-        this.autoActivation = new AutoActivation(this);
+        this.autoMarking = new AutoMarking(this);
         this.gameBoard = new GameBoard(this);
 
         URI uri = plugin.getWebsocketUrl(this.gameCode);
@@ -63,7 +64,7 @@ public class BingoGame {
         this.state = State.RUNNING;
     }
 
-    protected void prepareWorldSets(Collection<Player> players) {
+    private void prepareWorldSets(Collection<Player> players) {
         for (Player p : players) {
             WorldManager.WorldSet ws = this.plugin.worldManager.createWorlds(
                 gameCode + "_" + p.getName(), gameCode);
@@ -71,13 +72,13 @@ public class BingoGame {
         }
     }
 
-    protected void preparePlayerBoards(Collection<Player> players) {
+    private void preparePlayerBoards(Collection<Player> players) {
         for (Player p : players) {
             this.playerBoardMap.put(p.getUniqueId(), new PlayerBoard(p, this));
         }
     }
 
-    protected void teleportPlayersToWorlds(Collection<Player> players) {
+    private void teleportPlayersToWorlds(Collection<Player> players) {
         for (Player p : players) {
             World overworld = this.playerWorldSetMap.get(p.getUniqueId()).getWorld(World.Environment.NORMAL);
             overworld.setTime(0);
@@ -85,7 +86,7 @@ public class BingoGame {
         }
     }
 
-    protected void wipePlayers(Collection<Player> players) {
+    private void wipePlayers(Collection<Player> players) {
         CommandSender console = this.plugin.getServer().getConsoleSender();
 
         for (Player p : players) {
@@ -101,7 +102,7 @@ public class BingoGame {
         this.plugin.getServer().dispatchCommand(console, "clear @a");
     }
 
-    protected void doCountdown() {
+    private void doCountdown() {
         if (this.countdown <= 5 && this.countdown > 0) {
             for (Player p : this.getPlayers()) {
                 p.sendTitle(this.countdown + "", null, 2, 16, 2);
@@ -114,7 +115,7 @@ public class BingoGame {
         }
     }
 
-    protected void applyStartingEffects(Collection<Player> players, int ticks) {
+    private void applyStartingEffects(Collection<Player> players, int ticks) {
         for (Player p : players) {
             p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, ticks, 1));
             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, ticks, 6));

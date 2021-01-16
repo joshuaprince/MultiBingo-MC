@@ -2,7 +2,8 @@
 <project version="4">
   <component name="EntryPointsManager">
     <list size="2">
-      <item index="0" class="java.lang.String" itemvalue="com.jtprince.bingo.plugin.GoalListener.BingoListener" />
+      <item index="0" class="java.lang.String"
+            itemvalue="com.jtprince.bingo.plugin.automarking.EventTrigger.EventTriggerListener" />
       <item index="1" class="java.lang.String" itemvalue="org.bukkit.event.EventHandler" />
     </list>
   </component>

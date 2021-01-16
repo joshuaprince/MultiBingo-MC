@@ -1,26 +1,29 @@
 package com.jtprince.bingo.plugin;
 
+import com.jtprince.bingo.plugin.automarking.EventTrigger;
+import com.jtprince.bingo.plugin.automarking.ItemTrigger;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConcreteGoal {
-    BingoGame game;
+public class Square {
+    public BingoGame game;
 
-    public final String id;
+    public final String goalId;
     public final String text;
     public final int position;
     public final Map<String, Integer> variables = new HashMap<>();
-    public final ArrayList<ItemTrigger> itemTriggers = new ArrayList<>();
+    public final Collection<ItemTrigger> itemTriggers;
+    public final Collection<EventTrigger> eventTriggers;
 
-    public ConcreteGoal(BingoGame game, JSONObject obj) {
+    public Square(BingoGame game, JSONObject obj) {
         this.game = game;
 
-        this.id = (String) obj.get("id");
+        this.goalId = (String) obj.get("id");
         this.text = (String) obj.get("text");
         this.position = ((Long) obj.get("position")).intValue();
 
@@ -34,20 +37,18 @@ public class ConcreteGoal {
         }
 
         JSONArray triggers = (JSONArray) obj.get("triggers");
-        if (triggers != null) {
-            for (Object trigger : triggers) {
-                JSONObject trig = (JSONObject) trigger;
-                itemTriggers.add(new ItemTrigger(trig));
-            }
-        }
+        this.itemTriggers = ItemTrigger.fromJson(triggers);
+
+        // Must be at the end of the constructor since we pass `this`
+        this.eventTriggers = EventTrigger.createEventTriggers(this);
     }
 
     /**
      * Simply activate a square for a player if it exists on the board.
      * @param player Player to activate for.
      */
-    public void impulse(Player player) {
-        debugLog("Impulsing goal " + this.id);
+    public void mark(Player player) {
+        debugLog("Impulsing goal " + this.goalId);
         this.game.wsClient.sendMarkSquare(player.getName(), position, 1);
     }
 
@@ -57,7 +58,7 @@ public class ConcreteGoal {
      * @param player Player to "de"activate for.
      */
     public void impulseNegative(Player player) {
-        debugLog("Impulsing negative goal " + this.id);
+        debugLog("Impulsing negative goal " + this.goalId);
         this.game.wsClient.sendMarkSquare(player.getName(), position, 3);
     }
 

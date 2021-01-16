@@ -1,4 +1,4 @@
-package com.jtprince.bingo.plugin;
+package com.jtprince.bingo.plugin.automarking;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -6,15 +6,31 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * Defines an item or set of items that the user can collect to automatically mark a Square as
+ * completed.
+ */
 public class ItemTrigger {
-    int neededMatchGroups = 1;
-    final ArrayList<ItemMatchGroup> matchGroups = new ArrayList<>();
+    private int neededMatchGroups = 1;
+    private final ArrayList<ItemMatchGroup> matchGroups = new ArrayList<>();
 
-    public ItemTrigger(JSONObject json) {
+    public static Collection<ItemTrigger> fromJson(JSONArray triggers) {
+        ArrayList<ItemTrigger> ret = new ArrayList<>();
+        if (triggers != null) {
+            for (Object trigger : triggers) {
+                JSONObject trig = (JSONObject) trigger;
+                ret.add(new ItemTrigger(trig));
+            }
+        }
+        return ret;
+    }
+
+    private ItemTrigger(JSONObject json) {
         JSONObject itemTriggerJson = (JSONObject) json.get("ItemTrigger");
 
         String needed = (String) itemTriggerJson.get("@needed");
@@ -73,7 +89,7 @@ public class ItemTrigger {
         return (matchesAllGroups >= neededMatchGroups);
     }
 
-    static class ItemMatchGroup {
+    private static class ItemMatchGroup {
         int maxMatches = Integer.MAX_VALUE;
         final ArrayList<Pattern> nameMatches = new ArrayList<>();
         int minQuantity = 1;
@@ -123,7 +139,7 @@ public class ItemTrigger {
     /**
      * Example: "minecraft:cobblestone"
      */
-    protected static String namespacedName(ItemStack itemStack) {
+    private static String namespacedName(ItemStack itemStack) {
         return itemStack.getType().getKey().toString();
     }
 }

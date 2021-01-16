@@ -17,8 +17,8 @@ import java.util.logging.Level;
 
 public class MCBingoPlugin extends JavaPlugin {
     boolean debug = false;
-    WorldManager worldManager;
-    BingoGame currentGame;
+    public WorldManager worldManager;
+    public BingoGame currentGame;
 
     @Override
     public void onLoad() {

@@ -69,7 +69,7 @@ public class PlayerBoard {
 
         if (invalidated != null) {
             this.announcedPositions.add(position);
-            ConcreteGoal square = this.game.gameBoard.getSquare(position);
+            Square square = this.game.gameBoard.getSquare(position);
             this.game.messages.announcePlayerMarking(this.player, square, invalidated);
         }
     }

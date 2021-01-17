@@ -123,7 +123,7 @@ public class MCBingoPlugin extends JavaPlugin {
             return true;
         }
 
-        this.currentGame.start();
+        this.currentGame.start(sender);
 
         return true;
     }

@@ -1,9 +1,6 @@
 package com.jtprince.bingo.plugin;
 
-import org.bukkit.entity.Player;
-
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class to maintain the Plugin-side latest known markings on a single Player's board.
@@ -13,19 +10,27 @@ import java.util.Set;
  */
 public class PlayerBoard {
     final BingoGame game;
-    final Player player;
-    protected final int[] knownMarkings = new int[25];
-    protected Set<Integer> announcedPositions = new HashSet<>();
+    final UUID playerUuid;
+
+    /**
+     * The latest known markings on this board.
+     * Not authoritative; the webserver holds the authoritative copy.
+     */
+    private final ArrayList<Integer> markings;
+    private final Set<Integer> announcedPositions = new HashSet<>();
 
     /* Board marking states */
-    protected final int UNMARKED = 0;
-    protected final int COMPLETE = 1;
-    protected final int REVERTED = 2;
-    protected final int INVALIDATED = 3;
+    final static int UNMARKED = 0;
+    final static int COMPLETE = 1;
+    final static int REVERTED = 2;
+    final static int INVALIDATED = 3;
 
-    public PlayerBoard(Player player, BingoGame game) {
-        this.player = player;
+    public PlayerBoard(UUID playerUuid, BingoGame game) {
+        this.playerUuid = playerUuid;
         this.game = game;
+
+        int numSquares = game.gameBoard.getSquares().size();
+        this.markings = new ArrayList<>(Collections.nCopies(numSquares, UNMARKED));
     }
 
     /**
@@ -35,25 +40,26 @@ public class PlayerBoard {
      *                     marked.
      */
     public void update(String jsonBoardStr) {
-        if (jsonBoardStr.length() != 25) {
+        if (jsonBoardStr.length() != this.markings.size()) {
             throw new ArrayIndexOutOfBoundsException(
-                "Received board markings that are not 25 characters: " + jsonBoardStr);
+                "Received board marking string of " + jsonBoardStr.length() + " squares; expected: "
+                    + this.markings.size());
         }
 
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < this.markings.size(); i++) {
             int toState = Character.getNumericValue(jsonBoardStr.charAt(i));
-            if (knownMarkings[i] != toState) {
+            if (this.markings.get(i) != toState) {
                 this.onChange(i, toState);
             }
-            this.knownMarkings[i] = toState;
+            this.markings.set(i, toState);
         }
     }
 
-    protected void onChange(int position, int toState) {
+    private void onChange(int position, int toState) {
         this.considerAnnounceChange(position, toState);
     }
 
-    protected void considerAnnounceChange(int position, int toState) {
+    private void considerAnnounceChange(int position, int toState) {
         if (this.announcedPositions.contains(position)) {
             return;
         }
@@ -69,8 +75,8 @@ public class PlayerBoard {
 
         if (invalidated != null) {
             this.announcedPositions.add(position);
-            Square square = this.game.gameBoard.getSquare(position);
-            this.game.messages.announcePlayerMarking(this.player, square, invalidated);
+            Square square = this.game.gameBoard.getSquares().get(position);
+            this.game.messages.announcePlayerMarking(this.playerUuid, square, invalidated);
         }
     }
 }

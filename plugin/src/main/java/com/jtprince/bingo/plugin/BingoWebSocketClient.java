@@ -8,15 +8,16 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
 public class BingoWebSocketClient extends WebSocketClient {
     final BingoGame game;
-    protected JSONParser jsonParser = new JSONParser();
 
-    protected int reconnectAttemptsRemaining = 10;
+    private static final JSONParser jsonParser = new JSONParser();
+    private int reconnectAttemptsRemaining = 10;
 
     public BingoWebSocketClient(BingoGame game, URI uri) {
         super(uri);
@@ -50,19 +51,19 @@ public class BingoWebSocketClient extends WebSocketClient {
         this.send(js.toJSONString());
     }
 
-    protected void receiveSquares(JSONArray squaresJson) {
-        Square[] squares = new Square[25];
-        for (int i = 0; i < 25; i++) {
-            JSONObject sqJson = (JSONObject) squaresJson.get(i);
+    private void receiveSquares(JSONArray squaresJson) {
+        ArrayList<Square> squares = new ArrayList<>();
+        for (Object o : squaresJson) {
+            JSONObject sqJson = (JSONObject) o;
             Square sq = new Square(this.game, sqJson);
-            squares[i] = sq;
+            squares.add(sq);
         }
 
-        this.game.plugin.getLogger().info("Received board for game " + this.game.gameCode);
         this.game.gameBoard.setSquares(squares);
+        this.game.plugin.getLogger().info("Received board for game " + this.game.gameCode);
     }
 
-    protected void receivePlayerBoards(JSONArray playerBoards) {
+    private void receivePlayerBoards(JSONArray playerBoards) {
         for (Object obj : playerBoards) {
             JSONObject json = (JSONObject) obj;
             String playerName = (String) json.get("player_name");
@@ -79,6 +80,7 @@ public class BingoWebSocketClient extends WebSocketClient {
         this.game.plugin.getLogger().info(
             "Successfully opened websocket for game " + this.game.gameCode);
         this.reconnectAttemptsRemaining = 10;
+        this.game.transitionToReady();
     }
 
     @Override
@@ -106,6 +108,8 @@ public class BingoWebSocketClient extends WebSocketClient {
     public void onClose(int code, String reason, boolean remote) {
         if (this.reconnectAttemptsRemaining-- <= 0) {
             this.game.plugin.getLogger().severe("Websocket failed to reconnect.");
+            this.game.messages.announceGameFailed();
+            this.game.state = BingoGame.State.FAILED;
         } else {
             this.game.plugin.getLogger().warning(
                 "Websocket for game " + this.game.gameCode +

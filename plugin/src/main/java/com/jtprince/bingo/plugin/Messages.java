@@ -3,10 +3,13 @@ package com.jtprince.bingo.plugin;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.UUID;
 
 public class Messages {
     final BingoGame game;
@@ -40,6 +43,22 @@ public class Messages {
         this.game.plugin.getServer().broadcast(components);
     }
 
+    public void tellGameNotReady(CommandSender sender) {
+        BaseComponent[] components = new ComponentBuilder()
+            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append("Game is not yet ready to be started!")
+            .create();
+        sender.sendMessage(components);
+    }
+
+    public void announceGameFailed() {
+        BaseComponent[] components = new ComponentBuilder()
+            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append("Failed to connect to the Bingo board.").color(ChatColor.RED)
+            .create();
+        this.game.plugin.getServer().broadcast(components);
+    }
+
     public void announceGameReady(Collection<Player> players) {
         BaseComponent[] components = new ComponentBuilder()
             .append(HEADER, ComponentBuilder.FormatRetention.NONE)
@@ -64,7 +83,9 @@ public class Messages {
         }
     }
 
-    public void announcePlayerMarking(Player player, Square goal, boolean invalidated) {
+    public void announcePlayerMarking(UUID playerUuid, Square goal, boolean invalidated) {
+        OfflinePlayer player = this.game.plugin.getServer().getOfflinePlayer(playerUuid);
+
         BaseComponent[] components;
         if (!invalidated) {
             components = new ComponentBuilder()

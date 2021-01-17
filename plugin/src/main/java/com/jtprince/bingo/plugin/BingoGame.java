@@ -20,11 +20,12 @@ public class BingoGame {
     public final BingoWebSocketClient wsClient;
     public final GameBoard gameBoard;
 
-    protected State state = State.CREATED;
     public final String gameCode;
-    private final Map<UUID, WorldManager.WorldSet> playerWorldSetMap = new HashMap<>();
+    State state = State.CREATED;
+    private int countdown;
+
+    private Map<UUID, WorldManager.WorldSet> playerWorldSetMap;
     private final Map<UUID, PlayerBoard> playerBoardMap = new HashMap<>();
-    protected int countdown;
 
     public BingoGame(MCBingoPlugin plugin, String gameCode) {
         this.plugin = plugin;
@@ -41,15 +42,29 @@ public class BingoGame {
         this.state = State.PREPARING;
         this.messages.announcePreparingGame();
 
+        // Start connecting to the websocket and then preparing worldsets simultaneously.
+        this.wsClient.connect();  // does not block
         this.prepareWorldSets(players);
-        this.preparePlayerBoards(players);
-        this.wsClient.connect();
 
-        this.messages.announceGameReady(players);
-        this.state = State.READY;
+        // Wait until both WS is connected and worlds are ready, then mark the game as ready.
+        this.transitionToReady();
     }
 
-    public void start() {
+    public synchronized void transitionToReady() {
+        if (this.state == State.PREPARING
+            && this.wsClient.isOpen()
+            && this.playerWorldSetMap != null) {
+            this.preparePlayerBoards(this.getPlayers());
+            this.messages.announceGameReady(this.getPlayers());
+            this.state = State.READY;
+        }
+    }
+
+    public void start(CommandSender commander) {
+        if (this.state != State.READY) {
+            this.messages.tellGameNotReady(commander);
+        }
+
         this.wipePlayers(this.getPlayers());
         this.applyStartingEffects(this.getPlayers(), 7 * 20);
         this.teleportPlayersToWorlds(this.getPlayers());
@@ -65,16 +80,23 @@ public class BingoGame {
     }
 
     private void prepareWorldSets(Collection<Player> players) {
+        Map<UUID, WorldManager.WorldSet> newWorldSetMap = new HashMap<>();
         for (Player p : players) {
             WorldManager.WorldSet ws = this.plugin.worldManager.createWorlds(
                 gameCode + "_" + p.getName(), gameCode);
-            this.playerWorldSetMap.put(p.getUniqueId(), ws);
+            newWorldSetMap.put(p.getUniqueId(), ws);
         }
+
+        synchronized (this) {
+            this.playerWorldSetMap = newWorldSetMap;
+        }
+
+        this.plugin.getLogger().info("Finished generating " + players.size() + " worlds");
     }
 
     private void preparePlayerBoards(Collection<Player> players) {
         for (Player p : players) {
-            this.playerBoardMap.put(p.getUniqueId(), new PlayerBoard(p, this));
+            this.playerBoardMap.put(p.getUniqueId(), new PlayerBoard(p.getUniqueId(), this));
         }
     }
 
@@ -129,7 +151,7 @@ public class BingoGame {
      */
     public Collection<Player> getPlayers() {
         ArrayList<Player> list = new ArrayList<>();
-        for (UUID uuid : this.playerBoardMap.keySet()) {
+        for (UUID uuid : this.playerWorldSetMap.keySet()) {
             Player p = this.plugin.getServer().getPlayer(uuid);
             if (p != null) {
                 list.add(p);
@@ -171,6 +193,7 @@ public class BingoGame {
         PREPARING,
         READY,
         RUNNING,
-        DONE
+        DONE,
+        FAILED,
     }
 }

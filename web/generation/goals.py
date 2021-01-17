@@ -20,6 +20,7 @@ class Goal:
         self.id = id
         self.description_template = ""
         self.tooltip_template = ""
+        self.type = "default"
         self.weight = 1.0
         self.antisynergy = None
         self.variable_ranges = {}  # type: Dict[str, tuple]
@@ -182,6 +183,10 @@ def parse_xml(filename=GOAL_XML):
 
         if len(e_goal.findall('ItemTrigger')) > 0 or len(e_goal.findall('Auto')) > 0:
             new_goal.is_autoactivated = True
+
+        goal_type = e_goal.get('type')
+        if goal_type:
+            new_goal.type = goal_type
 
         difficulty = int(e_goal.get('difficulty'))
         GOALS[difficulty].append(new_goal)

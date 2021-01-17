@@ -14,6 +14,7 @@ public class Square {
     public BingoGame game;
 
     public final String goalId;
+    public final String goalType;
     public final String text;
     public final int position;
     public final Map<String, Integer> variables = new HashMap<>();
@@ -24,6 +25,7 @@ public class Square {
         this.game = game;
 
         this.goalId = (String) obj.get("id");
+        this.goalType = (String) obj.get("type");
         this.text = (String) obj.get("text");
         this.position = ((Long) obj.get("position")).intValue();
 
@@ -49,17 +51,8 @@ public class Square {
      */
     public void mark(Player player) {
         debugLog("Impulsing goal " + this.goalId);
-        this.game.wsClient.sendMarkSquare(player.getName(), position, 1);
-    }
-
-    /**
-     * Activate a goal phrased like "Never" - marking it as "undone". For example, a goal
-     * "Never Sleep" would be negatively impulsed if the player sleeps.
-     * @param player Player to "de"activate for.
-     */
-    public void impulseNegative(Player player) {
-        debugLog("Impulsing negative goal " + this.goalId);
-        this.game.wsClient.sendMarkSquare(player.getName(), position, 3);
+        this.game.wsClient.sendMarkSquare(player.getName(), position,
+            this.goalType.equals("negative") ? 3 : 1);
     }
 
     protected void debugLog(String msg) {

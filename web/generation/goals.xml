@@ -482,11 +482,11 @@
       <Quantity>$var</Quantity>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="1" id="jm_never_lates77348">
+  <Goal difficulty="1" id="jm_never_lates77348" type="negative">
     <Description>Never wear Chestplates</Description>
     <Auto/>
   </Goal>
-  <Goal difficulty="1" id="jm_never_hield82710">
+  <Goal difficulty="1" id="jm_never_hield82710" type="negative">
     <Description>Never use a Shield</Description>
     <Auto/>
   </Goal>
@@ -847,7 +847,7 @@
       <Name>minecraft:lime_dye</Name>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="1" id="jm_never_sleep35022">
+  <Goal difficulty="1" id="jm_never_sleep35022" type="negative">
     <Description>Never Sleep</Description>
     <Auto/>
   </Goal>
@@ -1326,11 +1326,11 @@
       <Quantity>$var</Quantity>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="1" id="jm_never_g_rod73476">
+  <Goal difficulty="1" id="jm_never_g_rod73476" type="negative">
     <Description>Never use a Fishing Rod</Description>
     <Auto/>
   </Goal>
-  <Goal difficulty="1" id="jm_never__boat85417">
+  <Goal difficulty="1" id="jm_never__boat85417" type="negative">
     <Description>Never use a Boat</Description>
     <Auto/>
   </Goal>
@@ -1568,7 +1568,7 @@
   <Goal difficulty="2" id="jm_kill__arrow18771">
     <Description>Kill a Skeleton with it's own Arrow</Description>
   </Goal>
-  <Goal difficulty="2" id="jm_never_rmour42273">
+  <Goal difficulty="2" id="jm_never_rmour42273" type="negative">
     <Description>Never wear any Armour</Description>
     <Auto/>
   </Goal>
@@ -1689,7 +1689,7 @@
     <Tooltip>Dig a hole to bedrock and build to 256 Y (height limit), then jump from top to bottom at the end of the game</Tooltip>
     <Antisynergy>Finish</Antisynergy>
   </Goal>
-  <Goal difficulty="2" id="jm_vegetarian_67077">
+  <Goal difficulty="2" id="jm_vegetarian_67077" type="negative">
     <Description>Vegetarian</Description>
     <Tooltip>Never eat meat, including fish</Tooltip>
     <Antisynergy>Food</Antisynergy>
@@ -1845,7 +1845,7 @@
   <Goal difficulty="2" id="jm_kill__anvil29958">
     <Description>Kill a hostile mob with an Anvil</Description>
   </Goal>
-  <Goal difficulty="2" id="jm_never_die_37813">
+  <Goal difficulty="2" id="jm_never_die_37813" type="negative">
     <Description>Never Die</Description>
     <Tooltip>No death allowed, including if immediately caused by completing the last goal (e.g. inadvertently dying to the explosion of &quot;Detonate a TNT-Minecart&quot;)</Tooltip>
     <Auto/>
@@ -1949,7 +1949,7 @@
       <Name>minecraft:ghast_tear</Name>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="2" id="jm_never__coal44187">
+  <Goal difficulty="2" id="jm_never__coal44187" type="negative">
     <Description>Never use Coal</Description>
     <Tooltip>Never use Coal for any crafting recipes, fuel in a furnace or trades, CAN use Charcoal</Tooltip>
     <Auto/>
@@ -2002,7 +2002,7 @@
   <Goal difficulty="2" id="jm_dig_s_hole)50067">
     <Description>Dig straight down to Bedrock from Sea level (1x1 hole)</Description>
   </Goal>
-  <Goal difficulty="2" id="jm_never_sword96977">
+  <Goal difficulty="2" id="jm_never_sword96977" type="negative">
     <Description>Never use a Sword</Description>
     <Tooltip>Never use a Sword for Combat or Block Breaking. Holding or crafting is fine.</Tooltip>
     <Auto/>
@@ -2111,7 +2111,7 @@
       <Quantity>$var</Quantity>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="2" id="jm_never_n_axe38071">
+  <Goal difficulty="2" id="jm_never_n_axe38071" type="negative">
     <Description>Never use an Axe</Description>
     <Tooltip>Never use an Axe for Combat or Block Breaking. Holding or crafting is fine.</Tooltip>
     <Auto/>
@@ -2257,7 +2257,7 @@
     <Tooltip>Using Stairs, build up to 256 Y (the height limit) and stand on the top at the end of the game (If you need to jump over a block it's not a finished stairway)</Tooltip>
     <Antisynergy>Finish</Antisynergy>
   </Goal>
-  <Goal difficulty="3" id="jm_never_rches51018">
+  <Goal difficulty="3" id="jm_never_rches51018" type="negative">
     <Description>Never place Torches</Description>
     <Auto/>
   </Goal>
@@ -2273,7 +2273,7 @@
   <Goal difficulty="3" id="jm_tame__onkey63865">
     <Description>Tame a Donkey</Description>
   </Goal>
-  <Goal difficulty="3" id="jm_never_ields14785">
+  <Goal difficulty="3" id="jm_never_ields14785" type="negative">
     <Description>Never wear Armour or use Shields</Description>
     <Auto/>
   </Goal>
@@ -2283,7 +2283,7 @@
   <Goal difficulty="3" id="jm_encha_items79670">
     <Description>Enchant 5 different items</Description>
   </Goal>
-  <Goal difficulty="3" id="jm_never_ckets96909">
+  <Goal difficulty="3" id="jm_never_ckets96909" type="negative">
     <Description>Never use Buckets</Description>
     <Auto/>
   </Goal>
@@ -2414,7 +2414,7 @@
   <Goal difficulty="4" id="jm_fully_nduit86611">
     <Description>Fully power a Conduit</Description>
   </Goal>
-  <Goal difficulty="4" id="jm_never_ticks40530">
+  <Goal difficulty="4" id="jm_never_ticks40530" type="negative">
     <Description>Never Craft Sticks</Description>
     <Auto/>
   </Goal>

@@ -83,7 +83,7 @@ public class Messages {
         }
     }
 
-    public void announcePlayerMarking(UUID playerUuid, Square goal, boolean invalidated) {
+    public void announcePlayerMarking(UUID playerUuid, Square square, boolean invalidated) {
         OfflinePlayer player = this.game.plugin.getServer().getOfflinePlayer(playerUuid);
 
         BaseComponent[] components;
@@ -92,7 +92,7 @@ public class Messages {
                 .append(HEADER, ComponentBuilder.FormatRetention.NONE)
                 .append(player.getName())
                 .append(" has marked ")
-                .append(goal.text).color(ChatColor.GREEN)
+                .append(square.text).color(ChatColor.GREEN)
                 .append("!").color(COLOR_TEXT)
                 .create();
         } else {
@@ -100,7 +100,7 @@ public class Messages {
                 .append(HEADER, ComponentBuilder.FormatRetention.NONE)
                 .append(player.getName())
                 .append(" has invalidated ")
-                .append(goal.text).color(ChatColor.RED)
+                .append(square.text).color(ChatColor.RED)
                 .append("!").color(COLOR_TEXT)
                 .create();
         }

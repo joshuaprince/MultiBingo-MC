@@ -35,6 +35,13 @@ each difficulty for balancing purposes.
 #### `id`
 A unique identifier for this goal. This is used for automatic activation only.
 
+#### `type`
+An optional "Goal Type" that implies that it may behave in a certain way.
+Current goal types are:
+- `default` - The default, regular goal to achieve.
+- `negative` - A goal of the type "Never X" that, if marked, blocks a bingo 
+  in its wake instead of counting towards one.
+
 ### Goal Sub-Nodes
 
 Each goal may have the following sub-nodes:

@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,8 @@ public class MCBingoPlugin extends JavaPlugin {
 
     private void registerCommands() {
         CommandAPICommand prepareCmd = new CommandAPICommand("prepare")
+            .executes((CommandExecutor) (sender, args) -> commandPrepare(sender, null));
+        CommandAPICommand prepareCmdArg = new CommandAPICommand("prepare")
             .withArguments(new StringArgument("gameCode"))
             .executes((CommandExecutor) (sender, args) -> commandPrepare(sender, (String) args[0]));
 
@@ -61,6 +64,7 @@ public class MCBingoPlugin extends JavaPlugin {
 
         CommandAPICommand root = new CommandAPICommand("bingo");
         root.withSubcommand(prepareCmd);
+        root.withSubcommand(prepareCmdArg);
         root.withSubcommand(startCmd);
         root.withSubcommand(endCmd);
         if (debug) {
@@ -71,6 +75,9 @@ public class MCBingoPlugin extends JavaPlugin {
 
     private void commandPrepare(CommandSender sender, String worldCode) {
         ArrayList<Player> players = new ArrayList<>(this.getServer().getOnlinePlayers());
+        if (worldCode == null) {
+            worldCode = randomGameCode();
+        }
         this.setCurrentGame(new BingoGame(this, worldCode, players));
     }
 
@@ -129,5 +136,17 @@ public class MCBingoPlugin extends JavaPlugin {
             this.currentGame.destroy();
         }
         this.currentGame = newGame;
+    }
+
+    private static String randomGameCode() {
+        final int numChars = 6;
+
+        Random rand = new Random();
+        char[] chars = new char[numChars];
+        for (int i = 0; i < numChars; i++) {
+            chars[i] = (char) ('A' + rand.nextInt(26));
+        }
+
+        return new String(chars);
     }
 }

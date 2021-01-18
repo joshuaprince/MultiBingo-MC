@@ -1,9 +1,9 @@
 # Bingo Goals Format
 
-Goals are used to generate Bingo boards. A goal is used to create a single
-square on the board.
+Goals are used to generate Bingo boards. Each square on the board consists 
+of a single Goal.
 
-Goals are stored in `goals.xml`. An example Goals XML:
+Goal Templates are stored in `goals.xml`. An example Goals XML:
 
 ```xml
 <MCBingoGoals version="0">
@@ -25,8 +25,11 @@ The root `<MCBingoGoals>` node contains any number of `<Goal>` nodes.
 
 ### Goal Nodes
 
-Each goal has the following attributes.
- 
+Each XML `<Goal>` node defines a Goal Template. When a board is generated, Goal
+Templates are pulled from the XML and placed on a board as concrete Goals. A
+Goal Template may have variables (described below) which are fixed when the 
+template is placed on a board as a concrete Goal.
+
 #### `difficulty` (Required)
 Ranges from 0 to 4. Describes the difficulty of this goal with 0 being "very
 easy" and 4 being "very hard". Boards will be generated with select values of

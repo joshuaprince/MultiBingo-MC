@@ -8,16 +8,18 @@ from xml.etree.ElementTree import Element
 import xmltodict
 
 GOAL_XML = os.path.join(os.path.dirname(__file__), 'goals.xml')
-NUM_DIFFICULTIES = 5
-GOALS: Dict[int, List['Goal']] = {i: [] for i in range(NUM_DIFFICULTIES)}
+MAX_DIFFICULTY = 4
+GOALS: List['GoalTemplate'] = []
 
 
-class Goal:
+class GoalTemplate:
     """
-    An abstract Goal "template" that contains variable ranges.
+    An abstract Goal "template" that contains unset variable ranges.
+    Each GoalTemplate maps 1:1 with a <Goal> defined in `goals.xml`.
     """
     def __init__(self, id: str):
         self.id = id
+        self.difficulty = None
         self.description_template = ""
         self.tooltip_template = ""
         self.type = "default"
@@ -35,39 +37,39 @@ class ConcreteGoal:
     """
     A goal on a board whose variables are set.
     """
-    def __init__(self, goal: Goal, rand: Optional[Random]):
+    def __init__(self, template: GoalTemplate, rand: Optional[Random]):
         """
-        :param goal: Goal that this ConcreteGoal references.
+        :param template: Goal that this ConcreteGoal references.
         :param rand: Random element used to set variables. If None, variables will not be
                      automatically set. This should only be used if the variables are being set
                      manually after creation of the ConcreteGoal (such as if being parsed from an
                      XML ID)
         """
-        self.goal = goal
+        self.template = template
         self.variables = {}
 
         if rand:
-            for k, (mini, maxi) in self.goal.variable_ranges.items():
+            for k, (mini, maxi) in self.template.variable_ranges.items():
                 self.variables[k] = rand.randint(mini, maxi)
 
     def description(self) -> str:
-        return self._replace_vars(self.goal.description_template)
+        return self._replace_vars(self.template.description_template)
 
     def tooltip(self) -> str:
-        return self._replace_vars(self.goal.tooltip_template)
+        return self._replace_vars(self.template.tooltip_template)
 
     def xml_id(self) -> str:
         """
         XML ID contains the ID of the goal and serialized versions of any variables.
         Example: "stairs:::needed:3::othervar:5"
         """
-        goal_id = self.goal.id
+        goal_id = self.template.id
         vars_str = '::'.join(':'.join([k, str(v)]) for k, v in self.variables.items())
         return ':::'.join([goal_id, vars_str])
 
     def triggers(self) -> List[dict]:
         triggers_list = []
-        for goal_trigger_element in self.goal.triggers_xml:
+        for goal_trigger_element in self.template.triggers_xml:
             xml_str = ElementTree.tostring(goal_trigger_element, encoding='unicode')
             xml_str_derefd = self._replace_vars(xml_str)
             xml_dict = xmltodict.parse(xml_str_derefd, force_list=True)  # type: OrderedDict
@@ -85,10 +87,9 @@ class ConcreteGoal:
 
         # Find goal in GOALS
         the_goal = None
-        for dif in range(NUM_DIFFICULTIES):
-            for goal in GOALS[dif]:
-                if goal.id == goal_id:
-                    the_goal = goal
+        for goal in GOALS:
+            if goal.id == goal_id:
+                the_goal = goal
         if the_goal is None:
             raise RuntimeError(f"Goal ID {goal_id} does not exist in the loaded XML.")
 
@@ -101,7 +102,7 @@ class ConcreteGoal:
                 vars_from_xml[k] = v
 
         # By iterating twice, ensure that only variables associated with this Goal are in this CG
-        for goal_var, _ in cg.goal.variable_ranges.items():
+        for goal_var, _ in cg.template.variable_ranges.items():
             cg.variables[goal_var] = vars_from_xml[goal_var]
 
         return cg
@@ -127,24 +128,23 @@ def get_goals(rand: Random, difficulty_counts: tuple) -> List[ConcreteGoal]:
 
     for diff, count in enumerate(difficulty_counts):
         for _ in range(count):
-            this_difficulty_goals_list: List = goals_copy[diff]
-            if len(this_difficulty_goals_list) == 0:
+            goals_this_difficulty: List = [g for g in goals_copy if g.difficulty == diff]
+            if len(goals_this_difficulty) == 0:
                 raise IndexError(f"Ran out of goals of difficulty {diff}")
 
             # Pick a random goal at this difficulty
-            weights = [goal.weight for goal in this_difficulty_goals_list]
-            goal_idx = rand.choices(range(len(this_difficulty_goals_list)), weights=weights)[0]
-            goal = this_difficulty_goals_list[goal_idx]
+            weights = [goal.weight for goal in goals_this_difficulty]
+            goal_idx = rand.choices(range(len(goals_this_difficulty)), weights=weights)[0]
+            goal = goals_this_difficulty[goal_idx]
 
             # Append it to our returned list
             ret.append(ConcreteGoal(goal, rand))
 
             # Remove the goal and its antisynergies from the template list so none come up again
             if goal.antisynergy:
-                for df in goals_copy.keys():
-                    goals_copy[df] = [g for g in goals_copy[df] if g.antisynergy != goal.antisynergy]
+                goals_copy = [g for g in goals_copy if g.antisynergy != goal.antisynergy]
             else:
-                this_difficulty_goals_list.pop(goal_idx)
+                goals_copy.pop(goal_idx)
 
     rand.shuffle(ret)
 
@@ -162,7 +162,13 @@ def parse_xml(filename=GOAL_XML):
             else:
                 goal_ids.add(gid)
 
-        new_goal = Goal(gid)
+        new_goal = GoalTemplate(gid)
+
+        difficulty = int(e_goal.get('difficulty'))
+        if difficulty is None or difficulty > MAX_DIFFICULTY:
+            raise ValueError(f"Goal {gid} does not have a difficulty between "
+                             f"0 and {MAX_DIFFICULTY}")
+        new_goal.difficulty = difficulty
 
         if e_goal.find('Description') is not None:
             new_goal.description_template = e_goal.find('Description').text
@@ -188,21 +194,7 @@ def parse_xml(filename=GOAL_XML):
         if goal_type:
             new_goal.type = goal_type
 
-        difficulty = int(e_goal.get('difficulty'))
-        GOALS[difficulty].append(new_goal)
-
-    # _add_placeholder_goals()  # TODO remove
-
-
-def _add_placeholder_goals():
-    """
-    Add goals that will placehold until there are 25 of each difficulty
-    """
-    for dif in range(NUM_DIFFICULTIES):
-        for i in range(25):
-            new_goal = Goal(f'placeholder_dif{dif}_{i}')
-            new_goal.description_template = f'D{dif} Placeholder goal {i}'
-            GOALS[dif].append(new_goal)
+        GOALS.append(new_goal)
 
 
 parse_xml(GOAL_XML)

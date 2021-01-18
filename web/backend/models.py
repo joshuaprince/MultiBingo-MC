@@ -53,15 +53,15 @@ class Square(models.Model):
 
     def is_autoactivated(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
-        return cg.goal.is_autoactivated
+        return cg.template.is_autoactivated
 
     def to_json(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
         return {
-            'id': cg.goal.id,
+            'id': cg.template.id,
             'text': self.text,
             'position': self.position,
-            'type': cg.goal.type,
+            'type': cg.template.type,
             'variables': cg.variables,
             'triggers': cg.triggers(),
         }

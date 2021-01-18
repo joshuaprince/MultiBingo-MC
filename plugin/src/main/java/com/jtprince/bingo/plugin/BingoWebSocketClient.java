@@ -1,6 +1,7 @@
 package com.jtprince.bingo.plugin;
 
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -106,11 +107,15 @@ public class BingoWebSocketClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        if (this.reconnectAttemptsRemaining-- <= 0) {
+        if (code == CloseFrame.NORMAL) {
+            this.game.plugin.getLogger().info("Closed websocket for game " + this.game.gameCode);
+        }
+        else if (this.reconnectAttemptsRemaining-- <= 0) {
             this.game.plugin.getLogger().severe("Websocket failed to reconnect.");
             this.game.messages.announceGameFailed();
             this.game.state = BingoGame.State.FAILED;
-        } else {
+        }
+        else {
             this.game.plugin.getLogger().warning(
                 "Websocket for game " + this.game.gameCode +
                     " closed. Retrying in 5 seconds. " + reason);

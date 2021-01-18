@@ -4,21 +4,21 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
-import org.bukkit.command.Command;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class MCBingoPlugin extends JavaPlugin {
     boolean debug = false;
     public WorldManager worldManager;
-    public BingoGame currentGame;
+    private BingoGame currentGame;
 
     @Override
     public void onLoad() {
@@ -35,8 +35,7 @@ public class MCBingoPlugin extends JavaPlugin {
     public void onEnable() {
         CommandAPI.onEnable(this);
 
-        worldManager = new WorldManager(this);
-        this.getServer().getPluginManager().registerEvents(worldManager, this);
+        this.worldManager = new WorldManager(this);
         this.registerCommands();
 
         this.saveDefaultConfig();
@@ -46,86 +45,51 @@ public class MCBingoPlugin extends JavaPlugin {
         CommandAPICommand prepareCmd = new CommandAPICommand("prepare")
             .withArguments(new StringArgument("gameCode"))
             .executes((CommandExecutor) (sender, args) -> commandPrepare(sender, (String) args[0]));
+
         CommandAPICommand startCmd = new CommandAPICommand("start")
             .executes((CommandExecutor) (sender, args) -> commandStart(sender));
 
-        new CommandAPICommand("bingo")
-            .withSubcommand(prepareCmd)
-            .withSubcommand(startCmd)
-            .register();
+        CommandAPICommand endCmd = new CommandAPICommand("end")
+            .executes((CommandExecutor) (sender, args) -> commandEnd(sender));
+
+        CommandAPICommand debugCmd = new CommandAPICommand("debug")
+            .executes((sender, args) -> {
+                sender.sendMessage(String.join(", ",
+                    this.getServer().getWorlds().stream().map(World::getName)
+                        .collect(Collectors.toUnmodifiableList())));
+            });
+
+        CommandAPICommand root = new CommandAPICommand("bingo");
+        root.withSubcommand(prepareCmd);
+        root.withSubcommand(startCmd);
+        root.withSubcommand(endCmd);
+        if (debug) {
+            root.withSubcommand(debugCmd);
+        }
+        root.register();
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
-                             @NotNull String label, @NotNull String[] args) {
-        if (args.length == 0) {
-            if (sender instanceof Player) {
-                Player p = (Player) sender;
-                sender.sendMessage("Your world: " + p.getWorld().getName());
-            }
-            return false;
-        }
-
-        if (args[0].equalsIgnoreCase("generate")) {
-            if (args.length < 2) return false;
-            return this.commandGenerate(sender, args[1]);
-        }
-
-        if (args[0].equalsIgnoreCase("go")) {
-            if (args.length < 2) return false;
-            return this.commandGo(sender, args[1]);
-        }
-
-        if (args[0].equalsIgnoreCase("prepare")) {
-            if (args.length < 2) return false;
-            return this.commandPrepare(sender, args[1]);
-        }
-
-        if (args[0].equalsIgnoreCase("start")) {
-            return this.commandStart(sender);
-        }
-
-        return false;
-    }
-
-    protected boolean commandGenerate(CommandSender sender, String worldCode) {
-        // TODO consider deletion or format messages
-        sender.sendMessage("Generating worlds...");
-        worldManager.createWorlds(worldCode, worldCode);
-        sender.sendMessage("Worlds generated! Type /bingo go " + worldCode + " to go there.");
-        return true;
-    }
-
-    protected boolean commandGo(CommandSender sender, String worldCode) {
-        // TODO consider deletion or format messages
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to use this command.");
-            return true;
-        }
-
-        Player p = (Player) sender;
-        return worldManager.putInWorld(p, worldCode);
-    }
-
-    protected boolean commandPrepare(CommandSender sender, String worldCode) {
-        this.currentGame = new BingoGame(this, worldCode);
-
+    private void commandPrepare(CommandSender sender, String worldCode) {
         ArrayList<Player> players = new ArrayList<>(this.getServer().getOnlinePlayers());
-        this.currentGame.prepare(players);
-
-        return true;
+        this.setCurrentGame(new BingoGame(this, worldCode, players));
     }
 
-    protected boolean commandStart(CommandSender sender) {
-        if (this.currentGame == null) {
-            // TODO format message
-            sender.sendMessage("No game is prepared! Use /bingo prepare <gameCode>");
-            return true;
+    private void commandStart(CommandSender sender) {
+        if (this.getCurrentGame() == null) {
+            Messages.basicTellNoGame(sender, "No game is prepared! Use /bingo prepare <gameCode>");
+            return;
         }
 
-        this.currentGame.start(sender);
+        this.getCurrentGame().start(sender);
+    }
 
-        return true;
+    private void commandEnd(CommandSender sender) {
+        if (this.getCurrentGame() == null) {
+            Messages.basicTellNoGame(sender, "No game is running!");
+            return;
+        }
+
+        this.setCurrentGame(null);
     }
 
     URI getWebsocketUrl(String gameCode) {
@@ -154,5 +118,16 @@ public class MCBingoPlugin extends JavaPlugin {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public BingoGame getCurrentGame() {
+        return currentGame;
+    }
+
+    private void setCurrentGame(BingoGame newGame) {
+        if (this.currentGame != null) {
+            this.currentGame.destroy();
+        }
+        this.currentGame = newGame;
     }
 }

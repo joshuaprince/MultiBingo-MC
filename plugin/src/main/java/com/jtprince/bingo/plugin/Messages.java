@@ -14,17 +14,46 @@ import java.util.UUID;
 public class Messages {
     final BingoGame game;
 
-    protected final ChatColor COLOR_HEADER = ChatColor.GOLD;
-    protected final ChatColor COLOR_TEXT = ChatColor.AQUA;
-    protected final BaseComponent[] HEADER;
+    private static final ChatColor COLOR_HEADER = ChatColor.GOLD;
+    private static final ChatColor COLOR_TEXT = ChatColor.AQUA;
+
+    private final BaseComponent[] HEADER;
+    private static final BaseComponent[] HEADER_NO_GAME = new ComponentBuilder("[BINGO]")
+        .color(COLOR_HEADER).bold(true)
+        .append(" ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
+        .create();
 
     public Messages(BingoGame game) {
         this.game = game;
-        this.HEADER = new ComponentBuilder("[BINGO]")
-            .color(COLOR_HEADER).bold(true)
-            .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Game Code: " + game.gameCode)))
-            .append(" ", ComponentBuilder.FormatRetention.NONE).bold(false).color(COLOR_TEXT)
+        this.HEADER = new ComponentBuilder(HEADER_NO_GAME[0])
+            .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new Text("Game Code: " + game.gameCode)))
+            .append(HEADER_NO_GAME[1], ComponentBuilder.FormatRetention.NONE)
             .create();
+    }
+
+    public void basicTell(CommandSender sender, String msg) {
+        BaseComponent[] components = new ComponentBuilder()
+            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append(msg)
+            .create();
+        sender.sendMessage(components);
+    }
+
+    public void basicAnnounce(String msg) {
+        BaseComponent[] components = new ComponentBuilder()
+            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append(msg)
+            .create();
+        this.game.plugin.getServer().broadcast(components);
+    }
+
+    public static void basicTellNoGame(CommandSender sender, String msg) {
+        BaseComponent[] components = new ComponentBuilder()
+            .append(HEADER_NO_GAME, ComponentBuilder.FormatRetention.NONE)
+            .append(msg)
+            .create();
+        sender.sendMessage(components);
     }
 
     public void announcePreparingGame() {
@@ -41,14 +70,6 @@ public class Messages {
             .append("This will cause the server to lag!")
             .create();
         this.game.plugin.getServer().broadcast(components);
-    }
-
-    public void tellGameNotReady(CommandSender sender) {
-        BaseComponent[] components = new ComponentBuilder()
-            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
-            .append("Game is not yet ready to be started!")
-            .create();
-        sender.sendMessage(components);
     }
 
     public void announceGameFailed() {

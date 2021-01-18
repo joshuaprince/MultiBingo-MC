@@ -14,11 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorldManager implements Listener {
-    protected MCBingoPlugin plugin;
-    protected Map<String, WorldSet> worldSetMap = new HashMap<>();
+    private final MCBingoPlugin plugin;
+    private final Map<String, WorldSet> worldSetMap = new HashMap<>();
+
+    private static final Environment[] ENVIRONMENTS = {
+        Environment.NORMAL, Environment.NETHER, Environment.THE_END
+    };
 
     public WorldManager(MCBingoPlugin plugin) {
         this.plugin = plugin;
+        this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
     }
 
     public WorldSet createWorlds(String worldCode, String seed) {
@@ -34,26 +39,36 @@ public class WorldManager implements Listener {
         wc_nether.seed(seed.hashCode());
         wc_end.seed(seed.hashCode());
 
-        WorldSet ws = new WorldSet(wc_overworld.createWorld(), wc_nether.createWorld(), wc_end.createWorld());
+        WorldSet ws = new WorldSet(worldCode,
+            wc_overworld.createWorld(), wc_nether.createWorld(), wc_end.createWorld());
         this.worldSetMap.put(worldCode, ws);
         return ws;
     }
 
-    public boolean putInWorld(Player p, String worldCode) {
-        WorldSet ws = this.worldSetMap.get(worldCode);
-        if (ws == null) {
-            return false;
+    public void unloadWorlds(WorldSet ws) {
+        this.plugin.getLogger().info("Unloading WorldSet " + ws.worldSetCode);
+        for (Environment env : ENVIRONMENTS) {
+            World world = ws.getWorld(env);
+            World spawnWorld = this.plugin.getServer().getWorlds().get(0);
+
+            // Move all players in this world to the spawn world
+            for (Player p : world.getPlayers()) {
+                p.teleport(spawnWorld.getSpawnLocation());
+            }
+
+            this.plugin.getServer().unloadWorld(world, true);
         }
 
-        Location loc = ws.getWorld(Environment.NORMAL).getSpawnLocation();
-        p.teleport(loc);
-        return true;
+        //noinspection SuspiciousMethodCalls
+        this.worldSetMap.remove(ws);
     }
 
     public static class WorldSet {
-        protected Map<Environment, World> map;
+        private final String worldSetCode;
+        private final Map<Environment, World> map;
 
-        public WorldSet(World overworld, World nether, World end) {
+        private WorldSet(String worldSetCode, World overworld, World nether, World end) {
+            this.worldSetCode = worldSetCode;
             this.map = new HashMap<>();
             this.map.put(Environment.NORMAL, overworld);
             this.map.put(Environment.NETHER, nether);
@@ -132,7 +147,7 @@ public class WorldManager implements Listener {
         }
     }
 
-    protected WorldSet findWorldSet(World world) {
+    WorldSet findWorldSet(World world) {
         for (WorldSet ws : worldSetMap.values()) {
             for (Environment env : Environment.values()) {
                 if (world.equals(ws.getWorld(env))) {

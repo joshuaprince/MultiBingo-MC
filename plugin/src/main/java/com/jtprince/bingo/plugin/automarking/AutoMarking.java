@@ -5,6 +5,7 @@ import com.jtprince.bingo.plugin.Square;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -67,6 +68,14 @@ public class AutoMarking {
         this.activeEventListenerMap = newEventListenerMap;
         this.autoMarkedSquares = Collections.unmodifiableSet(listenedGoals);
         return this.autoMarkedSquares;
+    }
+
+    /**
+     * Removes listeners and unregisters all goals, for when a game ends.
+     */
+    public void destroy() {
+        HandlerList.unregisterAll(this.listener);
+        this.autoMarkedSquares = null;
     }
 
     /**

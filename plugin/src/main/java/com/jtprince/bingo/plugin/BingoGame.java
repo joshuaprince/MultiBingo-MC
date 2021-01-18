@@ -1,6 +1,7 @@
 package com.jtprince.bingo.plugin;
 
 import com.jtprince.bingo.plugin.automarking.AutoMarking;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -21,13 +22,13 @@ public class BingoGame {
     public final GameBoard gameBoard;
 
     public final String gameCode;
-    State state = State.CREATED;
+    public State state;
     private int countdown;
 
     private Map<UUID, WorldManager.WorldSet> playerWorldSetMap;
     private final Map<UUID, PlayerBoard> playerBoardMap = new HashMap<>();
 
-    public BingoGame(MCBingoPlugin plugin, String gameCode) {
+    public BingoGame(MCBingoPlugin plugin, String gameCode, Collection<Player> players) {
         this.plugin = plugin;
         this.gameCode = gameCode;
         this.messages = new Messages(this);
@@ -36,9 +37,7 @@ public class BingoGame {
 
         URI uri = plugin.getWebsocketUrl(this.gameCode);
         this.wsClient = new BingoWebSocketClient(this, uri);
-    }
 
-    public void prepare(Collection<Player> players) {
         this.state = State.PREPARING;
         this.messages.announcePreparingGame();
 
@@ -48,6 +47,18 @@ public class BingoGame {
 
         // Wait until both WS is connected and worlds are ready, then mark the game as ready.
         this.transitionToReady();
+    }
+
+    public void destroy() {
+        this.state = State.DONE;
+        this.plugin.getLogger().info("Destroying game " + gameCode);
+        this.messages.basicAnnounce("The game has ended!");
+
+        if (this.wsClient != null) {
+            this.wsClient.close();
+        }
+        this.unloadWorldSets();
+        this.autoMarking.destroy();
     }
 
     public synchronized void transitionToReady() {
@@ -62,7 +73,8 @@ public class BingoGame {
 
     public void start(CommandSender commander) {
         if (this.state != State.READY) {
-            this.messages.tellGameNotReady(commander);
+            this.messages.basicTell(commander, "Game is not yet ready to be started!");
+            return;
         }
 
         this.wipePlayers(this.getPlayers());
@@ -94,6 +106,13 @@ public class BingoGame {
         this.plugin.getLogger().info("Finished generating " + players.size() + " worlds");
     }
 
+    private void unloadWorldSets() {
+        for (UUID playerUuid : this.playerWorldSetMap.keySet()) {
+            this.plugin.worldManager.unloadWorlds(this.playerWorldSetMap.get(playerUuid));
+            this.playerWorldSetMap.put(playerUuid, null);
+        }
+    }
+
     private void preparePlayerBoards(Collection<Player> players) {
         for (Player p : players) {
             this.playerBoardMap.put(p.getUniqueId(), new PlayerBoard(p.getUniqueId(), this));
@@ -111,10 +130,18 @@ public class BingoGame {
     private void wipePlayers(Collection<Player> players) {
         CommandSender console = this.plugin.getServer().getConsoleSender();
 
+        // For testing purposes, don't wipe some things if I am the only one in this game.
+        boolean debugConvenience = (this.plugin.debug && players.size() == 1);
+
         for (Player p : players) {
             p.setHealth(20.0);
             p.setFoodLevel(20);
             p.setSaturation(5.0f);
+            p.setExp(0);
+            p.setLevel(0);
+            if (!debugConvenience) {
+                p.setGameMode(GameMode.SURVIVAL);
+            }
             for (PotionEffect e : p.getActivePotionEffects()) {
                 p.removePotionEffect(e.getType());
             }
@@ -166,16 +193,14 @@ public class BingoGame {
      * @return The player, or null if this world is not part of this game.
      */
     public Player getPlayerInWorld(@NotNull World world) {
-        for (Player p : this.getPlayers()) {
-            WorldManager.WorldSet worldSet = this.playerWorldSetMap.get(p.getUniqueId());
-            for (World w : worldSet.map.values()) {
-                if (w.equals(world)) {
-                    return p;
-                }
+        WorldManager.WorldSet ws = this.plugin.worldManager.findWorldSet(world);
+        for (UUID p : this.playerWorldSetMap.keySet()) {
+            if (this.playerWorldSetMap.get(p).equals(ws)) {
+                return this.plugin.getServer().getPlayer(p);
             }
         }
 
-        this.plugin.getLogger().finer("getPlayerInWorld did not find a player for " + world.getName());
+        this.plugin.getLogger().warning("getPlayerInWorld did not find a player for " + world.getName());
         return null;
     }
 
@@ -189,7 +214,6 @@ public class BingoGame {
     }
 
     public enum State {
-        CREATED,
         PREPARING,
         READY,
         RUNNING,

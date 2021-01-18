@@ -1,5 +1,6 @@
 package com.jtprince.bingo.plugin.automarking;
 
+import com.jtprince.bingo.plugin.BingoGame;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -44,6 +45,10 @@ public class AutoMarkListener implements Listener {
      */
     @Contract("null -> true")
     private boolean ignore(LivingEntity player) {
+        if (this.autoMarking.game.state != BingoGame.State.RUNNING) {
+            return true;
+        }
+
         if (!(player instanceof Player)) {
             return true;
         }
@@ -61,6 +66,10 @@ public class AutoMarkListener implements Listener {
      * Return whether to ignore event in this world, because it is not part of a game.
      */
     private boolean ignore(World world) {
+        if (this.autoMarking.game.state != BingoGame.State.RUNNING) {
+            return true;
+        }
+
         if (world == null) {
             return true;
         }

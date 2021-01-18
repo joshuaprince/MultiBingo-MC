@@ -405,7 +405,7 @@
   <Goal difficulty="1" id="jm_book__quill34457">
     <Description>Book and Quill</Description>
     <ItemTrigger>
-      <Name>minecraft:book_and_quill</Name>
+      <Name>minecraft:writable_book</Name>
     </ItemTrigger>
   </Goal>
   <Goal difficulty="1" id="jm_flint_57555">
@@ -1696,7 +1696,7 @@
     <Antisynergy>Food</Antisynergy>
     <Auto/>
   </Goal>
-  <Goal difficulty="2" id="jm_carnivore_30882">
+  <Goal difficulty="2" id="jm_carnivore_30882" type="negative">
     <Description>Carnivore</Description>
     <Tooltip>Only eat meat</Tooltip>
     <Antisynergy>Food</Antisynergy>

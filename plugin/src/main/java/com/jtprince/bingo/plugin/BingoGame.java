@@ -1,10 +1,7 @@
 package com.jtprince.bingo.plugin;
 
 import com.jtprince.bingo.plugin.automarking.AutoMarking;
-import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -137,8 +134,10 @@ public class BingoGame {
             p.setHealth(20.0);
             p.setFoodLevel(20);
             p.setSaturation(5.0f);
+            p.setExhaustion(0);
             p.setExp(0);
             p.setLevel(0);
+            p.setStatistic(Statistic.TIME_SINCE_REST, 0);  // reset Phantom spawns
             if (!debugConvenience) {
                 p.setGameMode(GameMode.SURVIVAL);
             }

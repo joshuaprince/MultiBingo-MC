@@ -144,7 +144,7 @@ def get_goals(rand: Random, difficulty_counts: tuple) -> List[ConcreteGoal]:
             if goal.antisynergy:
                 goals_copy = [g for g in goals_copy if g.antisynergy != goal.antisynergy]
             else:
-                goals_copy.pop(goal_idx)
+                goals_copy.remove(goal)
 
     rand.shuffle(ret)
 

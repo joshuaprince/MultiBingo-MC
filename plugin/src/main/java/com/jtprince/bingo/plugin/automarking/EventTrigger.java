@@ -125,6 +125,12 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
+    static boolean jm_destr_awner87999(BlockBreakEvent event) {
+        // Destroy a monster spawner
+        return event.getBlock().getType() == Material.SPAWNER;
+    }
+
+    @EventTriggerListener
     static boolean jm_never_rches51018(BlockPlaceEvent event) {
         // Never place torches
         return Arrays.stream(torches).anyMatch(m -> event.getBlock().getType() == m);

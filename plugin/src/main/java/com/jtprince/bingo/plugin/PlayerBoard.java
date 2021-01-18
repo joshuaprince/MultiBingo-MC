@@ -24,6 +24,7 @@ public class PlayerBoard {
     final static int COMPLETE = 1;
     final static int REVERTED = 2;
     final static int INVALIDATED = 3;
+    final static int NOT_INVALIDATED = 4;
 
     public PlayerBoard(UUID playerUuid, BingoGame game) {
         this.playerUuid = playerUuid;

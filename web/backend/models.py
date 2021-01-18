@@ -1,3 +1,5 @@
+from typing import List
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -55,6 +57,13 @@ class Square(models.Model):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
         return cg.template.is_autoactivated
 
+    def initial_state(self) -> 'PlayerBoard.Marking':
+        cg = ConcreteGoal.from_xml_id(self.xml_id)
+        if cg.template.type == 'negative':
+            return PlayerBoard.Marking.NOT_INVALIDATED
+        else:
+            return PlayerBoard.Marking.UNMARKED
+
     def to_json(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
         return {
@@ -87,13 +96,14 @@ class PlayerBoard(models.Model):
     """
     class Marking(models.IntegerChoices):
         UNMARKED = 0
-        MARKED_GREEN = 1
-        MARKED_BLUE = 2
-        MARKED_RED = 3
+        COMPLETE = 1
+        REVERTED = 2
+        INVALIDATED = 3
+        NOT_INVALIDATED = 4
 
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     player_name = models.CharField(blank=False, max_length=128)
-    squares = models.CharField(max_length=25, default=('0' * 25))
+    squares = models.CharField(max_length=25, default='')
     disconnected_at = models.DateTimeField(null=True)
 
     def __str__(self):
@@ -115,3 +125,11 @@ class PlayerBoard(models.Model):
             'board': self.squares,
             'disconnected_at': self.disconnected_at.isoformat() if self.disconnected_at else None,
         }
+
+
+@receiver(post_save, sender=PlayerBoard)
+def build_player_board(instance: PlayerBoard, created: bool, **kwargs):
+    if not instance.squares:
+        all_squares = instance.board.square_set.order_by('position').all()  # type: List[Square]
+        instance.squares = ''.join([str(sq.initial_state().value) for sq in all_squares])
+        instance.save()

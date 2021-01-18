@@ -1,26 +1,29 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.Square;
+import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -162,6 +165,18 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
+    static boolean jm_creat_golem39717(CreatureSpawnEvent event) {
+        // Create a Snow Golem
+        return event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.BUILD_SNOWMAN;
+    }
+
+    @EventTriggerListener
+    static boolean jm_creat_golem39114(CreatureSpawnEvent event) {
+        // Create an Iron Golem
+        return event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.BUILD_IRONGOLEM;
+    }
+
+    @EventTriggerListener
     static boolean jm_never_sword96977(EntityDamageByEntityEvent event) {
         // Never use a sword
         // See also BlockBreakEvent variant
@@ -175,6 +190,60 @@ public class EventTrigger {
         // See also BlockBreakEvent variant
         return ((Player) event.getDamager()).getInventory().getItemInMainHand()
             .getType().getKey().toString().contains("_axe");
+    }
+
+    @EventTriggerListener
+    static boolean jm_deton_ecart39576(EntityExplodeEvent event) {
+        // Detonate a TNT minecart
+        return event.getEntity().getType() == EntityType.MINECART_TNT;
+    }
+
+    @EventTriggerListener
+    static boolean jm_2_cre__boat97078(EntityMountEvent event) {
+        // 2 Creepers in the same Boat
+        if (!(event.getMount() instanceof Boat)) {
+            return false;
+        }
+        Boat boat = (Boat) event.getMount();
+
+        int creepers = 0;
+        for (Entity passenger : boat.getPassengers()) {
+            if (passenger instanceof Creeper) {
+                creepers++;
+            }
+        }
+
+        return creepers >= 2;
+    }
+
+    @EventTriggerListener
+    static boolean jm_tame__horse50063(EntityTameEvent event) {
+        // Tame a horse
+        return event.getEntity().getType() == EntityType.HORSE;
+    }
+
+    @EventTriggerListener
+    static boolean jm_tame___wolf12580(EntityTameEvent event) {
+        // Tame a wolf
+        return event.getEntity().getType() == EntityType.WOLF;
+    }
+
+    @EventTriggerListener
+    static boolean jm_tame__arrot29264(EntityTameEvent event) {
+        // Tame a parrot
+        return event.getEntity().getType() == EntityType.PARROT;
+    }
+
+    @EventTriggerListener
+    static boolean jm_tame__celot19643(EntityTameEvent event) {
+        // Tame an ocelot
+        return event.getEntity().getType() == EntityType.OCELOT;
+    }
+
+    @EventTriggerListener
+    static boolean jm_tame__onkey63865(EntityTameEvent event) {
+        // Tame a donkey
+        return event.getEntity().getType() == EntityType.DONKEY;
     }
 
     @EventTriggerListener
@@ -220,6 +289,21 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
+    static boolean jm_use_a_abbit23802(PlayerInteractEntityEvent event) {
+        // Use a lead on a rabbit
+        ItemStack hand = event.getPlayer().getInventory().getItem(event.getHand());
+        return event.getRightClicked().getType() == EntityType.RABBIT
+            && hand != null && hand.getType() == Material.LEAD;
+    }
+
+    @EventTriggerListener
+    static boolean jm_never__boat85417(PlayerInteractEntityEvent event) {
+        // Never use (enter) boats
+        // See also PlayerInteractEvent variant
+        return event.getRightClicked().getType() == EntityType.BOAT;
+    }
+
+    @EventTriggerListener
     static boolean jm_try__nether11982(PlayerInteractEvent event) {
         // Nether bed
         return event.getClickedBlock() != null
@@ -250,7 +334,7 @@ public class EventTrigger {
     static boolean jm_never__boat85417(PlayerInteractEvent event) {
         // Never use (place) boats
         // Boat placement calls RIGHT_CLICK_BLOCK on the water it is placed on
-        // TODO also check Interact Entity event for when player gets in boat
+        // See also PlayerInteractEntityEvent variant
         return event.getItem() != null
             && event.getItem().getType().getKey().toString().contains("_boat")
             && event.getAction() == Action.RIGHT_CLICK_BLOCK;
@@ -275,6 +359,12 @@ public class EventTrigger {
     static boolean jm_vegetarian_67077(PlayerItemConsumeEvent event) {
         // Never eat meat (i.e. trigger if meat)
         return Arrays.stream(meats).anyMatch(f -> event.getItem().getType() == f);
+    }
+
+    @EventTriggerListener
+    static boolean jm_trade_lager37854(PlayerTradeEvent event) {
+        // Trade a villager
+        return event.getVillager() instanceof Villager;
     }
 
     @EventTriggerListener

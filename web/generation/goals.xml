@@ -531,6 +531,7 @@
   </Goal>
   <Goal difficulty="1" id="jm_creat_golem39717">
     <Description>Create a Snow Golem</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_note__locks35190">
     <Description>$var Note Blocks</Description>
@@ -753,9 +754,11 @@
   <Goal difficulty="1" id="jm_2_cre__boat97078">
     <Description>2 Creepers in the same Boat</Description>
     <Tooltip>The 2 Creepers must be in the same boat at the same time</Tooltip>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_trade_lager37854">
     <Description>Trade with a Villager</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_diffe_ields36241">
     <Description>$var Different Pattern / Color Shields</Description>
@@ -1528,12 +1531,14 @@
   </Goal>
   <Goal difficulty="2" id="jm_tame__horse50063">
     <Description>Tame a Horse</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_place_r_pot79183">
     <Description>Place a Cactus in a Flower Pot</Description>
   </Goal>
   <Goal difficulty="2" id="jm_deton_ecart39576">
     <Description>Detonate a TNT-Minecart</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_magma_locks26810">
     <Description>$var Magma Blocks</Description>
@@ -1605,6 +1610,7 @@
   </Goal>
   <Goal difficulty="2" id="jm_tame___wolf12580">
     <Description>Tame a Wolf</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_6_fir_arges12920">
     <Description>6 Fire Charges</Description>
@@ -1623,6 +1629,7 @@
   </Goal>
   <Goal difficulty="2" id="jm_creat_golem39114">
     <Description>Create an Iron Golem</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_eye_o_ender84173">
     <Description>Eye of Ender</Description>
@@ -1927,6 +1934,7 @@
   </Goal>
   <Goal difficulty="2" id="jm_use_a_abbit23802">
     <Description>Use a lead on a Rabbit</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_firew__star89450">
     <Description>Firework Star</Description>
@@ -2130,6 +2138,9 @@
   <Goal difficulty="3" id="jm_grass_block99235">
     <Description>Grass Block</Description>
     <Tooltip>If you don't have Silk Touch I know a guy who might pick one up for you...</Tooltip>
+    <ItemTrigger>
+      <Name>minecraft:grass_block</Name>
+    </ItemTrigger>
   </Goal>
   <Goal difficulty="3" id="jm_creat_l_10+37096">
     <Description>Create an Enchantment requiring level 10+</Description>
@@ -2227,6 +2238,7 @@
   <Goal difficulty="3" id="jm_tame__arrot29264">
     <Description>Tame a Parrot</Description>
     <Weight>0.5</Weight>
+    <Auto/>
   </Goal>
   <Goal difficulty="3" id="jm_kill__golem79568">
     <Description>Kill an Iron Golem</Description>
@@ -2270,9 +2282,11 @@
   </Goal>
   <Goal difficulty="3" id="jm_tame__celot19643">
     <Description>Tame an Ocelot</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="3" id="jm_tame__onkey63865">
     <Description>Tame a Donkey</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="3" id="jm_never_ields14785" type="negative">
     <Description>Never wear Armour or use Shields</Description>

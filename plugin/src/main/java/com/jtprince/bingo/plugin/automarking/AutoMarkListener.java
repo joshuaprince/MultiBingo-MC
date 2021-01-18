@@ -1,6 +1,7 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.BingoGame;
+import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -9,18 +10,18 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Contract;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 /**
  * Container for all Bukkit Listeners in a single BingoGame.
@@ -154,6 +155,15 @@ public class AutoMarkListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onInteractEntity(PlayerInteractEntityEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onDirectDamageEntity(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player)) {
             return;
@@ -221,5 +231,55 @@ public class AutoMarkListener implements Listener {
         }
 
         this.autoMarking.impulseEvent(event, event.getBlock().getWorld());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onTrade(PlayerTradeEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityExplode(EntityExplodeEvent event) {
+        if (ignore(event.getLocation().getWorld())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getLocation().getWorld());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onTame(EntityTameEvent event) {
+        if (!(event.getOwner() instanceof Player)) {
+            return;
+        }
+
+        Player owner = (Player) event.getOwner();
+        if (ignore(owner)) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, owner);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        if (ignore(event.getLocation().getWorld())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getLocation().getWorld());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityMount(EntityMountEvent event) {
+        if (ignore(event.getEntity().getWorld())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getEntity().getWorld());
     }
 }

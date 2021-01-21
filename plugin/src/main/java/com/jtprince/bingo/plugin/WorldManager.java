@@ -138,7 +138,10 @@ public class WorldManager implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         if (event.isAnchorSpawn() || event.isBedSpawn()) {
-            return;
+            World spawnWorld = this.plugin.getServer().getWorlds().get(0);
+            if (!event.getRespawnLocation().getWorld().equals(spawnWorld)) {
+                return;
+            }
         }
 
         WorldSet ws = findWorldSet(event.getPlayer().getWorld());

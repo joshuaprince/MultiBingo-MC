@@ -54,7 +54,7 @@
   </div>
   <div class="boards-secondary"></div>
   <template id="board-secondary-template">
-    <div class="board-secondary">
+    <div class="board-secondary{% if obscured %} obscured{% endif %}">
       <table class="bingo-table">
         {% for board_row in board %}
         <tr>

@@ -36,22 +36,26 @@ table.bingo-table td {
   width: 20%;
 }
 
-.board-primary:not(.obscured) .bingo-square.mark-1 {
+.board-primary:not(.obscured) .bingo-square.mark-1,
+.board-secondary:not(.obscured) .bingo-square.mark-1 {
   /* Complete */
   background: greenyellow;
 }
 
-.board-primary:not(.obscured) .bingo-square.mark-2 {
+.board-primary:not(.obscured) .bingo-square.mark-2,
+.board-secondary:not(.obscured) .bingo-square.mark-2 {
   /* Reverted */
   background: lightskyblue;
 }
 
-.board-primary:not(.obscured) .bingo-square.mark-3 {
+.board-primary:not(.obscured) .bingo-square.mark-3,
+.board-secondary:not(.obscured) .bingo-square.mark-3 {
   /* Invalidated */
   background: palevioletred;
 }
 
-.board-primary:not(.obscured) .bingo-square.mark-4 {
+.board-primary:not(.obscured) .bingo-square.mark-4,
+.board-secondary:not(.obscured) .bingo-square.mark-4 {
   /* Not Invalidated */
   background: #dbffb3;
 }

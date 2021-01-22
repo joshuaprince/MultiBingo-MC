@@ -11,12 +11,24 @@ import java.util.*;
 public class PlayerBoard {
     final BingoGame game;
     final UUID playerUuid;
+    final String playerName;
 
     /**
      * The latest known markings on this board.
      * Not authoritative; the webserver holds the authoritative copy.
      */
     private final ArrayList<Integer> markings;
+
+    /**
+     * List of positions that were automatically marked (by either an EventTrigger or ItemTrigger),
+     * so that the plugin will not send another marking if the trigger occurs again.
+     */
+    private final Set<Integer> autoMarkedPositions = new HashSet<>();
+
+    /**
+     * List of positions on this player's board that have been announced as marked, so that no
+     * square is announced multiple times (i.e. if the player manually changes it).
+     */
     private final Set<Integer> announcedPositions = new HashSet<>();
 
     /* Board marking states */
@@ -26,12 +38,25 @@ public class PlayerBoard {
     final static int INVALIDATED = 3;
     final static int NOT_INVALIDATED = 4;
 
-    public PlayerBoard(UUID playerUuid, BingoGame game) {
+    public PlayerBoard(UUID playerUuid, String playerName, BingoGame game) {
         this.playerUuid = playerUuid;
+        this.playerName = playerName;
         this.game = game;
 
         int numSquares = game.gameBoard.getSquares().size();
         this.markings = new ArrayList<>(Collections.nCopies(numSquares, UNMARKED));
+    }
+
+    /**
+     * Mark a square on a player's board if it has not been auto-marked yet.
+     * @param square Square to mark.
+     */
+    public void autoMark(Square square) {
+        if (!autoMarkedPositions.contains(square.position)) {
+            this.game.wsClient.sendMarkSquare(playerName, square.position,
+                square.goalType.equals("negative") ? 3 : 1);
+            autoMarkedPositions.add(square.position);
+        }
     }
 
     /**

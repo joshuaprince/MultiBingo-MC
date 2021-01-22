@@ -87,7 +87,7 @@ public class AutoMarking {
         for (Square sq : this.autoMarkedSquares) {
             for (ItemTrigger trigger : sq.itemTriggers) {
                 if (trigger.isSatisfied(player.getInventory())) {
-                    sq.mark(player);
+                    this.game.getPlayerBoard(player.getName()).autoMark(sq);
                 }
             }
         }
@@ -116,7 +116,7 @@ public class AutoMarking {
             }
 
             if (activate) {
-                gal.square.mark(player);
+                this.game.getPlayerBoard(player.getName()).autoMark(gal.square);
             }
         }
     }

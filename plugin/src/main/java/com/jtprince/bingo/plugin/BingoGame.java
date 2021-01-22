@@ -61,6 +61,7 @@ public class BingoGame {
     public synchronized void transitionToReady() {
         if (this.state == State.PREPARING
             && this.wsClient.isOpen()
+            && this.gameBoard.isReady()
             && this.playerWorldSetMap != null) {
             this.preparePlayerBoards(this.getPlayers());
             this.messages.announceGameReady(this.getPlayers());
@@ -112,7 +113,8 @@ public class BingoGame {
 
     private void preparePlayerBoards(Collection<Player> players) {
         for (Player p : players) {
-            this.playerBoardMap.put(p.getUniqueId(), new PlayerBoard(p.getUniqueId(), this));
+            this.playerBoardMap.put(p.getUniqueId(),
+                new PlayerBoard(p.getUniqueId(), p.getName(), this));
         }
     }
 

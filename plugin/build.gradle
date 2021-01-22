@@ -19,7 +19,7 @@ dependencies {
     shadow 'org.jetbrains:annotations:20.1.0'
     shadow 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     implementation 'org.java-websocket:Java-WebSocket:1.5.1'
-    implementation 'dev.jorel:commandapi-shade:5.7'
+    implementation 'dev.jorel:commandapi-shade:5.8'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'

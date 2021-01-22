@@ -1,9 +1,7 @@
 package com.jtprince.bingo.plugin;
 
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.World.Environment;
-import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,11 +47,10 @@ public class WorldManager implements Listener {
         this.plugin.getLogger().info("Unloading WorldSet " + ws.worldSetCode);
         for (Environment env : ENVIRONMENTS) {
             World world = ws.getWorld(env);
-            World spawnWorld = this.plugin.getServer().getWorlds().get(0);
 
             // Move all players in this world to the spawn world
             for (Player p : world.getPlayers()) {
-                p.teleport(spawnWorld.getSpawnLocation());
+                p.teleport(WorldManager.getSpawnWorld().getSpawnLocation());
             }
 
             this.plugin.getServer().unloadWorld(world, true);
@@ -78,6 +75,14 @@ public class WorldManager implements Listener {
         public World getWorld(Environment env) {
             return map.get(env);
         }
+    }
+
+    /**
+     * Get the world that players spawn into when first joining the server, independent of any
+     * Bingo games.
+     */
+    public static World getSpawnWorld() {
+        return Bukkit.getWorlds().get(0);
     }
 
     @EventHandler
@@ -138,8 +143,7 @@ public class WorldManager implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         if (event.isAnchorSpawn() || event.isBedSpawn()) {
-            World spawnWorld = this.plugin.getServer().getWorlds().get(0);
-            if (!event.getRespawnLocation().getWorld().equals(spawnWorld)) {
+            if (!event.getRespawnLocation().getWorld().equals(WorldManager.getSpawnWorld())) {
                 return;
             }
         }

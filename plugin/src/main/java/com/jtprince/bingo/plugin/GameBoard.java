@@ -17,16 +17,22 @@ public class GameBoard {
      * squares.
      * @param squares The new set of Squares that should be on this board.
      */
-    public void setSquares(Collection<Square> squares) {
+    public synchronized void setSquares(Collection<Square> squares) {
         this.squares = new ArrayList<>(squares);
 
         // Register squares with auto marking
         Set<Square> autoSquares = this.game.autoMarking.registerGoals(squares);
         this.game.plugin.getLogger().info("Auto activation on:" + String.join(", ",
             autoSquares.stream().map(sq -> sq.goalId).collect(Collectors.toUnmodifiableList())));
+
+        this.game.transitionToReady();
     }
 
-    public ArrayList<Square> getSquares() {
+    public synchronized ArrayList<Square> getSquares() {
         return this.squares;
+    }
+
+    public synchronized boolean isReady() {
+        return this.squares != null && !this.squares.isEmpty();
     }
 }

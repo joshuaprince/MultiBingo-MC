@@ -217,6 +217,13 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
+    static boolean jm_never__boat85417(EntityMountEvent event) {
+        // Never use (enter) boats
+        return event.getEntity() instanceof Player
+            && event.getMount() instanceof Boat;
+    }
+
+    @EventTriggerListener
     static boolean jm_tame__horse50063(EntityTameEvent event) {
         // Tame a horse
         return event.getEntity().getType() == EntityType.HORSE;
@@ -297,13 +304,6 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_never__boat85417(PlayerInteractEntityEvent event) {
-        // Never use (enter) boats
-        // See also PlayerInteractEvent variant
-        return event.getRightClicked().getType() == EntityType.BOAT;
-    }
-
-    @EventTriggerListener
     static boolean jm_try__nether11982(PlayerInteractEvent event) {
         // Nether bed
         return event.getClickedBlock() != null
@@ -328,16 +328,6 @@ public class EventTrigger {
             && event.getItem().getType() == Material.SHIELD
             && (event.getAction() == Action.RIGHT_CLICK_AIR
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK);
-    }
-
-    @EventTriggerListener
-    static boolean jm_never__boat85417(PlayerInteractEvent event) {
-        // Never use (place) boats
-        // Boat placement calls RIGHT_CLICK_BLOCK on the water it is placed on
-        // See also PlayerInteractEntityEvent variant
-        return event.getItem() != null
-            && event.getItem().getType().getKey().toString().contains("_boat")
-            && event.getAction() == Action.RIGHT_CLICK_BLOCK;
     }
 
     @EventTriggerListener

@@ -1335,6 +1335,7 @@
   </Goal>
   <Goal difficulty="1" id="jm_never__boat85417" type="negative">
     <Description>Never use a Boat</Description>
+    <Tooltip>Only entering the boat counts, you may still place them</Tooltip>
     <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_get_a_ether66387">

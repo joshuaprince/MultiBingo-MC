@@ -358,6 +358,13 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
+    static boolean jm_activ_llage72436(PortalCreateEvent event) {
+        // Portal in village
+        return event.getEntity() instanceof Player
+            && ActivationHelpers.inVillage(event.getBlocks().get(0).getLocation());
+    }
+
+    @EventTriggerListener
     static boolean jm_grow__ether38694(StructureGrowEvent event) {
         // Grow a tree in the nether
         return event.getWorld().getEnvironment() == World.Environment.NETHER
@@ -374,12 +381,5 @@ public class EventTrigger {
     static boolean jm_grow___tree94140(StructureGrowEvent event) {
         // Grow a full jungle tree
         return event.getSpecies() == TreeType.JUNGLE;
-    }
-
-    @EventTriggerListener
-    static boolean jm_activ_llage72436(PortalCreateEvent event) {
-        // Portal in village
-        return event.getEntity() instanceof Player
-            && ActivationHelpers.inVillage(event.getBlocks().get(0).getLocation());
     }
 }

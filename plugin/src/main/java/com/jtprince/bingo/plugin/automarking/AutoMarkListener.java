@@ -85,99 +85,6 @@ public class AutoMarkListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (ignore(event.getPlayer())) {
-            return;
-        }
-
-        Player p = (Player) event.getPlayer();
-        this.autoMarking.impulseInventory(p);
-        this.autoMarking.impulseEvent(event, p);
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPickupItem(EntityPickupItemEvent event) {
-        if (ignore(event.getEntity())) {
-            return;
-        }
-
-        Player p = (Player) event.getEntity();
-        // 1 tick later so the item is in the player's inventory
-        this.autoMarking.game.plugin.getServer().getScheduler().scheduleSyncDelayedTask(
-            this.autoMarking.game.plugin, () -> this.autoMarking.impulseInventory(p), 1);
-        this.autoMarking.impulseEvent(event, p);
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerSleep(PlayerBedLeaveEvent event) {
-        if (ignore(event.getPlayer())) {
-            return;
-        }
-
-        this.autoMarking.impulseEvent(event, event.getPlayer());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onStructureGrow(StructureGrowEvent event) {
-        if (ignore(event.getPlayer())) {
-            return;
-        }
-
-        this.autoMarking.impulseEvent(event, event.getPlayer());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPortalCreate(PortalCreateEvent event) {
-        if (ignore(event.getWorld())) {
-            return;
-        }
-
-        this.autoMarking.impulseEvent(event, event.getWorld());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBlockInteract(PlayerInteractEvent event) {
-        if (ignore(event.getPlayer())) {
-            return;
-        }
-
-        this.autoMarking.impulseEvent(event, event.getPlayer());
-    }
-
-    // No ignoreCancelled because Bukkit cancels air interact events for some reason...
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onInteract(PlayerInteractEvent event) {
-        if (ignore(event.getPlayer())) {
-            return;
-        }
-
-        this.autoMarking.impulseEvent(event, event.getPlayer());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onInteractEntity(PlayerInteractEntityEvent event) {
-        if (ignore(event.getPlayer())) {
-            return;
-        }
-
-        this.autoMarking.impulseEvent(event, event.getPlayer());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onDirectDamageEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) {
-            return;
-        }
-
-        Player damager = (Player) event.getDamager();
-        if (ignore(damager)) {
-            return;
-        }
-
-        this.autoMarking.impulseEvent(event, damager);
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBreakBlock(BlockBreakEvent event) {
         if (ignore(event.getPlayer())) {
             return;
@@ -196,24 +103,6 @@ public class AutoMarkListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onConsume(PlayerItemConsumeEvent event) {
-        if (ignore(event.getPlayer())) {
-            return;
-        }
-
-        this.autoMarking.impulseEvent(event, event.getPlayer());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        if (ignore(event.getEntity())) {
-            return;
-        }
-
-        this.autoMarking.impulseEvent(event, event.getEntity());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCraft(CraftItemEvent event) {
         if (ignore(event.getWhoClicked())) {
             return;
@@ -225,21 +114,26 @@ public class AutoMarkListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onFurnaceStartBurning(FurnaceBurnEvent event) {
-        if (ignore(event.getBlock().getWorld())) {
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        if (ignore(event.getLocation().getWorld())) {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getBlock().getWorld());
+        this.autoMarking.impulseEvent(event, event.getLocation().getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onTrade(PlayerTradeEvent event) {
-        if (ignore(event.getPlayer())) {
+    public void onDirectDamageEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player)) {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        Player damager = (Player) event.getDamager();
+        if (ignore(damager)) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, damager);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -249,6 +143,28 @@ public class AutoMarkListener implements Listener {
         }
 
         this.autoMarking.impulseEvent(event, event.getLocation().getWorld());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityMount(EntityMountEvent event) {
+        if (ignore(event.getEntity().getWorld())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getEntity().getWorld());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPickupItem(EntityPickupItemEvent event) {
+        if (ignore(event.getEntity())) {
+            return;
+        }
+
+        Player p = (Player) event.getEntity();
+        // 1 tick later so the item is in the player's inventory
+        this.autoMarking.game.plugin.getServer().getScheduler().scheduleSyncDelayedTask(
+            this.autoMarking.game.plugin, () -> this.autoMarking.impulseInventory(p), 1);
+        this.autoMarking.impulseEvent(event, p);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -266,20 +182,95 @@ public class AutoMarkListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (ignore(event.getLocation().getWorld())) {
+    public void onFurnaceStartBurning(FurnaceBurnEvent event) {
+        if (ignore(event.getBlock().getWorld())) {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getLocation().getWorld());
+        this.autoMarking.impulseEvent(event, event.getBlock().getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onEntityMount(EntityMountEvent event) {
-        if (ignore(event.getEntity().getWorld())) {
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (ignore(event.getPlayer())) {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getEntity().getWorld());
+        Player p = (Player) event.getPlayer();
+        this.autoMarking.impulseInventory(p);
+        this.autoMarking.impulseEvent(event, p);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerSleep(PlayerBedLeaveEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        if (ignore(event.getEntity())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getEntity());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onInteractEntity(PlayerInteractEntityEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getPlayer());
+    }
+
+    // No ignoreCancelled because Bukkit cancels air interact events for some reason...
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onInteract(PlayerInteractEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onConsume(PlayerItemConsumeEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onTrade(PlayerTradeEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPortalCreate(PortalCreateEvent event) {
+        if (ignore(event.getWorld())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getWorld());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onStructureGrow(StructureGrowEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getPlayer());
     }
 }

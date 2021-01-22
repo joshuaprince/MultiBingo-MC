@@ -5,6 +5,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -90,53 +91,71 @@ public class WorldManager implements Listener {
         WorldSet ws = findWorldSet(event.getFrom().getWorld());
         if (ws == null) {
             String msg = "No WorldSet found for teleport from " + event.getFrom().getWorld();
+            this.plugin.getLogger().fine(msg);
+            return;
+        }
+
+        Environment from = event.getFrom().getWorld().getEnvironment();
+        Environment to = event.getTo().getWorld().getEnvironment();
+
+        if (from == Environment.NETHER) {
+            /* Special handling for nether -> overworld:
+             *
+             * When going from bingo_overworld to bingo_nether, the coordinates we are
+             * handed are pre-divided by 8. From is bingo_overworld, but To is the_nether.
+             * Therefore we just have to update the To world, and we are done.
+             *
+             * But when we go from bingo_nether to bingo_overworld, the coordinates are not
+             * scaled at all! The From dimension is bingo_nether, but the To dimension is
+             * incorrectly still the_nether instead of the_overworld.
+             *
+             * It seems like the game's internal checks for which dimension to send a portal
+             * to looks like: "Is To in the_nether ? If so, send to the_overworld. Else,
+             * send to the_nether." That means that for any bingo_* world, we will be sent
+             * to the_nether.
+             *
+             * My theory: coming from *any* nether to the_nether, the environment is not
+             * changing, so the coordinates calculated and handed to us are not scaled.
+             */
+            event.getTo().setX(event.getTo().getX() * 8);
+            event.getTo().setZ(event.getTo().getZ() * 8);
+            event.setSearchRadius(128);
+            to = Environment.NORMAL;
+        }
+
+        World targetWorld = ws.getWorld(to);
+        if (targetWorld != null) {
+            Location toLoc = event.getTo();
+            toLoc.setWorld(targetWorld);
+            event.setTo(toLoc);
+        }
+    }
+
+    @EventHandler
+    public void onEntityPortal(EntityPortalEvent event) {
+        WorldSet ws = findWorldSet(event.getFrom().getWorld());
+        if (ws == null) {
+            String msg = "No WorldSet found for Entity teleport from " + event.getFrom().getWorld();
             this.plugin.getServer().getConsoleSender().sendMessage(msg);
             return;
         }
 
-        World targetWorld = null;
-        switch (event.getCause()) {
-            case NETHER_PORTAL:
-                if (event.getFrom().getWorld().getEnvironment() == Environment.NETHER) {
-                    targetWorld = ws.getWorld(Environment.NORMAL);
+        Environment from = event.getFrom().getWorld().getEnvironment();
+        Environment to = event.getTo() == null ? null : event.getTo().getWorld().getEnvironment();
 
-                    /* Special handling for nether -> overworld:
-                     *
-                     * When going from bingo_overworld to bingo_nether, the coordinates we are
-                     * handed are pre-divided by 8. From is bingo_overworld, but To is the_nether.
-                     * Therefore we just have to update the To world, and we are done.
-                     *
-                     * But when we go from bingo_nether to bingo_overworld, the coordinates are not
-                     * scaled at all! The From dimension is bingo_nether, but the To dimension is
-                     * incorrectly still the_nether instead of the_overworld.
-                     *
-                     * It seems like the game's internal checks for which dimension to send a portal
-                     * to looks like: "Is To in the_nether ? If so, send to the_overworld. Else,
-                     * send to the_nether." That means that for any bingo_* world, we will be sent
-                     * to the_nether.
-                     *
-                     * My theory: coming from *any* nether to the_nether, the environment is not
-                     * changing, so the coordinates calculated and handed to us are not scaled.
-                     */
-                    event.getTo().setX(event.getTo().getX() * 8);
-                    event.getTo().setZ(event.getTo().getZ() * 8);
-                } else {
-                    targetWorld = ws.getWorld(Environment.NETHER);
-                }
-                break;
-            case END_PORTAL:
-                if (event.getFrom().getWorld().getEnvironment() == Environment.NORMAL) {
-                    targetWorld = ws.getWorld(Environment.THE_END);
-                } else {
-                    targetWorld = ws.getWorld(Environment.NORMAL);
-                }
-                break;
+        if (from == Environment.NETHER && to != null) {
+            /* Special handling for nether -> overworld: see onPortal */
+            event.getTo().setX(event.getTo().getX() * 8);
+            event.getTo().setZ(event.getTo().getZ() * 8);
+            event.setSearchRadius(128);
+            to = Environment.NORMAL;
         }
 
+        World targetWorld = ws.getWorld(to);
         if (targetWorld != null) {
-            Location to = event.getTo();
-            to.setWorld(targetWorld);
-            event.setTo(to);
+            Location toLoc = event.getTo();
+            toLoc.setWorld(targetWorld);
+            event.setTo(toLoc);
         }
     }
 

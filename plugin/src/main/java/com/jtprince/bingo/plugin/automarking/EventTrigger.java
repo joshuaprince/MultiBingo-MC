@@ -313,6 +313,26 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
+    static boolean jm_cauld_water24040(PlayerInteractEvent event) {
+        // Cauldron with water (put water in a cauldron)
+        return event.getClickedBlock() != null
+            && event.getClickedBlock().getType() == Material.CAULDRON
+            && event.getItem() != null
+            && event.getItem().getType() == Material.WATER_BUCKET
+            && event.getAction() == Action.RIGHT_CLICK_BLOCK;
+    }
+
+    @EventTriggerListener
+    static boolean jm_place_r_pot79183(PlayerInteractEvent event) {
+        // Place a cactus in a flower pot
+        return event.getClickedBlock() != null
+            && event.getClickedBlock().getType() == Material.FLOWER_POT
+            && event.getItem() != null
+            && event.getItem().getType() == Material.CACTUS
+            && event.getAction() == Action.RIGHT_CLICK_BLOCK;
+    }
+
+    @EventTriggerListener
     static boolean jm_never_g_rod73476(PlayerInteractEvent event) {
         // Never use a fishing rod
         return event.getItem() != null

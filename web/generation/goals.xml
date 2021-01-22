@@ -622,6 +622,8 @@
   </Goal>
   <Goal difficulty="1" id="jm_cauld_water24040">
     <Description>Cauldron with Water</Description>
+    <Tooltip>You must add the water yourself.</Tooltip>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_compl_a_map49710">
     <Description>Complete a Map</Description>
@@ -1536,6 +1538,7 @@
   </Goal>
   <Goal difficulty="2" id="jm_place_r_pot79183">
     <Description>Place a Cactus in a Flower Pot</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_deton_ecart39576">
     <Description>Detonate a TNT-Minecart</Description>

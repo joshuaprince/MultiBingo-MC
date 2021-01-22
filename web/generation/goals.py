@@ -120,11 +120,21 @@ class ConcreteGoal:
         return self.description()
 
 
-def get_goals(rand: Random, difficulty_counts: tuple) -> List[ConcreteGoal]:
+def get_goals(rand: Random, difficulty_counts: tuple,
+              forced_goals: List[str] = None) -> List[ConcreteGoal]:
     # Making a copy of our master Goal (template) list so that we can modify it,
     #  removing goals as we go to ensure no duplicates.
     goals_copy = deepcopy(GOALS)
     ret: List[ConcreteGoal] = []
+
+    if forced_goals:
+        for fg_id in forced_goals:
+            # Force goals by setting their weight absurdly high, "almost" guaranteeing their pick
+            fg_list = [g for g in goals_copy if g.id == fg_id]
+            if len(fg_list) == 0:
+                print(f"Cannot force unknown goal ID {fg_id}")
+                continue
+            fg_list[0].weight = 9999999
 
     for diff, count in enumerate(difficulty_counts):
         for _ in range(count):

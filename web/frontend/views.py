@@ -17,10 +17,11 @@ def index(request):
 
 def board(request, game_code):
     player_name = request.GET.get('name', '')
+    forced_goals = request.GET.getlist('force', [])
 
     board_obj, created = Board.objects.prefetch_related('square_set').get_or_create(
         game_code=game_code,
-        defaults={'seed': game_code}
+        defaults={'seed': game_code, 'forced_goals': ';'.join(forced_goals)}
     )
     if created:
         print(f"Created a new board with game code {game_code}")

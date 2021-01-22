@@ -1,16 +1,18 @@
 import random
+from typing import List
 
 from .goals import get_goals
 
 
 class BoardGenerator:
-    def __init__(self, board_difficulty: int, seed=None):
+    def __init__(self, board_difficulty: int, seed=None, forced_goals: List[str] = None):
         self.board_difficulty = board_difficulty
         self.rand = random.Random(seed)
+        self.forced_goals = forced_goals or []
 
     def generate(self):
         diff_spread = self._get_difficulty_spread()
-        goals = get_goals(self.rand, diff_spread)
+        goals = get_goals(self.rand, diff_spread, forced_goals=self.forced_goals)
         return goals
 
     def _get_difficulty_spread(self):

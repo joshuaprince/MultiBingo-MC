@@ -15,6 +15,7 @@ class Board(models.Model):
     """If blank, goals will not be auto-generated on this board."""
 
     difficulty = models.IntegerField(default=2)
+    forced_goals = models.CharField(default='', max_length=256)  # Semicolon-delimited
 
     obscured = models.BooleanField(default=True)
 
@@ -26,7 +27,8 @@ class Board(models.Model):
         Populate all squares with goals based on the seed.
         :return:
         """
-        gen = BoardGenerator(self.difficulty, self.seed or None)
+        gen = BoardGenerator(self.difficulty, self.seed or None,
+                             forced_goals=self.forced_goals.split(';'))
         goals = gen.generate()
 
         for pos, goal in enumerate(goals):

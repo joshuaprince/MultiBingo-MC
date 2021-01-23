@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class BingoPlayerTeam implements BingoPlayer {
+public class BingoPlayerTeam extends BingoPlayer {
     private final Collection<UUID> playerUuids;
     private final String teamName;
     private final @Nullable ChatColor color;

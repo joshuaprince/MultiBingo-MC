@@ -22,12 +22,14 @@ public class BingoGame {
     public State state;
     private int countdown;
 
-    private Map<BingoPlayer, WorldManager.WorldSet> playerWorldSetMap;
-    private final Map<BingoPlayer, PlayerBoard> playerBoardMap = new HashMap<>();
+    private final Set<BingoPlayer> players;
 
     public BingoGame(MCBingoPlugin plugin, String gameCode, Collection<BingoPlayer> players) {
         this.plugin = plugin;
         this.gameCode = gameCode;
+
+        this.players = new HashSet<>(players);
+
         this.messages = new Messages(this);
         this.autoMarking = new AutoMarking(this);
         this.gameBoard = new GameBoard(this);
@@ -63,64 +65,66 @@ public class BingoGame {
         if (this.state == State.PREPARING
             && this.wsClient.isOpen()
             && this.gameBoard.isReady()
-            && this.playerWorldSetMap != null) {
+            && this.players.stream().allMatch(p -> p.getWorldSet() != null)) {
             this.preparePlayerBoards(this.getPlayers());
             this.messages.announceGameReady(this.getPlayers());
             this.state = State.READY;
         }
     }
 
-    public void start(CommandSender commander) {
+    public void start(CommandSender commander, boolean debug) {
         if (this.state != State.READY) {
             this.messages.basicTell(commander, "Game is not yet ready to be started!");
             return;
         }
 
-        this.wipePlayers(this.getBukkitPlayers());
-        this.applyStartingEffects(this.getBukkitPlayers(), 7 * 20);
+        if (!debug) {
+            this.wipePlayers(this.getBukkitPlayers());
+            this.applyStartingEffects(this.getBukkitPlayers(), 7 * 20);
+        }
         this.teleportPlayersToWorlds(this.getPlayers());
 
-        // Countdown is from 7, but only numbers from 5 and below are displayed
-        if (this.wsClient != null) {
-            this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin,
-                this.wsClient::sendRevealBoard, 7 * 20);
+        if (debug) {
+            this.wsClient.sendRevealBoard();
+        } else {
+            // Countdown is from 7, but only numbers from 5 and below are displayed
+            if (this.wsClient != null) {
+                this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin,
+                    this.wsClient::sendRevealBoard, 7 * 20);
+            }
+            this.countdown = 7;
+            this.doCountdown();
         }
-        this.countdown = 7;
-        this.doCountdown();
+
         this.state = State.RUNNING;
     }
 
     private void prepareWorldSets(Collection<BingoPlayer> players) {
-        Map<BingoPlayer, WorldManager.WorldSet> newWorldSetMap = new HashMap<>();
         for (BingoPlayer p : players) {
             WorldManager.WorldSet ws = this.plugin.worldManager.createWorlds(
                 gameCode + "_" + p.getName(), gameCode);
-            newWorldSetMap.put(p, ws);
-        }
-
-        synchronized (this) {
-            this.playerWorldSetMap = newWorldSetMap;
+            p.setWorldSet(ws);
         }
 
         this.plugin.getLogger().info("Finished generating " + players.size() + " worlds");
     }
 
     private void unloadWorldSets() {
-        for (BingoPlayer player : this.playerWorldSetMap.keySet()) {
-            this.plugin.worldManager.unloadWorlds(this.playerWorldSetMap.get(player));
-            this.playerWorldSetMap.put(player, null);
+        for (BingoPlayer player : this.players) {
+            this.plugin.worldManager.unloadWorlds(player.getWorldSet());
+            player.setWorldSet(null);
         }
     }
 
     private void preparePlayerBoards(Collection<BingoPlayer> players) {
         for (BingoPlayer p : players) {
-            this.playerBoardMap.put(p, new PlayerBoard(p, this));
+            p.setPlayerBoard(new PlayerBoard(p, this));
         }
     }
 
     private void teleportPlayersToWorlds(Collection<BingoPlayer> players) {
         for (BingoPlayer bp : players) {
-            World overworld = this.playerWorldSetMap.get(bp).getWorld(World.Environment.NORMAL);
+            World overworld = bp.getWorldSet().getWorld(World.Environment.NORMAL);
             overworld.setTime(0);
             for (Player p : bp.getBukkitPlayers()) {
                 p.teleport(overworld.getSpawnLocation());
@@ -131,9 +135,6 @@ public class BingoGame {
     private void wipePlayers(Collection<Player> players) {
         CommandSender console = this.plugin.getServer().getConsoleSender();
 
-        // For testing purposes, don't wipe some things if I am the only one in this game.
-        boolean debugConvenience = (this.plugin.debug && players.size() == 1);
-
         for (Player p : players) {
             p.setHealth(20.0);
             p.setFoodLevel(20);
@@ -142,9 +143,7 @@ public class BingoGame {
             p.setExp(0);
             p.setLevel(0);
             p.setStatistic(Statistic.TIME_SINCE_REST, 0);  // reset Phantom spawns
-            if (!debugConvenience) {
-                p.setGameMode(GameMode.SURVIVAL);
-            }
+            p.setGameMode(GameMode.SURVIVAL);
             for (PotionEffect e : p.getActivePotionEffects()) {
                 p.removePotionEffect(e.getType());
             }
@@ -180,7 +179,7 @@ public class BingoGame {
      * Return a list of BingoPlayers that are participating in this game.
      */
     public Collection<BingoPlayer> getPlayers() {
-        return this.playerWorldSetMap.keySet();
+        return this.players;
     }
 
     /**
@@ -188,14 +187,10 @@ public class BingoGame {
      */
     public Collection<Player> getBukkitPlayers() {
         ArrayList<Player> list = new ArrayList<>();
-        for (BingoPlayer p : this.playerWorldSetMap.keySet()) {
+        for (BingoPlayer p : this.players) {
             list.addAll(p.getBukkitPlayers());
         }
         return list;
-    }
-
-    public PlayerBoard getPlayerBoard(BingoPlayer player) {
-        return this.playerBoardMap.get(player);
     }
 
     /**
@@ -205,8 +200,8 @@ public class BingoGame {
      */
     public BingoPlayer getBingoPlayer(@NotNull World world) {
         WorldManager.WorldSet ws = this.plugin.worldManager.findWorldSet(world);
-        for (BingoPlayer p : this.playerWorldSetMap.keySet()) {
-            if (this.playerWorldSetMap.get(p).equals(ws)) {
+        for (BingoPlayer p : this.players) {
+            if (p.getWorldSet().equals(ws)) {
                 return p;
             }
         }
@@ -222,7 +217,7 @@ public class BingoGame {
      * @return The BingoPlayer object, or null if this Player is not part of this game.
      */
     public BingoPlayer getBingoPlayer(@NotNull Player player) {
-        for (BingoPlayer p : this.playerWorldSetMap.keySet()) {
+        for (BingoPlayer p : this.players) {
             if (p.getBukkitPlayers().contains(player)) {
                 return p;
             }
@@ -238,8 +233,8 @@ public class BingoGame {
      * @return The BingoPlayer object, or null if no BingoPlayer exists of this name.
      */
     public BingoPlayer getBingoPlayer(@NotNull String name) {
-        for (BingoPlayer p : this.playerWorldSetMap.keySet()) {
-            if (p.getName().equals(name)) {
+        for (BingoPlayer p : this.players) {
+            if (p.getName().equals(name) || p.getSlugName().equals(name)) {
                 return p;
             }
         }

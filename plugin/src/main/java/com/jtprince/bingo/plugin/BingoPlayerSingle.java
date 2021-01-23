@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 
-public class BingoPlayerSingle implements BingoPlayer {
+public class BingoPlayerSingle extends BingoPlayer {
     private final UUID playerUuid;
 
     public BingoPlayerSingle(OfflinePlayer player) {

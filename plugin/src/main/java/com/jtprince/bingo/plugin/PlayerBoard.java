@@ -52,7 +52,8 @@ public class PlayerBoard {
      * @param square Square to mark.
      */
     public void autoMark(Square square) {
-        if (!autoMarkedPositions.contains(square.position)) {
+        // FIXME config option?
+        if (true || !autoMarkedPositions.contains(square.position)) {
             this.game.wsClient.sendMarkSquare(playerName, square.position,
                 square.goalType.equals("negative") ? 3 : 1);
             autoMarkedPositions.add(square.position);

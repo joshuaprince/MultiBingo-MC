@@ -201,7 +201,8 @@ public class BingoGame {
             }
         }
 
-        this.plugin.getLogger().warning("getPlayerInWorld did not find a player for " + world.getName());
+        this.plugin.getLogger().finest(
+            "getPlayerInWorld did not find a player for " + world.getName());
         return null;
     }
 

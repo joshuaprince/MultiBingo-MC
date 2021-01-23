@@ -5,6 +5,7 @@ import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,6 +20,8 @@ import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Contract;
 import org.spigotmc.event.entity.EntityMountEvent;
+
+import java.util.Arrays;
 
 /**
  * Container for all Bukkit Listeners in a single BingoGame.
@@ -75,10 +78,17 @@ public class AutoMarkListener implements Listener {
         Player p = this.autoMarking.game.getPlayerInWorld(world);
 
         if (p == null) {
-            this.autoMarking.game.plugin.getLogger().fine(
+            this.autoMarking.game.plugin.getLogger().finest(
                 "ActivationListener ignored world " + world.getName());
         }
         return (p == null);
+    }
+
+    static boolean listenerExists(Class<? extends Event> listenerType) {
+        return Arrays.stream(AutoMarkListener.class.getDeclaredMethods()).anyMatch(method ->
+            method.getAnnotation(EventHandler.class) != null
+                && method.getParameterTypes()[0].equals(listenerType)
+        );
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -117,6 +127,15 @@ public class AutoMarkListener implements Listener {
         }
 
         this.autoMarking.impulseEvent(event, event.getLocation().getWorld());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityAirChange(EntityAirChangeEvent event) {
+        if (ignore(event.getEntity().getWorld())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getEntity().getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

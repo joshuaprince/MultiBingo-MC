@@ -1344,6 +1344,7 @@
   </Goal>
   <Goal difficulty="1" id="jm_get_a_ether66387">
     <Description>Get a Fish into Nether</Description>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_dried_locks68459">
     <Description>$var Dried Kelp Blocks</Description>

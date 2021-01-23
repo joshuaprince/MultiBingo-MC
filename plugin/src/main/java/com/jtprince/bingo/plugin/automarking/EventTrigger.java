@@ -58,6 +58,22 @@ public class EventTrigger {
             }
 
             // TODO Sanity check each method - return type, params, static, etc
+            // TODO Move that sanity check to an onEnable callback, rather than log spam 25x on
+            //   every board receive
+
+            // Determine which Event to listen for and register this Square in a new EventTrigger.
+            Class<?> expectedType = method.getParameterTypes()[0];
+            if (!Event.class.isAssignableFrom(expectedType)) {
+                square.game.plugin.getLogger().severe(
+                    "Parameter in Listener method " + method.getName() + " is not an Event.");
+                continue;
+            }
+            if (!AutoMarkListener.listenerExists((Class<? extends Event>) expectedType)) {
+                square.game.plugin.getLogger().severe(
+                    "Event trigger method " + method.getName()
+                        + " does not have a corresponding Event Listener.");
+                continue;
+            }
 
             // Find all goals that this method can track
             Set<String> goalsTrackedByMethod = new HashSet<>();
@@ -67,13 +83,6 @@ public class EventTrigger {
                 continue;
             }
 
-            // Determine which Event to listen for and register this Square in a new EventTrigger.
-            Class<?> expectedType = method.getParameterTypes()[0];
-            if (!Event.class.isAssignableFrom(expectedType)) {
-                square.game.plugin.getLogger().severe(
-                    "Parameter in Listener method " + method.getName() + " is not an Event.");
-                continue;
-            }
             Class<? extends Event> expectedEventType = (Class<? extends Event>) expectedType;
             ret.add(new EventTrigger(square, method, expectedEventType));
         }
@@ -127,7 +136,13 @@ public class EventTrigger {
         TreeType.TALL_REDWOOD, TreeType.TREE
     };
 
-    static final TreeType[] MUSHROOMS = {TreeType.BROWN_MUSHROOM, TreeType.RED_MUSHROOM};
+    private static final TreeType[] MUSHROOMS = {
+        TreeType.BROWN_MUSHROOM, TreeType.RED_MUSHROOM
+    };
+
+    private static final EntityType[] FISH_ENTITIES = {
+        EntityType.COD, EntityType.SALMON, EntityType.PUFFERFISH, EntityType.TROPICAL_FISH
+    };
 
     /* Listeners */
 
@@ -194,6 +209,14 @@ public class EventTrigger {
     private boolean jm_creat_golem39114(CreatureSpawnEvent event) {
         // Create an Iron Golem
         return event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.BUILD_IRONGOLEM;
+    }
+
+    @EventTriggerListener
+    private boolean jm_get_a_ether66387(EntityAirChangeEvent event) {
+        // Get a fish into the nether
+        // TODO Fix marking spam as long as the fish is alive
+        return event.getEntity().getWorld().getEnvironment() == World.Environment.NETHER
+            && Arrays.stream(FISH_ENTITIES).anyMatch(t -> event.getEntity().getType() == t);
     }
 
     @EventTriggerListener
@@ -382,6 +405,7 @@ public class EventTrigger {
     @EventTriggerListener
     private boolean jm_carnivore_30882(PlayerItemConsumeEvent event) {
         // Only eat meat (i.e. trigger if NOT meat)
+        // FIXME Potions activate this!
         return Arrays.stream(MEATS).noneMatch(f -> event.getItem().getType() == f);
     }
 

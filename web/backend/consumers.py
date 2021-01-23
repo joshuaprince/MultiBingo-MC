@@ -134,8 +134,7 @@ class PluginBackendConsumer(AsyncJsonWebsocketConsumer):
             pos = int(text_data_json['position'])
             to_state = int(text_data_json['to_state'])
             player_name = text_data_json['player']
-            await self.rx_mark_board(pos, to_state, player_name)
-            broadcast_boards = True
+            broadcast_boards = await self.rx_mark_board(pos, to_state, player_name)
 
         if action == 'reveal_board':
             await self.rx_reveal_board()
@@ -148,7 +147,7 @@ class PluginBackendConsumer(AsyncJsonWebsocketConsumer):
             await self.send_boards_to_ws()
 
     async def rx_mark_board(self, pos, to_state, player):
-        await mark_square_admin(self.board_id, player, pos, to_state)
+        return await mark_square_admin(self.board_id, player, pos, to_state)
 
     async def rx_reveal_board(self):
         await reveal_board(self.board_id)
@@ -226,16 +225,22 @@ def reveal_board(board_id: str, revealed: bool = True):
 
 @database_sync_to_async
 def mark_square(player_board_id: int, pos: int, to_state: int):
+    """
+    Mark a square on a player's board.
+    :return: True if the board was changed, False otherwise.
+    """
     player_board_obj = PlayerBoard.objects.get(pk=player_board_id)
-    player_board_obj.mark_square(pos, to_state)
-    player_board_obj.save()
+    return player_board_obj.mark_square(pos, to_state)
 
 
 @database_sync_to_async
 def mark_square_admin(board_id: int, player_name: str, pos: int, to_state: int):
+    """
+    Mark a square on a player's board.
+    :return: True if the board was changed, False otherwise.
+    """
     player_board_obj = PlayerBoard.objects.get(board_id=board_id, player_name=player_name)
-    player_board_obj.mark_square(pos, to_state)
-    player_board_obj.save()
+    return player_board_obj.mark_square(pos, to_state)
 
 
 @database_sync_to_async

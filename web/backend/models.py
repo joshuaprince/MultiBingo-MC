@@ -115,10 +115,17 @@ class PlayerBoard(models.Model):
         unique_together = ['board', 'player_name']
 
     def mark_square(self, pos, to_state: Marking):
+        """
+        Mark a square on this player's board to a specified state.
+        :return: True if the board was changed, False otherwise.
+        """
+        old_squares = self.squares
         self.squares = \
             self.squares[:pos] + \
             str(to_state) + \
             self.squares[pos+1:]
+        self.save()
+        return old_squares != self.squares
 
     def to_json(self):
         return {

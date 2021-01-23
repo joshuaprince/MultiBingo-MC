@@ -4,6 +4,7 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandExecutor;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -74,11 +76,10 @@ public class MCBingoPlugin extends JavaPlugin {
     }
 
     private void commandPrepare(CommandSender sender, String worldCode) {
-        ArrayList<Player> players = new ArrayList<>(this.getServer().getOnlinePlayers());
         if (worldCode == null) {
             worldCode = randomGameCode();
         }
-        this.setCurrentGame(new BingoGame(this, worldCode, players));
+        this.setCurrentGame(new BingoGame(this, worldCode, createBingoPlayers()));
     }
 
     private void commandStart(CommandSender sender) {
@@ -113,7 +114,7 @@ public class MCBingoPlugin extends JavaPlugin {
         }
     }
 
-    URI getGameUrl(String gameCode, Player p) {
+    URI getGameUrl(String gameCode, BingoPlayer p) {
         String template = this.getConfig().getString("urls.game_player");
         if (template == null) {
             this.getLogger().severe("No game_player URL is configured!");
@@ -148,5 +149,10 @@ public class MCBingoPlugin extends JavaPlugin {
         }
 
         return new String(chars);
+    }
+
+    private static Collection<BingoPlayer> createBingoPlayers() {
+        return Bukkit.getOnlinePlayers().stream().map(BingoPlayerSingle::new)
+            .collect(Collectors.toUnmodifiableList());
     }
 }

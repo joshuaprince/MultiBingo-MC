@@ -10,8 +10,7 @@ import java.util.*;
  */
 public class PlayerBoard {
     final BingoGame game;
-    final UUID playerUuid;
-    final String playerName;
+    final BingoPlayer player;
 
     /**
      * The latest known markings on this board.
@@ -38,9 +37,8 @@ public class PlayerBoard {
     final static int INVALIDATED = 3;
     final static int NOT_INVALIDATED = 4;
 
-    public PlayerBoard(UUID playerUuid, String playerName, BingoGame game) {
-        this.playerUuid = playerUuid;
-        this.playerName = playerName;
+    public PlayerBoard(BingoPlayer player, BingoGame game) {
+        this.player = player;
         this.game = game;
 
         int numSquares = game.gameBoard.getSquares().size();
@@ -54,7 +52,7 @@ public class PlayerBoard {
     public void autoMark(Square square) {
         // FIXME config option?
         if (true || !autoMarkedPositions.contains(square.position)) {
-            this.game.wsClient.sendMarkSquare(playerName, square.position,
+            this.game.wsClient.sendMarkSquare(player.getName(), square.position,
                 square.goalType.equals("negative") ? 3 : 1);
             autoMarkedPositions.add(square.position);
         }
@@ -103,7 +101,7 @@ public class PlayerBoard {
         if (invalidated != null) {
             this.announcedPositions.add(position);
             Square square = this.game.gameBoard.getSquares().get(position);
-            this.game.messages.announcePlayerMarking(this.playerUuid, square, invalidated);
+            this.game.messages.announcePlayerMarking(this.player, square, invalidated);
         }
     }
 }

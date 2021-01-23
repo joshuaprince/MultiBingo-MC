@@ -1,6 +1,7 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.BingoGame;
+import com.jtprince.bingo.plugin.BingoPlayer;
 import com.jtprince.bingo.plugin.Square;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -85,7 +86,7 @@ public class AutoMarking {
         for (Square sq : this.autoMarkedSquares) {
             for (ItemTrigger trigger : sq.itemTriggers) {
                 if (trigger.isSatisfied(player.getInventory())) {
-                    this.game.getPlayerBoard(player.getName()).autoMark(sq);
+                    this.game.getPlayerBoard(this.game.getBingoPlayer(player)).autoMark(sq);
                 }
             }
         }
@@ -95,9 +96,10 @@ public class AutoMarking {
      * Scan an Event that has been fired by Bukkit, to check if any MethodTriggers on the board
      * should be triggered and cause a square to be marked.
      * @param event Event that was raised by Bukkit.
-     * @param player The player whose board should be marked if this Event triggers any markings.
+     * @param player The BingoPlayer whose board should be marked if this Event triggers any
+     *               markings.
      */
-    void impulseEvent(Event event, Player player) {
+    void impulseEvent(Event event, BingoPlayer player) {
         List<EventTrigger> methods = activeEventListenerMap.get(event.getClass());
         if (methods == null) {
             return;
@@ -105,7 +107,7 @@ public class AutoMarking {
 
         for (EventTrigger gal : methods) {
             if (gal.satisfiedBy(event)) {
-                this.game.getPlayerBoard(player.getName()).autoMark(gal.square);
+                this.game.getPlayerBoard(player).autoMark(gal.square);
             }
         }
     }
@@ -114,10 +116,21 @@ public class AutoMarking {
      * Scan an Event that has been fired by Bukkit, to check if any MethodTriggers on the board
      * should be triggered and cause a square to be marked.
      * @param event Event that was raised by Bukkit.
-     * @param world The world this Event occurred in, used to match to a Player whose board should
-     *              be marked.
+     * @param player The Bukkit Player that triggered this event, used to match to a BingoPlayer
+     *               whose board should be marked.
+     */
+    void impulseEvent(Event event, Player player) {
+        this.impulseEvent(event, this.game.getBingoPlayer(player));
+    }
+
+    /**
+     * Scan an Event that has been fired by Bukkit, to check if any MethodTriggers on the board
+     * should be triggered and cause a square to be marked.
+     * @param event Event that was raised by Bukkit.
+     * @param world The world this Event occurred in, used to match to a BingoPlayer whose board
+     *              should be marked.
      */
     void impulseEvent(Event event, World world) {
-        this.impulseEvent(event, this.game.getPlayerInWorld(world));
+        this.impulseEvent(event, this.game.getBingoPlayer(world));
     }
 }

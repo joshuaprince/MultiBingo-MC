@@ -1,6 +1,7 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.BingoGame;
+import com.jtprince.bingo.plugin.BingoPlayer;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
@@ -54,8 +55,8 @@ public class AutoMarkListener implements Listener {
             return true;
         }
 
-        Player p = (Player) player;
-        boolean ret = !autoMarking.game.getPlayers().contains(p);
+        BingoPlayer bp = this.autoMarking.game.getBingoPlayer((Player) player);
+        boolean ret = !autoMarking.game.getPlayers().contains(bp);
         if (ret) {
             this.autoMarking.game.plugin.getLogger().fine(
                 "ActivationListener ignored player " + player.getName());
@@ -75,7 +76,7 @@ public class AutoMarkListener implements Listener {
             return true;
         }
 
-        Player p = this.autoMarking.game.getPlayerInWorld(world);
+        BingoPlayer p = this.autoMarking.game.getBingoPlayer(world);
 
         if (p == null) {
             this.autoMarking.game.plugin.getLogger().finest(

@@ -3,13 +3,11 @@ package com.jtprince.bingo.plugin;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.UUID;
 
 public class Messages {
     final BingoGame game;
@@ -80,14 +78,14 @@ public class Messages {
         this.game.plugin.getServer().broadcast(components);
     }
 
-    public void announceGameReady(Collection<Player> players) {
+    public void announceGameReady(Collection<BingoPlayer> players) {
         BaseComponent[] components = new ComponentBuilder()
             .append(HEADER, ComponentBuilder.FormatRetention.NONE)
             .append("Bingo worlds have been generated for " + players.size() + " players.")
             .create();
         this.game.plugin.getServer().broadcast(components);
 
-        for (Player p : players) {
+        for (BingoPlayer p : players) {
             // Game link
             URI url = this.game.plugin.getGameUrl(this.game.gameCode, p);
             components = new ComponentBuilder()
@@ -100,13 +98,13 @@ public class Messages {
                 .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bingo start"))
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Start Game")))
                 .create();
-            p.sendMessage(components);
+            for (Player bukkitPlayer : p.getBukkitPlayers()) {
+                bukkitPlayer.sendMessage(components);
+            }
         }
     }
 
-    public void announcePlayerMarking(UUID playerUuid, Square square, boolean invalidated) {
-        OfflinePlayer player = this.game.plugin.getServer().getOfflinePlayer(playerUuid);
-
+    public void announcePlayerMarking(BingoPlayer player, Square square, boolean invalidated) {
         BaseComponent[] components;
         if (!invalidated) {
             components = new ComponentBuilder()

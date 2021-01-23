@@ -14,10 +14,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
@@ -392,6 +389,14 @@ public class EventTrigger {
     private boolean jm_vegetarian_67077(PlayerItemConsumeEvent event) {
         // Never eat meat (i.e. trigger if meat)
         return Arrays.stream(MEATS).anyMatch(f -> event.getItem().getType() == f);
+    }
+
+    @EventTriggerListener(extraGoals = {"jm_level__53191", "jm_level__62503",
+                                        "jm_level__50255", "jm_level__27398"})
+    private boolean jm_level__71448(PlayerLevelChangeEvent event) {
+        // Level <x>
+        int requiredLevel = this.square.variables.get("var");
+        return event.getNewLevel() >= requiredLevel;
     }
 
     @EventTriggerListener

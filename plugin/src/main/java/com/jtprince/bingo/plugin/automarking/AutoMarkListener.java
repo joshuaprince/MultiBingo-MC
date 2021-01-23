@@ -14,10 +14,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Contract;
@@ -240,6 +237,15 @@ public class AutoMarkListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onConsume(PlayerItemConsumeEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        this.autoMarking.impulseEvent(event, event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onLevelChange(PlayerLevelChangeEvent event) {
         if (ignore(event.getPlayer())) {
             return;
         }

@@ -140,6 +140,7 @@
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="5" max="7"/>
+    <Auto/>
   </Goal>
   <Goal difficulty="0" id="jm_note__locks88772">
     <Description>$var Note Blocks</Description>
@@ -528,6 +529,7 @@
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="8" max="15"/>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_creat_golem39717">
     <Description>Create a Snow Golem</Description>
@@ -1867,6 +1869,7 @@
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="16" max="26"/>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_diffe_seeds78120">
     <Description>$var Different Seeds</Description>
@@ -2255,6 +2258,7 @@
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="27" max="37"/>
+    <Auto/>
   </Goal>
   <Goal difficulty="3" id="jm_build__cube73579">
     <Description>Build a $var1x$var2x$var3 Ice cube</Description>
@@ -2393,6 +2397,7 @@
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
     <Variable min="38" max="50"/>
+    <Auto/>
   </Goal>
   <Goal difficulty="4" id="jm_fill__items73968">
     <Description>Fill a Double Chest with 3456 items</Description>

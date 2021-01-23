@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameBoard {
-    final BingoGame game;
+    public final BingoGame game;
 
     private ArrayList<Square> squares;
 

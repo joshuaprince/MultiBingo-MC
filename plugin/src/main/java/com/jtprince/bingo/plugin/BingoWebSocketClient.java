@@ -56,7 +56,7 @@ public class BingoWebSocketClient extends WebSocketClient {
         ArrayList<Square> squares = new ArrayList<>();
         for (Object o : squaresJson) {
             JSONObject sqJson = (JSONObject) o;
-            Square sq = new Square(this.game, sqJson);
+            Square sq = new Square(this.game.gameBoard, sqJson);
             squares.add(sq);
         }
 

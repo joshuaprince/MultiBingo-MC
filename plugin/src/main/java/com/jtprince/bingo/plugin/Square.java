@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Square {
-    public BingoGame game;
+    public GameBoard board;
 
     public final String goalId;
     public final String goalType;
@@ -21,8 +21,8 @@ public class Square {
     public final Collection<ItemTrigger> itemTriggers;
     public final Collection<EventTrigger> eventTriggers;
 
-    public Square(BingoGame game, JSONObject obj) {
-        this.game = game;
+    public Square(GameBoard board, JSONObject obj) {
+        this.board = board;
 
         this.goalId = (String) obj.get("id");
         this.goalType = (String) obj.get("type");

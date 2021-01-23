@@ -27,16 +27,20 @@ import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Container class that maps a Square on a board to a Method that can check if that square should be
  * activated when a Bukkit Event is fired.
+ *
+ * Event Trigger methods for individual goals are at the bottom of this file.
  */
 public class EventTrigger {
     final Square square;
-    final Method method;
+    private final Method method;
     final Class<? extends Event> eventType;
 
     private EventTrigger(Square square, Method method, Class<? extends Event> eventType) {
@@ -80,14 +84,33 @@ public class EventTrigger {
         return ret;
     }
 
+    public boolean satisfiedBy(Event event) {
+        Object result = this.invoke(event);
+        if (result == null) {
+            return false;
+        } else {
+            return (boolean) result;
+        }
+    }
+
+    private Object invoke(Event event) {
+        try {
+            return this.method.invoke(this, event);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            this.square.game.plugin.getLogger().log(Level.SEVERE,
+                "Failed to pass " + event.getClass().getName() + " to listeners", e);
+            return null;
+        }
+    }
+
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface EventTriggerListener {
+    private @interface EventTriggerListener {
         String[] extraGoals() default {};
     }
 
     /* Definitions */
 
-    static final Material[] meats = {
+    private static final Material[] MEATS = {
         Material.CHICKEN, Material.COOKED_CHICKEN, Material.COD, Material.COOKED_COD,
         Material.BEEF, Material.COOKED_BEEF, Material.MUTTON, Material.COOKED_MUTTON,
         Material.RABBIT, Material.COOKED_RABBIT, Material.SALMON, Material.COOKED_SALMON,
@@ -95,24 +118,24 @@ public class EventTrigger {
         Material.RABBIT_STEW, Material.ROTTEN_FLESH
     };
 
-    static final Material[] torches = {
+    private static final Material[] TORCHES = {
         Material.TORCH, Material.WALL_TORCH, Material.SOUL_TORCH, Material.SOUL_WALL_TORCH,
         Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH
     };
 
-    static final TreeType[] trees = {
+    private static final TreeType[] TREES = {
         TreeType.ACACIA, TreeType.BIG_TREE, TreeType.BIRCH, TreeType.COCOA_TREE,
         TreeType.DARK_OAK, TreeType.JUNGLE, TreeType.JUNGLE_BUSH, TreeType.MEGA_REDWOOD,
         TreeType.REDWOOD, TreeType.SMALL_JUNGLE, TreeType.SWAMP, TreeType.TALL_BIRCH,
         TreeType.TALL_REDWOOD, TreeType.TREE
     };
 
-    static final TreeType[] mushrooms = {TreeType.BROWN_MUSHROOM, TreeType.RED_MUSHROOM};
+    static final TreeType[] MUSHROOMS = {TreeType.BROWN_MUSHROOM, TreeType.RED_MUSHROOM};
 
     /* Listeners */
 
     @EventTriggerListener
-    static boolean jm_never_sword96977(BlockBreakEvent event) {
+    private boolean jm_never_sword96977(BlockBreakEvent event) {
         // Never use a sword
         // See also EntityDamageByEntityEvent variant
         return event.getPlayer().getInventory().getItemInMainHand()
@@ -120,7 +143,7 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_never_n_axe38071(BlockBreakEvent event) {
+    private boolean jm_never_n_axe38071(BlockBreakEvent event) {
         // Never use an axe
         // See also EntityDamageByEntityEvent variant
         return event.getPlayer().getInventory().getItemInMainHand()
@@ -128,25 +151,25 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_destr_awner87999(BlockBreakEvent event) {
+    private boolean jm_destr_awner87999(BlockBreakEvent event) {
         // Destroy a monster spawner
         return event.getBlock().getType() == Material.SPAWNER;
     }
 
     @EventTriggerListener
-    static boolean jm_never_rches51018(BlockPlaceEvent event) {
+    private boolean jm_never_rches51018(BlockPlaceEvent event) {
         // Never place torches
-        return Arrays.stream(torches).anyMatch(m -> event.getBlock().getType() == m);
+        return Arrays.stream(TORCHES).anyMatch(m -> event.getBlock().getType() == m);
     }
 
     @EventTriggerListener
-    static boolean jm_never_ticks40530(CraftItemEvent event) {
+    private boolean jm_never_ticks40530(CraftItemEvent event) {
         // Never craft sticks
         return event.getRecipe().getResult().getType() == Material.STICK;
     }
 
     @EventTriggerListener
-    static boolean jm_never__coal44187(CraftItemEvent event) {
+    private boolean jm_never__coal44187(CraftItemEvent event) {
         // Never use coal
         // See also FurnaceBurnEvent variant
         if (event.getRecipe() instanceof ShapedRecipe) {
@@ -165,19 +188,19 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_creat_golem39717(CreatureSpawnEvent event) {
+    private boolean jm_creat_golem39717(CreatureSpawnEvent event) {
         // Create a Snow Golem
         return event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.BUILD_SNOWMAN;
     }
 
     @EventTriggerListener
-    static boolean jm_creat_golem39114(CreatureSpawnEvent event) {
+    private boolean jm_creat_golem39114(CreatureSpawnEvent event) {
         // Create an Iron Golem
         return event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.BUILD_IRONGOLEM;
     }
 
     @EventTriggerListener
-    static boolean jm_never_sword96977(EntityDamageByEntityEvent event) {
+    private boolean jm_never_sword96977(EntityDamageByEntityEvent event) {
         // Never use a sword
         // See also BlockBreakEvent variant
         return ((Player) event.getDamager()).getInventory().getItemInMainHand()
@@ -185,7 +208,7 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_never_n_axe38071(EntityDamageByEntityEvent event) {
+    private boolean jm_never_n_axe38071(EntityDamageByEntityEvent event) {
         // Never use an axe
         // See also BlockBreakEvent variant
         return ((Player) event.getDamager()).getInventory().getItemInMainHand()
@@ -193,13 +216,13 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_deton_ecart39576(EntityExplodeEvent event) {
+    private boolean jm_deton_ecart39576(EntityExplodeEvent event) {
         // Detonate a TNT minecart
         return event.getEntity().getType() == EntityType.MINECART_TNT;
     }
 
     @EventTriggerListener
-    static boolean jm_2_cre__boat97078(EntityMountEvent event) {
+    private boolean jm_2_cre__boat97078(EntityMountEvent event) {
         // 2 Creepers in the same Boat
         if (!(event.getMount() instanceof Boat)) {
             return false;
@@ -217,44 +240,44 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_never__boat85417(EntityMountEvent event) {
+    private boolean jm_never__boat85417(EntityMountEvent event) {
         // Never use (enter) boats
         return event.getEntity() instanceof Player
             && event.getMount() instanceof Boat;
     }
 
     @EventTriggerListener
-    static boolean jm_tame__horse50063(EntityTameEvent event) {
+    private boolean jm_tame__horse50063(EntityTameEvent event) {
         // Tame a horse
         return event.getEntity().getType() == EntityType.HORSE;
     }
 
     @EventTriggerListener
-    static boolean jm_tame___wolf12580(EntityTameEvent event) {
+    private boolean jm_tame___wolf12580(EntityTameEvent event) {
         // Tame a wolf
         return event.getEntity().getType() == EntityType.WOLF;
     }
 
     @EventTriggerListener
-    static boolean jm_tame__arrot29264(EntityTameEvent event) {
+    private boolean jm_tame__arrot29264(EntityTameEvent event) {
         // Tame a parrot
         return event.getEntity().getType() == EntityType.PARROT;
     }
 
     @EventTriggerListener
-    static boolean jm_tame__celot19643(EntityTameEvent event) {
+    private boolean jm_tame__celot19643(EntityTameEvent event) {
         // Tame an ocelot
         return event.getEntity().getType() == EntityType.OCELOT;
     }
 
     @EventTriggerListener
-    static boolean jm_tame__onkey63865(EntityTameEvent event) {
+    private boolean jm_tame__onkey63865(EntityTameEvent event) {
         // Tame a donkey
         return event.getEntity().getType() == EntityType.DONKEY;
     }
 
     @EventTriggerListener
-    static boolean jm_never__coal44187(FurnaceBurnEvent event) {
+    private boolean jm_never__coal44187(FurnaceBurnEvent event) {
         // Never use coal
         // See also CraftItemEvent variant
         return event.getFuel().getType() == Material.COAL
@@ -262,7 +285,7 @@ public class EventTrigger {
     }
 
     @EventTriggerListener(extraGoals = {"jm_never_ields14785"})
-    static boolean jm_never_rmour42273(InventoryCloseEvent event) {
+    private boolean jm_never_rmour42273(InventoryCloseEvent event) {
         // Never use armor
         // Never use armor or shields
         Player p = (Player) event.getPlayer();
@@ -270,33 +293,33 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_never_lates77348(InventoryCloseEvent event) {
+    private boolean jm_never_lates77348(InventoryCloseEvent event) {
         // Never wear chestplates
         Player p = (Player) event.getPlayer();
         return p.getInventory().getArmorContents()[2] != null;
     }
 
     @EventTriggerListener(extraGoals = {"jm_never_sleep35022"})
-    static boolean jm_sleep_a_bed24483(PlayerBedLeaveEvent event) {
+    private boolean jm_sleep_a_bed24483(PlayerBedLeaveEvent event) {
         // Just sleep
         return event.getPlayer().getWorld().getTime() < 1000;
     }
 
     @EventTriggerListener
-    static boolean jm_sleep_llage18859(PlayerBedLeaveEvent event) {
+    private boolean jm_sleep_llage18859(PlayerBedLeaveEvent event) {
         // Sleep in a village
         return jm_sleep_a_bed24483(event)
             && ActivationHelpers.inVillage(event.getPlayer().getLocation());
     }
 
     @EventTriggerListener
-    static boolean jm_never_die_37813(PlayerDeathEvent event) {
+    private boolean jm_never_die_37813(PlayerDeathEvent event) {
         // Never die
         return true;
     }
 
     @EventTriggerListener
-    static boolean jm_use_a_abbit23802(PlayerInteractEntityEvent event) {
+    private boolean jm_use_a_abbit23802(PlayerInteractEntityEvent event) {
         // Use a lead on a rabbit
         ItemStack hand = event.getPlayer().getInventory().getItem(event.getHand());
         return event.getRightClicked().getType() == EntityType.RABBIT
@@ -304,7 +327,7 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_try__nether11982(PlayerInteractEvent event) {
+    private boolean jm_try__nether11982(PlayerInteractEvent event) {
         // Nether bed
         return event.getClickedBlock() != null
             && event.getClickedBlock().getWorld().getEnvironment() == World.Environment.NETHER
@@ -313,7 +336,7 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_cauld_water24040(PlayerInteractEvent event) {
+    private boolean jm_cauld_water24040(PlayerInteractEvent event) {
         // Cauldron with water (put water in a cauldron)
         return event.getClickedBlock() != null
             && event.getClickedBlock().getType() == Material.CAULDRON
@@ -323,7 +346,7 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_place_r_pot79183(PlayerInteractEvent event) {
+    private boolean jm_place_r_pot79183(PlayerInteractEvent event) {
         // Place a cactus in a flower pot
         return event.getClickedBlock() != null
             && event.getClickedBlock().getType() == Material.FLOWER_POT
@@ -333,7 +356,7 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_never_g_rod73476(PlayerInteractEvent event) {
+    private boolean jm_never_g_rod73476(PlayerInteractEvent event) {
         // Never use a fishing rod
         return event.getItem() != null
             && event.getItem().getType() == Material.FISHING_ROD
@@ -342,7 +365,7 @@ public class EventTrigger {
     }
 
     @EventTriggerListener(extraGoals = {"jm_never_ields14785"})
-    static boolean jm_never_hield82710(PlayerInteractEvent event) {
+    private boolean jm_never_hield82710(PlayerInteractEvent event) {
         // Never use a shield
         return event.getItem() != null
             && event.getItem().getType() == Material.SHIELD
@@ -351,7 +374,7 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_never_ckets96909(PlayerInteractEvent event) {
+    private boolean jm_never_ckets96909(PlayerInteractEvent event) {
         // Never use buckets
         return event.getItem() != null
             && event.getItem().getType().getKey().toString().contains("bucket")
@@ -360,45 +383,45 @@ public class EventTrigger {
     }
 
     @EventTriggerListener
-    static boolean jm_carnivore_30882(PlayerItemConsumeEvent event) {
+    private boolean jm_carnivore_30882(PlayerItemConsumeEvent event) {
         // Only eat meat (i.e. trigger if NOT meat)
-        return Arrays.stream(meats).noneMatch(f -> event.getItem().getType() == f);
+        return Arrays.stream(MEATS).noneMatch(f -> event.getItem().getType() == f);
     }
 
     @EventTriggerListener
-    static boolean jm_vegetarian_67077(PlayerItemConsumeEvent event) {
+    private boolean jm_vegetarian_67077(PlayerItemConsumeEvent event) {
         // Never eat meat (i.e. trigger if meat)
-        return Arrays.stream(meats).anyMatch(f -> event.getItem().getType() == f);
+        return Arrays.stream(MEATS).anyMatch(f -> event.getItem().getType() == f);
     }
 
     @EventTriggerListener
-    static boolean jm_trade_lager37854(PlayerTradeEvent event) {
+    private boolean jm_trade_lager37854(PlayerTradeEvent event) {
         // Trade a villager
         return event.getVillager() instanceof Villager;
     }
 
     @EventTriggerListener
-    static boolean jm_activ_llage72436(PortalCreateEvent event) {
+    private boolean jm_activ_llage72436(PortalCreateEvent event) {
         // Portal in village
         return event.getEntity() instanceof Player
             && ActivationHelpers.inVillage(event.getBlocks().get(0).getLocation());
     }
 
     @EventTriggerListener
-    static boolean jm_grow__ether38694(StructureGrowEvent event) {
+    private boolean jm_grow__ether38694(StructureGrowEvent event) {
         // Grow a tree in the nether
         return event.getWorld().getEnvironment() == World.Environment.NETHER
-            && Arrays.stream(trees).anyMatch(t -> t == event.getSpecies());
+            && Arrays.stream(TREES).anyMatch(t -> t == event.getSpecies());
     }
 
     @EventTriggerListener
-    static boolean jm_grow__hroom76894(StructureGrowEvent event) {
+    private boolean jm_grow__hroom76894(StructureGrowEvent event) {
         // Grow a huge mushroom
-        return Arrays.stream(mushrooms).anyMatch(t -> t == event.getSpecies());
+        return Arrays.stream(MUSHROOMS).anyMatch(t -> t == event.getSpecies());
     }
 
     @EventTriggerListener
-    static boolean jm_grow___tree94140(StructureGrowEvent event) {
+    private boolean jm_grow___tree94140(StructureGrowEvent event) {
         // Grow a full jungle tree
         return event.getSpecies() == TreeType.JUNGLE;
     }

@@ -7,9 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Root object for all automated board marking functionality in a game.
@@ -106,16 +104,7 @@ public class AutoMarking {
         }
 
         for (EventTrigger gal : methods) {
-            boolean activate;
-            try {
-                activate = (boolean) gal.method.invoke(null, event);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                this.game.plugin.getLogger().log(Level.SEVERE,
-                    "Failed to pass " + event.getClass().getName() + " to listeners", e);
-                return;
-            }
-
-            if (activate) {
+            if (gal.satisfiedBy(event)) {
                 this.game.getPlayerBoard(player.getName()).autoMark(gal.square);
             }
         }

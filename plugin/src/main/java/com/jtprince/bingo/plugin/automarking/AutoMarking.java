@@ -86,7 +86,10 @@ public class AutoMarking {
         for (Square sq : this.autoMarkedSquares) {
             for (ItemTrigger trigger : sq.itemTriggers) {
                 if (trigger.isSatisfied(player.getInventory())) {
-                    this.game.getBingoPlayer(player).getPlayerBoard().autoMark(sq);
+                    BingoPlayer bp = this.game.getBingoPlayer(player);
+                    if (bp != null) {
+                        bp.getPlayerBoard().autoMark(sq);
+                    }
                 }
             }
         }

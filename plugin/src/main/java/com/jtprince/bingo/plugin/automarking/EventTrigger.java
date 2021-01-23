@@ -247,9 +247,12 @@ public class EventTrigger {
         if (!(event.getMount() instanceof Boat)) {
             return false;
         }
+        if (!(event.getEntity() instanceof Creeper)) {
+            return false;
+        }
         Boat boat = (Boat) event.getMount();
 
-        int creepers = 0;
+        int creepers = 1;  // The creeper entering on this Event
         for (Entity passenger : boat.getPassengers()) {
             if (passenger instanceof Creeper) {
                 creepers++;
@@ -332,6 +335,7 @@ public class EventTrigger {
             && ActivationHelpers.inVillage(event.getPlayer().getLocation());
     }
 
+    @SuppressWarnings("SameReturnValue")
     @EventTriggerListener
     private boolean jm_never_die_37813(PlayerDeathEvent event) {
         // Never die

@@ -68,7 +68,14 @@ public class BingoWebSocketClient extends WebSocketClient {
         for (Object obj : playerBoards) {
             JSONObject json = (JSONObject) obj;
             String playerName = (String) json.get("player_name");
-            PlayerBoard pb = this.game.getBingoPlayer(playerName).getPlayerBoard();
+            BingoPlayer player = this.game.getBingoPlayer(playerName);
+            if (player == null) {
+                // TODO this spams the log a bit - every time a board is received
+                this.game.plugin.getLogger().warning("No Bingo Player named " + playerName
+                    + " is on this server, but a board exists for them.");
+                continue;
+            }
+            PlayerBoard pb = player.getPlayerBoard();
             if (pb != null) {
                 String board = (String) json.get("board");
                 pb.update(board);

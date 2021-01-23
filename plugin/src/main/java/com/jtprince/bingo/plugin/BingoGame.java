@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.util.*;
@@ -178,14 +179,14 @@ public class BingoGame {
     /**
      * Return a list of BingoPlayers that are participating in this game.
      */
-    public Collection<BingoPlayer> getPlayers() {
+    public @NotNull Collection<BingoPlayer> getPlayers() {
         return this.players;
     }
 
     /**
      * Return a list of Players that are participating in this game and connected to the server.
      */
-    public Collection<Player> getBukkitPlayers() {
+    public @NotNull Collection<Player> getBukkitPlayers() {
         ArrayList<Player> list = new ArrayList<>();
         for (BingoPlayer p : this.players) {
             list.addAll(p.getBukkitPlayers());
@@ -198,7 +199,7 @@ public class BingoGame {
      * @param world The world to check.
      * @return The BingoPlayer object, or null if this world is not part of this game.
      */
-    public BingoPlayer getBingoPlayer(@NotNull World world) {
+    public @Nullable BingoPlayer getBingoPlayer(@NotNull World world) {
         WorldManager.WorldSet ws = this.plugin.worldManager.findWorldSet(world);
         for (BingoPlayer p : this.players) {
             if (p.getWorldSet().equals(ws)) {
@@ -216,7 +217,7 @@ public class BingoGame {
      * @param player The Bukkit Player to check.
      * @return The BingoPlayer object, or null if this Player is not part of this game.
      */
-    public BingoPlayer getBingoPlayer(@NotNull Player player) {
+    public @Nullable BingoPlayer getBingoPlayer(@NotNull Player player) {
         for (BingoPlayer p : this.players) {
             if (p.getBukkitPlayers().contains(player)) {
                 return p;
@@ -232,7 +233,7 @@ public class BingoGame {
      * @param name String to look for.
      * @return The BingoPlayer object, or null if no BingoPlayer exists of this name.
      */
-    public BingoPlayer getBingoPlayer(@NotNull String name) {
+    public @Nullable BingoPlayer getBingoPlayer(@NotNull String name) {
         for (BingoPlayer p : this.players) {
             if (p.getName().equals(name) || p.getSlugName().equals(name)) {
                 return p;

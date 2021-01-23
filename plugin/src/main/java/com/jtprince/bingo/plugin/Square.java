@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Square {
-    public GameBoard board;
+    public final GameBoard board;
 
     public final String goalId;
     public final String goalType;

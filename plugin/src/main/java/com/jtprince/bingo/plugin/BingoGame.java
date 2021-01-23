@@ -37,6 +37,7 @@ public class BingoGame {
 
         this.state = State.PREPARING;
         this.messages.announcePreparingGame();
+        this.messages.tellPlayerTeams(players);
 
         // Start connecting to the websocket and then preparing worldsets simultaneously.
         this.wsClient.connect();  // does not block

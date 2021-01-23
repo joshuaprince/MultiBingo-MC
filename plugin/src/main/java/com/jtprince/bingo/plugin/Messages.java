@@ -109,21 +109,38 @@ public class Messages {
         if (!invalidated) {
             components = new ComponentBuilder()
                 .append(HEADER, ComponentBuilder.FormatRetention.NONE)
-                .append(player.getName())
-                .append(" has marked ")
+                .append(player.getFormattedName())
+                .append(" has marked ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
                 .append(square.text).color(ChatColor.GREEN)
                 .append("!").color(COLOR_TEXT)
                 .create();
         } else {
             components = new ComponentBuilder()
                 .append(HEADER, ComponentBuilder.FormatRetention.NONE)
-                .append(player.getName())
-                .append(" has invalidated ")
+                .append(player.getFormattedName())
+                .append(" has invalidated ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
                 .append(square.text).color(ChatColor.RED)
                 .append("!").color(COLOR_TEXT)
                 .create();
         }
 
         this.game.plugin.getServer().broadcast(components);
+    }
+
+    public void tellPlayerTeams(Collection<BingoPlayer> players) {
+        for (BingoPlayer bp : players) {
+            if (bp instanceof BingoPlayerTeam) {
+                BingoPlayerTeam bpt = (BingoPlayerTeam) bp;
+                BaseComponent[] components = new ComponentBuilder()
+                    .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+                    .append("You are playing on team ")
+                    .append(bpt.getFormattedName())
+                    .append("!").color(COLOR_TEXT)
+                    .create();
+                for (Player p : bpt.getBukkitPlayers()) {
+                    p.sendMessage(components);
+                }
+            }
+        }
     }
 }

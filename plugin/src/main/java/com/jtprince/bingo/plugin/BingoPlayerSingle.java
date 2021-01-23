@@ -1,8 +1,11 @@
 package com.jtprince.bingo.plugin;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -16,12 +19,24 @@ public class BingoPlayerSingle implements BingoPlayer {
     }
 
     @Override
-    public String getName() {
-        return Bukkit.getOfflinePlayer(playerUuid).getName();
+    public @NotNull String getName() {
+        String playerName = Bukkit.getOfflinePlayer(playerUuid).getName();
+        if (playerName == null) {
+            // TODO proper logger
+            Bukkit.getLogger().warning("getName for player " + playerUuid + " is null");
+            return playerUuid.toString();
+        }
+
+        return playerName;
     }
 
     @Override
-    public Collection<Player> getBukkitPlayers() {
+    public @NotNull BaseComponent getFormattedName() {
+        return new TextComponent(this.getName());
+    }
+
+    @Override
+    public @NotNull Collection<Player> getBukkitPlayers() {
         return Collections.singleton(Bukkit.getPlayer(playerUuid));
     }
 }

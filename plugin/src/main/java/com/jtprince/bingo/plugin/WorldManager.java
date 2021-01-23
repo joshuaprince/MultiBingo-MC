@@ -26,6 +26,8 @@ public class WorldManager implements Listener {
     }
 
     public WorldSet createWorlds(String worldCode, String seed) {
+        worldCode = worldCode.replace(" ", "_");
+
         WorldCreator wc_overworld = WorldCreator.name("world_bingo_" + worldCode + "_overworld");
         WorldCreator wc_nether = WorldCreator.name("world_bingo_" + worldCode + "_nether");
         WorldCreator wc_end = WorldCreator.name("world_bingo_" + worldCode + "_the_end");

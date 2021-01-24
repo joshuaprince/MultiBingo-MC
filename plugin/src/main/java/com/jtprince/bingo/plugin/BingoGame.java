@@ -103,7 +103,7 @@ public class BingoGame {
     private void prepareWorldSets(Collection<BingoPlayer> players) {
         for (BingoPlayer p : players) {
             WorldManager.WorldSet ws = this.plugin.worldManager.createWorlds(
-                gameCode + "_" + p.getName(), gameCode);
+                gameCode + "_" + p.getSlugName(), gameCode);
             p.setWorldSet(ws);
         }
 

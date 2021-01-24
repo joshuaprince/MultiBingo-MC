@@ -1,5 +1,7 @@
 package com.jtprince.bingo.plugin;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
 /**
@@ -17,12 +19,6 @@ public class PlayerBoard {
      * Not authoritative; the webserver holds the authoritative copy.
      */
     private final ArrayList<Integer> markings;
-
-    /**
-     * List of positions that were automatically marked (by either an EventTrigger or ItemTrigger),
-     * so that the plugin will not send another marking if the trigger occurs again.
-     */
-    private final Set<Integer> autoMarkedPositions = new HashSet<>();
 
     /**
      * List of positions on this player's board that have been announced as marked, so that no
@@ -46,15 +42,13 @@ public class PlayerBoard {
     }
 
     /**
-     * Mark a square on a player's board if it has not been auto-marked yet.
+     * Mark a square on a player's board if it is not currently marked.
      * @param square Square to mark.
      */
-    public void autoMark(Square square) {
-        // FIXME config option?
-        if (true || !autoMarkedPositions.contains(square.position)) {
-            this.game.wsClient.sendMarkSquare(player.getName(), square.position,
-                square.goalType.equals("negative") ? 3 : 1);
-            autoMarkedPositions.add(square.position);
+    public synchronized void autoMark(@NotNull Square square) {
+        int toState = square.goalType.equals("negative") ? 3 : 1;
+        if (markings.get(square.position) != toState) {
+            this.game.wsClient.sendMarkSquare(player.getName(), square.position, toState);
         }
     }
 
@@ -64,7 +58,7 @@ public class PlayerBoard {
      *                     "0000000000001000000000000" for a board with only the middle square
      *                     marked.
      */
-    public void update(String jsonBoardStr) {
+    public synchronized void update(String jsonBoardStr) {
         if (jsonBoardStr.length() != this.markings.size()) {
             throw new ArrayIndexOutOfBoundsException(
                 "Received board marking string of " + jsonBoardStr.length() + " squares; expected: "

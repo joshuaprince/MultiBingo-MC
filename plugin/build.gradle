@@ -18,6 +18,7 @@ repositories {
 dependencies {
     shadow 'org.jetbrains:annotations:20.1.0'
     shadow 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'org.java-websocket:Java-WebSocket:1.5.1'
     implementation 'dev.jorel:commandapi-shade:5.8'
 

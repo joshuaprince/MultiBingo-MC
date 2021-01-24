@@ -11,8 +11,7 @@ function connect() {
   const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
   const wsUrl = protocol + '://'
       + window.location.host + '/ws/board/'
-      + game_code + '/'
-      + (player_name ? (player_name + '/') : '');
+      + game_code + (player_name ? ('/' + player_name) : '');
 
   boardSocket = new WebSocket(wsUrl);
 

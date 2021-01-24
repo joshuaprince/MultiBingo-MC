@@ -70,8 +70,7 @@ public class BingoWebSocketClient extends WebSocketClient {
             String playerName = (String) json.get("player_name");
             BingoPlayer player = this.game.getBingoPlayer(playerName);
             if (player == null) {
-                // TODO this spams the log a bit - every time a board is received
-                MCBingoPlugin.logger().warning("No Bingo Player named " + playerName
+                MCBingoPlugin.logger().finest("No Bingo Player named " + playerName
                     + " is on this server, but a board exists for them.");
                 continue;
             }

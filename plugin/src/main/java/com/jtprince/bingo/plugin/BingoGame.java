@@ -206,8 +206,7 @@ public class BingoGame {
                 return p;
             }
         }
-
-        MCBingoPlugin.logger().finest(
+        MCBingoPlugin.logger().fine(
             "getPlayerInWorld did not find a player for World " + world.getName());
         return null;
     }
@@ -223,7 +222,7 @@ public class BingoGame {
                 return p;
             }
         }
-        MCBingoPlugin.logger().warning(
+        MCBingoPlugin.logger().fine(
             "getBingoPlayer did not find a player for Player " + player.getName());
         return null;
     }
@@ -239,7 +238,7 @@ public class BingoGame {
                 return p;
             }
         }
-        MCBingoPlugin.logger().warning(
+        MCBingoPlugin.logger().fine(
             "getBingoPlayer did not find a player for String " + name);
         return null;
     }

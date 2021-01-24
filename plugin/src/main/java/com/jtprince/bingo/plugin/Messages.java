@@ -6,7 +6,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.net.URI;
+import java.net.URL;
 import java.util.Collection;
 
 public class Messages {
@@ -87,17 +87,25 @@ public class Messages {
 
         for (BingoPlayer p : players) {
             // Game link
-            URI url = this.game.plugin.getGameUrl(this.game.gameCode, p);
-            components = new ComponentBuilder()
-                .append(HEADER, ComponentBuilder.FormatRetention.NONE)
-                .append("[Open Board]").underlined(true).color(ChatColor.YELLOW)
-                .event(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(url.toString())))
-                .append(" ", ComponentBuilder.FormatRetention.NONE)
-                .append("[START]").underlined(true).color(ChatColor.GREEN)
-                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bingo start"))
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Start Game")))
-                .create();
+            URL url = MCBConfig.getGameUrl(this.game.gameCode, p);
+            if (url == null) {
+                components = new ComponentBuilder()
+                    .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+                    .append("Could not get the board to link you to! Contact the server admin to "
+                        + "update the plugin's config.yml.").color(ChatColor.RED)
+                    .create();
+            } else {
+                components = new ComponentBuilder()
+                    .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+                    .append("[Open Board]").underlined(true).color(ChatColor.YELLOW)
+                    .event(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(url.toString())))
+                    .append(" ", ComponentBuilder.FormatRetention.NONE)
+                    .append("[START]").underlined(true).color(ChatColor.GREEN)
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bingo start"))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Start Game")))
+                    .create();
+            }
             for (Player bukkitPlayer : p.getBukkitPlayers()) {
                 bukkitPlayer.sendMessage(components);
             }

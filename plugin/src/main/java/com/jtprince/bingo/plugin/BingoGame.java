@@ -35,8 +35,8 @@ public class BingoGame {
         this.autoMarking = new AutoMarking(this);
         this.gameBoard = new GameBoard(this);
 
-        URI uri = plugin.getWebsocketUrl(this.gameCode);
-        this.wsClient = new BingoWebSocketClient(this, uri);
+        URI wsUrl = MCBConfig.getWebsocketUrl(this.gameCode);
+        this.wsClient = new BingoWebSocketClient(this, wsUrl);
 
         this.state = State.PREPARING;
         this.messages.announcePreparingGame();

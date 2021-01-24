@@ -16,10 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +24,6 @@ import java.util.stream.Collectors;
 public class MCBingoPlugin extends JavaPlugin {
     private static MCBingoPlugin plugin;  // singleton instance
 
-    boolean debug = false;
     public WorldManager worldManager;
     private BingoGame currentGame;
 
@@ -36,13 +31,12 @@ public class MCBingoPlugin extends JavaPlugin {
     public void onLoad() {
         plugin = this;
 
-        if (this.getConfig().getBoolean("debug", false)) {
+        if (MCBConfig.getDebug()) {
             logger().info("Debug mode is enabled.");
             logger().setLevel(Level.FINER);
-            this.debug = true;
         }
 
-        CommandAPI.onLoad(this.debug);
+        CommandAPI.onLoad(MCBConfig.getDebug());
     }
 
     @Override
@@ -113,7 +107,7 @@ public class MCBingoPlugin extends JavaPlugin {
         root.withSubcommand(endCmd);
         root.withSubcommand(goCmd);
         root.withSubcommand(goSpawnCmd);
-        if (debug) {
+        if (MCBConfig.getDebug()) {
             root.withSubcommand(debugCmd);
             root.withSubcommand(startDebugCmd);
         }
@@ -160,37 +154,6 @@ public class MCBingoPlugin extends JavaPlugin {
 
     public static Logger logger() {
         return plugin.getLogger();
-    }
-
-    URI getWebsocketUrl(String gameCode) {
-        String template = this.getConfig().getString("urls.websocket");
-        if (template == null) {
-            logger().severe("No websocket URL is configured!");
-            return null;
-        }
-        try {
-            return new URI(template.replace("$code", gameCode));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    URI getGameUrl(String gameCode, BingoPlayer p) {
-        String template = this.getConfig().getString("urls.game_player");
-        if (template == null) {
-            logger().severe("No game_player URL is configured!");
-            return null;
-        }
-        try {
-            return new URI(template
-                .replace("$code", URLEncoder.encode(gameCode, StandardCharsets.UTF_8))
-                .replace("$player", URLEncoder.encode(p.getName(), StandardCharsets.UTF_8))
-            );
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public BingoGame getCurrentGame() {

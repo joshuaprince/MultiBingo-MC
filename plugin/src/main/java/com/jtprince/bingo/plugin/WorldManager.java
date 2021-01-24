@@ -47,7 +47,7 @@ public class WorldManager implements Listener {
     }
 
     public void unloadWorlds(WorldSet ws) {
-        this.plugin.getLogger().info("Unloading WorldSet " + ws.worldSetCode);
+        MCBingoPlugin.logger().info("Unloading WorldSet " + ws.worldSetCode);
         for (Environment env : ENVIRONMENTS) {
             World world = ws.getWorld(env);
 
@@ -93,7 +93,7 @@ public class WorldManager implements Listener {
         WorldSet ws = findWorldSet(event.getFrom().getWorld());
         if (ws == null) {
             String msg = "No WorldSet found for teleport from " + event.getFrom().getWorld();
-            this.plugin.getLogger().fine(msg);
+            MCBingoPlugin.logger().fine(msg);
             return;
         }
 

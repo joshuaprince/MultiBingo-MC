@@ -1,5 +1,6 @@
 package com.jtprince.bingo.plugin.automarking;
 
+import com.jtprince.bingo.plugin.MCBingoPlugin;
 import com.jtprince.bingo.plugin.Square;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.Material;
@@ -64,12 +65,12 @@ public class EventTrigger {
             // Determine which Event to listen for and register this Square in a new EventTrigger.
             Class<?> expectedType = method.getParameterTypes()[0];
             if (!Event.class.isAssignableFrom(expectedType)) {
-                square.board.game.plugin.getLogger().severe(
+                MCBingoPlugin.logger().severe(
                     "Parameter in Listener method " + method.getName() + " is not an Event.");
                 continue;
             }
             if (!AutoMarkListener.listenerExists((Class<? extends Event>) expectedType)) {
-                square.board.game.plugin.getLogger().severe(
+                MCBingoPlugin.logger().severe(
                     "Event trigger method " + method.getName()
                         + " does not have a corresponding Event Listener.");
                 continue;
@@ -103,7 +104,7 @@ public class EventTrigger {
         try {
             return this.method.invoke(this, event);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            this.square.board.game.plugin.getLogger().log(Level.SEVERE,
+            MCBingoPlugin.logger().log(Level.SEVERE,
                 "Failed to pass " + event.getClass().getName() + " to listeners", e);
             return null;
         }

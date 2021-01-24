@@ -22,18 +22,23 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class MCBingoPlugin extends JavaPlugin {
+    private static MCBingoPlugin plugin;  // singleton instance
+
     boolean debug = false;
     public WorldManager worldManager;
     private BingoGame currentGame;
 
     @Override
     public void onLoad() {
+        plugin = this;
+
         if (this.getConfig().getBoolean("debug", false)) {
-            this.getLogger().info("Debug mode is enabled.");
-            this.getLogger().setLevel(Level.FINER);
+            logger().info("Debug mode is enabled.");
+            logger().setLevel(Level.FINER);
             this.debug = true;
         }
 
@@ -149,10 +154,18 @@ public class MCBingoPlugin extends JavaPlugin {
         }
     }
 
+    public static MCBingoPlugin instance() {
+        return plugin;
+    }
+
+    public static Logger logger() {
+        return plugin.getLogger();
+    }
+
     URI getWebsocketUrl(String gameCode) {
         String template = this.getConfig().getString("urls.websocket");
         if (template == null) {
-            this.getLogger().severe("No websocket URL is configured!");
+            logger().severe("No websocket URL is configured!");
             return null;
         }
         try {
@@ -166,7 +179,7 @@ public class MCBingoPlugin extends JavaPlugin {
     URI getGameUrl(String gameCode, BingoPlayer p) {
         String template = this.getConfig().getString("urls.game_player");
         if (template == null) {
-            this.getLogger().severe("No game_player URL is configured!");
+            logger().severe("No game_player URL is configured!");
             return null;
         }
         try {

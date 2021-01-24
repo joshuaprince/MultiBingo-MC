@@ -22,8 +22,7 @@ public class BingoPlayerSingle extends BingoPlayer {
     public @NotNull String getName() {
         String playerName = Bukkit.getOfflinePlayer(playerUuid).getName();
         if (playerName == null) {
-            // TODO proper logger
-            Bukkit.getLogger().warning("getName for player " + playerUuid + " is null");
+            MCBingoPlugin.logger().warning("getName for player " + playerUuid + " is null");
             return playerUuid.toString();
         }
 

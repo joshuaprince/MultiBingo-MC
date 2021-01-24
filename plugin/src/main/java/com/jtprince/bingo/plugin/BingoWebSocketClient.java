@@ -27,7 +27,7 @@ public class BingoWebSocketClient extends WebSocketClient {
 
     public void sendRevealBoard() {
         if (!this.isOpen()) {
-            this.game.plugin.getLogger().warning(
+            MCBingoPlugin.logger().warning(
                 "Dropping reveal_board packet since Websocket is closed");
             return;
         }
@@ -39,7 +39,7 @@ public class BingoWebSocketClient extends WebSocketClient {
 
     public void sendMarkSquare(String player, int pos, int toState) {
         if (!this.isOpen()) {
-            this.game.plugin.getLogger().warning(
+            MCBingoPlugin.logger().warning(
                 "Dropping board_mark_admin packet since Websocket is closed");
             return;
         }
@@ -61,7 +61,7 @@ public class BingoWebSocketClient extends WebSocketClient {
         }
 
         this.game.gameBoard.setSquares(squares);
-        this.game.plugin.getLogger().info("Received board for game " + this.game.gameCode);
+        MCBingoPlugin.logger().info("Received board for game " + this.game.gameCode);
     }
 
     private void receivePlayerBoards(JSONArray playerBoards) {
@@ -71,7 +71,7 @@ public class BingoWebSocketClient extends WebSocketClient {
             BingoPlayer player = this.game.getBingoPlayer(playerName);
             if (player == null) {
                 // TODO this spams the log a bit - every time a board is received
-                this.game.plugin.getLogger().warning("No Bingo Player named " + playerName
+                MCBingoPlugin.logger().warning("No Bingo Player named " + playerName
                     + " is on this server, but a board exists for them.");
                 continue;
             }
@@ -85,7 +85,7 @@ public class BingoWebSocketClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        this.game.plugin.getLogger().info(
+        MCBingoPlugin.logger().info(
             "Successfully opened websocket for game " + this.game.gameCode);
         this.reconnectAttemptsRemaining = 10;
         this.game.transitionToReady();
@@ -97,7 +97,7 @@ public class BingoWebSocketClient extends WebSocketClient {
         try {
             obj = (JSONObject) jsonParser.parse(message);
         } catch (ParseException e) {
-            game.plugin.getLogger().log(Level.SEVERE, "JSON parsing exception" + e.getMessage());
+            MCBingoPlugin.logger().log(Level.SEVERE, "JSON parsing exception", e);
             return;
         }
 
@@ -115,15 +115,15 @@ public class BingoWebSocketClient extends WebSocketClient {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         if (code == CloseFrame.NORMAL) {
-            this.game.plugin.getLogger().info("Closed websocket for game " + this.game.gameCode);
+            MCBingoPlugin.logger().info("Closed websocket for game " + this.game.gameCode);
         }
         else if (this.reconnectAttemptsRemaining-- <= 0) {
-            this.game.plugin.getLogger().severe("Websocket failed to reconnect.");
+            MCBingoPlugin.logger().severe("Websocket failed to reconnect.");
             this.game.messages.announceGameFailed();
             this.game.state = BingoGame.State.FAILED;
         }
         else {
-            this.game.plugin.getLogger().warning(
+            MCBingoPlugin.logger().warning(
                 "Websocket for game " + this.game.gameCode +
                     " closed. Retrying in 5 seconds. " + reason);
             this.game.plugin.getServer().getScheduler().scheduleSyncDelayedTask(
@@ -133,7 +133,7 @@ public class BingoWebSocketClient extends WebSocketClient {
 
     @Override
     public void onError(Exception ex) {
-        this.game.plugin.getLogger().log(Level.SEVERE,
+        MCBingoPlugin.logger().log(Level.SEVERE,
             "Error in web socket connection for game " + game.gameCode, ex);
     }
 }

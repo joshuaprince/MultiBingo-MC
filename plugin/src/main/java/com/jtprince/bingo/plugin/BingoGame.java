@@ -52,7 +52,7 @@ public class BingoGame {
 
     public void destroy() {
         this.state = State.DONE;
-        this.plugin.getLogger().info("Destroying game " + gameCode);
+        MCBingoPlugin.logger().info("Destroying game " + gameCode);
         this.messages.basicAnnounce("The game has ended!");
 
         if (this.wsClient != null) {
@@ -107,7 +107,7 @@ public class BingoGame {
             p.setWorldSet(ws);
         }
 
-        this.plugin.getLogger().info("Finished generating " + players.size() + " worlds");
+        MCBingoPlugin.logger().info("Finished generating " + players.size() + " worlds");
     }
 
     private void unloadWorldSets() {
@@ -207,7 +207,7 @@ public class BingoGame {
             }
         }
 
-        this.plugin.getLogger().finest(
+        MCBingoPlugin.logger().finest(
             "getPlayerInWorld did not find a player for World " + world.getName());
         return null;
     }
@@ -223,7 +223,7 @@ public class BingoGame {
                 return p;
             }
         }
-        this.plugin.getLogger().warning(
+        MCBingoPlugin.logger().warning(
             "getBingoPlayer did not find a player for Player " + player.getName());
         return null;
     }
@@ -239,7 +239,7 @@ public class BingoGame {
                 return p;
             }
         }
-        this.plugin.getLogger().warning(
+        MCBingoPlugin.logger().warning(
             "getBingoPlayer did not find a player for String " + name);
         return null;
     }

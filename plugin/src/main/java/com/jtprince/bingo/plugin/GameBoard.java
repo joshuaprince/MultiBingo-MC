@@ -22,7 +22,7 @@ public class GameBoard {
 
         // Register squares with auto marking
         Set<Square> autoSquares = this.game.autoMarking.registerGoals(squares);
-        this.game.plugin.getLogger().info("Auto activation on:" + String.join(", ",
+        MCBingoPlugin.logger().info("Auto activation on:" + String.join(", ",
             autoSquares.stream().map(sq -> sq.goalId).collect(Collectors.toUnmodifiableList())));
 
         this.game.transitionToReady();

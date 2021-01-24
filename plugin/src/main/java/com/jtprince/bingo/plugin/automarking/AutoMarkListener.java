@@ -2,6 +2,7 @@ package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.BingoGame;
 import com.jtprince.bingo.plugin.BingoPlayer;
+import com.jtprince.bingo.plugin.MCBingoPlugin;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
@@ -58,8 +59,7 @@ public class AutoMarkListener implements Listener {
         BingoPlayer bp = this.autoMarking.game.getBingoPlayer((Player) player);
         boolean ret = !autoMarking.game.getPlayers().contains(bp);
         if (ret) {
-            this.autoMarking.game.plugin.getLogger().fine(
-                "ActivationListener ignored player " + player.getName());
+            MCBingoPlugin.logger().fine("ActivationListener ignored player " + player.getName());
         }
         return ret;
     }
@@ -79,8 +79,7 @@ public class AutoMarkListener implements Listener {
         BingoPlayer p = this.autoMarking.game.getBingoPlayer(world);
 
         if (p == null) {
-            this.autoMarking.game.plugin.getLogger().finest(
-                "ActivationListener ignored world " + world.getName());
+            MCBingoPlugin.logger().finest("ActivationListener ignored world " + world.getName());
         }
         return (p == null);
     }

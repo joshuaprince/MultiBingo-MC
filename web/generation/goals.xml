@@ -1706,13 +1706,13 @@
   </Goal>
   <Goal difficulty="2" id="jm_vegetarian_67077" type="negative">
     <Description>Vegetarian</Description>
-    <Tooltip>Never eat meat, including fish</Tooltip>
+    <Tooltip>Never eat meat, fish, or any food prepared with them</Tooltip>
     <Antisynergy>Food</Antisynergy>
     <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_carnivore_30882" type="negative">
     <Description>Carnivore</Description>
-    <Tooltip>Only eat meat</Tooltip>
+    <Tooltip>Only eat meat, fish, and any food prepared with them</Tooltip>
     <Antisynergy>Food</Antisynergy>
     <Auto/>
   </Goal>

@@ -117,13 +117,24 @@ public class EventTrigger {
 
     /* Definitions */
 
-    private static final Material[] MEATS = {
+    private static final Material[] MEATS = { // Invalidate Vegetarian
         Material.CHICKEN, Material.COOKED_CHICKEN, Material.COD, Material.COOKED_COD,
         Material.BEEF, Material.COOKED_BEEF, Material.MUTTON, Material.COOKED_MUTTON,
         Material.RABBIT, Material.COOKED_RABBIT, Material.SALMON, Material.COOKED_SALMON,
         Material.PORKCHOP, Material.COOKED_PORKCHOP, Material.TROPICAL_FISH, Material.PUFFERFISH,
-        Material.RABBIT_STEW, Material.ROTTEN_FLESH
+        Material.RABBIT_STEW, Material.ROTTEN_FLESH, Material.SPIDER_EYE
     };
+
+    private static final Material[] NON_MEATS = {  // Invalidate Carnivore
+        Material.APPLE, Material.BAKED_POTATO, Material.BEETROOT, Material.BEETROOT_SOUP,
+        Material.BREAD, Material.CARROT, Material.CHORUS_FRUIT, Material.COOKIE,
+        Material.DRIED_KELP, Material.ENCHANTED_GOLDEN_APPLE, Material.GOLDEN_APPLE,
+        Material.GOLDEN_CARROT, Material.MELON_SLICE, Material.MUSHROOM_STEW,
+        Material.POISONOUS_POTATO, Material.POTATO, Material.PUMPKIN_PIE, Material.SUSPICIOUS_STEW,
+        Material.SWEET_BERRIES
+    };
+
+    /* Consumables that do not invalidate either of the above: Potions, Honey, Milk, Cake (block) */
 
     private static final Material[] TORCHES = {
         Material.TORCH, Material.WALL_TORCH, Material.SOUL_TORCH, Material.SOUL_WALL_TORCH,
@@ -410,8 +421,7 @@ public class EventTrigger {
     @EventTriggerListener
     private boolean jm_carnivore_30882(PlayerItemConsumeEvent event) {
         // Only eat meat (i.e. trigger if NOT meat)
-        // FIXME Potions activate this!
-        return Arrays.stream(MEATS).noneMatch(f -> event.getItem().getType() == f);
+        return Arrays.stream(NON_MEATS).anyMatch(f -> event.getItem().getType() == f);
     }
 
     @EventTriggerListener

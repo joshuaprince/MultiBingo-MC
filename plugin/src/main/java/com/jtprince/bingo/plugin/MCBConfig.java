@@ -69,4 +69,11 @@ public class MCBConfig {
             return null;
         }
     }
+
+    /**
+     * Returns whether all bingo worlds should be saved to disk when a game ends.
+     */
+    public static boolean getSaveWorlds() {
+        return MCBingoPlugin.instance().getConfig().getBoolean("save_worlds", true);
+    }
 }

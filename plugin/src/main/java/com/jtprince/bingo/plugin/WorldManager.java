@@ -56,7 +56,7 @@ public class WorldManager implements Listener {
                 p.teleport(WorldManager.getSpawnWorld().getSpawnLocation());
             }
 
-            this.plugin.getServer().unloadWorld(world, true);
+            this.plugin.getServer().unloadWorld(world, MCBConfig.getSaveWorlds());
         }
 
         //noinspection SuspiciousMethodCalls

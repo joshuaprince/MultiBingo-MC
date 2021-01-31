@@ -91,6 +91,8 @@ def build_board(instance: Board, created: bool, **kwargs):
         if instance.seed:
             instance.generate_goals()
 
+        print(f"Created a new board with game code {instance.game_code}")
+
 
 class PlayerBoard(models.Model):
     """
@@ -105,7 +107,7 @@ class PlayerBoard(models.Model):
 
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     player_name = models.CharField(blank=False, max_length=128)
-    squares = models.CharField(max_length=25, default='')
+    squares = models.CharField(max_length=25, default='')  # Defaults set in build_player_board()
     disconnected_at = models.DateTimeField(null=True)
 
     def __str__(self):
@@ -138,6 +140,9 @@ class PlayerBoard(models.Model):
 
 @receiver(post_save, sender=PlayerBoard)
 def build_player_board(instance: PlayerBoard, created: bool, **kwargs):
+    if created:
+        print(f"Created a new player board with game code {instance.board.game_code}, "
+              f"player {instance.player_name}")
     if not instance.squares:
         all_squares = instance.board.square_set.order_by('position').all()  # type: List[Square]
         instance.squares = ''.join([str(sq.initial_state().value) for sq in all_squares])

@@ -23,8 +23,6 @@ def board(request, game_code):
         game_code=game_code,
         defaults={'seed': game_code, 'forced_goals': ';'.join(forced_goals)}
     )
-    if created:
-        print(f"Created a new board with game code {game_code}")
 
     player_board_obj = None
     if player_name:
@@ -33,8 +31,6 @@ def board(request, game_code):
                 board_id=board_obj.pk,
                 player_name=player_name
             )
-            if created:
-                print(f"Created a new player board with game code {game_code}, player {player_name}")
         except ValidationError:
             print(f"Player name {player_name} raised ValidationError")
             player_name = ''

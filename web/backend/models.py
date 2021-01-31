@@ -66,7 +66,15 @@ class Square(models.Model):
         else:
             return PlayerBoard.Marking.UNMARKED
 
-    def to_json(self):
+    def to_player_json(self):
+        return {
+            'position': self.position,
+            'text': self.text,
+            'tooltip': self.tooltip,
+            'auto': self.is_autoactivated(),
+        }
+
+    def to_plugin_json(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
         return {
             'id': cg.template.id,

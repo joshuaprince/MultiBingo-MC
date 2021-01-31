@@ -111,6 +111,7 @@ class PlayerWebConsumer(BaseWebConsumer):
             self.player_board_id = player_board_obj.pk
             await mark_disconnected(self.player_board_id, False)
 
+        await self.send_board_defs_to_ws()
         print(f"{self.player_name if self.player_name else 'Spectator'} joined game {self.game_code}.")
 
     async def disconnect(self, code):
@@ -120,6 +121,12 @@ class PlayerWebConsumer(BaseWebConsumer):
             await self.send_boards_all_consumers()
 
         print(f"{self.player_name if self.player_name else 'Spectator'} disconnected from game {self.game_code}.")
+
+    async def send_board_defs_to_ws(self):
+        board_goals = await get_player_goals(self.board_id)
+        await self.send(text_data=json.dumps({
+            'squares': board_goals
+        }))
 
 
 class PluginBackendConsumer(BaseWebConsumer):
@@ -140,7 +147,7 @@ class PluginBackendConsumer(BaseWebConsumer):
         print(f"Plugin Backend disconnected from game {self.game_code}.")
 
     async def send_board_xml_to_ws(self):
-        board_goals = await get_board_goals(self.board_id)
+        board_goals = await get_plugin_goals(self.board_id)
         await self.send(text_data=json.dumps({
             'squares': board_goals
         }))
@@ -211,6 +218,12 @@ def mark_disconnected(player_board_id: int, disconnected: bool):
 
 
 @database_sync_to_async
-def get_board_goals(board_id: int):
+def get_player_goals(board_id: int):
     squares = Square.objects.filter(board_id=board_id).order_by('position')
-    return [sq.to_json() for sq in squares]
+    return [sq.to_player_json() for sq in squares]
+
+
+@database_sync_to_async
+def get_plugin_goals(board_id: int):
+    squares = Square.objects.filter(board_id=board_id).order_by('position')
+    return [sq.to_plugin_json() for sq in squares]

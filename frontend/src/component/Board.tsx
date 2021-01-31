@@ -18,18 +18,22 @@ export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
     let cells = [];
     for (let col = 0; col < NUM_COLS; col++) {
       const pos = (row * NUM_COLS) + col;
+      const marking = props.markings ? props.markings.charAt(pos) : "0";
       cells.push(
-        <td>
-          <Square key={pos} square={props.board.squares[pos]} />
+        <td key={pos}>
+          <Square square={props.board.squares[pos]} marking={marking} />
         </td>
       );
     }
-    rows.push(<tr>{cells}</tr>);
+    rows.push(<tr key={row}>{cells}</tr>);
   }
 
+  /* TODO Get rid of this className */
   return (
-    <table className="bingo-table"> {/* TODO Get rid of this className */}
-      {rows}
+    <table className="bingo-table">
+      <tbody>
+        {rows}
+      </tbody>
     </table>
   );
 }

@@ -3,3 +3,23 @@
     font-family: minecraftFont;
     src: url('./Minecraftia.ttf');
 }
+
+.bingo-square.mark-1 {
+  /* Complete */
+  background: greenyellow;
+}
+
+.bingo-square.mark-2 {
+  /* Reverted */
+  background: lightskyblue;
+}
+
+.bingo-square.mark-3 {
+  /* Invalidated */
+  background: palevioletred;
+}
+
+.bingo-square.mark-4 {
+  /* Not Invalidated */
+  background: #dbffb3;
+}

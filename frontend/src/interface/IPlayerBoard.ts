@@ -2,7 +2,7 @@ export type PlayerId = number;
 export type Markings = string;
 
 export interface IPlayerBoard {
-  playerId: PlayerId;
-  name: string;
-  markings: Markings;
+  player_id: PlayerId;
+  player_name: string;
+  board: Markings;
 }

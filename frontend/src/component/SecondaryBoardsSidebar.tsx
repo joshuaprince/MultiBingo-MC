@@ -13,7 +13,7 @@ export const SecondaryBoardsSidebar: React.FunctionComponent<IProps> = (props: I
   return (
     <div className="boards-secondary-sidebar">
       {props.playerBoards.map(pb => (
-      <div>
+      <div key={pb.player_id}>
         <BoardContainer isPrimary={false} board={props.board} playerBoard={pb}/>
       </div>
       ))}

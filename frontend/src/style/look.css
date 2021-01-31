@@ -1,0 +1,5 @@
+/* CSS rules that define the looks of the page, i.e. colors and fonts */
+@font-face {
+    font-family: minecraftFont;
+    src: url('./Minecraftia.ttf');
+}

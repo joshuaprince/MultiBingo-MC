@@ -1,0 +1,127 @@
+/* CSS rules that define the structure of the page, i.e. display and flex rules */
+.bingo-app {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  font-family: minecraftFont, sans-serif;
+}
+
+.room-name {
+  width: 100%;
+  text-align: center;
+}
+
+/* Generic board rules */
+table.bingo-table, table.bingo-table th, table.bingo-table td {
+  border: 1px solid black;
+}
+
+div.bingo-square {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+}
+
+div.bingo-text {
+  padding: 10px;
+}
+
+div.bingo-text.small {
+  font-size: small;
+}
+
+table.bingo-table tr {
+  height: 20%;
+}
+
+table.bingo-table td {
+  width: 20%;
+}
+
+/* Primary board */
+div.board-container.primary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.board-container.primary table {
+  width: 80vh;
+  height: 80vh;
+  max-width: 100%;
+}
+
+.board-container.primary .bingo-tooltip:not(.autoactivated-a) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+}
+
+.board-container.primary .bingo-tooltip.autoactivated-a {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 5px;
+  font-size: x-small;
+}
+
+.board-container.primary .bingo-square {
+  position: relative;
+}
+
+.board-container.primary.active .bingo-square {
+  cursor: pointer;
+}
+
+.board-container.primary.obscured .bingo-square {
+  filter: blur(8px);
+}
+
+/* Secondary boards */
+.board-container.secondary table {
+  width: 10vw;
+  height: 10vw;
+  min-width: 250px;
+  min-height: 250px;
+  max-width: 30vw;
+  max-height: 30vw;
+}
+
+.board-container.secondary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+}
+
+div.boards-secondary-sidebar {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.board-container.secondary .bingo-square {
+  display: none;
+}
+
+.board-container.secondary.disconnected .player-name {
+  color: gray;
+}
+
+/* Player name input */
+.player-name-input {
+  margin-top: 20px;
+  font-size: 30px;
+  font-family: minecraftFont, sans-serif;
+  width: 100%;
+  text-align: center;
+}

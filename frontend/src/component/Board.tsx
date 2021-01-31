@@ -2,11 +2,11 @@ import React from "react";
 
 import { IBoard } from "../interface/IBoard";
 import { Square } from "./Square";
-import { Markings } from "../interface/IPlayerBoard";
+import { Marking } from "../interface/IPlayerBoard";
 
 type IProps = {
   board: IBoard;
-  markings?: Markings;
+  markings?: Marking[];
 }
 
 export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
@@ -18,10 +18,9 @@ export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
     let cells = [];
     for (let col = 0; col < NUM_COLS; col++) {
       const pos = (row * NUM_COLS) + col;
-      const marking = props.markings ? props.markings.charAt(pos) : "0";
       cells.push(
         <td key={pos}>
-          <Square square={props.board.squares[pos]} marking={marking} />
+          <Square square={props.board.squares[pos]} marking={props.markings?.[pos]} />
         </td>
       );
     }

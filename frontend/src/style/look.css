@@ -4,6 +4,10 @@
     src: url('./Minecraftia.ttf');
 }
 
+.primary .bingo-square {
+  cursor: pointer;
+}
+
 .bingo-square.mark-1 {
   /* Complete */
   background: greenyellow;

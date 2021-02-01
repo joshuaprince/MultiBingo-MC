@@ -3,6 +3,7 @@ import React from "react";
 import { Board } from "./Board";
 import { IBoard } from "../interface/IBoard";
 import { IPlayerBoard } from "../interface/IPlayerBoard";
+import { PlayerNameInput } from "./PlayerNameInput";
 
 type IProps = {
   isPrimary: boolean,
@@ -13,7 +14,7 @@ type IProps = {
 export const BoardContainer: React.FunctionComponent<IProps> = (props: IProps) => {
   const nameDisplay = (props.playerBoard
     ? <h2 className="player-name">{props.playerBoard.player_name}</h2>
-    : <input className="player-name-input" type="text" placeholder="Enter your name to join..."/>
+    : <PlayerNameInput/>
   );
 
   return (

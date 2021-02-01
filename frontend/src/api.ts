@@ -13,6 +13,10 @@ export const updateWebSocket = (ws: WebSocket | null) => {
 export const onApiMessage = (setState: SetState, message: any) => {
   console.log(message);
 
+  if (!message) {
+    return;
+  }
+
   if (message.hasOwnProperty("squares")) {
     const squares = message["squares"] as any[];
     setState(state => ({
@@ -44,7 +48,7 @@ export const getWebSocketUrl = (gameCode: string, playerName?: string) => {
   return protocol + '://'
       // + window.location.host + '/ws/board/'  TODO
       + 'localhost:8000' + '/ws/board/'
-      + gameCode + (playerName ? ('/' + playerName) : '');
+      + encodeURI(gameCode) + encodeURI(playerName ? ('/' + playerName) : '');
 }
 
 export const sendMarkBoard = (position: number, toState: number) => {
@@ -56,7 +60,7 @@ export const sendMarkBoard = (position: number, toState: number) => {
 }
 
 const send = (obj: object) => {
-  if (socket) {
+  if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(obj));
   } else {
     console.error("Attempted to send data on null websocket");

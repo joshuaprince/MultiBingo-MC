@@ -109,7 +109,8 @@ div.boards-secondary-sidebar {
   justify-content: center;
 }
 
-.board-container.secondary .bingo-square {
+.board-container.secondary .primary-only {
+  /* Elements tagged with primary-only are hidden if in a Secondary board */
   display: none;
 }
 

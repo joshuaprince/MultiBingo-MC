@@ -30,7 +30,7 @@ export const Square: React.FunctionComponent<IProps> = (props: IProps) => {
   return (
     <div className={"bingo-square mark-" + (props.marking || Marking.UNMARKED)}
          onMouseDown={onMouseDown} onContextMenu={onContextMenu}>
-      <div className="bingo-text">  {/* TODO small text for long squares */}
+      <div className="bingo-text primary-only">  {/* TODO small text for long squares */}
         {square.text}
       </div>
     </div>

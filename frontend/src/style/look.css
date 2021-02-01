@@ -27,3 +27,22 @@
   /* Not Invalidated */
   background: #dbffb3;
 }
+
+/* Loading spinner */
+.loading-spinner {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  border: 1px solid black;
+  padding: 10px;
+  animation: rotation 4s linear infinite;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

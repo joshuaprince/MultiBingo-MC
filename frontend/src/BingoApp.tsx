@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
+import "tippy.js/dist/tippy.css";
 import "./style/look.css";
 import "./style/structure.css";
 import { BoardContainer } from "./component/BoardContainer";

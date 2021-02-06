@@ -7,6 +7,7 @@ import { Marking } from "../interface/IPlayerBoard";
 type IProps = {
   board: IBoard;
   markings?: Marking[];
+  isPrimary: boolean;
 }
 
 export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
@@ -21,7 +22,7 @@ export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
       cells.push(
         <td key={pos}>
           <Square square={props.board.squares[pos]} marking={props.markings?.[pos]}
-                  obscured={props.board.obscured}/>
+                  obscured={props.board.obscured} isPrimary={props.isPrimary}/>
         </td>
       );
     }

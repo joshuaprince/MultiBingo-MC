@@ -4,6 +4,10 @@
     src: url('./Minecraftia.ttf');
 }
 
+body {
+  font-family: minecraftFont, sans-serif;
+}
+
 .primary .player-name {
   font-size: 32px;
 }

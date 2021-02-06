@@ -1,4 +1,5 @@
 import React from "react";
+import Tippy from "@tippyjs/react";
 
 import { ISquare } from "../interface/ISquare";
 import { sendMarkBoard } from "../api";
@@ -8,6 +9,7 @@ type IProps = {
   obscured: boolean;
   square: ISquare;
   marking?: Marking;
+  isPrimary: boolean;
 }
 
 export const Square: React.FunctionComponent<IProps> = (props: IProps) => {
@@ -32,12 +34,25 @@ export const Square: React.FunctionComponent<IProps> = (props: IProps) => {
     e.preventDefault();
   }
 
-  return (
+  const wholeSquareTooltip = props.isPrimary ? undefined : props.square.text;
+  const innerTooltip = props.isPrimary ? props.square.tooltip : undefined;
+
+  const squareDiv = (
     <div className={"bingo-square mark-" + (props.marking || Marking.UNMARKED)}
          onMouseDown={onMouseDown} onContextMenu={onContextMenu}>
       <div className="bingo-text primary-only">  {/* TODO small text for long squares */}
+        {innerTooltip &&
+          <Tippy content={innerTooltip}>
+            <div className="bingo-tooltip">?</div>
+          </Tippy>}
         {square.text}
       </div>
     </div>
   );
+
+  if (wholeSquareTooltip) {
+    return (<Tippy content={wholeSquareTooltip}>{squareDiv}</Tippy>)
+  } else {
+    return squareDiv;
+  }
 }

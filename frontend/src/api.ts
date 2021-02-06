@@ -41,6 +41,16 @@ export const onApiMessage = (setState: SetState, message: any) => {
       }))
     }));
   }
+
+  /* TODO: This key belongs in the "board" object */
+  if (message.hasOwnProperty("obscured")) {
+    const obscured = message["obscured"] as boolean;
+    setState(state => ({
+      ...state, board: {
+        ...state.board, obscured: obscured,
+      }
+    }));
+  }
 }
 
 export const getWebSocketUrl = (gameCode: string, playerName?: string) => {
@@ -56,6 +66,12 @@ export const sendMarkBoard = (position: number, toState: number) => {
     action: "board_mark",
     position: position,
     to_state: toState,
+  });
+}
+
+export const sendRevealBoard = () => {
+  send({
+    action: "reveal_board",
   });
 }
 

@@ -5,6 +5,7 @@ import { sendMarkBoard } from "../api";
 import { Marking } from "../interface/IPlayerBoard";
 
 type IProps = {
+  obscured: boolean;
   square: ISquare;
   marking?: Marking;
 }
@@ -14,6 +15,10 @@ export const Square: React.FunctionComponent<IProps> = (props: IProps) => {
 
   const onMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
+
+    if (props.obscured) {
+      return;
+    }
 
     const isRightClick = e.button === 2;
     const newMarking = isRightClick ? 0 : ((props.marking || 0) + 1) % Marking.__COUNT;

@@ -4,26 +4,30 @@
     src: url('./Minecraftia.ttf');
 }
 
-.primary .bingo-square {
+.revealed .primary .bingo-square {
   cursor: pointer;
 }
 
-.bingo-square.mark-1 {
+.obscured .bingo-square {
+  filter: blur(8px);
+}
+
+.revealed .bingo-square.mark-1 {
   /* Complete */
   background: greenyellow;
 }
 
-.bingo-square.mark-2 {
+.revealed .bingo-square.mark-2 {
   /* Reverted */
   background: lightskyblue;
 }
 
-.bingo-square.mark-3 {
+.revealed .bingo-square.mark-3 {
   /* Invalidated */
   background: palevioletred;
 }
 
-.bingo-square.mark-4 {
+.revealed .bingo-square.mark-4 {
   /* Not Invalidated */
   background: #dbffb3;
 }
@@ -36,6 +40,17 @@
   border: 1px solid black;
   padding: 10px;
   animation: rotation 4s linear infinite;
+}
+
+/* Reveal Button */
+div.reveal-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  cursor: pointer;
+  border: black 1px solid;
+  margin: 5px;
 }
 
 @keyframes rotation {

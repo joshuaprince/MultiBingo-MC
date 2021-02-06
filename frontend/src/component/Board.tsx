@@ -20,7 +20,8 @@ export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
       const pos = (row * NUM_COLS) + col;
       cells.push(
         <td key={pos}>
-          <Square square={props.board.squares[pos]} marking={props.markings?.[pos]} />
+          <Square square={props.board.squares[pos]} marking={props.markings?.[pos]}
+                  obscured={props.board.obscured}/>
         </td>
       );
     }

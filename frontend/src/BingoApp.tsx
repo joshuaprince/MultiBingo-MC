@@ -9,6 +9,7 @@ import { IPlayerBoard } from "./interface/IPlayerBoard";
 import { SecondaryBoardsSidebar } from "./component/SecondaryBoardsSidebar";
 import { getWebSocketUrl, onApiMessage, updateWebSocket } from "./api";
 import { LoadingSpinner } from "./component/LoadingSpinner";
+import { RevealButton } from "./component/RevealButton";
 
 export type IBingoState = {
   gameCode: string;
@@ -34,30 +35,32 @@ export const BingoApp: React.FunctionComponent = () => {
 
   /* Update `connecting` state entry and API's websocket */
   useEffect(() => {
-    setState({...state, connecting: (readyState !== ReadyState.OPEN)});
+    setState(s => ({...s, connecting: (readyState !== ReadyState.OPEN)}));
     updateWebSocket(getWebSocket());
-  }, [getWebSocket(), readyState]);
+  }, [getWebSocket, readyState]);
 
   /* React to incoming messages */
   useEffect(() => {
     onApiMessage(setState, lastJsonMessage);
-  }, [lastJsonMessage])
+  }, [lastJsonMessage]);
 
   const primaryPlayer = state.playerBoards.find(pb => pb.player_name === state.playerName);
   const secondaryPlayers = state.playerBoards.filter(pb => pb.player_name !== state.playerName);
 
   return (
-    <div className="bingo-app">
+    <div className={"bingo-app " + (state.board.obscured ? "obscured" : "revealed")}>
       <h1 className="room-name">{state.gameCode}</h1>
       <BoardContainer isPrimary={true} board={state.board} playerBoard={primaryPlayer}/>
       <SecondaryBoardsSidebar board={state.board} playerBoards={secondaryPlayers}/>
       {state.connecting && <LoadingSpinner/>}
+      {state.board.obscured && <RevealButton/>}
     </div>
   );
 }
 
 const getInitialState: (() => IBingoState) = () => {
   const board: IBoard = {
+    obscured: true,
     squares: Array.from(Array(25), (_, i) => i).map(num => ({
       position: num,
       text: "",

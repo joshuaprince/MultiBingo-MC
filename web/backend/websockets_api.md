@@ -79,6 +79,115 @@ board to all players.
 
 ## Server to Client API
 
+### Board (Player)
+
+This packet is sent as soon as a websocket is opened by a Player. It contains
+information about the board, such as the squares on it. Example:
+
+```json
+{
+  "obscured": true,
+  "squares": [
+    {
+      "position": 0,
+      "text": "3 Cobblestone",
+      "tooltip": "",
+      "auto": true
+    },
+    {
+      "position": 1,
+      "text": "40 Stone",
+      "tooltip": "Smooth stone, not cobblestone",
+      "auto": false
+    }
+  ]
+}
+```
+
+`obscured` is a flag that specifies whether the client should hide board
+goals. If true, the data in `squares` is not guaranteed to be accurate.
+
+`squares` is a list of objects, each corresponding to a square on the 
+board. Each Goal object consists of:
+- A `position` field, which is an integer from 0 through 24 with the 
+  position of this square on the board.
+- A `text` field, with the text that should be displayed on the square.
+- An optional `tooltip` object, which specifies additional information about 
+  this goal that can be seen on hover.
+- An `auto` field, which indicates that this square will be automatically 
+  completed and should be represented as such to the user.
+
+### Board (Plugin)
+
+This packet is sent as soon as a websocket is opened by a Plugin. It is
+analagous to Board (Player) above, but contains different information. For
+example, it describes all goals that the plugin should listen for and report
+back to the server when accomplished.
+
+```json
+{
+  "board": {
+    "squares": [
+      {
+        "id": "cobblestone",
+        "position": 0,
+        "variables": {
+          "var": 32
+        },
+        "triggers": []
+      },
+      {
+        "id": "poppies_dandelions",
+        "position": 1,
+        "variables": {
+          "var1": 10,
+          "var2": 20
+        },
+        "triggers": [
+          {
+            "ItemTrigger": {
+              "@needed": "4",
+              "Name": [
+                "minecraft:water_bucket",
+                "minecraft:lava_bucket",
+                "minecraft:milk_bucket"
+              ],
+              "ItemMatchGroup": [
+                {
+                  "@max-matches": "1",
+                  "Name": [
+                    "minecraft:cod_bucket",
+                    "minecraft:salmon_bucket",
+                    "minecraft:pufferfish_bucket",
+                    "minecraft:tropical_fish_bucket"
+                  ]
+                }
+              ],
+              "Quantity": [
+                "1"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+`squares` is a list of 25 Goal objects, each corresponding to a square on the 
+board. Each Goal object consists of:
+- An `id` field, which corresponds to the goal ID in goals.xml.
+- A `position` field, which is an integer from 0 through 24 with the 
+  position of this goal on the board.
+- An optional `variables` object, which lists any variables present on this 
+  goal.
+- An optional `triggers` list, which describes any automated trigger criteria
+  that the plugin can use to automatically trigger goals. This list is 
+  passed exactly as it is specified in the XML, converted to JSON as 
+  specified by [xmltodict](https://pypi.org/project/xmltodict/) where all 
+  objects are converted to lists (force_list=True).
+
 ### Player Boards
 
 This packet is sent to all connected clients (both players and plugins) when
@@ -87,7 +196,6 @@ on a socket. Example:
 
 ```json
 {
-  "obscured": true,
   "pboards": [
     {
       "player_id": 123,
@@ -105,78 +213,9 @@ on a socket. Example:
 }
 ```
 
-`obscured` is a flag that specifies whether the client should hide board
-goals.
-
 `pboards` is a list of objects corresponding to each player in the current
 game. `player_id` is a unique identifier for this player. `board` is the
 representation of the squares the player has marked, with the index in the
 returned string representing the position of each square and its value the
 marking state. `disconnected_at` is an ISO datetime if the player disconnected
 from the game, or null if the plyer is still connected.
-
-### Goals
-
-This packet is sent as soon as a Plugin websocket is opened. It describes all
-goals that the plugin should listen for and report back to the server when 
-accomplished.
-
-```json
-{
-  "goals": [
-    {
-      "id": "cobblestone",
-      "position": 0,
-      "variables": {
-        "var": 32
-      },
-      "triggers": []
-    },
-    {
-      "id": "poppies_dandelions",
-      "position": 1,
-      "variables": {
-        "var1": 10,
-        "var2": 20
-      },
-      "triggers": [
-        {
-          "ItemTrigger": {
-            "@needed": "4",
-            "Name": [
-              "minecraft:water_bucket",
-              "minecraft:lava_bucket",
-              "minecraft:milk_bucket"
-            ],
-            "ItemMatchGroup": [
-              {
-                "@max-matches": "1",
-                "Name": [
-                  "minecraft:cod_bucket",
-                  "minecraft:salmon_bucket",
-                  "minecraft:pufferfish_bucket",
-                  "minecraft:tropical_fish_bucket"
-                ]
-              }
-            ],
-            "Quantity": ["1"]
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-`goals` is a list of 25 Goal objects, each corresponding to a square on the 
-board. Each Goal object consists of:
-- An `id` field, which corresponds to the goal ID in goals.xml.
-- A `position` field, which is an integer from 0 through 24 with the 
-  position of this goal on the board.
-- An optional `variables` object, which lists any variables present on this 
-  goal.
-- An optional `triggers` list, which describes any automated trigger criteria
-  that the plugin can use to automatically trigger goals. This list is 
-  passed exactly as it is specified in the XML, converted to JSON as 
-  specified by [xmltodict](https://pypi.org/project/xmltodict/) where all 
-  objects are converted to lists (force_list=True).

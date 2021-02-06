@@ -52,7 +52,9 @@ public class BingoWebSocketClient extends WebSocketClient {
         this.send(js.toJSONString());
     }
 
-    private void receiveSquares(JSONArray squaresJson) {
+    private void receiveBoard(JSONObject boardJson) {
+        JSONArray squaresJson = (JSONArray) boardJson.get("squares");
+
         ArrayList<Square> squares = new ArrayList<>();
         for (Object o : squaresJson) {
             JSONObject sqJson = (JSONObject) o;
@@ -100,9 +102,9 @@ public class BingoWebSocketClient extends WebSocketClient {
             return;
         }
 
-        JSONArray squares = (JSONArray) obj.get("squares");
-        if (squares != null) {
-            this.receiveSquares(squares);
+        JSONObject board = (JSONObject) obj.get("board");
+        if (board != null) {
+            this.receiveBoard(board);
         }
 
         JSONArray pboards = (JSONArray) obj.get("pboards");

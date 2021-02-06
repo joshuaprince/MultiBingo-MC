@@ -17,11 +17,15 @@ export const onApiMessage = (setState: SetState, message: any) => {
     return;
   }
 
-  if (message.hasOwnProperty("squares")) {
-    const squares = message["squares"] as any[];
+  if (message.hasOwnProperty("board")) {
+    const board = message["board"] as any;
+    const obscured = board["obscured"] as boolean;
+    const squares = board["squares"] as any[];
     setState(state => ({
       ...state, board: {
-        ...state.board, squares: squares.map(s => ({
+        ...state.board,
+        obscured: obscured,
+        squares: squares.map(s => ({
           position: s["position"],
           text: s["text"],
           tooltip: s["tooltip"],
@@ -39,16 +43,6 @@ export const onApiMessage = (setState: SetState, message: any) => {
         player_id: pb["player_id"],
         player_name: pb["player_name"]
       }))
-    }));
-  }
-
-  /* TODO: This key belongs in the "board" object */
-  if (message.hasOwnProperty("obscured")) {
-    const obscured = message["obscured"] as boolean;
-    setState(state => ({
-      ...state, board: {
-        ...state.board, obscured: obscured,
-      }
     }));
   }
 }

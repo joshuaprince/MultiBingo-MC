@@ -4,6 +4,10 @@
     src: url('./Minecraftia.ttf');
 }
 
+.primary .player-name {
+  font-size: 32px;
+}
+
 .revealed .primary .bingo-square {
   cursor: pointer;
 }

@@ -1,77 +1,32 @@
-import React, { useCallback, useEffect } from 'react';
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import React from "react";
 
 import "tippy.js/dist/tippy.css";
 import "./style/look.css";
 import "./style/structure.css";
-import { BoardContainer } from "./component/BoardContainer";
-import { IBoard } from "./interface/IBoard";
-import { IPlayerBoard } from "./interface/IPlayerBoard";
-import { SecondaryBoardsSidebar } from "./component/SecondaryBoardsSidebar";
-import { getWebSocketUrl, onApiMessage, updateWebSocket } from "./api";
-import { LoadingSpinner } from "./component/LoadingSpinner";
-import { RevealButton } from "./component/RevealButton";
+import "./style/homepage.css";
 
-export type IBingoState = {
-  gameCode: string;
-  board: IBoard;
-  playerBoards: IPlayerBoard[];
+import { BingoGame } from "./BingoGame";
+import { HomePage } from "./HomePage";
+
+export type IBingoAppState = {
+  gameCode?: string;
   playerName?: string;
-  connecting: boolean;
 }
 
 export const BingoApp: React.FunctionComponent = () => {
-  const [state, setState] = React.useState<IBingoState>(getInitialState);
+  const [state] = React.useState<IBingoAppState>(getInitialState);
 
-  const socketUrl = useCallback(() => getWebSocketUrl(state.gameCode, state.playerName),
-    [state.gameCode, state.playerName]);
-  const {
-    lastJsonMessage,
-    getWebSocket,
-    readyState,
-  } = useWebSocket(socketUrl, {
-    onOpen: () => console.log('Websocket opened'),
-    shouldReconnect: () => true,
-  });
-
-  /* Update `connecting` state entry and API's websocket */
-  useEffect(() => {
-    setState(s => ({...s, connecting: (readyState !== ReadyState.OPEN)}));
-    updateWebSocket(getWebSocket());
-  }, [getWebSocket, readyState]);
-
-  /* React to incoming messages */
-  useEffect(() => {
-    onApiMessage(setState, lastJsonMessage);
-  }, [lastJsonMessage]);
-
-  const primaryPlayer = state.playerBoards.find(pb => pb.player_name === state.playerName);
-  const secondaryPlayers = state.playerBoards.filter(pb => pb.player_name !== state.playerName);
-
-  return (
-    <div className={"bingo-app " + (state.board.obscured ? "obscured" : "revealed")}>
-      <h1 className="room-name">{state.gameCode}</h1>
-      <BoardContainer isPrimary={true} board={state.board} playerBoard={primaryPlayer}/>
-      <SecondaryBoardsSidebar board={state.board} playerBoards={secondaryPlayers}/>
-      {state.connecting && <LoadingSpinner/>}
-      {state.board.obscured && <RevealButton/>}
-    </div>
-  );
+  if (state.gameCode) {
+    return (<BingoGame gameCode={state.gameCode} playerName={state.playerName}/>)
+  } else {
+    return <HomePage/>
+  }
 }
 
-const getInitialState: (() => IBingoState) = () => {
-  const board: IBoard = {
-    obscured: true,
-    squares: Array.from(Array(25), (_, i) => i).map(num => ({
-      position: num,
-      text: "",
-      auto: false,
-    })),
-  }
-
+const getInitialState: (() => IBingoAppState) = () => {
   // Maybe someday, I'll use React Router to make this better.
   const re = /game\/(\w+)/;
-  const gameCode = re.exec(window.location.pathname)?.[1] || "UnknownGame";
+  const gameCode = re.exec(window.location.pathname)?.[1] || undefined;
 
   const params = new URLSearchParams(window.location.search);
   const name = params.get("name") || undefined;
@@ -81,13 +36,8 @@ const getInitialState: (() => IBingoState) = () => {
     // window.location.search = params.toString();
   }
 
-  console.log("Name is " + name);
-
   return {
     gameCode: gameCode,
-    board: board,
-    playerBoards: [],
     playerName: name,
-    connecting: true,
   };
 }

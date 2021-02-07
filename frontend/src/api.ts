@@ -1,8 +1,8 @@
 import React from "react";
 
-import { IBingoState } from "./BingoApp";
+import { IBingoGameState } from "./BingoGame";
 
-type SetState = React.Dispatch<React.SetStateAction<IBingoState>>;
+type SetState = React.Dispatch<React.SetStateAction<IBingoGameState>>;
 
 let socket: WebSocket | null = null;
 

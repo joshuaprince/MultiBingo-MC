@@ -1,0 +1,28 @@
+.homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: stretch;
+}
+
+.homepage .logo {
+  max-width: 400px;
+}
+
+.homepage div.player-name, .homepage div.room-name {
+  margin: 5px;
+  width: 50%;
+}
+
+.homepage .player-name input, .homepage .room-name input {
+  min-width: 100%;
+  max-width: 100%;
+  font-size: large;
+  font-family: inherit;
+}
+
+.homepage #room-name-submit {
+  font-size: large;
+  font-family: inherit;
+  margin-top: 10px;
+}

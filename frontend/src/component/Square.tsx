@@ -33,13 +33,14 @@ export const Square: React.FunctionComponent<IProps> = (props: IProps) => {
   }
 
   const isAutoactivated = props.square.auto;
+  const smallText = props.square.text.length > 40;
   const wholeSquareTooltip = props.isPrimary ? undefined : props.square.text;
   const innerTooltip = props.isPrimary ? props.square.tooltip : undefined;
 
   const squareDiv = (
     <div className={"bingo-square mark-" + (props.marking || Marking.UNMARKED)}
          onMouseDown={onMouseDown} onContextMenu={onContextMenu}>
-      <div className="bingo-text primary-only">  {/* TODO small text for long squares */}
+      <div className={"bingo-text primary-only" + (smallText ? " small" : "")}>
         {innerTooltip &&
           <Tippy content={innerTooltip}>
             <div className="bingo-tooltip">?</div>

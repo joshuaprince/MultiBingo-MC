@@ -50,8 +50,8 @@ export const onApiMessage = (setState: SetState, message: any) => {
 export const getWebSocketUrl = (gameCode: string, playerName?: string) => {
   const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
   return protocol + '://'
-      // + window.location.host + '/ws/board/'  TODO
-      + 'localhost:8000' + '/ws/board/'
+      + (process.env.NODE_ENV === "development" ? "localhost:8000" : window.location.host)
+      + '/ws/board/'
       + encodeURI(gameCode) + encodeURI(playerName ? ('/' + playerName) : '');
 }
 

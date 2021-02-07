@@ -30,7 +30,7 @@ export const BingoGame: React.FunctionComponent<IProps> = (props: IProps) => {
     getWebSocket,
     readyState,
   } = useWebSocket(socketUrl, {
-    onOpen: () => console.log('Websocket opened'),
+    onOpen: (e) => console.log('Websocket opened: ' + getWebSocket()?.url),
     shouldReconnect: () => true,
   });
 

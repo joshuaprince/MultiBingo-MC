@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'web.backend',
-    'web.frontend',
 ]
 
 MIDDLEWARE = [
@@ -109,8 +108,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/frontend/static/'
 
-ASGI_APPLICATION = 'web.MCBingo.asgi.application'
+ASGI_APPLICATION = 'MCBingo.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

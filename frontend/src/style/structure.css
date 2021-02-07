@@ -56,31 +56,23 @@ div.board-container.primary {
   max-width: 100%;
 }
 
-.board-container.primary .bingo-tooltip:not(.autoactivated-a) {
+.board-container.primary .bingo-tooltip {
   position: absolute;
   top: 0;
   right: 0;
   padding: 10px;
 }
 
-.board-container.primary .bingo-tooltip.autoactivated-a {
+.board-container.primary .bingo-auto-tooltip {
   position: absolute;
   bottom: 0;
-  left: 0;
+  left: 4px;
   padding: 5px;
   font-size: x-small;
 }
 
 .board-container.primary .bingo-square {
   position: relative;
-}
-
-.board-container.primary.active .bingo-square {
-  cursor: pointer;
-}
-
-.board-container.primary.obscured .bingo-square {
-  filter: blur(8px);
 }
 
 /* Secondary boards */

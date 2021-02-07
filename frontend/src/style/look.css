@@ -40,6 +40,10 @@ body {
   background: #dbffb3;
 }
 
+.bingo-auto-tooltip {
+  color: gray;
+}
+
 /* Loading spinner */
 .loading-spinner {
   position: absolute;

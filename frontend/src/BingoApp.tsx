@@ -1,9 +1,9 @@
 import React from "react";
 
 import "tippy.js/dist/tippy.css";
-import "./style/look.css";
-import "./style/structure.css";
-import "./style/homepage.css";
+import "./style/look.scss";
+import "./style/structure.scss";
+import "./style/homepage.scss";
 
 import { BingoGame } from "./BingoGame";
 import { HomePage } from "./HomePage";

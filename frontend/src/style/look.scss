@@ -20,28 +20,30 @@ body {
   cursor: pointer;
 }
 
-.obscured .bingo-square {
+.obscured .bingo-square .bingo-text {
   filter: blur(8px);
 }
 
-.revealed .bingo-square.mark-1 {
-  /* Complete */
-  background: greenyellow;
-}
+.revealed .bingo-square {
+  &.mark-1 {
+    /* Complete */
+    background: greenyellow;
+  }
 
-.revealed .bingo-square.mark-2 {
-  /* Reverted */
-  background: lightskyblue;
-}
+  &.mark-2 {
+    /* Reverted */
+    background: lightskyblue;
+  }
 
-.revealed .bingo-square.mark-3 {
-  /* Invalidated */
-  background: palevioletred;
-}
+  &.mark-3 {
+    /* Invalidated */
+    background: palevioletred;
+  }
 
-.revealed .bingo-square.mark-4 {
-  /* Not Invalidated */
-  background: #dbffb3;
+  &.mark-4 {
+    /* Not Invalidated */
+    background: #dbffb3;
+  }
 }
 
 .bingo-auto-tooltip {

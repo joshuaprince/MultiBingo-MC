@@ -48,55 +48,66 @@ table.bingo-table td {
   width: 20%;
 }
 
+
 /* Primary board */
-div.board-container.primary {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 40px;
-  margin-right: 40px;
+.board-container.primary {
+  & {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+
+  .bingo-board {
+    width: 80vh;
+    height: 80vh;
+    max-width: 100%;
+  }
+
+  .bingo-tooltip {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+  }
+
+  .bingo-auto-tooltip {
+    position: absolute;
+    bottom: 0;
+    left: 4px;
+    padding: 5px;
+    font-size: x-small;
+  }
+
+  .bingo-square {
+    position: relative;
+  }
 }
 
-.board-container.primary .bingo-board {
-  width: 80vh;
-  height: 80vh;
-  max-width: 100%;
-}
-
-.board-container.primary .bingo-tooltip {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;
-}
-
-.board-container.primary .bingo-auto-tooltip {
-  position: absolute;
-  bottom: 0;
-  left: 4px;
-  padding: 5px;
-  font-size: x-small;
-}
-
-.board-container.primary .bingo-square {
-  position: relative;
-}
 
 /* Secondary boards */
-.board-container.secondary .bingo-board {
-  width: 10vw;
-  height: 10vw;
-  min-width: 250px;
-  min-height: 250px;
-  max-width: 30vw;
-  max-height: 30vw;
-}
-
 .board-container.secondary {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px;
+  & {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+  }
+
+  .bingo-board {
+    width: 10vw;
+    height: 10vw;
+    min-width: 250px;
+    min-height: 250px;
+    max-width: 30vw;
+    max-height: 30vw;
+  }
+
+  .primary-only {
+    /* Elements tagged with primary-only are hidden if in a Secondary board */
+    display: none;
+  }
 }
 
 div.boards-secondary-sidebar {
@@ -107,14 +118,6 @@ div.boards-secondary-sidebar {
   justify-content: center;
 }
 
-.board-container.secondary .primary-only {
-  /* Elements tagged with primary-only are hidden if in a Secondary board */
-  display: none;
-}
-
-.board-container.secondary.disconnected .player-name {
-  color: gray;
-}
 
 /* Player name input */
 .player-name-input {

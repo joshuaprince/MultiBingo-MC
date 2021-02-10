@@ -15,10 +15,8 @@ services:
     networks:
       - internal
   nginx:
-    image: nginx
-    volumes:
-      - ./nginx.conf.template:/etc/nginx/templates/nginx.conf.template:ro
-      - frontend_static:/frontend/
+    build:
+      context: .
     ports:
       - "8000:8000"
     networks:
@@ -26,7 +24,6 @@ services:
       - external
     depends_on:
       - web
-      - frontend
   web:
     build:
       context: web
@@ -37,11 +34,6 @@ services:
     depends_on:
       - db
       - redis
-  frontend:
-    build:
-      context: frontend
-    volumes:
-      - frontend_static:/frontend/build/
 
 networks:
   internal:
@@ -50,5 +42,4 @@ networks:
     name: bingo_external
 
 volumes:
-  frontend_static:
   postgres_data:

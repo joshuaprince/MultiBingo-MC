@@ -1,10 +1,15 @@
+import os
+
 from .settings_base import *
 
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', 'bingo.jtprince.com']
+ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOST')]
 
 
 # Database
@@ -21,11 +26,6 @@ DATABASES = {
     }
 }
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
-STATIC_ROOT = '/static/'
 
 CHANNEL_LAYERS = {
     'default': {

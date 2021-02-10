@@ -3,8 +3,6 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     networks:
       - internal
@@ -27,8 +25,9 @@ services:
   web:
     build:
       context: web
-#    volumes:
-#      - frontend_static:/frontend  # Not necessary with no frontend
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_ALLOWED_HOST=localhost
     networks:
       - internal
     depends_on:

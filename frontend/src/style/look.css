@@ -12,6 +12,10 @@ body {
   font-size: 32px;
 }
 
+.bingo-board, .bingo-square {
+  border: 1px solid black;
+}
+
 .revealed .primary .bingo-square {
   cursor: pointer;
 }

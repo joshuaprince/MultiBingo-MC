@@ -13,12 +13,19 @@
 }
 
 /* Generic board rules */
-table.bingo-table, table.bingo-table th, table.bingo-table td {
-  border: 1px solid black;
+div.bingo-board {
+  display: grid;
+  grid-template-columns: repeat(5, 20%);
+  grid-template-rows: repeat(5, 20%);
+  padding: 1px;
+}
+
+div.bingo-board:after {
+  padding-bottom: 100%;
 }
 
 div.bingo-square {
-  height: 100%;
+  margin: 1px;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -50,7 +57,7 @@ div.board-container.primary {
   margin-right: 40px;
 }
 
-.board-container.primary table {
+.board-container.primary .bingo-board {
   width: 80vh;
   height: 80vh;
   max-width: 100%;
@@ -76,7 +83,7 @@ div.board-container.primary {
 }
 
 /* Secondary boards */
-.board-container.secondary table {
+.board-container.secondary .bingo-board {
   width: 10vw;
   height: 10vw;
   min-width: 250px;
@@ -112,6 +119,7 @@ div.boards-secondary-sidebar {
 /* Player name input */
 .player-name-input {
   margin-top: 20px;
+  margin-bottom: 30px;
   font-size: 30px;
   font-family: minecraftFont, sans-serif;
   width: 100%;

@@ -112,14 +112,14 @@ public class Messages {
         }
     }
 
-    public void announcePlayerMarking(BingoPlayer player, Square square, boolean invalidated) {
+    public void announcePlayerMarking(BingoPlayer player, Space space, boolean invalidated) {
         BaseComponent[] components;
         if (!invalidated) {
             components = new ComponentBuilder()
                 .append(HEADER, ComponentBuilder.FormatRetention.NONE)
                 .append(player.getFormattedName())
                 .append(" has marked ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
-                .append(square.text).color(ChatColor.GREEN)
+                .append(space.text).color(ChatColor.GREEN)
                 .append("!").color(COLOR_TEXT)
                 .create();
         } else {
@@ -127,7 +127,7 @@ public class Messages {
                 .append(HEADER, ComponentBuilder.FormatRetention.NONE)
                 .append(player.getFormattedName())
                 .append(" has invalidated ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
-                .append(square.text).color(ChatColor.RED)
+                .append(space.text).color(ChatColor.RED)
                 .append("!").color(COLOR_TEXT)
                 .create();
         }

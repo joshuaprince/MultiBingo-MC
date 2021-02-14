@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from web.backend.models import Board, Square, PlayerBoard
+from web.backend.models import Board, Space, PlayerBoard
 
 
 @admin.register(Board)
@@ -8,8 +8,8 @@ class BoardAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Square)
-class SquareAdmin(admin.ModelAdmin):
+@admin.register(Space)
+class SpaceAdmin(admin.ModelAdmin):
     pass
 
 

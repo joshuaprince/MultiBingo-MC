@@ -1,6 +1,8 @@
 package com.jtprince.bingo.plugin;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.util.*;
 
@@ -16,15 +18,16 @@ public class PlayerBoard {
 
     /**
      * The latest known markings on this board.
+     * Maps Space ID to the marking (color) code.
      * Not authoritative; the webserver holds the authoritative copy.
      */
-    private final ArrayList<Integer> markings;
+    private final Map<Integer, Integer> markings;
 
     /**
-     * List of positions on this player's board that have been announced as marked, so that no
-     * square is announced multiple times (i.e. if the player manually changes it).
+     * List of spaces on this player's board that have been announced as marked, so that no
+     * space is announced multiple times (i.e. if the player manually changes it).
      */
-    private final Set<Integer> announcedPositions = new HashSet<>();
+    private final Set<Integer> announcedSpaceIds = new HashSet<>();
 
     /* Board marking states */
     final static int UNMARKED = 0;
@@ -37,49 +40,55 @@ public class PlayerBoard {
         this.player = player;
         this.game = game;
 
-        int numSquares = game.gameBoard.getSquares().size();
-        this.markings = new ArrayList<>(Collections.nCopies(numSquares, UNMARKED));
+        this.markings = new HashMap<>();
+        for (int spaceId : game.gameBoard.getSpaces().keySet()) {
+            this.markings.put(spaceId, UNMARKED);
+        }
     }
 
     /**
-     * Mark a square on a player's board if it is not currently marked.
-     * @param square Square to mark.
+     * Mark a space on a player's board if it is not currently marked.
+     * @param space Space to mark.
      */
-    public synchronized void autoMark(@NotNull Square square) {
-        int toState = square.goalType.equals("negative") ? 3 : 1;
-        if (markings.get(square.position) != toState) {
-            this.game.wsClient.sendMarkSquare(player.getName(), square.position, toState);
+    public synchronized void autoMark(@NotNull Space space) {
+        int toState = space.goalType.equals("negative") ? 3 : 1;
+        if (markings.get(space.spaceId) != toState) {
+            this.game.wsClient.sendMarkSpace(player.getName(), space.spaceId, toState);
         }
     }
 
     /**
      * Update the latest known markings to the provided list of markings.
-     * @param jsonBoardStr A board marking string directly from the websocket, such as
-     *                     "0000000000001000000000000" for a board with only the middle square
-     *                     marked.
+     * @param markings A board marking JSON object directly from the websocket.
      */
-    public synchronized void update(String jsonBoardStr) {
-        if (jsonBoardStr.length() != this.markings.size()) {
+    public synchronized void update(JSONArray markings) {
+        if (markings.size() != this.markings.size()) {
             throw new ArrayIndexOutOfBoundsException(
-                "Received board marking string of " + jsonBoardStr.length() + " squares; expected: "
+                "Received board marking of " + markings.size() + " spaces; expected: "
                     + this.markings.size());
         }
 
-        for (int i = 0; i < this.markings.size(); i++) {
-            int toState = Character.getNumericValue(jsonBoardStr.charAt(i));
-            if (this.markings.get(i) != toState) {
-                this.onChange(i, toState);
+        for (Object marking : markings) {
+            JSONObject markObj = (JSONObject) marking;
+            int spaceId = ((Long) markObj.get("space_id")).intValue();
+            int toState = ((Long) markObj.get("color")).intValue();
+            if (!this.markings.containsKey(spaceId)) {
+                throw new ArrayIndexOutOfBoundsException("Received board marking with space ID " +
+                    spaceId + " that does not exist on the board.");
             }
-            this.markings.set(i, toState);
+            if (this.markings.get(spaceId) != toState) {
+                this.onChange(spaceId, toState);
+                this.markings.put(spaceId, toState);
+            }
         }
     }
 
-    private void onChange(int position, int toState) {
-        this.considerAnnounceChange(position, toState);
+    private void onChange(int spaceId, int toState) {
+        this.considerAnnounceChange(spaceId, toState);
     }
 
-    private void considerAnnounceChange(int position, int toState) {
-        if (this.announcedPositions.contains(position)) {
+    private void considerAnnounceChange(int spaceId, int toState) {
+        if (this.announcedSpaceIds.contains(spaceId)) {
             return;
         }
 
@@ -93,9 +102,9 @@ public class PlayerBoard {
         }
 
         if (invalidated != null) {
-            this.announcedPositions.add(position);
-            Square square = this.game.gameBoard.getSquares().get(position);
-            this.game.messages.announcePlayerMarking(this.player, square, invalidated);
+            this.announcedSpaceIds.add(spaceId);
+            Space space = this.game.gameBoard.getSpaces().get(spaceId);
+            this.game.messages.announcePlayerMarking(this.player, space, invalidated);
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.MCBingoPlugin;
-import com.jtprince.bingo.plugin.Square;
+import com.jtprince.bingo.plugin.Space;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
@@ -31,24 +31,24 @@ import java.util.*;
 import java.util.logging.Level;
 
 /**
- * Container class that maps a Square on a board to a Method that can check if that square should be
+ * Container class that maps a Space on a board to a Method that can check if that space should be
  * activated when a Bukkit Event is fired.
  *
  * Event Trigger methods for individual goals are at the bottom of this file.
  */
 public class EventTrigger {
-    final Square square;
+    final Space space;
     private final Method method;
     final Class<? extends Event> eventType;
 
-    private EventTrigger(Square square, Method method, Class<? extends Event> eventType) {
-        this.square = square;
+    private EventTrigger(Space space, Method method, Class<? extends Event> eventType) {
+        this.space = space;
         this.method = method;
         this.eventType = eventType;
     }
 
     @SuppressWarnings("unchecked")  // Reflection + generics is lots of fun...
-    public static ArrayList<EventTrigger> createEventTriggers(Square square) {
+    public static ArrayList<EventTrigger> createEventTriggers(Space space) {
         ArrayList<EventTrigger> ret = new ArrayList<>();
 
         // Register goals with Method triggers
@@ -62,7 +62,7 @@ public class EventTrigger {
             // TODO Move that sanity check to an onEnable callback, rather than log spam 25x on
             //   every board receive
 
-            // Determine which Event to listen for and register this Square in a new EventTrigger.
+            // Determine which Event to listen for and register this Space in a new EventTrigger.
             Class<?> expectedType = method.getParameterTypes()[0];
             if (!Event.class.isAssignableFrom(expectedType)) {
                 MCBingoPlugin.logger().severe(
@@ -80,12 +80,12 @@ public class EventTrigger {
             Set<String> goalsTrackedByMethod = new HashSet<>();
             goalsTrackedByMethod.add(method.getName());
             goalsTrackedByMethod.addAll(Arrays.asList(anno.extraGoals()));
-            if (!goalsTrackedByMethod.contains(square.goalId)) {
+            if (!goalsTrackedByMethod.contains(space.goalId)) {
                 continue;
             }
 
             Class<? extends Event> expectedEventType = (Class<? extends Event>) expectedType;
-            ret.add(new EventTrigger(square, method, expectedEventType));
+            ret.add(new EventTrigger(space, method, expectedEventType));
         }
 
         return ret;
@@ -434,7 +434,7 @@ public class EventTrigger {
                                         "jm_level__50255", "jm_level__27398"})
     private boolean jm_level__71448(PlayerLevelChangeEvent event) {
         // Level <x>
-        int requiredLevel = this.square.variables.get("var");
+        int requiredLevel = this.space.variables.get("var");
         return event.getNewLevel() >= requiredLevel;
     }
 

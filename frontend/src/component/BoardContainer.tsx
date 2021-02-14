@@ -19,7 +19,7 @@ export const BoardContainer: React.FunctionComponent<IProps> = (props: IProps) =
 
   return (
     <div className={"board-container " + (props.isPrimary ? "primary" : "secondary")}>
-      <Board board={props.board} markings={props.playerBoard?.board} isPrimary={props.isPrimary}/>
+      <Board board={props.board} playerBoard={props.playerBoard} isPrimary={props.isPrimary}/>
       {nameDisplay}
     </div>
   );

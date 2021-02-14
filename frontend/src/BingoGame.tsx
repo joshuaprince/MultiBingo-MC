@@ -62,8 +62,14 @@ export const BingoGame: React.FunctionComponent<IProps> = (props: IProps) => {
 const getInitialState: (() => IBingoGameState) = () => {
   const board: IBoard = {
     obscured: true,
-    squares: Array.from(Array(25), (_, i) => i).map(num => ({
-      position: num,
+    shape: "square",
+    spaces: Array.from(Array(25), (_, i) => i).map(num => ({
+      space_id: num,
+      position: {
+        x: num / 5,
+        y: num % 5,
+        z: 0,
+      },
       text: "",
       auto: false,
     })),

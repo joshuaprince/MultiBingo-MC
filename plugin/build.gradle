@@ -6,6 +6,8 @@ plugins {
 
 archivesBaseName = 'Bingo'
 
+sourceCompatibility = JavaVersion.VERSION_11
+
 group 'com.jtprince.bingo'
 version gitVersion()
 

@@ -19,10 +19,10 @@ class Command(BaseCommand):
         print(js)
 
         board = Board.objects.create(game_code=game_code, seed='', difficulty=2)
-        squares = board.square_set.order_by('position')
+        spaces = board.space_set.order_by('position')
         for pos, goal in enumerate(js):
             print(pos)
-            sq = squares[pos]
-            sq.text = goal['name']
-            sq.tooltip = goal['tooltip']
-            sq.save()
+            spc = spaces[pos]
+            spc.text = goal['name']
+            spc.tooltip = goal['tooltip']
+            spc.save()

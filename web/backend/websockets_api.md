@@ -38,13 +38,13 @@ Example:
 
 Availability: Player socket only.  
 
-Marks a square on the board belonging to the player who opened this socket.
+Marks a space on the board belonging to the player who opened this socket.
 `position` is an integer from 0 to 24. `to_state` is an integer corresponding
-to how the square should be marked:
-- 0: White square (unmarked)
-- 1: Green square (marked)
-- 2: Blue square
-- 3: Red square
+to how the space should be marked:
+- 0: White space (unmarked)
+- 1: Green space (marked)
+- 2: Blue space
+- 3: Red space
 
 ### board_mark_admin
 Example:
@@ -59,7 +59,7 @@ Example:
 
 Availability: Plugin socket only.  
 
-Marks a square on the board for the specified player. Identical to `board_mark`
+Marks a space on the board for the specified player. Identical to `board_mark`
 but with the added `player` argument, which should have a string matching
 the player whose name to mark.
 
@@ -82,12 +82,12 @@ board to all players.
 ### Board (Player)
 
 This packet is sent as soon as a websocket is opened by a Player. It contains
-information about the board, such as the squares on it. Example:
+information about the board, such as the spaces on it. Example:
 
 ```json
 {
   "obscured": true,
-  "squares": [
+  "spaces": [
     {
       "position": 0,
       "text": "3 Cobblestone",
@@ -105,16 +105,16 @@ information about the board, such as the squares on it. Example:
 ```
 
 `obscured` is a flag that specifies whether the client should hide board
-goals. If true, the data in `squares` is not guaranteed to be accurate.
+goals. If true, the data in `spaces` is not guaranteed to be accurate.
 
-`squares` is a list of objects, each corresponding to a square on the 
+`spaces` is a list of objects, each corresponding to a space on the 
 board. Each Goal object consists of:
 - A `position` field, which is an integer from 0 through 24 with the 
-  position of this square on the board.
-- A `text` field, with the text that should be displayed on the square.
+  position of this space on the board.
+- A `text` field, with the text that should be displayed on the space.
 - An optional `tooltip` object, which specifies additional information about 
   this goal that can be seen on hover.
-- An `auto` field, which indicates that this square will be automatically 
+- An `auto` field, which indicates that this space will be automatically 
   completed and should be represented as such to the user.
 
 ### Board (Plugin)
@@ -127,7 +127,7 @@ back to the server when accomplished.
 ```json
 {
   "board": {
-    "squares": [
+    "spaces": [
       {
         "id": "cobblestone",
         "position": 0,
@@ -175,7 +175,7 @@ back to the server when accomplished.
 }
 ```
 
-`squares` is a list of 25 Goal objects, each corresponding to a square on the 
+`spaces` is a list of 25 Goal objects, each corresponding to a space on the 
 board. Each Goal object consists of:
 - An `id` field, which corresponds to the goal ID in goals.xml.
 - A `position` field, which is an integer from 0 through 24 with the 
@@ -215,7 +215,7 @@ on a socket. Example:
 
 `pboards` is a list of objects corresponding to each player in the current
 game. `player_id` is a unique identifier for this player. `board` is the
-representation of the squares the player has marked, with the index in the
-returned string representing the position of each square and its value the
+representation of the spaces the player has marked, with the index in the
+returned string representing the position of each space and its value the
 marking state. `disconnected_at` is an ISO datetime if the player disconnected
 from the game, or null if the plyer is still connected.

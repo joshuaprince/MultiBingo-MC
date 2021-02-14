@@ -12,19 +12,19 @@ body {
   font-size: 32px;
 }
 
-.bingo-board, .bingo-square {
+.bingo-board, .bingo-space {
   border: 1px solid black;
 }
 
-.revealed .primary .bingo-square {
+.revealed .primary .bingo-space {
   cursor: pointer;
 }
 
-.obscured .bingo-square .bingo-text {
+.obscured .bingo-space .bingo-text {
   filter: blur(8px);
 }
 
-.revealed .bingo-square {
+.revealed .bingo-space {
   &.mark-1 {
     /* Complete */
     background: greenyellow;

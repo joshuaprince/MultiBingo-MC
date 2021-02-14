@@ -1,6 +1,8 @@
+import { SpaceId } from "./ISpace";
+
 export type PlayerId = number;
 
-export enum Marking {
+export enum Color {
   UNMARKED = 0,
   COMPLETE = 1,
   REVERTED = 2,
@@ -9,8 +11,14 @@ export enum Marking {
   __COUNT
 }
 
+export interface IPlayerBoardMarking {
+  space_id: SpaceId;
+  // position: IPosition;
+  color: Color;
+}
+
 export interface IPlayerBoard {
   player_id: PlayerId;
   player_name: string;
-  board: Marking[];
+  markings: IPlayerBoardMarking[];
 }

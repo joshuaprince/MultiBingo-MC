@@ -7,7 +7,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.db.models import Q
 from django.utils import timezone
 
-from web.backend.models import PlayerBoard, Board, Square
+from web.backend.models import PlayerBoard, Board, Space
 
 
 class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
@@ -46,16 +46,16 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
             return
 
         if action == 'board_mark' and self.player_board_id:
-            pos = int(text_data_json['position'])
+            space_id = int(text_data_json['space_id'])
             to_state = int(text_data_json['to_state'])
-            await self.rx_mark_board(pos, to_state)
+            await self.rx_mark_board(space_id, to_state)
             broadcast_pboards = True
 
         if action == 'board_mark_admin':
-            pos = int(text_data_json['position'])
+            space_id = int(text_data_json['space_id'])
             to_state = int(text_data_json['to_state'])
             player_name = text_data_json['player']
-            broadcast_pboards = await self.rx_mark_board_admin(pos, to_state, player_name)
+            broadcast_pboards = await self.rx_mark_board_admin(space_id, to_state, player_name)
 
         if action == 'reveal_board':
             revealed = await self.rx_reveal_board()
@@ -78,12 +78,12 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
             self.channel_name
         )
 
-    async def rx_mark_board(self, pos, to_state):
-        await mark_square(self.player_board_id, pos, to_state)
+    async def rx_mark_board(self, space_id, to_state):
+        await mark_space(self.player_board_id, space_id, to_state)
         await mark_disconnected(self.player_board_id, False)
 
-    async def rx_mark_board_admin(self, pos, to_state, player):
-        return await mark_square_admin(self.board_id, player, pos, to_state)
+    async def rx_mark_board_admin(self, space_id, to_state, player):
+        return await mark_space_admin(self.board_id, player, space_id, to_state)
 
     async def rx_reveal_board(self):
         changed = await reveal_board(self.board_id)
@@ -215,23 +215,23 @@ def reveal_board(board_id: str, revealed: bool = True):
 
 
 @database_sync_to_async
-def mark_square(player_board_id: int, pos: int, to_state: int):
+def mark_space(player_board_id: int, space_id: int, to_state: int):
     """
-    Mark a square on a player's board.
+    Mark a space on a player's board.
     :return: True if the board was changed, False otherwise.
     """
     player_board_obj = PlayerBoard.objects.get(pk=player_board_id)
-    return player_board_obj.mark_square(pos, to_state)
+    return player_board_obj.mark_space(space_id, to_state)
 
 
 @database_sync_to_async
-def mark_square_admin(board_id: int, player_name: str, pos: int, to_state: int):
+def mark_space_admin(board_id: int, player_name: str, space_id: int, to_state: int):
     """
-    Mark a square on a player's board.
+    Mark a space on a player's board.
     :return: True if the board was changed, False otherwise.
     """
     player_board_obj = PlayerBoard.objects.get(board_id=board_id, player_name=player_name)
-    return player_board_obj.mark_square(pos, to_state)
+    return player_board_obj.mark_space(space_id, to_state)
 
 
 @database_sync_to_async
@@ -244,16 +244,16 @@ def mark_disconnected(player_board_id: int, disconnected: bool):
 @database_sync_to_async
 def get_board_player(board_id: int):
     board = Board.objects.get(pk=board_id)
-    squares = board.square_set.order_by('position')
+    spaces = board.space_set.order_by('position')
     return {
         'obscured': board.obscured,
-        'squares': [sq.to_player_json() for sq in squares],
+        'spaces': [spc.to_player_json() for spc in spaces],
     }
 
 
 @database_sync_to_async
 def get_board_plugin(board_id: int):
-    squares = Square.objects.filter(board_id=board_id).order_by('position')
+    spaces = Space.objects.filter(board_id=board_id).order_by('position')
     return {
-        'squares': [sq.to_plugin_json() for sq in squares],
+        'spaces': [spc.to_plugin_json() for spc in spaces],
     }

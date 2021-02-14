@@ -17,7 +17,7 @@ class BoardGenerator:
 
     def _get_difficulty_spread(self):
         """
-        Returns tuple of length len(Difficulty) of how many squares of each difficulty to place
+        Returns tuple of length len(Difficulty) of how many spaces of each difficulty to place
         """
         if self.board_difficulty == 0:
             return 25, 0, 0, 0, 0

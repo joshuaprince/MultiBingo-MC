@@ -1,6 +1,6 @@
 # Bingo Goals Format
 
-Goals are used to generate Bingo boards. Each square on the board consists 
+Goals are used to generate Bingo boards. Each space on the board consists 
 of a single Goal.
 
 Goal Templates are stored in `goals.xml`. An example Goals XML:
@@ -51,13 +51,13 @@ Each goal may have the following sub-nodes:
 
 #### `<Description>` (Required)
 Inner text should be a short description of this goal. This is the text that 
-will be printed on the square on the actual board. Goal variables may be 
+will be printed on the space on the actual board. Goal variables may be 
 referenced with a `$`, such as `$var`.
 
 #### `<Tooltip>`
-If present, bingo squares will have a '?' in the upper right corner. When 
+If present, bingo spaces will have a '?' in the upper right corner. When 
 hovered over, this tooltip will show up. Used to give further details about 
-the goal that would be too verbose to include in the square itself.
+the goal that would be too verbose to include in the space itself.
 
 #### `<Variable>`
 Some goals have numbers that should be randomized every time the goal is 

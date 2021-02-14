@@ -6,33 +6,38 @@ import java.util.stream.Collectors;
 public class GameBoard {
     public final BingoGame game;
 
-    private ArrayList<Square> squares;
+    private Map<Integer, Space> spaces;
 
     public GameBoard(BingoGame game) {
         this.game = game;
     }
 
     /**
-     * Update this board with a new set of squares sent by the server, replacing the existing
-     * squares.
-     * @param squares The new set of Squares that should be on this board.
+     * Update this board with a new set of spaces sent by the server, replacing the existing
+     * spaces.
+     * @param spaces The new set of Spaces that should be on this board.
      */
-    public synchronized void setSquares(Collection<Square> squares) {
-        this.squares = new ArrayList<>(squares);
+    public synchronized void setSpaces(Collection<Space> spaces) {
+        this.spaces = new HashMap<>(
+            spaces.stream().collect(Collectors.toMap(space -> space.spaceId, space -> space))
+        );
 
-        // Register squares with auto marking
-        Set<Square> autoSquares = this.game.autoMarking.registerGoals(squares);
+        // Register spaces with auto marking
+        Set<Space> autoSpaces = this.game.autoMarking.registerGoals(spaces);
         MCBingoPlugin.logger().info("Auto activation on:" + String.join(", ",
-            autoSquares.stream().map(sq -> sq.goalId).collect(Collectors.toUnmodifiableList())));
+            autoSpaces.stream().map(spc -> spc.goalId).collect(Collectors.toUnmodifiableList())));
 
         this.game.transitionToReady();
     }
 
-    public synchronized ArrayList<Square> getSquares() {
-        return this.squares;
+    /**
+     * Get a map of all spaces on this Board, where keys are Space IDs and values are Space objects.
+     */
+    public synchronized Map<Integer, Space> getSpaces() {
+        return this.spaces;
     }
 
     public synchronized boolean isReady() {
-        return this.squares != null && !this.squares.isEmpty();
+        return this.spaces != null && !this.spaces.isEmpty();
     }
 }

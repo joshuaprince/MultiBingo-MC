@@ -37,7 +37,7 @@ public class BingoWebSocketClient extends WebSocketClient {
         this.send(js.toJSONString());
     }
 
-    public void sendMarkSquare(String player, int pos, int toState) {
+    public void sendMarkSpace(String player, int spaceId, int toState) {
         if (!this.isOpen()) {
             MCBingoPlugin.logger().warning(
                 "Dropping board_mark_admin packet since Websocket is closed");
@@ -46,23 +46,23 @@ public class BingoWebSocketClient extends WebSocketClient {
         Map<String, Object> m = new HashMap<>();
         m.put("action", "board_mark_admin");
         m.put("player", player);
-        m.put("position", pos);
+        m.put("space_id", spaceId);
         m.put("to_state", toState);
         JSONObject js = new JSONObject(m);
         this.send(js.toJSONString());
     }
 
     private void receiveBoard(JSONObject boardJson) {
-        JSONArray squaresJson = (JSONArray) boardJson.get("squares");
+        JSONArray spacesJson = (JSONArray) boardJson.get("spaces");
 
-        ArrayList<Square> squares = new ArrayList<>();
-        for (Object o : squaresJson) {
-            JSONObject sqJson = (JSONObject) o;
-            Square sq = new Square(this.game.gameBoard, sqJson);
-            squares.add(sq);
+        ArrayList<Space> spaces = new ArrayList<>();
+        for (Object o : spacesJson) {
+            JSONObject spcJson = (JSONObject) o;
+            Space spc = new Space(this.game.gameBoard, spcJson);
+            spaces.add(spc);
         }
 
-        this.game.gameBoard.setSquares(squares);
+        this.game.gameBoard.setSpaces(spaces);
         MCBingoPlugin.logger().info("Received board for game " + this.game.gameCode);
     }
 
@@ -78,8 +78,8 @@ public class BingoWebSocketClient extends WebSocketClient {
             }
             PlayerBoard pb = player.getPlayerBoard();
             if (pb != null) {
-                String board = (String) json.get("board");
-                pb.update(board);
+                JSONArray markings = (JSONArray) json.get("markings");
+                pb.update(markings);
             }
         }
     }

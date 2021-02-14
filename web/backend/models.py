@@ -24,24 +24,45 @@ class Board(models.Model):
 
     def generate_goals(self):
         """
-        Populate all squares with goals based on the seed.
+        Populate all spaces with goals based on the seed.
         :return:
         """
         gen = BoardGenerator(self.difficulty, self.seed or None,
                              forced_goals=self.forced_goals.split(';'))
-        goals = gen.generate()
+        goals = gen.generate()  # TODO 25 goals always
 
-        for pos, goal in enumerate(goals):
-            sq = self.square_set.get(position=pos)  # type: Square
-            sq.text = goal.description()
-            sq.tooltip = goal.tooltip()
-            sq.xml_id = goal.xml_id()
-            sq.save()
+        spaces = list(self.space_set.order_by('position'))
+
+        for i, space in enumerate(spaces):
+            goal = goals[i]
+            space.text = goal.description()
+            space.tooltip = goal.tooltip()
+            space.xml_id = goal.xml_id()
+            space.save()
 
 
-class Square(models.Model):
+class Position(models.Model):
+    x = models.IntegerField()
+    y = models.IntegerField()
+    z = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str((self.x, self.y, self.z))
+
+    def to_json(self):
+        return {
+            'x': self.x,
+            'y': self.y,
+            'z': self.z,
+        }
+
+    class Meta:
+        ordering = ['y', 'x', 'z']
+
+
+class Space(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
-    position = models.IntegerField()
+    position = models.OneToOneField(Position, on_delete=models.CASCADE)
 
     text = models.CharField(max_length=256)
     tooltip = models.CharField(max_length=512)
@@ -50,10 +71,12 @@ class Square(models.Model):
     """`id` field of the goal from XML. Should only be used to pull trigger data."""
 
     def __str__(self):
-        return str(self.board) + " #" + str(self.position)
+        return str(self.board) + " @" + str(self.position)
 
     class Meta:
-        unique_together = ['board', 'position']
+        ...
+        # unique_together = ['board']
+        # TODO uniqueness validation for spaces
 
     def is_autoactivated(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
@@ -68,7 +91,8 @@ class Square(models.Model):
 
     def to_player_json(self):
         return {
-            'position': self.position,
+            'space_id': self.pk,
+            'position': self.position.to_json(),
             'text': self.text,
             'tooltip': self.tooltip,
             'auto': self.is_autoactivated(),
@@ -77,9 +101,9 @@ class Square(models.Model):
     def to_plugin_json(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
         return {
-            'id': cg.template.id,
+            'space_id': self.pk,
+            'goal_id': cg.template.id,
             'text': self.text,
-            'position': self.position,
             'type': cg.template.type,
             'variables': cg.variables,
             'triggers': cg.triggers(),
@@ -94,7 +118,9 @@ def build_board(instance: Board, created: bool, **kwargs):
             instance.difficulty = int(instance.game_code[-1])
 
         for i in range(25):
-            Square.objects.create(board=instance, position=i)
+            pos = Position(x=(i % 5), y=(i // 5), z=0)
+            pos.save()
+            Space.objects.create(board=instance, position=pos)
 
         if instance.seed:
             instance.generate_goals()
@@ -115,7 +141,7 @@ class PlayerBoard(models.Model):
 
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     player_name = models.CharField(blank=False, max_length=128)
-    squares = models.CharField(max_length=25, default='')  # Defaults set in build_player_board()
+    markings = models.ManyToManyField(Space, through='PlayerBoardMarking')
     disconnected_at = models.DateTimeField(null=True)
 
     def __str__(self):
@@ -124,24 +150,24 @@ class PlayerBoard(models.Model):
     class Meta:
         unique_together = ['board', 'player_name']
 
-    def mark_square(self, pos, to_state: Marking):
+    def mark_space(self, space_id: int, to_state: Marking):
         """
-        Mark a square on this player's board to a specified state.
+        Mark a space on this player's board to a specified state.
         :return: True if the board was changed, False otherwise.
         """
-        old_squares = self.squares
-        self.squares = \
-            self.squares[:pos] + \
-            str(to_state) + \
-            self.squares[pos+1:]
-        self.save()
-        return old_squares != self.squares
+        marking = self.playerboardmarking_set.get(space_id=space_id)
+        if marking.color != to_state:
+            marking.color = to_state
+            marking.save()
+            return True
+        else:
+            return False
 
     def to_json(self):
         return {
             'player_id': self.pk,
             'player_name': self.player_name,
-            'board': self.squares,
+            'markings': [mark.to_json() for mark in self.playerboardmarking_set.all()],
             'disconnected_at': self.disconnected_at.isoformat() if self.disconnected_at else None,
         }
 
@@ -151,7 +177,23 @@ def build_player_board(instance: PlayerBoard, created: bool, **kwargs):
     if created:
         print(f"Created a new player board with game code {instance.board.game_code}, "
               f"player {instance.player_name}")
-    if not instance.squares:
-        all_squares = instance.board.square_set.order_by('position').all()  # type: List[Square]
-        instance.squares = ''.join([str(sq.initial_state().value) for sq in all_squares])
-        instance.save()
+
+        for space in instance.board.space_set.order_by('position').all():
+            PlayerBoardMarking.objects.create(
+                space=space,
+                player_board=instance,
+                color=space.initial_state(),
+            )
+
+
+class PlayerBoardMarking(models.Model):
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    player_board = models.ForeignKey(PlayerBoard, on_delete=models.CASCADE)
+    color = models.IntegerField()
+
+    def to_json(self):
+        return {
+            'space_id': self.space.pk,
+            # 'position': self.space.position.to_json(),
+            'color': self.color,
+        }

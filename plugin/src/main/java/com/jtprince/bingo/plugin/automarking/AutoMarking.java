@@ -2,7 +2,7 @@ package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.BingoGame;
 import com.jtprince.bingo.plugin.BingoPlayer;
-import com.jtprince.bingo.plugin.Square;
+import com.jtprince.bingo.plugin.Space;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -14,20 +14,20 @@ import java.util.*;
  * Root object for all automated board marking functionality in a game.
  *
  * Each BingoGame may have an AutoMarking instance that handles all listening, processing, and
- * marking of squares on the board for all players in that game.
+ * marking of spaces on the board for all players in that game.
  */
 public class AutoMarking {
     final BingoGame game;
     final AutoMarkListener listener;
 
-    private Set<Square> autoMarkedSquares;
+    private Set<Space> autoMarkedSpaces;
 
     /**
      * A map from Event *class objects* to a list of Method Triggers that are active in this game.
      *
-     * For example, if a game has a "Never Use an Axe" square, this map would contain key
+     * For example, if a game has a "Never Use an Axe" space, this map would contain key
      * BlockBreakEvent, and value a list containing MethodTrigger object with jm_never_n_axe38071
-     * and the Square that is described "Never Use an Axe".
+     * and the Space that is described "Never Use an Axe".
      */
     private Map<Class<? extends Event>, List<EventTrigger>> activeEventListenerMap = new HashMap<>();
 
@@ -37,36 +37,36 @@ public class AutoMarking {
     }
 
     /**
-     * Given a list of Squares on the board, create listeners that will respond when the player does
-     * something in game that would activate each of those squares.
-     * @param squares List of Squares on the board.
-     * @return An Unmodifiable Set of which Squares will be auto-activated.
+     * Given a list of Spaces on the board, create listeners that will respond when the player does
+     * something in game that would activate each of those spaces.
+     * @param spaces List of Spaces on the board.
+     * @return An Unmodifiable Set of which Spaces will be auto-activated.
      */
-    public Set<Square> registerGoals(Collection<Square> squares) {
+    public Set<Space> registerGoals(Collection<Space> spaces) {
         Map<Class<? extends Event>, List<EventTrigger>> newEventListenerMap = new HashMap<>();
-        Set<Square> listenedGoals = new HashSet<>();
+        Set<Space> listenedGoals = new HashSet<>();
 
-        for (Square sq : squares) {
-            // Register all squares with ItemTriggers
-            if (sq.itemTriggers.size() > 0) {
-                listenedGoals.add(sq);
+        for (Space spc : spaces) {
+            // Register all spaces with ItemTriggers
+            if (spc.itemTriggers.size() > 0) {
+                listenedGoals.add(spc);
             }
 
-            // Register all squares with EventTriggers
-            if (sq.eventTriggers.size() > 0) {
-                for (EventTrigger eventTrigger : sq.eventTriggers) {
+            // Register all spaces with EventTriggers
+            if (spc.eventTriggers.size() > 0) {
+                for (EventTrigger eventTrigger : spc.eventTriggers) {
                     if (!newEventListenerMap.containsKey(eventTrigger.eventType)) {
                         newEventListenerMap.put(eventTrigger.eventType, new ArrayList<>());
                     }
                     newEventListenerMap.get(eventTrigger.eventType).add(eventTrigger);
                 }
-                listenedGoals.add(sq);
+                listenedGoals.add(spc);
             }
         }
 
         this.activeEventListenerMap = newEventListenerMap;
-        this.autoMarkedSquares = Collections.unmodifiableSet(listenedGoals);
-        return this.autoMarkedSquares;
+        this.autoMarkedSpaces = Collections.unmodifiableSet(listenedGoals);
+        return this.autoMarkedSpaces;
     }
 
     /**
@@ -74,21 +74,21 @@ public class AutoMarking {
      */
     public void destroy() {
         HandlerList.unregisterAll(this.listener);
-        this.autoMarkedSquares = null;
+        this.autoMarkedSpaces = null;
     }
 
     /**
      * Scan the inventory of a given player, to check if any ItemTriggers on the board should
-     * be triggered and cause a square to be marked.
+     * be triggered and cause a space to be marked.
      * @param player The player whose inventory should be scanned.
      */
     void impulseInventory(Player player) {
-        for (Square sq : this.autoMarkedSquares) {
-            for (ItemTrigger trigger : sq.itemTriggers) {
+        for (Space spc : this.autoMarkedSpaces) {
+            for (ItemTrigger trigger : spc.itemTriggers) {
                 if (trigger.isSatisfied(player.getInventory())) {
                     BingoPlayer bp = this.game.getBingoPlayer(player);
                     if (bp != null) {
-                        bp.getPlayerBoard().autoMark(sq);
+                        bp.getPlayerBoard().autoMark(spc);
                     }
                 }
             }
@@ -97,7 +97,7 @@ public class AutoMarking {
 
     /**
      * Scan an Event that has been fired by Bukkit, to check if any MethodTriggers on the board
-     * should be triggered and cause a square to be marked.
+     * should be triggered and cause a space to be marked.
      * @param event Event that was raised by Bukkit.
      * @param player The BingoPlayer whose board should be marked if this Event triggers any
      *               markings.
@@ -110,14 +110,14 @@ public class AutoMarking {
 
         for (EventTrigger gal : methods) {
             if (gal.satisfiedBy(event)) {
-                player.getPlayerBoard().autoMark(gal.square);
+                player.getPlayerBoard().autoMark(gal.space);
             }
         }
     }
 
     /**
      * Scan an Event that has been fired by Bukkit, to check if any MethodTriggers on the board
-     * should be triggered and cause a square to be marked.
+     * should be triggered and cause a space to be marked.
      * @param event Event that was raised by Bukkit.
      * @param player The Bukkit Player that triggered this event, used to match to a BingoPlayer
      *               whose board should be marked.
@@ -128,7 +128,7 @@ public class AutoMarking {
 
     /**
      * Scan an Event that has been fired by Bukkit, to check if any MethodTriggers on the board
-     * should be triggered and cause a square to be marked.
+     * should be triggered and cause a space to be marked.
      * @param event Event that was raised by Bukkit.
      * @param world The world this Event occurred in, used to match to a BingoPlayer whose board
      *              should be marked.

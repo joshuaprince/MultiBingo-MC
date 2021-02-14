@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Defines an item or set of items that the user can collect to automatically mark a Square as
+ * Defines an item or set of items that the user can collect to automatically mark a Space as
  * completed.
  */
 public class ItemTrigger {

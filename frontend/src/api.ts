@@ -1,6 +1,7 @@
 import React from "react";
 
 import { IBingoGameState } from "./BingoGame";
+import { SpaceId } from "./interface/ISpace";
 
 type SetState = React.Dispatch<React.SetStateAction<IBingoGameState>>;
 
@@ -20,13 +21,18 @@ export const onApiMessage = (setState: SetState, message: any) => {
   if (message.hasOwnProperty("board")) {
     const board = message["board"] as any;
     const obscured = board["obscured"] as boolean;
-    const squares = board["squares"] as any[];
+    const spaces = board["spaces"] as any[];
     setState(state => ({
       ...state, board: {
         ...state.board,
         obscured: obscured,
-        squares: squares.map(s => ({
-          position: s["position"],
+        spaces: spaces.map(s => ({
+          space_id: s["space_id"],
+          position: {
+            x: s["position"]["x"],
+            y: s["position"]["y"],
+            z: s["position"]["z"],
+          },
           text: s["text"],
           tooltip: s["tooltip"],
           auto: s["auto"],
@@ -39,7 +45,10 @@ export const onApiMessage = (setState: SetState, message: any) => {
     const pboards = message["pboards"] as any[];
     setState(state => ({
       ...state, playerBoards: pboards.map(pb => ({
-        board: [...pb["board"]].map(ch => parseInt(ch)),
+        markings: [...pb["markings"]].map(m => ({
+          space_id: m["space_id"],
+          color: m["color"],
+        })),
         player_id: pb["player_id"],
         player_name: pb["player_name"]
       }))
@@ -55,10 +64,10 @@ export const getWebSocketUrl = (gameCode: string, playerName?: string) => {
       + encodeURI(gameCode) + encodeURI(playerName ? ('/' + playerName) : '');
 }
 
-export const sendMarkBoard = (position: number, toState: number) => {
+export const sendMarkBoard = (spaceId: SpaceId, toState: number) => {
   send({
     action: "board_mark",
-    position: position,
+    space_id: spaceId,
     to_state: toState,
   });
 }

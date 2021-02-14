@@ -24,7 +24,7 @@ div.bingo-board:after {
   padding-bottom: 100%;
 }
 
-div.bingo-square {
+div.bingo-space {
   margin: 1px;
   display: flex;
   flex-direction: column;
@@ -80,7 +80,7 @@ table.bingo-table td {
     font-size: x-small;
   }
 
-  .bingo-square {
+  .bingo-space {
     position: relative;
   }
 }

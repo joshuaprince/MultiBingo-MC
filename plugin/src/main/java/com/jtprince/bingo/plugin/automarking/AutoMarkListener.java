@@ -31,7 +31,7 @@ import java.util.Arrays;
  * Each BingGame has one AutoMarkListener, stored through the game's AutoMarking instance,
  * that listens to ALL possible Bukkit Events, checks if the raised event is relevant to this
  * BingoGame, and passes it to the AutoMarking instance to see if that Event should trigger any
- * squares.
+ * spaces.
  */
 public class AutoMarkListener implements Listener {
     final AutoMarking autoMarking;

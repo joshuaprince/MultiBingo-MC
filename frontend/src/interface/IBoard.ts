@@ -1,6 +1,9 @@
-import { ISquare } from "./ISquare";
+import { ISpace } from "./ISpace";
+
+export type BoardShape = "square";
 
 export interface IBoard {
   obscured: boolean;
-  squares: ISquare[];
+  shape: BoardShape;
+  spaces: ISpace[];
 }

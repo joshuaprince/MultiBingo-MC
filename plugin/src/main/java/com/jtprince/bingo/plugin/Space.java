@@ -9,25 +9,25 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Square {
+public class Space {
     public final GameBoard board;
 
     public final String goalId;
     public final String goalType;
     public final String text;
-    public final int position;
+    public final int spaceId;
     public final Map<String, Integer> variables = new HashMap<>();
 
     public final Collection<ItemTrigger> itemTriggers;
     public final Collection<EventTrigger> eventTriggers;
 
-    public Square(GameBoard board, JSONObject obj) {
+    public Space(GameBoard board, JSONObject obj) {
         this.board = board;
 
-        this.goalId = (String) obj.get("id");
+        this.goalId = (String) obj.get("goal_id");
         this.goalType = (String) obj.get("type");
         this.text = (String) obj.get("text");
-        this.position = ((Long) obj.get("position")).intValue();
+        this.spaceId = ((Long) obj.get("space_id")).intValue();
 
         JSONObject vars = (JSONObject) obj.get("variables");
         if (vars != null) {

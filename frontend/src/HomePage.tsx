@@ -13,7 +13,7 @@ export const HomePage: React.FunctionComponent = () => {
   }
 
   return (
-    <div className="homepage" onKeyUp={e => e.key === "Enter" && submit}>
+    <div className="homepage" onKeyUp={e => e.key === "Enter" && submit()}>
       <img className="logo" src={logo} alt={"Minecraft Bingo"}/>
       <div className="player-name">
         <label htmlFor="player-name-input">Your Name:</label><br/>

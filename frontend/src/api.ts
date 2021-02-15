@@ -1,7 +1,9 @@
 import React from "react";
+import z from "myzod";
 
 import { IBingoGameState } from "./BingoGame";
-import { SpaceId } from "./interface/ISpace";
+import { TBoard } from "./interface/IBoard";
+import { TPlayerBoard } from "./interface/IPlayerBoard";
 
 type SetState = React.Dispatch<React.SetStateAction<IBingoGameState>>;
 
@@ -19,40 +21,13 @@ export const onApiMessage = (setState: SetState, message: any) => {
   }
 
   if (message.hasOwnProperty("board")) {
-    const board = message["board"] as any;
-    const obscured = board["obscured"] as boolean;
-    const spaces = board["spaces"] as any[];
-    setState(state => ({
-      ...state, board: {
-        ...state.board,
-        obscured: obscured,
-        spaces: spaces.map(s => ({
-          space_id: s["space_id"],
-          position: {
-            x: s["position"]["x"],
-            y: s["position"]["y"],
-            z: s["position"]["z"],
-          },
-          text: s["text"],
-          tooltip: s["tooltip"],
-          auto: s["auto"],
-        }))
-      }
-    }));
+    const board = TBoard.parse(message["board"]);
+    setState(state => ({...state, board: board}));
   }
 
   if (message.hasOwnProperty("pboards")) {
-    const pboards = message["pboards"] as any[];
-    setState(state => ({
-      ...state, playerBoards: pboards.map(pb => ({
-        markings: [...pb["markings"]].map(m => ({
-          space_id: m["space_id"],
-          color: m["color"],
-        })),
-        player_id: pb["player_id"],
-        player_name: pb["player_name"]
-      }))
-    }));
+    const pbs = z.array(TPlayerBoard).parse(message["pboards"]);
+    setState(state => ({...state, playerBoards: pbs}));
   }
 }
 
@@ -64,7 +39,7 @@ export const getWebSocketUrl = (gameCode: string, playerName?: string) => {
       + encodeURI(gameCode) + encodeURI(playerName ? ('/' + playerName) : '');
 }
 
-export const sendMarkBoard = (spaceId: SpaceId, toState: number) => {
+export const sendMarkBoard = (spaceId: number, toState: number) => {
   send({
     action: "board_mark",
     space_id: spaceId,

@@ -1,11 +1,13 @@
-import { IPosition } from "./IPosition";
+import z, { Infer } from "myzod";
 
-export type SpaceId = number;
+import { TPosition } from "./IPosition";
 
-export interface ISpace {
-  space_id: SpaceId;
-  position: IPosition;
-  text: string;
-  tooltip?: string;
-  auto: boolean;
-}
+export const TSpace = z.object({
+  space_id: z.number(),
+  position: TPosition,
+  text: z.string(),
+  tooltip: z.string().optional(),
+  auto: z.boolean().default(false),
+});
+
+export type ISpace = Infer<typeof TSpace>;

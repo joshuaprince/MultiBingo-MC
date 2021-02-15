@@ -1,6 +1,4 @@
-import { SpaceId } from "./ISpace";
-
-export type PlayerId = number;
+import z, { Infer } from "myzod";
 
 export enum Color {
   UNMARKED = 0,
@@ -11,14 +9,19 @@ export enum Color {
   __COUNT
 }
 
-export interface IPlayerBoardMarking {
-  space_id: SpaceId;
-  // position: IPosition;
-  color: Color;
-}
+export const TPlayerBoardMarking = z.object({
+  space_id: z.number(),
+  // position: TPosition,
+  color: z.enum(Color),
+});
 
-export interface IPlayerBoard {
-  player_id: PlayerId;
-  player_name: string;
-  markings: IPlayerBoardMarking[];
-}
+export type IPlayerBoardMarking = Infer<typeof TPlayerBoardMarking>;
+
+export const TPlayerBoard = z.object({
+  player_id: z.number(),
+  player_name: z.string(),
+  markings: z.array(TPlayerBoardMarking),
+  disconnected_at: z.date().nullable(),
+})
+
+export type IPlayerBoard = Infer<typeof TPlayerBoard>;

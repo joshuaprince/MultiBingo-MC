@@ -1,9 +1,11 @@
-import { ISpace } from "./ISpace";
+import z, { Infer } from "myzod";
 
-export type BoardShape = "square";
+import { TSpace } from "./ISpace";
 
-export interface IBoard {
-  obscured: boolean;
-  shape: BoardShape;
-  spaces: ISpace[];
-}
+export const TBoard = z.object({
+  obscured: z.boolean(),
+  shape: z.literals("square").default("square"),
+  spaces: z.array(TSpace),
+});
+
+export type IBoard = Infer<typeof TBoard>;

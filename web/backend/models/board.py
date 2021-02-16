@@ -8,7 +8,12 @@ from generation import BoardGenerator
 
 
 class Board(models.Model):
+    class Shape(models.TextChoices):
+        SQUARE = 'square'
+        HEXAGON = 'hexagon'
+
     game_code = models.SlugField(unique=True, max_length=128)
+    shape = models.CharField(max_length=16, choices=Shape.choices)
 
     seed = models.SlugField(max_length=128)
     """If blank, goals will not be auto-generated on this board."""
@@ -47,10 +52,23 @@ def build_board(instance: Board, created: bool, **kwargs):
         if instance.game_code[-1].isdigit():
             instance.difficulty = int(instance.game_code[-1])
 
-        for i in range(25):
-            pos = Position(x=(i % 5), y=(i // 5))
-            pos.save()
-            Space.objects.create(board=instance, position=pos)
+        if instance.shape == Board.Shape.HEXAGON:  # TODO
+            spaces = [
+                (1,0), (2,0), (3,0),
+                (0,1), (1,1), (2,1), (3,1),
+                (-1,2), (0,2), (1,2), (2,2), (3,2),
+                (-1,3), (0,3), (1,3), (2,3),
+                (-1,4), (0,4), (1,4)
+            ]
+            for sp in spaces:
+                pos = Position(x=sp[0], y=sp[1])
+                pos.save()
+                Space.objects.create(board=instance, position=pos)
+        else:
+            for i in range(25):
+                pos = Position(x=(i % 5), y=(i // 5))
+                pos.save()
+                Space.objects.create(board=instance, position=pos)
 
         if instance.seed:
             instance.generate_goals()

@@ -12,41 +12,41 @@ body {
   font-size: 32px;
 }
 
-.bingo-board, .bingo-space {
-  border: 1px solid black;
-}
-
 .revealed .primary .bingo-space {
   cursor: pointer;
 }
 
-.obscured .bingo-space .bingo-text {
+.obscured .bingo-space .bingo-space-content > * {
   filter: blur(8px);
 }
 
 .revealed .bingo-space {
-  &.mark-1 {
+  &.mark-0 .bingo-space-content{
+    background: white;
+  }
+
+  &.mark-1 .bingo-space-content {
     /* Complete */
     background: greenyellow;
   }
 
-  &.mark-2 {
+  &.mark-2 .bingo-space-content {
     /* Reverted */
     background: lightskyblue;
   }
 
-  &.mark-3 {
+  &.mark-3 .bingo-space-content {
     /* Invalidated */
     background: palevioletred;
   }
 
-  &.mark-4 {
+  &.mark-4 .bingo-space-content {
     /* Not Invalidated */
     background: #dbffb3;
   }
 }
 
-.bingo-auto-tooltip {
+.bingo-auto-tip {
   color: gray;
 }
 

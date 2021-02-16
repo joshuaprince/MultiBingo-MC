@@ -12,11 +12,11 @@ type IProps = {
 
 export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
   return (
-    <div className="bingo-board square">
+    <div className={"bingo-board " + props.board.shape}>
       {props.board.spaces.map(s => {
         const marking = props.playerBoard?.markings.find(pbm => pbm.space_id === s.space_id)?.color;
-        return <Space key={s.space_id} space={s} marking={marking}
-               obscured={props.board.obscured} isPrimary={props.isPrimary} />
+        return <Space key={s.space_id} space={s} shape={props.board.shape} marking={marking}
+                      obscured={props.board.obscured} isPrimary={props.isPrimary} />
       })}
     </div>
   );

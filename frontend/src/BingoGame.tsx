@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
 import { BoardContainer } from "./component/BoardContainer";
-import { IBoard } from "./interface/IBoard";
+import { BoardShape, IBoard } from "./interface/IBoard";
 import { IPlayerBoard } from "./interface/IPlayerBoard";
 import { SecondaryBoardsSidebar } from "./component/SecondaryBoardsSidebar";
 import { getWebSocketUrl, onApiMessage, updateWebSocket } from "./api";
@@ -30,7 +30,7 @@ export const BingoGame: React.FunctionComponent<IProps> = (props: IProps) => {
     getWebSocket,
     readyState,
   } = useWebSocket(socketUrl, {
-    onOpen: (e) => console.log('Websocket opened: ' + getWebSocket()?.url),
+    onOpen: () => console.log('Websocket opened: ' + getWebSocket()?.url),
     shouldReconnect: () => true,
   });
 
@@ -62,17 +62,8 @@ export const BingoGame: React.FunctionComponent<IProps> = (props: IProps) => {
 const getInitialState: (() => IBingoGameState) = () => {
   const board: IBoard = {
     obscured: true,
-    shape: "square",
-    spaces: Array.from(Array(25), (_, i) => i).map(num => ({
-      space_id: num,
-      position: {
-        x: num / 5,
-        y: num % 5,
-        z: 0,
-      },
-      text: "",
-      auto: false,
-    })),
+    shape: BoardShape.SQUARE,
+    spaces: [],
   }
 
   return {

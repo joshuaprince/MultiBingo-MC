@@ -186,7 +186,13 @@ def get_pboard_states(board_id: int):
 
 @database_sync_to_async
 def get_board(game_code: str):
-    return Board.objects.get_or_create(game_code=game_code, defaults={'seed': game_code})[0]
+    return Board.objects.get_or_create(
+        game_code=game_code,
+        defaults={
+            'seed': game_code,
+            'shape': Board.Shape.HEXAGON if game_code.startswith('HEX') else Board.Shape.SQUARE  # TODO
+        }
+    )[0]
 
 
 @database_sync_to_async
@@ -247,6 +253,7 @@ def get_board_player(board_id: int):
     spaces = board.space_set.order_by('position')
     return {
         'obscured': board.obscured,
+        'shape': board.shape,
         'spaces': [spc.to_player_json() for spc in spaces],
     }
 

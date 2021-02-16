@@ -1,11 +1,9 @@
-from typing import List
-
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from generation import BoardGenerator
 from generation.goals import ConcreteGoal
-from web.generation import BoardGenerator
 
 
 class Board(models.Model):

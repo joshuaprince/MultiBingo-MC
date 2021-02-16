@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from web.backend.models import Board, Space, PlayerBoard
+from backend.models import Board, Space, PlayerBoard
 
 
 @admin.register(Board)

@@ -31,7 +31,7 @@ Example:
 ```json
 {
   "action": "board_mark",
-  "position": 15,
+  "space_id": 15,
   "to_state": 1
 }
 ```
@@ -39,12 +39,20 @@ Example:
 Availability: Player socket only.  
 
 Marks a space on the board belonging to the player who opened this socket.
-`position` is an integer from 0 to 24. `to_state` is an integer corresponding
-to how the space should be marked:
-- 0: White space (unmarked)
-- 1: Green space (marked)
-- 2: Blue space
-- 3: Red space
+`space_id` is an integer representing which space (sent as part of the 
+`Board` server-to-client API) should be marked. `to_state` is an integer 
+corresponding to how the space should be marked:
+
+- 0: Unmarked space (white)
+- 1: *Marked space (green)
+- 2: Previously marked space (blue)
+  - Space was marked at some point, but is not right now.
+- 3: Invalidated space (red)
+  - Goal is of the negative type, and the player did the action they were 
+    not supposed to do.
+- 4: *Pre-marked space (pale green)
+  - Goal is of the negative type, and the player has not yet done the action 
+    they are not supposed to do.
 
 ### board_mark_admin
 Example:
@@ -52,7 +60,7 @@ Example:
 {
   "action": "board_mark_admin",
   "player": "Chips",
-  "position": 15,
+  "space_id": 15,
   "to_state": 1
 }
 ```
@@ -86,36 +94,50 @@ information about the board, such as the spaces on it. Example:
 
 ```json
 {
-  "obscured": true,
-  "spaces": [
-    {
-      "position": 0,
-      "text": "3 Cobblestone",
-      "tooltip": "",
-      "auto": true
-    },
-    {
-      "position": 1,
-      "text": "40 Stone",
-      "tooltip": "Smooth stone, not cobblestone",
-      "auto": false
-    }
-  ]
+  "board": {
+    "obscured": true,
+    "shape": "square",
+    "spaces": [
+      {
+        "space_id": 123,
+        "position": {
+          "x": 0,
+          "y": 1
+        },
+        "text": "3 Cobblestone",
+        "tooltip": "",
+        "auto": true
+      }
+    ]
+  }
 }
 ```
 
 `obscured` is a flag that specifies whether the client should hide board
-goals. If true, the data in `spaces` is not guaranteed to be accurate.
+goals. If true, the text and tooltip data in `spaces` is not guaranteed to be 
+accurate.
+
+`shape` is a string, currently either "square" or "hexagon".
 
 `spaces` is a list of objects, each corresponding to a space on the 
 board. Each Goal object consists of:
-- A `position` field, which is an integer from 0 through 24 with the 
-  position of this space on the board.
-- A `text` field, with the text that should be displayed on the space.
-- An optional `tooltip` object, which specifies additional information about 
+- A `space_id` integer, which uniquely identifies this space and must be used 
+  when the client wants to mark this space.
+- A `position` object, containing integer keys `x` and `y`.
+  - If the board shape is "square", this indicates the position on the grid, 
+    where (0, 0) is the upper left corner and all other positions are 
+    nonnegative.
+  - If the board shape is "hexagon", this indicates the position of the space
+    in [axial coordinates](https://www.redblobgames.com/grids/hexagons/#coordinates-axial).
+    The upper-left corner corresponds to (0, 0). Due to the way that axial
+    coordinates work, it is possible for valid coordinates to have negative
+    values. All valid coordinates must map to being no further above or to the
+    left of the position defined by (0, 0).
+- A `text` string, with the text that should be displayed on the space.
+- An optional `tooltip` string, which specifies additional information about 
   this goal that can be seen on hover.
-- An `auto` field, which indicates that this space will be automatically 
-  completed and should be represented as such to the user.
+- An optional `auto` boolean, which if true, indicates that this space will be
+  automatically completed and should be represented as such to the user.
 
 ### Board (Plugin)
 
@@ -130,7 +152,7 @@ back to the server when accomplished.
     "spaces": [
       {
         "id": "cobblestone",
-        "position": 0,
+        "space_id": 0,
         "variables": {
           "var": 32
         },
@@ -138,7 +160,7 @@ back to the server when accomplished.
       },
       {
         "id": "poppies_dandelions",
-        "position": 1,
+        "space_id": 1,
         "variables": {
           "var1": 10,
           "var2": 20
@@ -178,8 +200,8 @@ back to the server when accomplished.
 `spaces` is a list of 25 Goal objects, each corresponding to a space on the 
 board. Each Goal object consists of:
 - An `id` field, which corresponds to the goal ID in goals.xml.
-- A `position` field, which is an integer from 0 through 24 with the 
-  position of this goal on the board.
+- A `space_id` field, which uniquely identifies this space and must be used 
+  when the plugin wants to mark this space.
 - An optional `variables` object, which lists any variables present on this 
   goal.
 - An optional `triggers` list, which describes any automated trigger criteria
@@ -200,13 +222,23 @@ on a socket. Example:
     {
       "player_id": 123,
       "player_name": "Chips",
-      "board": "0000000000001000000000000",
+      "markings": [
+        {
+          "space_id": 0,
+          "color": 1
+        }
+      ],
       "disconnected_at": "2020-12-25T08:15:30-08:00"
     },
     {
       "player_id": 456,
       "player_name": "Bob",
-      "board": "1111100000001000000000000",
+      "markings": [
+        {
+          "space_id": 0,
+          "color": 1
+        }
+      ],
       "disconnected_at": null
     }
   ]
@@ -214,8 +246,7 @@ on a socket. Example:
 ```
 
 `pboards` is a list of objects corresponding to each player in the current
-game. `player_id` is a unique identifier for this player. `board` is the
-representation of the spaces the player has marked, with the index in the
-returned string representing the position of each space and its value the
-marking state. `disconnected_at` is an ISO datetime if the player disconnected
-from the game, or null if the plyer is still connected.
+game. `player_id` is a unique identifier for this player. `markings` is a list
+of all spaces on this board and the current marking that this player has on that
+square. `disconnected_at` is an ISO datetime if the player disconnected from the
+game, or null if the plyer is still connected.

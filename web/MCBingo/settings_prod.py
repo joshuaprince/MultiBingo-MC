@@ -36,3 +36,10 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+REST_FRAMEWORK = {
+    # Disables browsable API in prod
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}

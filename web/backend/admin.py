@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from backend.models import board, Space, PlayerBoard
+from backend.models import Board, Space, PlayerBoard
 
 
-@admin.register(board)
+@admin.register(Board)
 class BoardAdmin(admin.ModelAdmin):
     pass
 

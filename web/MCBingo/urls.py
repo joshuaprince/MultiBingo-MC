@@ -17,4 +17,9 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 
-urlpatterns = [path('admin/', admin.site.urls)] if 'admin' in settings.INSTALLED_APPS else []
+urlpatterns = [
+    path('', include('backend.routing'))
+]
+
+if 'django.contrib.admin' in settings.INSTALLED_APPS:
+    urlpatterns.append(path('admin/', admin.site.urls))

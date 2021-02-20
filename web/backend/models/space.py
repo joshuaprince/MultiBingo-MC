@@ -52,5 +52,3 @@ class Space(models.Model):
             'variables': cg.variables,
             'triggers': cg.triggers(),
         }
-
-

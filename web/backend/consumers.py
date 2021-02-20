@@ -7,7 +7,8 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.db.models import Q
 from django.utils import timezone
 
-from backend.models import Board, PlayerBoard, Space
+from backend.models import Board, BoardShape, PlayerBoard, Space
+from generation.board_generator import generate_board
 
 
 class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
@@ -186,13 +187,10 @@ def get_pboard_states(board_id: int):
 
 @database_sync_to_async
 def get_board(game_code: str):
-    return Board.objects.get_or_create(
-        game_code=game_code,
-        defaults={
-            'seed': game_code,
-            'shape': Board.Shape.HEXAGON if game_code.startswith('HEX') else Board.Shape.SQUARE  # TODO
-        }
-    )[0]
+    if Board.objects.filter(game_code=game_code).exists():
+        return Board.objects.get(game_code=game_code)
+    else:
+        return generate_board(game_code, BoardShape.SQUARE, board_difficulty=2)
 
 
 @database_sync_to_async

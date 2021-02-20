@@ -1,5 +1,6 @@
-from django.apps import apps
 from django.db import models
+
+from backend.models.board_shape import BoardShape
 
 
 class Position(models.Model):
@@ -27,12 +28,12 @@ class Position(models.Model):
         :return: This space's z coordinate
         """
         # Avoiding circular import
-        if self.space.board.shape != apps.get_model(Position._meta.app_label + '.Board').Shape.HEXAGON:
+        if self.space.board.shape != BoardShape.HEXAGON:
             raise ValueError("Cannot determine Z coordinate of non-hexagonal position")
         return -self.x - self.y
 
     def __str__(self):
-        if self.space.board.shape == apps.get_model(Position._meta.app_label + '.Board').Shape.HEXAGON:
+        if self.space.board.shape == BoardShape.HEXAGON:
             return str((self.x, self.y, self.z()))
         else:
             return str((self.x, self.y))

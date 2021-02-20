@@ -26,6 +26,7 @@ services:
     build:
       context: web
     environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-MCBingo.settings_prod}
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_ALLOWED_HOST=localhost
     networks:

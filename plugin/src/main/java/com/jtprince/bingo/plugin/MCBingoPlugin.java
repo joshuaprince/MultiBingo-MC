@@ -51,9 +51,9 @@ public class MCBingoPlugin extends JavaPlugin {
         return currentGame;
     }
 
-    void prepareNewGame(String gameCode) {
+    void prepareNewGame(GameSettings settings) {
         this.destroyCurrentGame();
-        this.currentGame = new BingoGame(this, gameCode, createBingoPlayers());
+        this.currentGame = new BingoGame(this, settings, createBingoPlayers());
     }
 
     void destroyCurrentGame() {

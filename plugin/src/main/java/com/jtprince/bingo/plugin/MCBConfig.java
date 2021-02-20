@@ -15,6 +15,28 @@ public class MCBConfig {
     }
 
     /**
+     * Get the URL to use to generate a board with settings.
+     */
+    public static URI getBoardCreateUrl() {
+        String template = MCBingoPlugin.instance().getConfig().getString("web_url");
+        if (template == null) {
+            MCBingoPlugin.logger().severe("No web_url is configured!");
+            return null;
+        }
+
+        try {
+            URIBuilder builder = new URIBuilder(template);
+
+            builder.setPathSegments("rest", "generate_board");
+
+            return builder.build();
+        } catch (URISyntaxException e) {
+            MCBingoPlugin.logger().log(Level.SEVERE, "Misconfigured web_url", e);
+            return null;
+        }
+    }
+
+    /**
      * Get the WebSocket URL to connect to the Bingo webserver hosting a game.
      * @param gameCode Game code that will be put in the URL, or null if it is improperly configured.
      */

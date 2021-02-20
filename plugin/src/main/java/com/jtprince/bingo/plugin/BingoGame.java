@@ -8,7 +8,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
@@ -16,18 +18,17 @@ public class BingoGame {
     public final MCBingoPlugin plugin;
     public final Messages messages;
     public final AutoMarking autoMarking;
-    public final BingoWebSocketClient wsClient;
+    public BingoWebSocketClient wsClient;
     public final GameBoard gameBoard;
 
-    public final String gameCode;
+    public String gameCode;
     public State state;
     private int countdown;
 
     private final Set<BingoPlayer> players;
 
-    public BingoGame(MCBingoPlugin plugin, String gameCode, Collection<BingoPlayer> players) {
+    public BingoGame(MCBingoPlugin plugin, GameSettings settings, Collection<BingoPlayer> players) {
         this.plugin = plugin;
-        this.gameCode = gameCode;
 
         this.players = new HashSet<>(players);
 
@@ -35,19 +36,39 @@ public class BingoGame {
         this.autoMarking = new AutoMarking(this);
         this.gameBoard = new GameBoard(this);
 
-        URI wsUrl = MCBConfig.getWebsocketUrl(this.gameCode);
-        this.wsClient = new BingoWebSocketClient(this, wsUrl);
+        this.generateBoard(settings);
 
-        this.state = State.PREPARING;
-        this.messages.announcePreparingGame();
-        this.messages.tellPlayerTeams(players);
+    }
 
-        // Start connecting to the websocket and then preparing worldsets simultaneously.
-        this.wsClient.connect();  // does not block
-        this.prepareWorldSets(players);
+    /**
+     * Generate a board with the backend and kick off the next steps when it's done
+     */
+    public void generateBoard(GameSettings settings) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            this.state = State.CREATING_BOARD;
+            String gameCode;
+            try {
+                gameCode = settings.generateBoardBlocking();
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
+                return;
+            }
 
-        // Wait until both WS is connected and worlds are ready, then mark the game as ready.
-        this.transitionToReady();
+            synchronized (this) {
+                this.gameCode = gameCode;
+                URI wsUrl = MCBConfig.getWebsocketUrl(this.gameCode);
+                this.wsClient = new BingoWebSocketClient(this, wsUrl);
+
+                this.state = State.PREPARING;
+                this.messages.announcePreparingGame();
+                this.messages.tellPlayerTeams(players);
+
+                // Start connecting to the websocket and then preparing worldsets simultaneously.
+                // Neither call blocks.
+                this.wsClient.connect();
+                this.prepareWorldSets(players);
+            }
+        });
     }
 
     public void destroy() {
@@ -101,13 +122,16 @@ public class BingoGame {
     }
 
     private void prepareWorldSets(Collection<BingoPlayer> players) {
-        for (BingoPlayer p : players) {
-            WorldManager.WorldSet ws = this.plugin.worldManager.createWorlds(
-                gameCode + "_" + p.getSlugName(), gameCode);
-            p.setWorldSet(ws);
-        }
+        this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
+            for (BingoPlayer p : players) {
+                WorldManager.WorldSet ws = this.plugin.worldManager.createWorlds(
+                    gameCode + "_" + p.getSlugName(), gameCode);
+                p.setWorldSet(ws);
+            }
 
-        MCBingoPlugin.logger().info("Finished generating " + players.size() + " worlds");
+            MCBingoPlugin.logger().info("Finished generating " + players.size() + " worlds");
+            this.transitionToReady();
+        });
     }
 
     private void unloadWorldSets() {
@@ -244,6 +268,7 @@ public class BingoGame {
     }
 
     public enum State {
+        CREATING_BOARD,
         PREPARING,
         READY,
         RUNNING,

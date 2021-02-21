@@ -44,6 +44,10 @@ body {
     /* Not Invalidated */
     background: #dbffb3;
   }
+
+  &.winning .bingo-space-content {
+    background: coral !important;
+  }
 }
 
 .bingo-auto-tip {

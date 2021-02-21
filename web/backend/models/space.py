@@ -1,6 +1,6 @@
 from django.db import models
 
-from backend.models.player_board_marking import PlayerBoardMarking
+from backend.models.color import Color
 from generation.goals import ConcreteGoal
 
 
@@ -29,9 +29,9 @@ class Space(models.Model):
     def initial_state(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
         if cg.template.type == 'negative':
-            return PlayerBoardMarking.Marking.NOT_INVALIDATED
+            return Color.NOT_INVALIDATED
         else:
-            return PlayerBoardMarking.Marking.UNMARKED
+            return Color.UNMARKED
 
     def to_player_json(self):
         return {

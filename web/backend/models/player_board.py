@@ -2,7 +2,9 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from backend.models.color import Color
 from backend.models.player_board_marking import PlayerBoardMarking
+from win_detection.win_detection import winning_space_ids
 
 
 class PlayerBoard(models.Model):
@@ -20,7 +22,7 @@ class PlayerBoard(models.Model):
     class Meta:
         unique_together = ['board', 'player_name']
 
-    def mark_space(self, space_id: int, to_state: PlayerBoardMarking.Marking):
+    def mark_space(self, space_id: int, to_state: Color):
         """
         Mark a space on this player's board to a specified state.
         :return: True if the board was changed, False otherwise.
@@ -38,6 +40,7 @@ class PlayerBoard(models.Model):
             'player_id': self.pk,
             'player_name': self.player_name,
             'markings': [mark.to_json() for mark in self.playerboardmarking_set.all()],
+            'win': winning_space_ids(self),
             'disconnected_at': self.disconnected_at.isoformat() if self.disconnected_at else None,
         }
 

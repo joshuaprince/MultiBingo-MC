@@ -12,6 +12,7 @@ type IProps = {
   space: ISpace;
   shape: BoardShape;
   marking?: Color;
+  winning: boolean;
   isPrimary: boolean;
 }
 
@@ -41,7 +42,8 @@ export const Space: React.FunctionComponent<IProps> = (props: IProps) => {
   const innerTooltip = props.isPrimary ? props.space.tooltip : undefined;
 
   const spaceDiv = (
-    <div className={"bingo-space mark-" + (props.marking || Color.UNMARKED)}
+    <div className={"bingo-space mark-" + (props.marking || Color.UNMARKED)
+                    + (props.winning ? " winning" : "")}
          style={getPositionStyle(props.space.position, props.shape)}
          onMouseDown={onMouseDown} onContextMenu={onContextMenu}>
       <div className={"bingo-space-content primary-only"}>

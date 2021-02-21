@@ -3,14 +3,17 @@ import string
 from typing import List
 
 from django.db import transaction
+from rest_framework.exceptions import ValidationError
 
 from backend.models import BoardShape, Board, Position, Space
+from win_detection.win_detection import get_win_detector
 from .goals import get_goals
 
 
 @transaction.atomic
 def generate_board(game_code: str = None,
                    shape: BoardShape = BoardShape.SQUARE,
+                   win_detector: str = None,
                    board_difficulty: int = 2,
                    seed: str = None,
                    forced_goals: List[str] = None) -> Board:
@@ -18,6 +21,7 @@ def generate_board(game_code: str = None,
     Generate a board and all spaces with the given parameters.
     :param game_code: Unique identifier for the board, or None for a random string.
     :param shape: Shape of the board, square or hexagon.
+    :param win_detector: Win detector function to use for this board
     :param board_difficulty: Overall difficulty of the board, used to generate a spread of
                              difficulties for each space.
     :param seed: Seed to use in generation, or None to use a random seed.
@@ -28,7 +32,12 @@ def generate_board(game_code: str = None,
     rand = random.Random(seed)
     difficulty_spread = _get_difficulty_spread(board_difficulty, rand)
 
-    board = Board.objects.create(game_code=game_code, shape=shape)
+    if win_detector:
+        wd_func = get_win_detector(win_detector)
+        if shape not in wd_func.board_shapes:
+            raise ValidationError("Win detector incompatible with board shape")
+
+    board = Board.objects.create(game_code=game_code, shape=shape, win_detector=win_detector)
 
     positions = _get_positions(shape)
     goals = get_goals(rand, difficulty_spread, forced_goals=forced_goals)  # TODO always 25

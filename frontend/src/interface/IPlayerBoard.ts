@@ -11,7 +11,6 @@ export enum Color {
 
 export const TPlayerBoardMarking = z.object({
   space_id: z.number(),
-  // position: TPosition,
   color: z.enum(Color),
 });
 
@@ -21,6 +20,7 @@ export const TPlayerBoard = z.object({
   player_id: z.number(),
   player_name: z.string(),
   markings: z.array(TPlayerBoardMarking),
+  win: z.array(z.number()).nullable(),
   disconnected_at: z.date().nullable(),
 })
 

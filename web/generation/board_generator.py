@@ -6,7 +6,7 @@ from django.db import transaction
 from rest_framework.exceptions import ValidationError
 
 from backend.models import BoardShape, Board, Position, Space
-from win_detection.win_detection import get_win_detector
+from win_detection.win_detection import get_win_detector, get_default_win_detector
 from .goals import get_goals
 
 
@@ -21,7 +21,8 @@ def generate_board(game_code: str = None,
     Generate a board and all spaces with the given parameters.
     :param game_code: Unique identifier for the board, or None for a random string.
     :param shape: Shape of the board, square or hexagon.
-    :param win_detector: Win detector function to use for this board
+    :param win_detector: Win detector function to use for this board, or None to use the board shape
+                         default.
     :param board_difficulty: Overall difficulty of the board, used to generate a spread of
                              difficulties for each space.
     :param seed: Seed to use in generation, or None to use a random seed.
@@ -36,6 +37,9 @@ def generate_board(game_code: str = None,
         wd_func = get_win_detector(win_detector)
         if shape not in wd_func.board_shapes:
             raise ValidationError("Win detector incompatible with board shape")
+    else:
+        wd_func = get_default_win_detector(shape)
+    win_detector = wd_func.__name__
 
     board = Board.objects.create(game_code=game_code, shape=shape, win_detector=win_detector)
 

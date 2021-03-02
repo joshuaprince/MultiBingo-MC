@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class WorldManager implements Listener {
     private final MCBingoPlugin plugin;
@@ -26,20 +27,22 @@ public class WorldManager implements Listener {
     }
 
     public WorldSet createWorlds(String worldCode, String seed) {
-        WorldCreator wc_overworld = WorldCreator.name("world_bingo_" + worldCode + "_overworld");
-        WorldCreator wc_nether = WorldCreator.name("world_bingo_" + worldCode + "_nether");
-        WorldCreator wc_end = WorldCreator.name("world_bingo_" + worldCode + "_the_end");
+        final String[] dims = {"overworld", "nether", "end"};
+        World[] worlds = new World[dims.length];
 
-        wc_overworld.copy(plugin.getServer().getWorlds().get(0));
-        wc_nether.copy(plugin.getServer().getWorlds().get(1));
-        wc_end.copy(plugin.getServer().getWorlds().get(2));
+        for (int i = 0; i < dims.length; i++) {
+            String dim = dims[i];
+            WorldCreator wc = WorldCreator.name("world_bingo_" + worldCode + "_" + dim);
 
-        wc_overworld.seed(seed.hashCode());
-        wc_nether.seed(seed.hashCode());
-        wc_end.seed(seed.hashCode());
+            World template = plugin.getServer().getWorlds().get(i);
+            wc.copy(template);
+            wc.seed(seed.hashCode());
 
-        WorldSet ws = new WorldSet(worldCode,
-            wc_overworld.createWorld(), wc_nether.createWorld(), wc_end.createWorld());
+            worlds[i] = wc.createWorld();
+            Objects.requireNonNull(worlds[i]).setDifficulty(template.getDifficulty());
+        }
+
+        WorldSet ws = new WorldSet(worldCode, worlds[0], worlds[1], worlds[2]);
         this.worldSetMap.put(worldCode, ws);
         return ws;
     }
@@ -98,7 +101,7 @@ public class WorldManager implements Listener {
         Environment from = event.getFrom().getWorld().getEnvironment();
         Environment to = event.getTo().getWorld().getEnvironment();
 
-        if (from == Environment.NETHER) {
+        if (from == Environment.NETHER && to == Environment.NETHER) {
             /* Special handling for nether -> overworld:
              *
              * When going from bingo_overworld to bingo_nether, the coordinates we are
@@ -116,6 +119,9 @@ public class WorldManager implements Listener {
              *
              * My theory: coming from *any* nether to the_nether, the environment is not
              * changing, so the coordinates calculated and handed to us are not scaled.
+             *
+             * This was fixed as SPIGOT-6347, so only needs to be run if that patch is not
+             * present. We test for that by checking if the `to` environment is also Nether.
              */
             event.getTo().setX(event.getTo().getX() * 8);
             event.getTo().setZ(event.getTo().getZ() * 8);
@@ -143,7 +149,7 @@ public class WorldManager implements Listener {
         Environment from = event.getFrom().getWorld().getEnvironment();
         Environment to = event.getTo() == null ? null : event.getTo().getWorld().getEnvironment();
 
-        if (from == Environment.NETHER && to != null) {
+        if (from == Environment.NETHER && to == Environment.NETHER) {
             /* Special handling for nether -> overworld: see onPortal */
             event.getTo().setX(event.getTo().getX() * 8);
             event.getTo().setZ(event.getTo().getZ() * 8);

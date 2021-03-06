@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,7 @@ public class BingoPlayerTeam extends BingoPlayer {
     @Override
     public @NotNull Collection<Player> getBukkitPlayers() {
         return this.playerUuids.stream().map(Bukkit::getPlayer)
+            .filter(Objects::nonNull).filter(OfflinePlayer::isOnline)
             .collect(Collectors.toCollection(ArrayList::new));
     }
 }

@@ -62,6 +62,11 @@ public class AutoMarking {
                 }
                 listenedGoals.add(spc);
             }
+
+            // Register all spaces with OccasionalTriggers
+            if (spc.occasionalTriggers.size() > 0) {
+                listenedGoals.add(spc);
+            }
         }
 
         this.activeEventListenerMap = newEventListenerMap;

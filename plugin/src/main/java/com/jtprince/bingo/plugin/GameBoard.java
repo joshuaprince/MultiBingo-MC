@@ -18,6 +18,13 @@ public class GameBoard {
      * @param spaces The new set of Spaces that should be on this board.
      */
     public synchronized void setSpaces(Collection<Space> spaces) {
+        // Destroy existing Space objects
+        if (this.spaces != null) {
+            for (Space sp : this.spaces.values()) {
+                sp.destroy();
+            }
+        }
+
         this.spaces = new HashMap<>(
             spaces.stream().collect(Collectors.toMap(space -> space.spaceId, space -> space))
         );

@@ -2,6 +2,7 @@ package com.jtprince.bingo.plugin;
 
 import com.jtprince.bingo.plugin.automarking.EventTrigger;
 import com.jtprince.bingo.plugin.automarking.ItemTrigger;
+import com.jtprince.bingo.plugin.automarking.OccasionalTrigger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -20,6 +21,7 @@ public class Space {
 
     public final Collection<ItemTrigger> itemTriggers;
     public final Collection<EventTrigger> eventTriggers;
+    public final Collection<OccasionalTrigger> occasionalTriggers;
 
     public Space(GameBoard board, JSONObject obj) {
         this.board = board;
@@ -43,5 +45,12 @@ public class Space {
 
         // Must be at the end of the constructor since we pass `this`
         this.eventTriggers = EventTrigger.createEventTriggers(this);
+        this.occasionalTriggers = OccasionalTrigger.createOccasionalTriggers(this);
+    }
+
+    public void destroy() {
+        for (OccasionalTrigger t : occasionalTriggers) {
+            t.destroy();
+        }
     }
 }

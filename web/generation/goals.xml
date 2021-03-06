@@ -630,6 +630,7 @@
   <Goal difficulty="1" id="jm_compl_a_map49710">
     <Description>Complete a Map</Description>
     <Antisynergy>CompleteMap</Antisynergy>
+    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_soul_sand_70871">
     <Description>$var Soul Sand</Description>
@@ -2139,6 +2140,7 @@
   <Goal difficulty="2" id="jm_compl_e_map18056">
     <Description>Complete a full size Map</Description>
     <Antisynergy>CompleteMap</Antisynergy>
+    <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_blue__harge63619">
     <Description>Blue Shield with White Flower Charge</Description>

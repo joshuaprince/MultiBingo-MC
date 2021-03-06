@@ -18,6 +18,7 @@ if __name__ == '__main__':
 
     for g in GOALS:
         desc_template = g.description_template
+        weight = f" {{{g.weight}}}" if g.weight != 1 else ''
         for varname, (mini, maxi) in g.variable_ranges.items():
             desc_template = desc_template.replace(f'${varname}', f'({mini}-{maxi})')
-        print(f'[{g.difficulty}]\t{desc_template}')
+        print(f'[{g.difficulty}]\t{desc_template}{weight}')

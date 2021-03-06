@@ -13,17 +13,18 @@ public abstract class BingoPlayer {
     /**
      * The name that should be used on the WebSocket, and will be displayed on the webpage.
      */
-    abstract @NotNull String getName();
+    public abstract @NotNull String getName();
 
     /**
      * The name that should be used on the WebSocket, and will be displayed on the webpage.
      */
-    abstract @NotNull BaseComponent  getFormattedName();
+    public abstract @NotNull BaseComponent getFormattedName();
 
     /**
      * Get a list of {@link org.bukkit.entity.Player}s that are online playing as this BingoPlayer.
+     * If no Bukkit Players playing as this BingoPlayer are online, returns an empty collection.
      */
-    abstract @NotNull Collection<Player> getBukkitPlayers();
+    public abstract @NotNull Collection<Player> getBukkitPlayers();
 
     public synchronized WorldManager.WorldSet getWorldSet() {
         return worldSet;

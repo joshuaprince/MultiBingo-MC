@@ -36,6 +36,11 @@ public class BingoPlayerSingle extends BingoPlayer {
 
     @Override
     public @NotNull Collection<Player> getBukkitPlayers() {
-        return Collections.singleton(Bukkit.getPlayer(playerUuid));
+        Player bukkitPlayer = Bukkit.getPlayer(playerUuid);
+        if (bukkitPlayer == null || !bukkitPlayer.isOnline()) {
+            return Collections.emptySet();
+        }
+
+        return Collections.singleton(bukkitPlayer);
     }
 }

@@ -23,23 +23,73 @@ import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Contract;
 import org.spigotmc.event.entity.EntityMountEvent;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
- * Container for all Bukkit Listeners in a single BingoGame.
+ * Container for all Bukkit Event Listeners.
  *
- * Each BingGame has one AutoMarkListener, stored through the game's AutoMarking instance,
- * that listens to ALL possible Bukkit Events, checks if the raised event is relevant to this
- * BingoGame, and passes it to the AutoMarking instance to see if that Event should trigger any
- * spaces.
+ * Rather than each Goal having its own listener that hooks into Bukkit, we register all
+ * Bukkit Event Listeners here. Individual goal triggers can register here to be called back
+ * whenever that event occurs.
  */
-public class AutoMarkListener implements Listener {
-    final AutoMarking autoMarking;
+public class EventTriggerBukkitListener implements Listener {
+    final MCBingoPlugin plugin;
 
-    public AutoMarkListener(AutoMarking aa) {
-        this.autoMarking = aa;
-        this.autoMarking.game.plugin.getServer().getPluginManager().registerEvents(this,
-            this.autoMarking.game.plugin);
+    /**
+     * A map from Event *class objects* to a list of EventTriggers that are active in the current
+     * game.
+     *
+     * For example, if a game has a "Never Use an Axe" space, this map would contain key
+     * BlockBreakEvent, and value a list containing EventTrigger object with jm_never_n_axe38071
+     * and the Space that is described "Never Use an Axe".
+     */
+    private final Map<Class<? extends Event>, Set<EventTrigger>> activeEventListenerMap = new HashMap<>();
+
+    /**
+     * A set of ItemTriggers that are currently being tracked. These will be impulsed whenever
+     * a Bukkit event is raised that changes a player inventory.
+     */
+    private final Set<ItemTrigger> itemTriggers = new HashSet<>();
+
+    public EventTriggerBukkitListener(MCBingoPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    void register(EventTrigger eventTrigger) {
+        if (!activeEventListenerMap.containsKey(eventTrigger.eventType)) {
+            activeEventListenerMap.put(eventTrigger.eventType, new HashSet<>());
+        }
+        boolean added = activeEventListenerMap.get(eventTrigger.eventType).add(eventTrigger);
+        if (!added) {
+            plugin.getLogger().severe(
+                "Registering " + eventTrigger.space.goalId + " EventTrigger already registered");
+        }
+    }
+
+    void register(ItemTrigger itemTrigger) {
+        boolean added = itemTriggers.add(itemTrigger);
+        if (!added) {
+            plugin.getLogger().severe(
+                "Registering " + itemTrigger.space.goalId + " ItemTrigger already registered");
+        }
+    }
+
+    void unregister(EventTrigger eventTrigger) {
+        boolean existed = activeEventListenerMap.get(eventTrigger.eventType).remove(eventTrigger);
+
+        if (!existed) {
+            plugin.getLogger().severe(
+                "Unregistering " + eventTrigger.space.goalId + " EventTrigger did not exist");
+        }
+    }
+
+    void unregister(ItemTrigger itemTrigger) {
+        boolean existed = itemTriggers.remove(itemTrigger);
+
+        if (!existed) {
+            plugin.getLogger().severe(
+                "Unregistering " + itemTrigger.space.goalId + " ItemTrigger did not exist");
+        }
     }
 
     /**
@@ -48,7 +98,8 @@ public class AutoMarkListener implements Listener {
      */
     @Contract("null -> true")
     private boolean ignore(LivingEntity player) {
-        if (this.autoMarking.game.state != BingoGame.State.RUNNING) {
+        if (plugin.getCurrentGame() == null
+            || plugin.getCurrentGame().state != BingoGame.State.RUNNING) {
             return true;
         }
 
@@ -56,8 +107,8 @@ public class AutoMarkListener implements Listener {
             return true;
         }
 
-        BingoPlayer bp = this.autoMarking.game.getBingoPlayer((Player) player);
-        boolean ret = !autoMarking.game.getPlayers().contains(bp);
+        BingoPlayer bp = plugin.getCurrentGame().getBingoPlayer((Player) player);
+        boolean ret = !plugin.getCurrentGame().getPlayers().contains(bp);
         if (ret) {
             MCBingoPlugin.logger().fine("ActivationListener ignored player " + player.getName());
         }
@@ -68,15 +119,13 @@ public class AutoMarkListener implements Listener {
      * Return whether to ignore event in this world, because it is not part of a game.
      */
     private boolean ignore(World world) {
-        if (this.autoMarking.game.state != BingoGame.State.RUNNING) {
+        if (plugin.getCurrentGame() == null
+            || plugin.getCurrentGame().state != BingoGame.State.RUNNING
+            || world == null) {
             return true;
         }
 
-        if (world == null) {
-            return true;
-        }
-
-        BingoPlayer p = this.autoMarking.game.getBingoPlayer(world);
+        BingoPlayer p = plugin.getCurrentGame().getBingoPlayer(world);
 
         if (p == null) {
             MCBingoPlugin.logger().finest("ActivationListener ignored world " + world.getName());
@@ -84,8 +133,68 @@ public class AutoMarkListener implements Listener {
         return (p == null);
     }
 
+
+    /**
+     * Scan an Event that has been fired by Bukkit, to check if any MethodTriggers on the board
+     * should be triggered and cause a space to be marked.
+     * @param event Event that was raised by Bukkit.
+     * @param player The BingoPlayer whose board should be marked if this Event triggers any
+     *               markings.
+     */
+    private void impulseEvent(Event event, BingoPlayer player) {
+        Set<EventTrigger> methods = activeEventListenerMap.get(event.getClass());
+        if (methods == null) {
+            return;
+        }
+
+        for (EventTrigger gal : methods) {
+            if (gal.satisfiedBy(event)) {
+                player.getPlayerBoard().autoMark(gal.space);
+            }
+        }
+    }
+
+    /**
+     * Scan an Event that has been fired by Bukkit, to check if any MethodTriggers on the board
+     * should be triggered and cause a space to be marked.
+     * @param event Event that was raised by Bukkit.
+     * @param player The Bukkit Player that triggered this event, used to match to a BingoPlayer
+     *               whose board should be marked.
+     */
+    private void impulseEvent(Event event, Player player) {
+        this.impulseEvent(event, plugin.getCurrentGame().getBingoPlayer(player));
+    }
+
+    /**
+     * Scan an Event that has been fired by Bukkit, to check if any MethodTriggers on the board
+     * should be triggered and cause a space to be marked.
+     * @param event Event that was raised by Bukkit.
+     * @param world The world this Event occurred in, used to match to a BingoPlayer whose board
+     *              should be marked.
+     */
+    private void impulseEvent(Event event, World world) {
+        this.impulseEvent(event, plugin.getCurrentGame().getBingoPlayer(world));
+    }
+
+    /**
+     * Scan the inventory of a given player, to check if any ItemTriggers on the board should
+     * be triggered and cause a space to be marked.
+     *
+     * @param player The player whose inventory should be scanned.
+     */
+    void impulseInventory(Player player) {
+        for (ItemTrigger trigger : itemTriggers) {
+            if (trigger.isSatisfied(player.getInventory())) {
+                BingoPlayer bp = plugin.getCurrentGame().getBingoPlayer(player);
+                if (bp != null) {
+                    bp.getPlayerBoard().autoMark(trigger.space);
+                }
+            }
+        }
+    }
+
     static boolean listenerExists(Class<? extends Event> listenerType) {
-        return Arrays.stream(AutoMarkListener.class.getDeclaredMethods()).anyMatch(method ->
+        return Arrays.stream(EventTriggerBukkitListener.class.getDeclaredMethods()).anyMatch(method ->
             method.getAnnotation(EventHandler.class) != null
                 && method.getParameterTypes()[0].equals(listenerType)
         );
@@ -97,7 +206,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        impulseEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -106,7 +215,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        impulseEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -117,7 +226,7 @@ public class AutoMarkListener implements Listener {
 
         Player p = (Player) event.getWhoClicked();
 
-        this.autoMarking.impulseEvent(event, p);
+        impulseEvent(event, p);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -126,7 +235,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getLocation().getWorld());
+        impulseEvent(event, event.getLocation().getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -135,7 +244,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getEntity().getWorld());
+        impulseEvent(event, event.getEntity().getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -149,7 +258,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, damager);
+        impulseEvent(event, damager);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -158,7 +267,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getLocation().getWorld());
+        impulseEvent(event, event.getLocation().getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -167,7 +276,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getEntity().getWorld());
+        impulseEvent(event, event.getEntity().getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -178,9 +287,9 @@ public class AutoMarkListener implements Listener {
 
         Player p = (Player) event.getEntity();
         // 1 tick later so the item is in the player's inventory
-        this.autoMarking.game.plugin.getServer().getScheduler().scheduleSyncDelayedTask(
-            this.autoMarking.game.plugin, () -> this.autoMarking.impulseInventory(p), 1);
-        this.autoMarking.impulseEvent(event, p);
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(
+            plugin, () -> impulseInventory(p), 1);
+        impulseEvent(event, p);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -194,7 +303,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, owner);
+        impulseEvent(event, owner);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -203,7 +312,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getBlock().getWorld());
+        impulseEvent(event, event.getBlock().getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -213,8 +322,8 @@ public class AutoMarkListener implements Listener {
         }
 
         Player p = (Player) event.getPlayer();
-        this.autoMarking.impulseInventory(p);
-        this.autoMarking.impulseEvent(event, p);
+        impulseInventory(p);
+        impulseEvent(event, p);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -223,7 +332,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        impulseEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -232,7 +341,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getEntity());
+        impulseEvent(event, event.getEntity());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -241,7 +350,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        impulseEvent(event, event.getPlayer());
     }
 
     // No ignoreCancelled because Bukkit cancels air interact events for some reason...
@@ -251,7 +360,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        impulseEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -260,7 +369,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        impulseEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -269,7 +378,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        impulseEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -278,7 +387,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        impulseEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -287,7 +396,7 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getWorld());
+        impulseEvent(event, event.getWorld());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -296,6 +405,6 @@ public class AutoMarkListener implements Listener {
             return;
         }
 
-        this.autoMarking.impulseEvent(event, event.getPlayer());
+        impulseEvent(event, event.getPlayer());
     }
 }

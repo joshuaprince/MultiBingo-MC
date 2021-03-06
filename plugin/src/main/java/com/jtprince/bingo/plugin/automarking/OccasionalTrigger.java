@@ -19,7 +19,7 @@ import java.util.logging.Level;
  * Defines a Trigger that is called at a regular interval to check if a player has completed a
  * goal.
  */
-public class OccasionalTrigger {
+class OccasionalTrigger extends AutoMarkTrigger {
     final Space space;
     private final Method method;
     private final int taskId;
@@ -29,10 +29,9 @@ public class OccasionalTrigger {
         this.method = method;
         this.taskId = space.board.game.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(
                 space.board.game.plugin, this::invoke, anno.value(), anno.value());
-        // TODO: Clean up tasks when game ends
     }
 
-    public static ArrayList<OccasionalTrigger> createOccasionalTriggers(Space space) {
+    static ArrayList<OccasionalTrigger> createTriggers(Space space) {
         ArrayList<OccasionalTrigger> ret = new ArrayList<>();
 
         // Register goals with Method triggers

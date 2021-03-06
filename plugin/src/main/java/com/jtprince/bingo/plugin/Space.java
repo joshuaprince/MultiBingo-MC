@@ -1,8 +1,6 @@
 package com.jtprince.bingo.plugin;
 
-import com.jtprince.bingo.plugin.automarking.EventTrigger;
-import com.jtprince.bingo.plugin.automarking.ItemTrigger;
-import com.jtprince.bingo.plugin.automarking.OccasionalTrigger;
+import com.jtprince.bingo.plugin.automarking.AutoMarkTrigger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -19,9 +17,7 @@ public class Space {
     public final int spaceId;
     public final Map<String, Integer> variables = new HashMap<>();
 
-    public final Collection<ItemTrigger> itemTriggers;
-    public final Collection<EventTrigger> eventTriggers;
-    public final Collection<OccasionalTrigger> occasionalTriggers;
+    public final Collection<AutoMarkTrigger> autoMarkTriggers;
 
     public Space(GameBoard board, JSONObject obj) {
         this.board = board;
@@ -40,17 +36,19 @@ public class Space {
             }
         }
 
-        JSONArray triggers = (JSONArray) obj.get("triggers");
-        this.itemTriggers = ItemTrigger.fromJson(triggers);
+        /* List of Auto-Triggers defined in goals.xml and passed to the plugin as JSON */
+        JSONArray xmlTriggers = (JSONArray) obj.get("triggers");
 
-        // Must be at the end of the constructor since we pass `this`
-        this.eventTriggers = EventTrigger.createEventTriggers(this);
-        this.occasionalTriggers = OccasionalTrigger.createOccasionalTriggers(this);
+        this.autoMarkTriggers = AutoMarkTrigger.createAllTriggers(this, xmlTriggers);
     }
 
     public void destroy() {
-        for (OccasionalTrigger t : occasionalTriggers) {
+        for (AutoMarkTrigger t : this.autoMarkTriggers) {
             t.destroy();
         }
+    }
+
+    public boolean isAutoMarked() {
+        return autoMarkTriggers.size() > 0;
     }
 }

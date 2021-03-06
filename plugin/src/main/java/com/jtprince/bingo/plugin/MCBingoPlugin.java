@@ -1,9 +1,11 @@
 package com.jtprince.bingo.plugin;
 
+import com.jtprince.bingo.plugin.automarking.EventTriggerBukkitListener;
 import dev.jorel.commandapi.CommandAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
 
@@ -16,6 +18,7 @@ public class MCBingoPlugin extends JavaPlugin {
 
     public WorldManager worldManager;
     private BingoGame currentGame;
+    public EventTriggerBukkitListener autoMarkListener;
 
     @Override
     public void onLoad() {
@@ -37,6 +40,14 @@ public class MCBingoPlugin extends JavaPlugin {
         new MCBCommands(this).registerCommands();
 
         this.saveDefaultConfig();
+
+        this.autoMarkListener = new EventTriggerBukkitListener(this);
+        getServer().getPluginManager().registerEvents(autoMarkListener, this);
+    }
+
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this.autoMarkListener);
     }
 
     public static MCBingoPlugin instance() {

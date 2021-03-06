@@ -29,12 +29,18 @@ public class GameBoard {
             spaces.stream().collect(Collectors.toMap(space -> space.spaceId, space -> space))
         );
 
-        // Register spaces with auto marking
-        Set<Space> autoSpaces = this.game.autoMarking.registerGoals(spaces);
+        // TODO return this info to webserver
+        Set<Space> autoSpaces = spaces.stream().filter(Space::isAutoMarked).collect(Collectors.toSet());
         MCBingoPlugin.logger().info("Auto activation on:" + String.join(", ",
             autoSpaces.stream().map(spc -> spc.goalId).collect(Collectors.toUnmodifiableList())));
 
         this.game.transitionToReady();
+    }
+
+    public void destroy() {
+        for (Space sp : this.spaces.values()) {
+            sp.destroy();
+        }
     }
 
     /**

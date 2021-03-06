@@ -1,6 +1,5 @@
 package com.jtprince.bingo.plugin;
 
-import com.jtprince.bingo.plugin.automarking.AutoMarking;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,7 +16,6 @@ import java.util.*;
 public class BingoGame {
     public final MCBingoPlugin plugin;
     public final Messages messages;
-    public final AutoMarking autoMarking;
     public BingoWebSocketClient wsClient;
     public final GameBoard gameBoard;
 
@@ -33,7 +31,6 @@ public class BingoGame {
         this.players = new HashSet<>(players);
 
         this.messages = new Messages(this);
-        this.autoMarking = new AutoMarking(this);
         this.gameBoard = new GameBoard(this);
 
         this.generateBoard(settings);
@@ -76,11 +73,11 @@ public class BingoGame {
         MCBingoPlugin.logger().info("Destroying game " + gameCode);
         this.messages.basicAnnounce("The game has ended!");
 
+        this.gameBoard.destroy();
         if (this.wsClient != null) {
             this.wsClient.close();
         }
         this.unloadWorldSets();
-        this.autoMarking.destroy();
     }
 
     public synchronized void transitionToReady() {

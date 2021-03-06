@@ -1,5 +1,7 @@
 package com.jtprince.bingo.plugin.automarking;
 
+import com.jtprince.bingo.plugin.MCBingoPlugin;
+import com.jtprince.bingo.plugin.Space;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
@@ -15,22 +17,32 @@ import java.util.regex.Pattern;
  * Defines an item or set of items that the user can collect to automatically mark a Space as
  * completed.
  */
-public class ItemTrigger {
+class ItemTrigger extends AutoMarkTrigger {
+    Space space;
     private int neededMatchGroups = 1;
     private final ArrayList<ItemMatchGroup> matchGroups = new ArrayList<>();
 
-    public static Collection<ItemTrigger> fromJson(JSONArray triggers) {
+    static Collection<ItemTrigger> createTriggers(Space space, JSONArray triggers) {
         ArrayList<ItemTrigger> ret = new ArrayList<>();
         if (triggers != null) {
             for (Object trigger : triggers) {
                 JSONObject trig = (JSONObject) trigger;
-                ret.add(new ItemTrigger(trig));
+
+                ItemTrigger it = new ItemTrigger(space, trig);
+                MCBingoPlugin.instance().autoMarkListener.register(it);
+                ret.add(it);
             }
         }
         return ret;
     }
 
-    private ItemTrigger(JSONObject json) {
+    @Override
+    public void destroy() {
+        MCBingoPlugin.instance().autoMarkListener.unregister(this);
+    }
+
+    private ItemTrigger(Space space, JSONObject json) {
+        this.space = space;
         JSONObject itemTriggerJson = (JSONObject) json.get("ItemTrigger");
 
         String needed = (String) itemTriggerJson.get("@needed");
@@ -63,7 +75,7 @@ public class ItemTrigger {
         }
     }
 
-    public boolean isSatisfied(Inventory inv) {
+    boolean isSatisfied(Inventory inv) {
         int matchesAllGroups = 0;
 
         for (ItemMatchGroup mg : matchGroups) {

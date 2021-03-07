@@ -15,7 +15,6 @@ public class Messages {
     private static final ChatColor COLOR_HEADER = ChatColor.GOLD;
     private static final ChatColor COLOR_TEXT = ChatColor.AQUA;
 
-    private final BaseComponent[] HEADER;
     private static final BaseComponent[] HEADER_NO_GAME = new ComponentBuilder("[BINGO]")
         .color(COLOR_HEADER).bold(true)
         .append(" ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
@@ -23,16 +22,25 @@ public class Messages {
 
     public Messages(BingoGame game) {
         this.game = game;
-        this.HEADER = new ComponentBuilder(HEADER_NO_GAME[0])
-            .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new Text("Game Code: " + game.gameCode)))
-            .append(HEADER_NO_GAME[1], ComponentBuilder.FormatRetention.NONE)
-            .create();
+    }
+
+    public BaseComponent[] getHeader() {
+        ComponentBuilder builder = new ComponentBuilder(HEADER_NO_GAME[0]);
+
+        if (this.game.gameCode != null) {
+            builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new Text("Game Code: " + game.gameCode)));
+
+        }
+
+        builder.append(HEADER_NO_GAME[1], ComponentBuilder.FormatRetention.NONE);
+
+        return builder.create();
     }
 
     public void basicTell(CommandSender sender, String msg) {
         BaseComponent[] components = new ComponentBuilder()
-            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
             .append(msg)
             .create();
         sender.sendMessage(components);
@@ -40,7 +48,7 @@ public class Messages {
 
     public void basicAnnounce(String msg) {
         BaseComponent[] components = new ComponentBuilder()
-            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
             .append(msg)
             .create();
         this.game.plugin.getServer().broadcast(components);
@@ -56,7 +64,7 @@ public class Messages {
 
     public void announcePreparingGame() {
         BaseComponent[] components = new ComponentBuilder()
-            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
             .append("Generating worlds for new game ")
             .append(game.gameCode).color(ChatColor.BLUE)
             .append(".").color(COLOR_TEXT)
@@ -64,7 +72,7 @@ public class Messages {
         this.game.plugin.getServer().broadcast(components);
 
         components = new ComponentBuilder()
-            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
             .append("This will cause the server to lag!")
             .create();
         this.game.plugin.getServer().broadcast(components);
@@ -72,7 +80,7 @@ public class Messages {
 
     public void announceGameFailed() {
         BaseComponent[] components = new ComponentBuilder()
-            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
             .append("Failed to connect to the Bingo board.").color(ChatColor.RED)
             .create();
         this.game.plugin.getServer().broadcast(components);
@@ -80,7 +88,7 @@ public class Messages {
 
     public void announceGameReady(Collection<BingoPlayer> players) {
         BaseComponent[] components = new ComponentBuilder()
-            .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
             .append("Bingo worlds have been generated for " + players.size() + " players.")
             .create();
         this.game.plugin.getServer().broadcast(components);
@@ -90,13 +98,13 @@ public class Messages {
             URL url = MCBConfig.getGameUrl(this.game.gameCode, p);
             if (url == null) {
                 components = new ComponentBuilder()
-                    .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+                    .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
                     .append("Could not get the board to link you to! Contact the server admin to "
                         + "update the plugin's config.yml.").color(ChatColor.RED)
                     .create();
             } else {
                 components = new ComponentBuilder()
-                    .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+                    .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
                     .append("[Open Board]").underlined(true).color(ChatColor.YELLOW)
                     .event(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(url.toString())))
@@ -116,7 +124,7 @@ public class Messages {
         BaseComponent[] components;
         if (!invalidated) {
             components = new ComponentBuilder()
-                .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+                .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
                 .append(player.getFormattedName())
                 .append(" has marked ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
                 .append(space.text).color(ChatColor.GREEN)
@@ -124,7 +132,7 @@ public class Messages {
                 .create();
         } else {
             components = new ComponentBuilder()
-                .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+                .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
                 .append(player.getFormattedName())
                 .append(" has invalidated ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
                 .append(space.text).color(ChatColor.RED)
@@ -140,7 +148,7 @@ public class Messages {
             if (bp instanceof BingoPlayerTeam) {
                 BingoPlayerTeam bpt = (BingoPlayerTeam) bp;
                 BaseComponent[] components = new ComponentBuilder()
-                    .append(HEADER, ComponentBuilder.FormatRetention.NONE)
+                    .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
                     .append("You are playing on team ")
                     .append(bpt.getFormattedName())
                     .append("!").color(COLOR_TEXT)

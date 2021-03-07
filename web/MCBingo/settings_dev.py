@@ -6,6 +6,7 @@ SECRET_KEY = 'qn+e-fai7lli06x5#-4z^h$zqj^&lvcfq16#vzbuqf1g!v4g2!'  # Dev only - 
 
 DEBUG = True
 
+FRONTEND_HOST = 'localhost:3000'
 ALLOWED_HOSTS = ['localhost']
 
 INSTALLED_APPS = [

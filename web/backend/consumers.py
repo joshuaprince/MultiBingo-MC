@@ -234,7 +234,7 @@ def mark_space_admin(board_id: int, player_name: str, space_id: int, to_state: i
     Mark a space on a player's board.
     :return: True if the board was changed, False otherwise.
     """
-    player_board_obj = PlayerBoard.objects.get(board_id=board_id, player_name=player_name)
+    player_board_obj = PlayerBoard.objects.get_or_create(board_id=board_id, player_name=player_name)[0]
     return player_board_obj.mark_space(space_id, to_state)
 
 

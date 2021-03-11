@@ -24,10 +24,20 @@ class MCBCommands {
         MultiLiteralArgument shapeArg = new MultiLiteralArgument("square", "hexagon");
         IntegerArgument diffArg = new IntegerArgument("difficulty", 0, 9);
         GreedyStringArgument forcedArg = new GreedyStringArgument("forcedGoals");
+
         // All-default form
         CommandAPICommand prepareCmd = new CommandAPICommand("prepare")
             .withAliases("p")
             .executes((CommandExecutor) (sender, args) -> commandPrepare(new GameSettings()));
+        // Game code form
+        CommandAPICommand prepareCmdGameCode = new CommandAPICommand("prepare")
+            .withAliases("p")
+            .withArguments(new StringArgument("gameCode"))
+            .executes((sender, args) -> {
+                GameSettings settings = new GameSettings();
+                settings.gameCode = (String) args[0];
+                commandPrepare(settings);
+            });
         // Shape-only form
         CommandAPICommand prepareCmdShaped = new CommandAPICommand("prepare")
             .withAliases("p")
@@ -104,6 +114,7 @@ class MCBCommands {
 
         CommandAPICommand root = new CommandAPICommand("bingo");
         root.withSubcommand(prepareCmd);
+        root.withSubcommand(prepareCmdGameCode);
         root.withSubcommand(prepareCmdShaped);
         root.withSubcommand(prepareCmdShapedDiff);
         root.withSubcommand(prepareCmdShapedDiffForced);

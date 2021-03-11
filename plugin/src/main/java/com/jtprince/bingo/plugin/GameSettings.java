@@ -21,10 +21,10 @@ import java.util.Arrays;
  */
 public class GameSettings {
     public String gameCode = null;
-    public String shape = "square";
-    public Integer boardDifficulty = 2;
+    public String shape = null;
+    public Integer boardDifficulty = null;
     public String seed = null;
-    public String[] forcedGoals = {};
+    public String[] forcedGoals = null;
 
     /**
      * Generate a board with the backend

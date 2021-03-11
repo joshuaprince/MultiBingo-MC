@@ -73,7 +73,9 @@ public class BingoGame {
         MCBingoPlugin.logger().info("Destroying game " + gameCode);
         this.messages.basicAnnounce("The game has ended!");
 
-        this.gameBoard.destroy();
+        if (this.gameBoard != null) {
+            this.gameBoard.destroy();
+        }
         if (this.wsClient != null) {
             this.wsClient.close();
         }

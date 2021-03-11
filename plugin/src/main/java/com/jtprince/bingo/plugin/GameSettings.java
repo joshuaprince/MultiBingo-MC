@@ -30,6 +30,7 @@ public class GameSettings {
      * Generate a board with the backend
      * @return The new game's Game Code
      */
+    @SuppressWarnings("unchecked")  // "Errors array" section below
     public String generateBoardBlocking() throws IOException, ParseException {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpPost httpPost = new HttpPost(MCBConfig.getBoardCreateUrl());
@@ -41,7 +42,20 @@ public class GameSettings {
                 HttpEntity responseEntity = response.getEntity();
                 JSONObject responseJson = (JSONObject) new JSONParser().parse(EntityUtils.toString(responseEntity));
                 EntityUtils.consume(responseEntity);
-                return (String) responseJson.get("game_code");
+
+                Object gameCodeObj = responseJson.get("game_code");
+                if (gameCodeObj instanceof JSONArray) {
+                    // Errors array
+                    if (((JSONArray)gameCodeObj).stream().allMatch(obj ->
+                        obj instanceof String && ((String)obj).contains("already exists"))) {
+                        // Board already exists on webserver.
+                        return this.gameCode;
+                    }
+                } else if (gameCodeObj instanceof String) {
+                    return (String) gameCodeObj;
+                }
+
+                throw new IOException("Unknown board generation response.");
             }
         }
     }

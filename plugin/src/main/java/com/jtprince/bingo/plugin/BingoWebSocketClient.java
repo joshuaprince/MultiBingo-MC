@@ -1,5 +1,6 @@
 package com.jtprince.bingo.plugin;
 
+import com.jtprince.bingo.plugin.player.BingoPlayer;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ServerHandshake;
@@ -23,6 +24,32 @@ public class BingoWebSocketClient extends WebSocketClient {
     public BingoWebSocketClient(BingoGame game, URI uri) {
         super(uri);
         this.game = game;
+    }
+
+    public void sendStartGame() {
+        if (!this.isOpen()) {
+            MCBingoPlugin.logger().warning(
+                "Dropping game_state start packet since Websocket is closed");
+            return;
+        }
+        Map<String, String> m = new HashMap<>();
+        m.put("action", "game_state");
+        m.put("to_state", "start");
+        JSONObject js = new JSONObject(m);
+        this.send(js.toJSONString());
+    }
+
+    public void sendEndGame() {
+        if (!this.isOpen()) {
+            MCBingoPlugin.logger().warning(
+                "Dropping game_state end packet since Websocket is closed");
+            return;
+        }
+        Map<String, String> m = new HashMap<>();
+        m.put("action", "game_state");
+        m.put("to_state", "end");
+        JSONObject js = new JSONObject(m);
+        this.send(js.toJSONString());
     }
 
     public void sendRevealBoard() {
@@ -71,16 +98,22 @@ public class BingoWebSocketClient extends WebSocketClient {
             JSONObject json = (JSONObject) obj;
             String playerName = (String) json.get("player_name");
             BingoPlayer player = this.game.getBingoPlayer(playerName);
-            if (player == null) {
-                MCBingoPlugin.logger().finest("No Bingo Player named " + playerName
-                    + " is on this server, but a board exists for them.");
-                continue;
-            }
-            PlayerBoard pb = player.getPlayerBoard();
-            if (pb != null) {
-                JSONArray markings = (JSONArray) json.get("markings");
-                pb.update(markings);
-            }
+            PlayerBoard pb = MCBingoPlugin.instance().getCurrentGame().getPlayerBoard(player);
+
+            JSONArray markings = (JSONArray) json.get("markings");
+            pb.update(markings);
+        }
+    }
+
+    private void receiveGameState(String toState) {
+        if (toState.equals("start")) {
+            this.game.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.game.plugin,
+                this.game::start);
+        }
+
+        if (toState.equals("end")) {
+            this.game.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.game.plugin,
+                MCBingoPlugin.instance()::destroyCurrentGame);
         }
     }
 
@@ -110,6 +143,11 @@ public class BingoWebSocketClient extends WebSocketClient {
         JSONArray pboards = (JSONArray) obj.get("pboards");
         if (pboards != null) {
             this.receivePlayerBoards(pboards);
+        }
+
+        String game_state = (String) obj.get("game_state");
+        if (game_state != null) {
+            this.receiveGameState(game_state);
         }
     }
 

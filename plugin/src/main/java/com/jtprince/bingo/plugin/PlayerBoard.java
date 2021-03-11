@@ -1,5 +1,6 @@
 package com.jtprince.bingo.plugin;
 
+import com.jtprince.bingo.plugin.player.BingoPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

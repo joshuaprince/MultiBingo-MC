@@ -1,10 +1,13 @@
 package com.jtprince.bingo.plugin;
 
+import com.jtprince.bingo.plugin.player.BingoPlayer;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.*;
+import java.util.Collection;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class MCBConfig {
     /**
@@ -40,7 +43,7 @@ public class MCBConfig {
      * Get the WebSocket URL to connect to the Bingo webserver hosting a game.
      * @param gameCode Game code that will be put in the URL, or null if it is improperly configured.
      */
-    public static URI getWebsocketUrl(String gameCode) {
+    public static URI getWebsocketUrl(String gameCode, Collection<BingoPlayer> players) {
         String template = MCBingoPlugin.instance().getConfig().getString("web_url");
         if (template == null) {
             MCBingoPlugin.logger().severe("No web_url is configured!");
@@ -58,7 +61,11 @@ public class MCBConfig {
                 throw new URISyntaxException(template, "Scheme must be http or https");
             }
 
-            builder.setPathSegments("ws", "board-plugin", gameCode);
+            String clientId =
+                "Plugin:" + String.join(",",
+                    players.stream().map(BingoPlayer::getSlugName).collect(Collectors.toUnmodifiableList()));
+
+            builder.setPathSegments("ws", "board-plugin", gameCode, clientId);
 
             return builder.build();
         } catch (URISyntaxException e) {

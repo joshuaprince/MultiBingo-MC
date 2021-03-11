@@ -1,6 +1,7 @@
 import json
 from abc import ABC, abstractmethod
 from datetime import timedelta
+from random import randrange
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
@@ -16,10 +17,10 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         super().__init__(*args, **kwargs)
         self.allowed_actions = []
         self.game_code = None
+        self.client_id = None  # Player Name if a player; unique ID if otherwise
         self.board_id = None
 
         # Optional - only set if this is representative of a single Player and not a Spectator
-        self.player_name = None  # Remains None if this represents a Spectator
         self.player_board_id = None  # Remains None if this represents a Spectator
 
     async def connect(self):
@@ -27,7 +28,7 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
 
         board_obj = await get_board(self.game_code)
         if not board_obj:
-            print(f"Error getting board: {self.game_code} (player: {self.player_name})")
+            print(f"Error getting board: {self.game_code} (client: {self.client_id})")
             return  # reject connection
         self.board_id = board_obj.pk
 
@@ -43,7 +44,7 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         action = text_data_json.get('action')
 
         if action not in self.allowed_actions:
-            print("WebSocket " + self.player_name + " attempted disallowed action " + action)
+            print("WebSocket " + self.client_id + " attempted disallowed action " + action)
             return
 
         if action == 'board_mark' and self.player_board_id:
@@ -57,6 +58,10 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
             to_state = int(text_data_json['to_state'])
             player_name = text_data_json['player']
             broadcast_pboards = await self.rx_mark_board_admin(space_id, to_state, player_name)
+
+        if action == 'game_state':
+            to_state = text_data_json['to_state']
+            await self.rx_game_state(to_state)
 
         if action == 'reveal_board':
             revealed = await self.rx_reveal_board()
@@ -86,6 +91,11 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
     async def rx_mark_board_admin(self, space_id, to_state, player):
         return await mark_space_admin(self.board_id, player, space_id, to_state)
 
+    async def rx_game_state(self, to_state):
+        valid_states = ['start', 'end']
+        if to_state in valid_states:
+            await self.send_game_state_all_consumers(to_state)
+
     async def rx_reveal_board(self):
         changed = await reveal_board(self.board_id)
         return changed
@@ -113,25 +123,41 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         board_states = await get_pboard_states(self.board_id)
         await self.send(text_data=json.dumps(board_states))
 
+    async def send_game_state_all_consumers(self, to_state):
+        await self.channel_layer.group_send(
+            self.game_code, {
+                'type': 'send_game_state_to_ws',
+                'to_state': to_state,
+            }
+        )
+
+    async def send_game_state_to_ws(self, event=None):
+        await self.send(text_data=json.dumps({
+            'game_state': event['to_state']
+        }))
+
 
 class PlayerWebConsumer(BaseWebConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.allowed_actions = [
             'board_mark',
-            'reveal_board'
+            'reveal_board',
         ]
 
     async def connect(self):
         await super().connect()
-        self.player_name = self.scope['url_route']['kwargs'].get('player_name')
+        self.client_id = self.scope['url_route']['kwargs'].get('player_name')
 
-        if self.player_name:
-            player_board_obj = await get_player_board(self.board_id, self.player_name)
+        if self.client_id:
+            player_board_obj = await get_player_board(self.board_id, self.client_id)
             self.player_board_id = player_board_obj.pk
             await mark_disconnected(self.player_board_id, False)
+        else:
+            # This is a spectator. Give them a unique identifier.
+            self.client_id = f'[Spectator {randrange(9999)}]'
 
-        print(f"{self.player_name if self.player_name else 'Spectator'} joined game {self.game_code}.")
+        print(f"{self.client_id} joined game {self.game_code}.")
 
     async def disconnect(self, code):
         await super().disconnect(code)
@@ -139,7 +165,7 @@ class PlayerWebConsumer(BaseWebConsumer):
             await mark_disconnected(self.player_board_id, True)
             await self.send_pboards_all_consumers()
 
-        print(f"{self.player_name if self.player_name else 'Spectator'} disconnected from game {self.game_code}.")
+        print(f"{self.client_id} disconnected from game {self.game_code}.")
 
     async def send_board_to_ws(self, event=None):
         board = await get_board_player(self.board_id)
@@ -153,16 +179,18 @@ class PluginBackendConsumer(BaseWebConsumer):
         super().__init__(*args, **kwargs)
         self.allowed_actions = [
             'board_mark_admin',
-            'reveal_board'
+            'game_state',
+            'reveal_board',
         ]
 
     async def connect(self):
         await super().connect()
-        print(f"Plugin Backend joined game {self.game_code}.")
+        self.client_id = '{' + self.scope['url_route']['kwargs'].get('client_id') + '}'
+        print(f"{self.client_id} joined game {self.game_code}.")
 
     async def disconnect(self, code):
         await super().disconnect(code)
-        print(f"Plugin Backend disconnected from game {self.game_code}.")
+        print(f"{self.client_id} disconnected from game {self.game_code}.")
 
     async def send_board_to_ws(self, event=None):
         board = await get_board_plugin(self.board_id)

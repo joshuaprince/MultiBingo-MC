@@ -1,5 +1,7 @@
 package com.jtprince.bingo.plugin;
 
+import com.jtprince.bingo.plugin.player.BingoPlayer;
+import com.jtprince.bingo.plugin.player.BingoPlayerTeam;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -86,15 +88,18 @@ public class Messages {
         this.game.plugin.getServer().broadcast(components);
     }
 
-    public void announceGameReady(Collection<BingoPlayer> players) {
+    public void announceWorldsGenerated(Collection<BingoPlayer> players) {
         BaseComponent[] components = new ComponentBuilder()
             .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
             .append("Bingo worlds have been generated for " + players.size() + " players.")
             .create();
         this.game.plugin.getServer().broadcast(components);
+    }
 
+    public void announceGameReady(Collection<BingoPlayer> players) {
+        BaseComponent[] components;
         for (BingoPlayer p : players) {
-            // Game link
+            // Game link for this specific player
             URL url = MCBConfig.getGameUrl(this.game.gameCode, p);
             if (url == null) {
                 components = new ComponentBuilder()
@@ -114,6 +119,7 @@ public class Messages {
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Start Game")))
                     .create();
             }
+
             for (Player bukkitPlayer : p.getBukkitPlayers()) {
                 bukkitPlayer.sendMessage(components);
             }

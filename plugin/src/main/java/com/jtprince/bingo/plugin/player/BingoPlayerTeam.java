@@ -1,4 +1,4 @@
-package com.jtprince.bingo.plugin;
+package com.jtprince.bingo.plugin.player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -23,7 +23,7 @@ public class BingoPlayerTeam extends BingoPlayer {
     public BingoPlayerTeam(String teamName, Collection<OfflinePlayer> teammates,
                            @Nullable ChatColor color) {
         this.playerUuids = teammates.stream().map(OfflinePlayer::getUniqueId)
-            .collect(Collectors.toCollection(ArrayList::new));
+            .collect(Collectors.toUnmodifiableSet());
         this.teamName = teamName;
         this.color = color;
     }
@@ -48,6 +48,6 @@ public class BingoPlayerTeam extends BingoPlayer {
     public @NotNull Collection<Player> getBukkitPlayers() {
         return this.playerUuids.stream().map(Bukkit::getPlayer)
             .filter(Objects::nonNull).filter(OfflinePlayer::isOnline)
-            .collect(Collectors.toCollection(ArrayList::new));
+            .collect(Collectors.toUnmodifiableSet());
     }
 }

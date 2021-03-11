@@ -1,6 +1,9 @@
 package com.jtprince.bingo.plugin;
 
 import com.jtprince.bingo.plugin.automarking.EventTriggerBukkitListener;
+import com.jtprince.bingo.plugin.player.BingoPlayer;
+import com.jtprince.bingo.plugin.player.BingoPlayerSingle;
+import com.jtprince.bingo.plugin.player.BingoPlayerTeam;
 import dev.jorel.commandapi.CommandAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

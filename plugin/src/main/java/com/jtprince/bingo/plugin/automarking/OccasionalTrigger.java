@@ -1,7 +1,7 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.BingoGame;
-import com.jtprince.bingo.plugin.BingoPlayer;
+import com.jtprince.bingo.plugin.player.BingoPlayer;
 import com.jtprince.bingo.plugin.MCBingoPlugin;
 import com.jtprince.bingo.plugin.Space;
 import org.bukkit.entity.Player;
@@ -65,12 +65,10 @@ class OccasionalTrigger extends AutoMarkTrigger {
         }
 
         try {
-            for (BingoPlayer p : this.space.board.game.getPlayers()) {
-
-
+            for (BingoPlayer p : this.space.board.game.getLocalPlayers()) {
                 boolean res = (boolean) this.method.invoke(this, p);
                 if (res) {
-                    p.getPlayerBoard().autoMark(this.space);
+                    space.board.game.getPlayerBoard(p).autoMark(this.space);
                 }
             }
         } catch (IllegalAccessException | InvocationTargetException e) {

@@ -1,5 +1,6 @@
 package com.jtprince.bingo.plugin;
 
+import com.jtprince.bingo.plugin.player.BingoPlayer;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.executors.CommandExecutor;
@@ -71,11 +72,7 @@ class MCBCommands {
 
         CommandAPICommand startCmd = new CommandAPICommand("start")
             .withAliases("s")
-            .executes((CommandExecutor) (sender, args) -> commandStart(sender, false));
-        CommandAPICommand startDebugCmd = new CommandAPICommand("start")
-            .withAliases("s")
-            .withArguments(new LiteralArgument("debug"))
-            .executes((CommandExecutor) (sender, args) -> commandStart(sender, true));
+            .executes((CommandExecutor) (sender, args) -> commandStart(sender));
 
         CommandAPICommand endCmd = new CommandAPICommand("end")
             .executes((CommandExecutor) (sender, args) -> commandEnd(sender));
@@ -89,7 +86,7 @@ class MCBCommands {
                     throw new CustomArgument.CustomArgumentException(
                         new CustomArgument.MessageBuilder("No games running."));
                 }
-                BingoPlayer player = this.plugin.getCurrentGame().getBingoPlayer(input);
+                BingoPlayer player = this.plugin.getCurrentGame().getLocalPlayer(input);
                 if (player == null) {
                     throw new CustomArgument.CustomArgumentException(
                         new CustomArgument.MessageBuilder("Unknown BingoPlayer: ").appendArgInput());
@@ -100,7 +97,7 @@ class MCBCommands {
                 if (this.plugin.getCurrentGame() == null) {
                     return new String[]{};
                 }
-                return this.plugin.getCurrentGame().getPlayers().stream()
+                return this.plugin.getCurrentGame().getLocalPlayers().stream()
                     .map(BingoPlayer::getSlugName).toArray(String[]::new);
             }))
             .executesPlayer((PlayerCommandExecutor) (sender, args) -> commandGo(sender, (BingoPlayer) args[0]));
@@ -124,7 +121,6 @@ class MCBCommands {
         root.withSubcommand(goSpawnCmd);
         if (MCBConfig.getDebug()) {
             root.withSubcommand(debugCmd);
-            root.withSubcommand(startDebugCmd);
         }
         root.register();
     }
@@ -133,13 +129,19 @@ class MCBCommands {
         this.plugin.prepareNewGame(settings);
     }
 
-    private void commandStart(CommandSender sender, boolean debug) {
-        if (this.plugin.getCurrentGame() == null) {
+    private void commandStart(CommandSender sender) {
+        BingoGame game = this.plugin.getCurrentGame();
+        if (game == null) {
             Messages.basicTellNoGame(sender, "No game is prepared! Use /bingo prepare <gameCode>");
             return;
         }
 
-        this.plugin.getCurrentGame().start(sender, debug);
+        if (game.state != BingoGame.State.READY) {
+            game.messages.basicTell(sender, "Game is not yet ready to be started!");
+            return;
+        }
+
+        game.wsClient.sendStartGame();
     }
 
     private void commandEnd(CommandSender sender) {
@@ -148,7 +150,9 @@ class MCBCommands {
             return;
         }
 
-        this.plugin.destroyCurrentGame();
+        this.plugin.getCurrentGame().wsClient.sendEndGame();
+
+        this.plugin.destroyCurrentGame();  // Fail-safe in case the above remote call fails
     }
 
     private void commandGo(Player sender, @Nullable BingoPlayer destination) {
@@ -156,7 +160,8 @@ class MCBCommands {
             sender.teleport(WorldManager.getSpawnWorld().getSpawnLocation());
         } else {
             sender.teleport(
-                destination.getWorldSet().getWorld(World.Environment.NORMAL).getSpawnLocation());
+                MCBingoPlugin.instance().getCurrentGame().getWorldSet(destination)
+                    .getWorld(World.Environment.NORMAL).getSpawnLocation());
         }
     }
 

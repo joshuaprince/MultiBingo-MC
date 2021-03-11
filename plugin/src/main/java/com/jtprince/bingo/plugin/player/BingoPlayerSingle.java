@@ -1,5 +1,6 @@
-package com.jtprince.bingo.plugin;
+package com.jtprince.bingo.plugin.player;
 
+import com.jtprince.bingo.plugin.MCBingoPlugin;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;

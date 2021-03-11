@@ -71,6 +71,20 @@ Marks a space on the board for the specified player. Identical to `board_mark`
 but with the added `player` argument, which should have a string matching
 the player whose name to mark.
 
+### game_state
+Example:
+```json
+{
+  "action": "game_state",
+  "to_state": "start"
+}
+```
+
+Availability: Plugin socket only.  
+
+Signals the server to change its game state. This means starting or ending a 
+game. `to_state` may be either `start` or `end`.
+
 ### reveal_board
 Example:
 ```json
@@ -250,3 +264,15 @@ game. `player_id` is a unique identifier for this player. `markings` is a list
 of all spaces on this board and the current marking that this player has on that
 square. `disconnected_at` is an ISO datetime if the player disconnected from the
 game, or null if the plyer is still connected.
+
+### Game State Change
+
+This packet is relayed directly from the client-to-server `game_state` API. 
+It indicates to any plugin backends connected to either start or end the game.
+Example:
+
+```json
+{
+  "game_state": "start"
+}
+```

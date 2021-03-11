@@ -1,7 +1,7 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.BingoGame;
-import com.jtprince.bingo.plugin.BingoPlayer;
+import com.jtprince.bingo.plugin.player.BingoPlayer;
 import com.jtprince.bingo.plugin.MCBingoPlugin;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.World;
@@ -108,7 +108,7 @@ public class EventTriggerBukkitListener implements Listener {
         }
 
         BingoPlayer bp = plugin.getCurrentGame().getBingoPlayer((Player) player);
-        boolean ret = !plugin.getCurrentGame().getPlayers().contains(bp);
+        boolean ret = !plugin.getCurrentGame().getLocalPlayers().contains(bp);
         if (ret) {
             MCBingoPlugin.logger().fine("ActivationListener ignored player " + player.getName());
         }
@@ -149,7 +149,7 @@ public class EventTriggerBukkitListener implements Listener {
 
         for (EventTrigger gal : methods) {
             if (gal.satisfiedBy(event)) {
-                player.getPlayerBoard().autoMark(gal.space);
+                this.plugin.getCurrentGame().getPlayerBoard(player).autoMark(gal.space);
             }
         }
     }
@@ -187,7 +187,7 @@ public class EventTriggerBukkitListener implements Listener {
             if (trigger.isSatisfied(player.getInventory())) {
                 BingoPlayer bp = plugin.getCurrentGame().getBingoPlayer(player);
                 if (bp != null) {
-                    bp.getPlayerBoard().autoMark(trigger.space);
+                    this.plugin.getCurrentGame().getPlayerBoard(bp).autoMark(trigger.space);
                 }
             }
         }

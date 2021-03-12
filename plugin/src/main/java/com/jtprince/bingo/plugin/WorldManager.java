@@ -179,7 +179,7 @@ public class WorldManager implements Listener {
         }
     }
 
-    WorldSet findWorldSet(World world) {
+    public WorldSet findWorldSet(World world) {
         for (WorldSet ws : worldSetMap.values()) {
             for (Environment env : Environment.values()) {
                 if (world.equals(ws.getWorld(env))) {

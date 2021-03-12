@@ -86,7 +86,7 @@ class MCBCommands {
                     throw new CustomArgument.CustomArgumentException(
                         new CustomArgument.MessageBuilder("No games running."));
                 }
-                BingoPlayer player = this.plugin.getCurrentGame().getLocalPlayer(input);
+                BingoPlayer player = this.plugin.getCurrentGame().playerManager.getLocalPlayer(input);
                 if (player == null) {
                     throw new CustomArgument.CustomArgumentException(
                         new CustomArgument.MessageBuilder("Unknown BingoPlayer: ").appendArgInput());
@@ -97,7 +97,7 @@ class MCBCommands {
                 if (this.plugin.getCurrentGame() == null) {
                     return new String[]{};
                 }
-                return this.plugin.getCurrentGame().getLocalPlayers().stream()
+                return this.plugin.getCurrentGame().playerManager.getLocalPlayers().stream()
                     .map(BingoPlayer::getSlugName).toArray(String[]::new);
             }))
             .executesPlayer((PlayerCommandExecutor) (sender, args) -> commandGo(sender, (BingoPlayer) args[0]));
@@ -160,7 +160,7 @@ class MCBCommands {
             sender.teleport(WorldManager.getSpawnWorld().getSpawnLocation());
         } else {
             sender.teleport(
-                MCBingoPlugin.instance().getCurrentGame().getWorldSet(destination)
+                MCBingoPlugin.instance().getCurrentGame().playerManager.getWorldSet(destination)
                     .getWorld(World.Environment.NORMAL).getSpawnLocation());
         }
     }

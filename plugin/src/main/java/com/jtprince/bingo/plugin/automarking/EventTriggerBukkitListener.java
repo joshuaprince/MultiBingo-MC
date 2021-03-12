@@ -107,8 +107,8 @@ public class EventTriggerBukkitListener implements Listener {
             return true;
         }
 
-        BingoPlayer bp = plugin.getCurrentGame().getBingoPlayer((Player) player);
-        boolean ret = !plugin.getCurrentGame().getLocalPlayers().contains(bp);
+        BingoPlayer bp = plugin.getCurrentGame().playerManager.getBingoPlayer((Player) player);
+        boolean ret = !plugin.getCurrentGame().playerManager.getLocalPlayers().contains(bp);
         if (ret) {
             MCBingoPlugin.logger().fine("ActivationListener ignored player " + player.getName());
         }
@@ -125,7 +125,7 @@ public class EventTriggerBukkitListener implements Listener {
             return true;
         }
 
-        BingoPlayer p = plugin.getCurrentGame().getBingoPlayer(world);
+        BingoPlayer p = plugin.getCurrentGame().playerManager.getBingoPlayer(world);
 
         if (p == null) {
             MCBingoPlugin.logger().finest("ActivationListener ignored world " + world.getName());
@@ -149,7 +149,7 @@ public class EventTriggerBukkitListener implements Listener {
 
         for (EventTrigger gal : methods) {
             if (gal.satisfiedBy(event)) {
-                this.plugin.getCurrentGame().getPlayerBoard(player).autoMark(gal.space);
+                this.plugin.getCurrentGame().playerManager.getPlayerBoard(player).autoMark(gal.space);
             }
         }
     }
@@ -162,7 +162,7 @@ public class EventTriggerBukkitListener implements Listener {
      *               whose board should be marked.
      */
     private void impulseEvent(Event event, Player player) {
-        this.impulseEvent(event, plugin.getCurrentGame().getBingoPlayer(player));
+        this.impulseEvent(event, plugin.getCurrentGame().playerManager.getBingoPlayer(player));
     }
 
     /**
@@ -173,7 +173,7 @@ public class EventTriggerBukkitListener implements Listener {
      *              should be marked.
      */
     private void impulseEvent(Event event, World world) {
-        this.impulseEvent(event, plugin.getCurrentGame().getBingoPlayer(world));
+        this.impulseEvent(event, plugin.getCurrentGame().playerManager.getBingoPlayer(world));
     }
 
     /**
@@ -185,9 +185,9 @@ public class EventTriggerBukkitListener implements Listener {
     void impulseInventory(Player player) {
         for (ItemTrigger trigger : itemTriggers) {
             if (trigger.isSatisfied(player.getInventory())) {
-                BingoPlayer bp = plugin.getCurrentGame().getBingoPlayer(player);
+                BingoPlayer bp = plugin.getCurrentGame().playerManager.getBingoPlayer(player);
                 if (bp != null) {
-                    this.plugin.getCurrentGame().getPlayerBoard(bp).autoMark(trigger.space);
+                    this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoMark(trigger.space);
                 }
             }
         }

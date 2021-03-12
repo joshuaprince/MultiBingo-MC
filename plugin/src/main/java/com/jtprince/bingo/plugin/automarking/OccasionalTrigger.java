@@ -65,10 +65,10 @@ class OccasionalTrigger extends AutoMarkTrigger {
         }
 
         try {
-            for (BingoPlayer p : this.space.board.game.getLocalPlayers()) {
+            for (BingoPlayer p : this.space.board.game.playerManager.getLocalPlayers()) {
                 boolean res = (boolean) this.method.invoke(this, p);
                 if (res) {
-                    space.board.game.getPlayerBoard(p).autoMark(this.space);
+                    space.board.game.playerManager.getPlayerBoard(p).autoMark(this.space);
                 }
             }
         } catch (IllegalAccessException | InvocationTargetException e) {

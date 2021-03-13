@@ -182,13 +182,16 @@ public class EventTriggerBukkitListener implements Listener {
      *
      * @param player The player whose inventory should be scanned.
      */
-    void impulseInventory(Player player) {
+    private void impulseInventory(Player player) {
+        BingoPlayer bp = plugin.getCurrentGame().playerManager.getBingoPlayer(player);
+        if (bp == null) {
+            return;
+        }
         for (ItemTrigger trigger : itemTriggers) {
             if (trigger.isSatisfied(player.getInventory())) {
-                BingoPlayer bp = plugin.getCurrentGame().playerManager.getBingoPlayer(player);
-                if (bp != null) {
-                    this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoMark(trigger.space);
-                }
+                this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoMark(trigger.space);
+            } else {
+                this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoRevert(trigger.space);
             }
         }
     }
@@ -341,7 +344,11 @@ public class EventTriggerBukkitListener implements Listener {
             return;
         }
 
-        impulseEvent(event, event.getEntity());
+        Player p = event.getEntity();
+        impulseEvent(event, p);
+        // 1 tick later so player's inventory is empty
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(
+            plugin, () -> impulseInventory(p), 1);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

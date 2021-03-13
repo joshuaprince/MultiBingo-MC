@@ -2,7 +2,6 @@ package com.jtprince.bingo.plugin.player;
 
 import com.jtprince.bingo.plugin.BingoGame;
 import com.jtprince.bingo.plugin.MCBingoPlugin;
-import com.jtprince.bingo.plugin.PlayerBoard;
 import com.jtprince.bingo.plugin.WorldManager;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

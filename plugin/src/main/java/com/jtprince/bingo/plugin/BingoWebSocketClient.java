@@ -1,6 +1,7 @@
 package com.jtprince.bingo.plugin;
 
 import com.jtprince.bingo.plugin.player.BingoPlayer;
+import com.jtprince.bingo.plugin.player.PlayerBoard;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ServerHandshake;

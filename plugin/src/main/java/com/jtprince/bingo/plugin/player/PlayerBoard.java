@@ -1,6 +1,8 @@
-package com.jtprince.bingo.plugin;
+package com.jtprince.bingo.plugin.player;
 
-import com.jtprince.bingo.plugin.player.BingoPlayer;
+import com.jtprince.bingo.plugin.BingoGame;
+import com.jtprince.bingo.plugin.MCBingoPlugin;
+import com.jtprince.bingo.plugin.Space;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,8 +16,8 @@ import java.util.*;
  * version.
  */
 public class PlayerBoard {
-    final BingoGame game;
-    final BingoPlayer player;
+    private final BingoGame game;
+    private final BingoPlayer player;
 
     /**
      * The latest known markings on this board.
@@ -29,6 +31,19 @@ public class PlayerBoard {
      * space is announced multiple times (i.e. if the player manually changes it).
      */
     private final Set<Integer> announcedSpaceIds = new HashSet<>();
+
+    /**
+     * List of spaces on this player's board that this plugin has sent to the webserver, but that
+     * we haven't gotten a change back yet for. Used to determine if an incoming change was remote
+     * or from this plugin.
+     */
+    private final Set<Integer> spacesChangingInFlight = new HashSet<>();
+
+    /**
+     * List of spaces on this player's board that were changed by something outside of this plugin,
+     * such as clicking on the web UI, meaning that we should no longer try to modify it.
+     */
+    private final Set<Integer> remoteChangedSpaceIds = new HashSet<>();
 
     /* Board marking states */
     final static int UNMARKED = 0;
@@ -52,9 +67,29 @@ public class PlayerBoard {
      * @param space Space to mark.
      */
     public synchronized void autoMark(@NotNull Space space) {
-        int toState = space.goalType.equals("negative") ? 3 : 1;
+        if (remoteChangedSpaceIds.contains(space.spaceId)) {
+            return;
+        }
+
+        int toState = space.goalType.equals("negative") ? INVALIDATED : COMPLETE;
         if (markings.get(space.spaceId) != toState) {
+            spacesChangingInFlight.add(space.spaceId);
             this.game.wsClient.sendMarkSpace(player.getName(), space.spaceId, toState);
+        }
+    }
+
+    /**
+     * Marks a space as "unmarked" (blue), only if it was previously marked.
+     * @param space Space to unmark.
+     */
+    public synchronized void autoRevert(@NotNull Space space) {
+        if (remoteChangedSpaceIds.contains(space.spaceId)) {
+            return;
+        }
+
+        if (markings.get(space.spaceId) == COMPLETE) {
+            spacesChangingInFlight.add(space.spaceId);
+            this.game.wsClient.sendMarkSpace(player.getName(), space.spaceId, REVERTED);
         }
     }
 
@@ -85,6 +120,13 @@ public class PlayerBoard {
     }
 
     private void onChange(int spaceId, int toState) {
+        if (spacesChangingInFlight.contains(spaceId)) {
+            spacesChangingInFlight.remove(spaceId);
+        } else {
+            MCBingoPlugin.logger().info("Got remote change to " + this.player.getName() +
+                " " + game.gameBoard.getSpaces().get(spaceId).goalId + ". No longer tracking.");
+            remoteChangedSpaceIds.add(spaceId);
+        }
         this.considerAnnounceChange(spaceId, toState);
     }
 

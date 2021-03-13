@@ -6,6 +6,9 @@
 
 body {
   font-family: minecraftFont, sans-serif;
+  background-image: url('./bg.jpg');
+  background-repeat: repeat;
+  background-size: 100px;
 }
 
 .primary .player-name {
@@ -14,6 +17,10 @@ body {
 
 .revealed .primary .bingo-space {
   cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
 }
 
 .obscured .bingo-space .bingo-space-content > * {
@@ -21,32 +28,15 @@ body {
 }
 
 .revealed .bingo-space {
-  &.mark-0 .bingo-space-content{
-    background: white;
-  }
-
-  &.mark-1 .bingo-space-content {
-    /* Complete */
-    background: greenyellow;
-  }
-
-  &.mark-2 .bingo-space-content {
-    /* Reverted */
-    background: lightskyblue;
-  }
-
-  &.mark-3 .bingo-space-content {
-    /* Invalidated */
-    background: palevioletred;
-  }
-
-  &.mark-4 .bingo-space-content {
-    /* Not Invalidated */
-    background: #dbffb3;
+  @import 'colors';
+  @each $i, $name in $markings {
+    &.mark-#{$i} .bingo-space-content {
+      background: $name;
+    }
   }
 
   &.winning .bingo-space-content {
-    background: coral !important;
+    background: $marking-win !important;
   }
 }
 

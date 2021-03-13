@@ -1,11 +1,14 @@
 import React from "react";
 import Tippy from "@tippyjs/react";
 
+import "tippy.js/animations/shift-away.css";
+
 import { ISpace } from "../interface/ISpace";
 import { sendMarkBoard } from "../api";
 import { Color } from "../interface/IPlayerBoard";
 import { IPosition } from "../interface/IPosition";
 import { BoardShape } from "../interface/IBoard";
+import { ColorPickerTooltip } from "./ColorPickerTooltip";
 
 type IProps = {
   obscured: boolean;
@@ -21,13 +24,13 @@ export const Space: React.FunctionComponent<IProps> = (props: IProps) => {
     e.preventDefault();
 
     if (props.obscured) {
-      return;
+      return false;
     }
 
     const isRightClick = e.button === 2;
-    const newMarking = isRightClick ? 0 : ((props.marking || 0) + 1) % Color.__COUNT;
-
-    sendMarkBoard(props.space.space_id, newMarking);
+    if (!isRightClick) {
+      sendMarkBoard(props.space.space_id, nextColor(props.marking));
+    }
 
     return false;
   }
@@ -65,9 +68,11 @@ export const Space: React.FunctionComponent<IProps> = (props: IProps) => {
   if (wholeSpaceTooltip) {
     return (<Tippy content={wholeSpaceTooltip}>{spaceDiv}</Tippy>)
   } else {
-    return spaceDiv;
+    const tooltipHtml = <ColorPickerTooltip spaceId={props.space.space_id}/>;
+    return <Tippy interactive delay={[500, 300]} animation={'shift-away'}
+                  content={tooltipHtml}>{spaceDiv}</Tippy>;
   }
-}
+};
 
 const getPositionStyle = (pos: IPosition, shape: BoardShape): React.CSSProperties => {
   if (shape === BoardShape.SQUARE) {
@@ -94,4 +99,21 @@ const getPositionStyle = (pos: IPosition, shape: BoardShape): React.CSSPropertie
   }
 
   throw new Error("Unknown board shape: " + shape);
-}
+};
+
+const nextColor = (col?: Color) => {
+  switch (col) {
+    case Color.UNMARKED:
+      return Color.COMPLETE;
+    case Color.COMPLETE:
+      return Color.UNMARKED;
+    case Color.REVERTED:
+      return Color.COMPLETE;
+    case Color.INVALIDATED:
+      return Color.NOT_INVALIDATED;
+    case Color.NOT_INVALIDATED:
+      return Color.INVALIDATED;
+  }
+
+  return Color.UNMARKED;
+};

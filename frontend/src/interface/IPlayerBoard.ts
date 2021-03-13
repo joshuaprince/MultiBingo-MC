@@ -6,7 +6,6 @@ export enum Color {
   REVERTED = 2,
   INVALIDATED = 3,
   NOT_INVALIDATED = 4,
-  __COUNT
 }
 
 export const TPlayerBoardMarking = z.object({

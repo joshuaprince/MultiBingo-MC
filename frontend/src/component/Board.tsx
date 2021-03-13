@@ -19,8 +19,10 @@ export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
 
         const win: boolean = !!(props.playerBoard?.win?.find(n => n === s.space_id));
 
+        const editable = !!(props.playerBoard && !props.board.obscured && props.isPrimary);
+
         return <Space key={s.space_id} space={s} shape={props.board.shape} marking={marking?.color}
-                      winning={win} obscured={props.board.obscured}
+                      winning={win} obscured={props.board.obscured} editable={editable}
                       isPrimary={props.isPrimary} />
       })}
     </div>

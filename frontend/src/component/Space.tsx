@@ -12,6 +12,7 @@ import { ColorPickerTooltip } from "./ColorPickerTooltip";
 
 type IProps = {
   obscured: boolean;
+  editable: boolean;
   space: ISpace;
   shape: BoardShape;
   marking?: Color;
@@ -23,7 +24,7 @@ export const Space: React.FunctionComponent<IProps> = (props: IProps) => {
   const onMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (props.obscured) {
+    if (!props.editable) {
       return false;
     }
 
@@ -40,21 +41,22 @@ export const Space: React.FunctionComponent<IProps> = (props: IProps) => {
   }
 
   const isAutoactivated = props.space.auto;
-  const smallText = props.space.text.length > 40;
-  const wholeSpaceTooltip = props.isPrimary ? undefined : props.space.text;
-  const innerTooltip = props.isPrimary ? props.space.tooltip : undefined;
+  const isSmallText = props.space.text.length > 40;
+  const wholeSpaceTooltip = !props.isPrimary && !props.obscured ? props.space.text : undefined;
+  const innerTooltipText = props.isPrimary && !props.obscured ? props.space.tooltip : undefined;
 
   const spaceDiv = (
     <div className={"bingo-space mark-" + (props.marking || Color.UNMARKED)
-                    + (props.winning ? " winning" : "")}
+                    + (props.winning ? " winning" : "")
+                    + (props.editable ? " editable" : "")}
          style={getPositionStyle(props.space.position, props.shape)}
          onMouseDown={onMouseDown} onContextMenu={onContextMenu}>
       <div className={"bingo-space-content primary-only"}>
-        {innerTooltip &&
-          <Tippy content={innerTooltip}>
+        {innerTooltipText &&
+          <Tippy content={innerTooltipText}>
             <div className="bingo-tooltip">?</div>
           </Tippy>}
-          <span className={"bingo-text" + (smallText ? " small" : "")}>
+          <span className={"bingo-text" + (isSmallText ? " small" : "")}>
             {props.space.text}
           </span>
         {isAutoactivated &&
@@ -66,10 +68,10 @@ export const Space: React.FunctionComponent<IProps> = (props: IProps) => {
   );
 
   if (wholeSpaceTooltip) {
-    return (<Tippy content={wholeSpaceTooltip}>{spaceDiv}</Tippy>)
+    return (<Tippy delay={0} interactive={false} content={wholeSpaceTooltip}>{spaceDiv}</Tippy>)
   } else {
     const tooltipHtml = <ColorPickerTooltip spaceId={props.space.space_id}/>;
-    return <Tippy disabled={props.obscured} interactive delay={[500, 300]} animation={'shift-away'}
+    return <Tippy disabled={!props.editable} interactive delay={[500, 300]} animation={'shift-away'}
                   content={tooltipHtml}>{spaceDiv}</Tippy>;
   }
 };

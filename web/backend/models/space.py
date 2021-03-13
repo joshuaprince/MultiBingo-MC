@@ -22,9 +22,13 @@ class Space(models.Model):
         # unique_together = ['board']
         # TODO uniqueness validation for spaces
 
-    def is_autoactivated(self):
-        cg = ConcreteGoal.from_xml_id(self.xml_id)
-        return cg.template.is_autoactivated
+    def is_autoactivated(self, player_board_id):
+        """
+        Determine if this Space is being automatically marked for a player by some websocket client.
+        """
+        if not player_board_id:
+            return False
+        return self.automarker_set.filter(player_board_id=player_board_id).exists()
 
     def initial_state(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)
@@ -33,13 +37,13 @@ class Space(models.Model):
         else:
             return Color.UNMARKED
 
-    def to_player_json(self):
+    def to_player_json(self, player_board_id):
         return {
             'space_id': self.pk,
             'position': self.position.to_json(),
             'text': self.text,
             'tooltip': self.tooltip,
-            'auto': self.is_autoactivated(),
+            'auto': self.is_autoactivated(player_board_id),
         }
 
     def to_plugin_json(self):

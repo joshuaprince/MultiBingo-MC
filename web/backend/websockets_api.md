@@ -99,6 +99,24 @@ Signals the server to modify the "obscured" flag on a game, revealing the
 board to all players.
 
 
+### set_automarks
+Example:
+```json
+{
+  "action": "set_automarks",
+  "players": {
+    "Alice": [1, 2, 3],
+    "Bob": [2, 3]
+  }
+}
+```
+
+Availability: Plugin socket only.
+
+Indicates to the server that this client is tracking and automatically marking
+the board for these space IDs.
+
+
 ## Server to Client API
 
 ### Board (Player)

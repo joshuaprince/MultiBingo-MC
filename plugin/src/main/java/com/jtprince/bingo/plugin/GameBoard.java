@@ -1,5 +1,7 @@
 package com.jtprince.bingo.plugin;
 
+import com.jtprince.bingo.plugin.player.BingoPlayer;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,17 +31,18 @@ public class GameBoard {
             spaces.stream().collect(Collectors.toMap(space -> space.spaceId, space -> space))
         );
 
-        // TODO return this info to webserver
-        Set<Space> autoSpaces = spaces.stream().filter(Space::isAutoMarked).collect(Collectors.toSet());
-        MCBingoPlugin.logger().info("Auto activation on:" + String.join(", ",
+        Set<Space> autoSpaces = this.updateAutoMarkedSpaces();
+        MCBingoPlugin.logger().info("Auto activation on: " + String.join(", ",
             autoSpaces.stream().map(spc -> spc.goalId).collect(Collectors.toUnmodifiableList())));
 
         this.game.transitionToReady();
     }
 
     public void destroy() {
-        for (Space sp : this.spaces.values()) {
-            sp.destroy();
+        if (this.spaces != null) {
+            for (Space sp : this.spaces.values()) {
+                sp.destroy();
+            }
         }
     }
 
@@ -52,5 +55,28 @@ public class GameBoard {
 
     public synchronized boolean isReady() {
         return this.spaces != null && !this.spaces.isEmpty();
+    }
+
+    /**
+     * Send the web server information about which Players and Spaces are being auto-marked by
+     * this plugin.
+     */
+    public Set<Space> updateAutoMarkedSpaces() {
+        Map<String, Collection<Integer>> playerSpaceIdsMap = new HashMap<>();
+
+        Set<Space> autoSpaces = spaces.values().stream()
+            .filter(Space::isAutoMarked).collect(Collectors.toUnmodifiableSet());
+
+        for (BingoPlayer p : game.playerManager.getLocalPlayers()) {
+            Set<Integer> autoSpaceIds = autoSpaces.stream()
+                .map(space -> space.spaceId)
+                .filter(id -> game.playerManager.getPlayerBoard(p).isSpaceAutomarkedForPlayer(id))
+                .collect(Collectors.toUnmodifiableSet());
+            playerSpaceIdsMap.put(p.getName(), autoSpaceIds);
+        }
+
+        game.wsClient.sendAutoMarks(playerSpaceIdsMap);
+
+        return autoSpaces;
     }
 }

@@ -67,7 +67,7 @@ public class PlayerBoard {
      * @param space Space to mark.
      */
     public synchronized void autoMark(@NotNull Space space) {
-        if (remoteChangedSpaceIds.contains(space.spaceId)) {
+        if (!isSpaceAutomarkedForPlayer(space.spaceId)) {
             return;
         }
 
@@ -83,7 +83,7 @@ public class PlayerBoard {
      * @param space Space to unmark.
      */
     public synchronized void autoRevert(@NotNull Space space) {
-        if (remoteChangedSpaceIds.contains(space.spaceId)) {
+        if (!isSpaceAutomarkedForPlayer(space.spaceId)) {
             return;
         }
 
@@ -113,19 +113,30 @@ public class PlayerBoard {
                     spaceId + " that does not exist on the board.");
             }
             if (this.markings.get(spaceId) != toState) {
-                this.onChange(spaceId, toState);
+                this.onChange(spaceId, this.markings.get(spaceId), toState);
                 this.markings.put(spaceId, toState);
             }
         }
     }
 
-    private void onChange(int spaceId, int toState) {
+    public boolean isSpaceAutomarkedForPlayer(int spaceId) {
+        Space spc = game.gameBoard.getSpaces().get(spaceId);
+        return (spc != null && spc.isAutoMarked() && !remoteChangedSpaceIds.contains(spaceId));
+    }
+
+    private void onChange(int spaceId, int fromState, int toState) {
+        if (fromState == UNMARKED && toState == NOT_INVALIDATED) {
+            // Initial board markings for Negative spaces - don't do anything special with them
+            return;
+        }
+
         if (spacesChangingInFlight.contains(spaceId)) {
             spacesChangingInFlight.remove(spaceId);
         } else {
             MCBingoPlugin.logger().info("Got remote change to " + this.player.getName() +
                 " " + game.gameBoard.getSpaces().get(spaceId).goalId + ". No longer tracking.");
             remoteChangedSpaceIds.add(spaceId);
+            game.gameBoard.updateAutoMarkedSpaces();
         }
         this.considerAnnounceChange(spaceId, toState);
     }

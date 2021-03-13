@@ -12,6 +12,7 @@ import org.json.simple.parser.ParseException;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -76,6 +77,19 @@ public class BingoWebSocketClient extends WebSocketClient {
         m.put("player", player);
         m.put("space_id", spaceId);
         m.put("to_state", toState);
+        JSONObject js = new JSONObject(m);
+        this.send(js.toJSONString());
+    }
+
+    public void sendAutoMarks(Map<String, Collection<Integer>> playerSpaceIdsMap) {
+        if (!this.isOpen()) {
+            MCBingoPlugin.logger().warning(
+                "Dropping set_automarks packet since Websocket is closed");
+            return;
+        }
+        Map<String, Object> m = new HashMap<>();
+        m.put("action", "set_automarks");
+        m.put("space_ids", playerSpaceIdsMap);
         JSONObject js = new JSONObject(m);
         this.send(js.toJSONString());
     }

@@ -2,13 +2,14 @@ import json
 from abc import ABC, abstractmethod
 from datetime import timedelta
 from random import randrange
+from typing import Set, Dict
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.db.models import Q
 from django.utils import timezone
 
-from backend.models import Board, BoardShape, PlayerBoard, Space
+from backend.models import Board, BoardShape, PlayerBoard, Space, AutoMarker
 from generation.board_generator import generate_board
 
 
@@ -69,6 +70,12 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
                 broadcast_board = True
                 broadcast_pboards = True
 
+        if action == 'set_automarks':
+            space_ids = text_data_json['space_ids']
+            changed = await self.rx_set_automarks(space_ids)
+            if changed:
+                broadcast_board = True
+
         if broadcast_board:
             await self.send_board_all_consumers()
 
@@ -79,6 +86,11 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
             await self.send_pboards_to_ws()
 
     async def disconnect(self, code):
+        # Clear all automarkings since this client is no longer connected
+        had_automarks = await set_automarks(self.board_id, self.client_id, {})
+        if had_automarks:
+            await self.send_board_all_consumers()
+
         await self.channel_layer.group_discard(
             self.game_code,
             self.channel_name
@@ -98,6 +110,10 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
 
     async def rx_reveal_board(self):
         changed = await reveal_board(self.board_id)
+        return changed
+
+    async def rx_set_automarks(self, space_ids):
+        changed = await set_automarks(self.board_id, self.client_id, space_ids)
         return changed
 
     async def send_board_all_consumers(self):
@@ -153,6 +169,9 @@ class PlayerWebConsumer(BaseWebConsumer):
             player_board_obj = await get_player_board(self.board_id, self.client_id)
             self.player_board_id = player_board_obj.pk
             await mark_disconnected(self.player_board_id, False)
+
+            # Need to send board with Auto Mark indicators now that player_board_id is set
+            await self.send_board_to_ws()
         else:
             # This is a spectator. Give them a unique identifier.
             self.client_id = f'[Spectator {randrange(9999)}]'
@@ -168,7 +187,7 @@ class PlayerWebConsumer(BaseWebConsumer):
         print(f"{self.client_id} disconnected from game {self.game_code}.")
 
     async def send_board_to_ws(self, event=None):
-        board = await get_board_player(self.board_id)
+        board = await get_board_player(self.board_id, self.player_board_id)
         await self.send(text_data=json.dumps({
             'board': board,
         }))
@@ -181,6 +200,7 @@ class PluginBackendConsumer(BaseWebConsumer):
             'board_mark_admin',
             'game_state',
             'reveal_board',
+            'set_automarks',
         ]
 
     async def connect(self):
@@ -274,13 +294,13 @@ def mark_disconnected(player_board_id: int, disconnected: bool):
 
 
 @database_sync_to_async
-def get_board_player(board_id: int):
+def get_board_player(board_id: int, player_board_id: int):
     board = Board.objects.get(pk=board_id)
     spaces = board.space_set.order_by('position')
     return {
         'obscured': board.obscured,
         'shape': board.shape,
-        'spaces': [spc.to_player_json() for spc in spaces],
+        'spaces': [spc.to_player_json(player_board_id) for spc in spaces],
     }
 
 
@@ -290,3 +310,27 @@ def get_board_plugin(board_id: int):
     return {
         'spaces': [spc.to_plugin_json() for spc in spaces],
     }
+
+
+@database_sync_to_async
+def set_automarks(board_id: int, client_id: str, player_space_ids_map: Dict[str, Set[str]]):
+    changed = False
+
+    # Cross = All combinations of (player name, space ID) tuples in the map
+    current_automark_objs = AutoMarker.objects.filter(client_id=client_id)
+    current_cross = set((a.player_board.player_name, a.space_id) for a in current_automark_objs)
+
+    new_cross = set((pname, spcid) for pname, pset in player_space_ids_map.items() for spcid in pset)
+
+    # Create missing AutoMark objects
+    for player_name, space_id in new_cross.difference(current_cross):
+        player_board = PlayerBoard.objects.get_or_create(board_id=board_id, player_name=player_name)[0]
+        AutoMarker.objects.create(player_board=player_board, space_id=space_id, client_id=client_id)
+        changed = True
+
+    # Delete removed AutoMark objects
+    for player_name, space_id in current_cross.difference(new_cross):
+        current_automark_objs.filter(player_board__player_name=player_name, space_id=space_id).delete()
+        changed = True
+
+    return changed

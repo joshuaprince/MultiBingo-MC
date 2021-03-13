@@ -69,7 +69,7 @@ export const Space: React.FunctionComponent<IProps> = (props: IProps) => {
     return (<Tippy content={wholeSpaceTooltip}>{spaceDiv}</Tippy>)
   } else {
     const tooltipHtml = <ColorPickerTooltip spaceId={props.space.space_id}/>;
-    return <Tippy interactive delay={[500, 300]} animation={'shift-away'}
+    return <Tippy disabled={props.obscured} interactive delay={[500, 300]} animation={'shift-away'}
                   content={tooltipHtml}>{spaceDiv}</Tippy>;
   }
 };

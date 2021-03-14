@@ -7,6 +7,12 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public abstract class AutoMarkTrigger {
+    private final Space space;
+
+    protected AutoMarkTrigger(Space space) {
+        this.space = space;
+    }
+
     public static Collection<AutoMarkTrigger> createAllTriggers(Space space, JSONArray xmlTriggers) {
         HashSet<AutoMarkTrigger> set = new HashSet<>();
 
@@ -15,6 +21,10 @@ public abstract class AutoMarkTrigger {
         set.addAll(OccasionalTrigger.createTriggers(space));
 
         return set;
+    }
+
+    public Space getSpace() {
+        return this.space;
     }
 
     public abstract void destroy();

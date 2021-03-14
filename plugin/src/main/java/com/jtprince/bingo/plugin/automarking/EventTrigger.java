@@ -37,16 +37,15 @@ import java.util.logging.Level;
  * Event Trigger methods for individual goals are at the bottom of this file.
  */
 class EventTrigger extends AutoMarkTrigger {
-    final Space space;
     private final Method method;
     final Class<? extends Event> eventType;
     private final EventTriggerBukkitListener bukkitListener;
 
     private EventTrigger(Space space, Method method, Class<? extends Event> eventType) {
-        this.space = space;
+        super(space);
         this.method = method;
         this.eventType = eventType;
-        this.bukkitListener = space.board.game.plugin.autoMarkListener;
+        this.bukkitListener = MCBingoPlugin.instance().autoMarkListener;
     }
 
     @SuppressWarnings("unchecked")  // Reflection + generics is lots of fun...
@@ -395,7 +394,7 @@ class EventTrigger extends AutoMarkTrigger {
                                         "jm_level__50255", "jm_level__27398"})
     private boolean jm_level__71448(PlayerLevelChangeEvent event) {
         // Level <x>
-        int requiredLevel = this.space.variables.get("var");
+        int requiredLevel = this.getSpace().variables.get("var");
         return event.getNewLevel() >= requiredLevel;
     }
 

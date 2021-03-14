@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
  * completed.
  */
 class ItemTrigger extends AutoMarkTrigger {
-    Space space;
     private final int totalMatchesNeeded;
     private final ArrayList<ItemMatchGroup> matchGroups = new ArrayList<>();
 
@@ -41,7 +40,7 @@ class ItemTrigger extends AutoMarkTrigger {
     }
 
     private ItemTrigger(Space space, JSONObject json) {
-        this.space = space;
+        super(space);
         JSONObject itemTriggerJson = (JSONObject) json.get("ItemTrigger");
 
         String needed = (String) itemTriggerJson.get("@needed");

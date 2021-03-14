@@ -62,7 +62,7 @@ public class EventTriggerBukkitListener implements Listener {
         boolean added = activeEventListenerMap.get(eventTrigger.eventType).add(eventTrigger);
         if (!added) {
             plugin.getLogger().severe(
-                "Registering " + eventTrigger.space.goalId + " EventTrigger already registered");
+                "Registering " + eventTrigger.getSpace().goalId + " EventTrigger already registered");
         }
     }
 
@@ -70,7 +70,7 @@ public class EventTriggerBukkitListener implements Listener {
         boolean added = itemTriggers.add(itemTrigger);
         if (!added) {
             plugin.getLogger().severe(
-                "Registering " + itemTrigger.space.goalId + " ItemTrigger already registered");
+                "Registering " + itemTrigger.getSpace().goalId + " ItemTrigger already registered");
         }
     }
 
@@ -79,7 +79,7 @@ public class EventTriggerBukkitListener implements Listener {
 
         if (!existed) {
             plugin.getLogger().severe(
-                "Unregistering " + eventTrigger.space.goalId + " EventTrigger did not exist");
+                "Unregistering " + eventTrigger.getSpace().goalId + " EventTrigger did not exist");
         }
     }
 
@@ -88,7 +88,7 @@ public class EventTriggerBukkitListener implements Listener {
 
         if (!existed) {
             plugin.getLogger().severe(
-                "Unregistering " + itemTrigger.space.goalId + " ItemTrigger did not exist");
+                "Unregistering " + itemTrigger.getSpace().goalId + " ItemTrigger did not exist");
         }
     }
 
@@ -149,7 +149,7 @@ public class EventTriggerBukkitListener implements Listener {
 
         for (EventTrigger gal : methods) {
             if (gal.satisfiedBy(event)) {
-                this.plugin.getCurrentGame().playerManager.getPlayerBoard(player).autoMark(gal.space);
+                this.plugin.getCurrentGame().playerManager.getPlayerBoard(player).autoMark(gal.getSpace());
             }
         }
     }
@@ -189,9 +189,9 @@ public class EventTriggerBukkitListener implements Listener {
         }
         for (ItemTrigger trigger : itemTriggers) {
             if (trigger.isSatisfied(player.getInventory())) {
-                this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoMark(trigger.space);
+                this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoMark(trigger.getSpace());
             } else {
-                this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoRevert(trigger.space);
+                this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoRevert(trigger.getSpace());
             }
         }
     }

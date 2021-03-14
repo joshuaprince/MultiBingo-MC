@@ -7,6 +7,7 @@ import com.jtprince.bingo.plugin.Space;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -20,14 +21,15 @@ import java.util.logging.Level;
  * goal.
  */
 class OccasionalTrigger extends AutoMarkTrigger {
-    final Space space;
+    private final BukkitScheduler scheduler;
     private final Method method;
     private final int taskId;
 
     private OccasionalTrigger(Space space, Method method, OccasionalTriggerListener anno) {
-        this.space = space;
+        super(space);
+        this.scheduler = MCBingoPlugin.instance().getServer().getScheduler();
         this.method = method;
-        this.taskId = space.board.game.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(
+        this.taskId = scheduler.scheduleSyncRepeatingTask(
                 space.board.game.plugin, this::invoke, anno.value(), anno.value());
     }
 
@@ -56,19 +58,19 @@ class OccasionalTrigger extends AutoMarkTrigger {
     }
 
     public void destroy() {
-        space.board.game.plugin.getServer().getScheduler().cancelTask(taskId);
+        scheduler.cancelTask(taskId);
     }
 
     private void invoke() {
-        if (this.space.board.game.state != BingoGame.State.RUNNING) {
+        if (this.getSpace().board.game.state != BingoGame.State.RUNNING) {
             return;
         }
 
         try {
-            for (BingoPlayer p : this.space.board.game.playerManager.getLocalPlayers()) {
+            for (BingoPlayer p : this.getSpace().board.game.playerManager.getLocalPlayers()) {
                 boolean res = (boolean) this.method.invoke(this, p);
                 if (res) {
-                    space.board.game.playerManager.getPlayerBoard(p).autoMark(this.space);
+                    getSpace().board.game.playerManager.getPlayerBoard(p).autoMark(this.getSpace());
                 }
             }
         } catch (IllegalAccessException | InvocationTargetException e) {

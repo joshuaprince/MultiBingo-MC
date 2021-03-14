@@ -4,13 +4,12 @@ import com.jtprince.bingo.plugin.MCBingoPlugin;
 import com.jtprince.bingo.plugin.Space;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -19,7 +18,7 @@ import java.util.regex.Pattern;
  */
 class ItemTrigger extends AutoMarkTrigger {
     Space space;
-    private int neededMatchGroups = 1;
+    private final int totalMatchesNeeded;
     private final ArrayList<ItemMatchGroup> matchGroups = new ArrayList<>();
 
     static Collection<ItemTrigger> createTriggers(Space space, JSONArray triggers) {
@@ -47,7 +46,9 @@ class ItemTrigger extends AutoMarkTrigger {
 
         String needed = (String) itemTriggerJson.get("@needed");
         if (needed != null) {
-            this.neededMatchGroups = Integer.parseInt(needed);
+            this.totalMatchesNeeded = Integer.parseInt(needed);
+        } else {
+            this.totalMatchesNeeded = 1;
         }
 
         JSONArray quantityTags = (JSONArray) itemTriggerJson.get("Quantity");
@@ -75,30 +76,45 @@ class ItemTrigger extends AutoMarkTrigger {
         }
     }
 
+    /**
+     * Determine whether the given inventory contains some items that can allow a goal to be
+     * considered completed.
+     */
     boolean isSatisfied(Inventory inv) {
-        int matchesAllGroups = 0;
+        int totalMatches = 0;
 
         for (ItemMatchGroup mg : matchGroups) {
-            int matchesThisGroup = 0;
-
-            /* Store a list of item names (i.e. minecraft:cobblestone) that we have matched already.
-             * An ItemMatchGroup cannot match on the same Material more than once.
+            /* Within a match group, each <Name> tag may count as one match towards totalMatches.
+             * However, a match group may have a maxMatches that defines that this group can only
+             * count towards totalMatches that many times.
              */
-            Set<String> matchedItemNames = new HashSet<>();
+
+            /* Maps namespaced name -> number of matching items with that name in the inventory */
+            Map<String, Integer> itemNameToCountMap = new HashMap<>();
 
             for (ItemStack itemStack : inv.getContents()) {
-                if (itemStack != null &&
-                        matchesThisGroup < mg.maxMatches &&
-                        mg.match(itemStack) &&
-                        !matchedItemNames.contains(namespacedName(itemStack))) {
-                    matchesAllGroups++;
+                int numItemsMatched = mg.match(itemStack);
+                if (numItemsMatched > 0) {
+                    String itemName = namespacedName(itemStack);
+                    // Increments itemNameToCountMap[item name] by numItemsMatched
+                    itemNameToCountMap.merge(itemName, numItemsMatched, Integer::sum);
+                }
+            }
+
+            int matchesThisGroup = 0;
+            for (String itemName : itemNameToCountMap.keySet()) {
+                int quantity = itemNameToCountMap.get(itemName);
+                if (quantity >= mg.minQuantity) {
+                    totalMatches++;
                     matchesThisGroup++;
-                    matchedItemNames.add(namespacedName(itemStack));
+                    if (matchesThisGroup >= mg.maxMatches) {
+                        break;
+                    }
                 }
             }
         }
 
-        return (matchesAllGroups >= neededMatchGroups);
+        return (totalMatches >= totalMatchesNeeded);
     }
 
     private static class ItemMatchGroup {
@@ -133,25 +149,29 @@ class ItemTrigger extends AutoMarkTrigger {
             this.nameMatches.add(Pattern.compile(name));
         }
 
-        boolean match(ItemStack itemStack) {
-            if (itemStack.getAmount() < this.minQuantity) {
-                return false;
+        /**
+         * Test whether a single Item Stack in an inventory satisfies this match group.
+         * @return The number of items in this item stack that satisfy the match group.
+         */
+        int match(@Nullable ItemStack itemStack) {
+            if (itemStack == null) {
+                return 0;
             }
 
             for (Pattern nameMatch : this.nameMatches) {
                 if (nameMatch.matcher(namespacedName(itemStack)).matches()) {
-                    return true;
+                    return itemStack.getAmount();
                 }
             }
 
-            return false;
+            return 0;
         }
     }
 
     /**
      * Example: "minecraft:cobblestone"
      */
-    private static String namespacedName(ItemStack itemStack) {
+    private static String namespacedName(@NotNull ItemStack itemStack) {
         return itemStack.getType().getKey().toString();
     }
 }

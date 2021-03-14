@@ -198,26 +198,17 @@ class EventTrigger extends AutoMarkTrigger {
     @GoalEventTriggerListener
     private boolean jm_never_ticks40530(CraftItemEvent event) {
         // Never craft sticks
-        return event.getRecipe().getResult().getType() == Material.STICK;
+        ItemStack result = event.getInventory().getResult();
+        return (result != null && result.getType() == Material.STICK);
     }
 
     @GoalEventTriggerListener
     private boolean jm_never__coal44187(CraftItemEvent event) {
         // Never use coal
         // See also FurnaceBurnEvent variant
-        if (event.getRecipe() instanceof ShapedRecipe) {
-            ShapedRecipe r = (ShapedRecipe) event.getRecipe();
-
-            return r.getIngredientMap().values().stream().anyMatch(i ->
-                i != null && i.getType() == Material.COAL);
-        }
-        else if (event.getRecipe() instanceof ShapelessRecipe) {
-            ShapelessRecipe r = (ShapelessRecipe) event.getRecipe();
-
-            return r.getIngredientList().stream().anyMatch(i ->
-                i != null && i.getType() == Material.COAL);
-        }
-        else return false;
+        //noinspection ConstantConditions - Matrix array members can be null if no ingredient in that slot
+        return Arrays.stream(event.getInventory().getMatrix())
+            .anyMatch(i -> i != null && i.getType() == Material.COAL);
     }
 
     @GoalEventTriggerListener
@@ -333,6 +324,7 @@ class EventTrigger extends AutoMarkTrigger {
         // Never use armor
         // Never use armor or shields
         Player p = (Player) event.getPlayer();
+        //noinspection ConstantConditions - Array members can be null if no armor in that slot
         return Arrays.stream(p.getInventory().getArmorContents()).anyMatch(Objects::nonNull);
     }
 
@@ -340,6 +332,7 @@ class EventTrigger extends AutoMarkTrigger {
     private boolean jm_never_lates77348(InventoryCloseEvent event) {
         // Never wear chestplates
         Player p = (Player) event.getPlayer();
+        //noinspection ConstantConditions - Array members can be null if no armor in that slot
         return p.getInventory().getArmorContents()[2] != null;
     }
 

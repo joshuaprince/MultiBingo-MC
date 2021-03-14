@@ -124,47 +124,6 @@ class EventTrigger extends AutoMarkTrigger {
         String[] extraGoals() default {};
     }
 
-    /* Definitions */
-
-    private static final Material[] MEATS = { // Invalidate Vegetarian
-        Material.CHICKEN, Material.COOKED_CHICKEN, Material.COD, Material.COOKED_COD,
-        Material.BEEF, Material.COOKED_BEEF, Material.MUTTON, Material.COOKED_MUTTON,
-        Material.RABBIT, Material.COOKED_RABBIT, Material.SALMON, Material.COOKED_SALMON,
-        Material.PORKCHOP, Material.COOKED_PORKCHOP, Material.TROPICAL_FISH, Material.PUFFERFISH,
-        Material.RABBIT_STEW, Material.ROTTEN_FLESH, Material.SPIDER_EYE
-    };
-
-    private static final Material[] NON_MEATS = {  // Invalidate Carnivore
-        Material.APPLE, Material.BAKED_POTATO, Material.BEETROOT, Material.BEETROOT_SOUP,
-        Material.BREAD, Material.CARROT, Material.CHORUS_FRUIT, Material.COOKIE,
-        Material.DRIED_KELP, Material.ENCHANTED_GOLDEN_APPLE, Material.GOLDEN_APPLE,
-        Material.GOLDEN_CARROT, Material.MELON_SLICE, Material.MUSHROOM_STEW,
-        Material.POISONOUS_POTATO, Material.POTATO, Material.PUMPKIN_PIE, Material.SUSPICIOUS_STEW,
-        Material.SWEET_BERRIES
-    };
-
-    /* Consumables that do not invalidate either of the above: Potions, Honey, Milk, Cake (block) */
-
-    private static final Material[] TORCHES = {
-        Material.TORCH, Material.WALL_TORCH, Material.SOUL_TORCH, Material.SOUL_WALL_TORCH,
-        Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH
-    };
-
-    private static final TreeType[] TREES = {
-        TreeType.ACACIA, TreeType.BIG_TREE, TreeType.BIRCH, TreeType.COCOA_TREE,
-        TreeType.DARK_OAK, TreeType.JUNGLE, TreeType.JUNGLE_BUSH, TreeType.MEGA_REDWOOD,
-        TreeType.REDWOOD, TreeType.SMALL_JUNGLE, TreeType.SWAMP, TreeType.TALL_BIRCH,
-        TreeType.TALL_REDWOOD, TreeType.TREE
-    };
-
-    private static final TreeType[] MUSHROOMS = {
-        TreeType.BROWN_MUSHROOM, TreeType.RED_MUSHROOM
-    };
-
-    private static final EntityType[] FISH_ENTITIES = {
-        EntityType.COD, EntityType.SALMON, EntityType.PUFFERFISH, EntityType.TROPICAL_FISH
-    };
-
     /* Listeners */
 
     @GoalEventTriggerListener
@@ -192,7 +151,7 @@ class EventTrigger extends AutoMarkTrigger {
     @GoalEventTriggerListener
     private boolean jm_never_rches51018(BlockPlaceEvent event) {
         // Never place torches
-        return Arrays.stream(TORCHES).anyMatch(m -> event.getBlock().getType() == m);
+        return TriggerDefinition.TORCHES.contains(event.getBlock().getType());
     }
 
     @GoalEventTriggerListener
@@ -224,11 +183,11 @@ class EventTrigger extends AutoMarkTrigger {
     }
 
     @GoalEventTriggerListener
-    private boolean jm_get_a_ether66387(EntityAirChangeEvent event) {
+    private boolean jm_get_a_ether66387(CreatureSpawnEvent event) {
         // Get a fish into the nether
-        // TODO Fix marking spam as long as the fish is alive
-        return event.getEntity().getWorld().getEnvironment() == World.Environment.NETHER
-            && Arrays.stream(FISH_ENTITIES).anyMatch(t -> event.getEntity().getType() == t);
+        // Going through a portal still fires this event, so no need for other EventTriggers.
+        return (event.getLocation().getWorld().getEnvironment() != World.Environment.NETHER
+            && TriggerDefinition.FISH_ENTITIES.contains(event.getEntityType()));
     }
 
     @GoalEventTriggerListener
@@ -423,13 +382,13 @@ class EventTrigger extends AutoMarkTrigger {
     @GoalEventTriggerListener
     private boolean jm_carnivore_30882(PlayerItemConsumeEvent event) {
         // Only eat meat (i.e. trigger if NOT meat)
-        return Arrays.stream(NON_MEATS).anyMatch(f -> event.getItem().getType() == f);
+        return TriggerDefinition.NON_MEATS.contains(event.getItem().getType());
     }
 
     @GoalEventTriggerListener
     private boolean jm_vegetarian_67077(PlayerItemConsumeEvent event) {
         // Never eat meat (i.e. trigger if meat)
-        return Arrays.stream(MEATS).anyMatch(f -> event.getItem().getType() == f);
+        return TriggerDefinition.MEATS.contains(event.getItem().getType());
     }
 
     @GoalEventTriggerListener(extraGoals = {"jm_level__53191", "jm_level__62503",
@@ -457,13 +416,13 @@ class EventTrigger extends AutoMarkTrigger {
     private boolean jm_grow__ether38694(StructureGrowEvent event) {
         // Grow a tree in the nether
         return event.getWorld().getEnvironment() == World.Environment.NETHER
-            && Arrays.stream(TREES).anyMatch(t -> t == event.getSpecies());
+            && TriggerDefinition.TREES.contains(event.getSpecies());
     }
 
     @GoalEventTriggerListener
     private boolean jm_grow__hroom76894(StructureGrowEvent event) {
         // Grow a huge mushroom
-        return Arrays.stream(MUSHROOMS).anyMatch(t -> t == event.getSpecies());
+        return TriggerDefinition.MUSHROOMS.contains(event.getSpecies());
     }
 
     @GoalEventTriggerListener

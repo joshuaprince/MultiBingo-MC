@@ -185,7 +185,7 @@ class EventTrigger extends AutoMarkTrigger {
     private boolean jm_get_a_ether66387(CreatureSpawnEvent event) {
         // Get a fish into the nether
         // Going through a portal still fires this event, so no need for other EventTriggers.
-        return (event.getLocation().getWorld().getEnvironment() != World.Environment.NETHER
+        return (event.getLocation().getWorld().getEnvironment() == World.Environment.NETHER
             && TriggerDefinition.FISH_ENTITIES.contains(event.getEntityType()));
     }
 

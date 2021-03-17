@@ -1,7 +1,7 @@
 package com.jtprince.bingo.plugin.player;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,8 +26,8 @@ public class BingoPlayerRemote extends BingoPlayer {
     }
 
     @Override
-    public @NotNull BaseComponent getFormattedName() {
-        return new TextComponent(this.getName());
+    public @NotNull TextComponent getFormattedName() {
+        return Component.text(this.getName());
     }
 
     @Override

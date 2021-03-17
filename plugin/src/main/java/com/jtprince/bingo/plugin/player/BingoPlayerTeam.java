@@ -1,8 +1,8 @@
 package com.jtprince.bingo.plugin.player;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 public class BingoPlayerTeam extends BingoPlayer {
     private final Collection<UUID> playerUuids;
     private final String teamName;
-    private final @Nullable ChatColor color;
+    private final @Nullable TextColor color;
 
     public BingoPlayerTeam(String teamName, Collection<OfflinePlayer> teammates,
-                           @Nullable ChatColor color) {
+                           @Nullable TextColor color) {
         this.playerUuids = teammates.stream().map(OfflinePlayer::getUniqueId)
             .collect(Collectors.toUnmodifiableSet());
         this.teamName = teamName;
@@ -38,10 +38,8 @@ public class BingoPlayerTeam extends BingoPlayer {
     }
 
     @Override
-    public @NotNull BaseComponent getFormattedName() {
-        TextComponent component = new TextComponent(this.teamName);
-        component.setColor(color);
-        return component;
+    public @NotNull TextComponent getFormattedName() {
+        return Component.text(this.teamName).color(color);
     }
 
     @Override

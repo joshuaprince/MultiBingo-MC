@@ -1,6 +1,6 @@
 package com.jtprince.bingo.plugin.player;
 
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public abstract class BingoPlayer {
     /**
      * The name that should be used on the WebSocket, and will be displayed on the webpage.
      */
-    public abstract @NotNull BaseComponent getFormattedName();
+    public abstract @NotNull TextComponent getFormattedName();
 
     /**
      * Get a list of {@link org.bukkit.entity.Player}s that are online playing as this BingoPlayer.

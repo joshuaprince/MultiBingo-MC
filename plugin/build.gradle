@@ -8,6 +8,8 @@ archivesBaseName = 'Bingo'
 
 sourceCompatibility = JavaVersion.VERSION_11
 
+compileJava.options.compilerArgs = ['-Xlint:unchecked','-Xlint:deprecation']
+
 group 'com.jtprince.bingo'
 version gitVersion()
 

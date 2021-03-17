@@ -5,6 +5,7 @@ import com.jtprince.bingo.plugin.player.BingoPlayer;
 import com.jtprince.bingo.plugin.player.BingoPlayerSingle;
 import com.jtprince.bingo.plugin.player.BingoPlayerTeam;
 import dev.jorel.commandapi.CommandAPI;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -109,8 +110,8 @@ public class MCBingoPlugin extends JavaPlugin {
 
         // Create all BingoPlayerTeams.
         for (Team t : teamPlayerMap.keySet()) {
-            BingoPlayerTeam bpt = new BingoPlayerTeam(t.getDisplayName(), teamPlayerMap.get(t),
-                                                      t.getColor().asBungee());
+            String name = PlainComponentSerializer.plain().serialize(t.displayName());
+            BingoPlayerTeam bpt = new BingoPlayerTeam(name, teamPlayerMap.get(t), t.color());
             ret.add(bpt);
         }
 

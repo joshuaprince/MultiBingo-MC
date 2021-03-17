@@ -1,167 +1,173 @@
 package com.jtprince.bingo.plugin;
 
 import com.jtprince.bingo.plugin.player.BingoPlayer;
+import com.jtprince.bingo.plugin.player.BingoPlayerRemote;
 import com.jtprince.bingo.plugin.player.BingoPlayerTeam;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.*;
-import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.command.CommandSender;
+import com.jtprince.util.ChatUtils;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class Messages {
     final BingoGame game;
 
-    private static final ChatColor COLOR_HEADER = ChatColor.GOLD;
-    private static final ChatColor COLOR_TEXT = ChatColor.AQUA;
+    private static final TextColor COLOR_HEADER = NamedTextColor.GOLD;
+    private static final TextColor COLOR_TEXT = NamedTextColor.AQUA;
 
-    private static final BaseComponent[] HEADER_NO_GAME = new ComponentBuilder("[BINGO]")
-        .color(COLOR_HEADER).bold(true)
-        .append(" ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
-        .create();
+    private static final TextComponent HEADER_NO_GAME = Component.text("[BINGO]")
+            .color(COLOR_HEADER).decoration(TextDecoration.BOLD, true);
 
     public Messages(BingoGame game) {
         this.game = game;
     }
 
-    public BaseComponent[] getHeader() {
-        ComponentBuilder builder = new ComponentBuilder(HEADER_NO_GAME[0]);
-
+    private TextComponent withHeader(TextComponent component) {
         if (this.game.gameCode != null) {
-            builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new Text("Game Code: " + game.gameCode)));
-
+            return Component.empty().color(COLOR_TEXT)
+                .append(HEADER_NO_GAME.hoverEvent(Component.text("Game Code: " + game.gameCode)))
+                .append(Component.space())
+                .append(component);
+        } else {
+            return withNoGameHeader(component);
         }
-
-        builder.append(HEADER_NO_GAME[1], ComponentBuilder.FormatRetention.NONE);
-
-        return builder.create();
     }
 
-    public void basicTell(CommandSender sender, String msg) {
-        BaseComponent[] components = new ComponentBuilder()
-            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
-            .append(msg)
-            .create();
-        sender.sendMessage(components);
+    private static TextComponent withNoGameHeader(TextComponent component) {
+        return Component.empty().color(COLOR_TEXT)
+            .append(HEADER_NO_GAME)
+            .append(Component.space())
+            .append(component);
+    }
+
+    private void sendWithHeader(Audience a, TextComponent component) {
+        a.sendMessage(withHeader(component));
+    }
+
+    private void announceWithHeader(TextComponent component) {
+        MCBingoPlugin.instance().getServer().sendMessage(withHeader(component));
+    }
+
+    private static void sendGamelessWithHeader(Audience a, TextComponent component) {
+        a.sendMessage(withNoGameHeader(component));
+    }
+
+    /* Begin external facing calls */
+
+    public void basicTell(Audience a, String msg) {
+        sendWithHeader(a, Component.text(msg));
     }
 
     public void basicAnnounce(String msg) {
-        BaseComponent[] components = new ComponentBuilder()
-            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
-            .append(msg)
-            .create();
-        this.game.plugin.getServer().broadcast(components);
+        sendWithHeader(MCBingoPlugin.instance().getServer(), Component.text(msg));
     }
 
-    public static void basicTellNoGame(CommandSender sender, String msg) {
-        BaseComponent[] components = new ComponentBuilder()
-            .append(HEADER_NO_GAME, ComponentBuilder.FormatRetention.NONE)
-            .append(msg)
-            .create();
-        sender.sendMessage(components);
+    public static void basicTellNoGame(Audience a, String msg) {
+        sendGamelessWithHeader(a, Component.text(msg));
     }
 
     public void announcePreparingGame() {
-        BaseComponent[] components = new ComponentBuilder()
-            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
-            .append("Generating worlds for new game ")
-            .append(game.gameCode).color(ChatColor.BLUE)
-            .append(".").color(COLOR_TEXT)
-            .create();
-        this.game.plugin.getServer().broadcast(components);
+        TextComponent component = Component
+            .text("Generating worlds for new game ")
+            .append(Component.text(game.gameCode).color(NamedTextColor.BLUE))
+            .append(Component.text("."));
+        announceWithHeader(component);
 
-        components = new ComponentBuilder()
-            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
-            .append("This will cause the server to lag!")
-            .create();
-        this.game.plugin.getServer().broadcast(components);
+        component = Component.text("This will cause the server to lag!");
+        announceWithHeader(component);
     }
 
     public void announceGameFailed() {
-        BaseComponent[] components = new ComponentBuilder()
-            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
-            .append("Failed to connect to the Bingo board.").color(ChatColor.RED)
-            .create();
-        this.game.plugin.getServer().broadcast(components);
+        TextComponent component = Component
+            .text("Failed to connect to the Bingo board.")
+            .color(NamedTextColor.RED);
+        announceWithHeader(component);
     }
 
     public void announceWorldsGenerated(Collection<BingoPlayer> players) {
-        BaseComponent[] components = new ComponentBuilder()
-            .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
-            .append("Bingo worlds have been generated for " + players.size() + " players.")
-            .create();
-        this.game.plugin.getServer().broadcast(components);
+        players = new HashSet<>(players);
+        players.add(new BingoPlayerRemote("Hello world"));
+        TextComponent playersCpnt = ChatUtils.commaSeparated(
+            players.stream().map(BingoPlayer::getFormattedName)
+                .collect(Collectors.toUnmodifiableSet())
+        );
+        TextComponent component = Component
+            .text("Bingo worlds have been generated for ")
+            .append(Component.text(players.size() + " players.").hoverEvent(playersCpnt));
+
+        announceWithHeader(component);
     }
 
     public void announceGameReady(Collection<BingoPlayer> players) {
-        BaseComponent[] components;
+        TextComponent component;
         for (BingoPlayer p : players) {
             // Game link for this specific player
             URL url = MCBConfig.getGameUrl(this.game.gameCode, p);
             if (url == null) {
-                components = new ComponentBuilder()
-                    .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
-                    .append("Could not get the board to link you to! Contact the server admin to "
-                        + "update the plugin's config.yml.").color(ChatColor.RED)
-                    .create();
+                component = Component
+                    .text("Could not get the board to link you to! Contact the server admin "
+                        + "to update the plugin's config.yml.")
+                    .color(NamedTextColor.RED);
             } else {
-                components = new ComponentBuilder()
-                    .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
-                    .append("[Open Board]").underlined(true).color(ChatColor.YELLOW)
-                    .event(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(url.toString())))
-                    .append(" ", ComponentBuilder.FormatRetention.NONE)
-                    .append("[START]").underlined(true).color(ChatColor.GREEN)
-                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bingo start"))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Start Game")))
-                    .create();
+                component = Component.empty()
+                    .append(Component.text("[Open Board]")
+                        .decoration(TextDecoration.UNDERLINED, true)
+                        .color(NamedTextColor.YELLOW)
+                        .hoverEvent(Component.text(url.toString()))
+                        .clickEvent(ClickEvent.openUrl(url))
+                    )
+                    .append(Component.space())
+                    .append(Component.text("[START]")
+                        .decoration(TextDecoration.UNDERLINED, true)
+                        .color(NamedTextColor.GREEN)
+                        .clickEvent(ClickEvent.runCommand("/bingo start"))
+                        .hoverEvent(Component.text("Start Game (/bingo start)"))
+                    );
             }
 
             for (Player bukkitPlayer : p.getBukkitPlayers()) {
-                bukkitPlayer.sendMessage(components);
+                sendWithHeader(bukkitPlayer, component);
             }
         }
     }
 
     public void announcePlayerMarking(BingoPlayer player, Space space, boolean invalidated) {
-        BaseComponent[] components;
+        TextComponent component;
         if (!invalidated) {
-            components = new ComponentBuilder()
-                .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
+            component = Component.empty()
                 .append(player.getFormattedName())
-                .append(" has marked ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
-                .append(space.text).color(ChatColor.GREEN)
-                .append("!").color(COLOR_TEXT)
-                .create();
+                .append(Component.text(" has marked "))
+                .append(Component.text(space.text).color(NamedTextColor.GREEN))
+                .append(Component.text("!"));
         } else {
-            components = new ComponentBuilder()
-                .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
+            component = Component.empty()
                 .append(player.getFormattedName())
-                .append(" has invalidated ", ComponentBuilder.FormatRetention.NONE).color(COLOR_TEXT)
-                .append(space.text).color(ChatColor.RED)
-                .append("!").color(COLOR_TEXT)
-                .create();
+                .append(Component.text(" has invalidated "))
+                .append(Component.text(space.text).color(NamedTextColor.RED))
+                .append(Component.text("!"));
         }
 
-        this.game.plugin.getServer().broadcast(components);
+        announceWithHeader(component);
     }
 
     public void tellPlayerTeams(Collection<BingoPlayer> players) {
         for (BingoPlayer bp : players) {
             if (bp instanceof BingoPlayerTeam) {
                 BingoPlayerTeam bpt = (BingoPlayerTeam) bp;
-                BaseComponent[] components = new ComponentBuilder()
-                    .append(getHeader(), ComponentBuilder.FormatRetention.NONE)
-                    .append("You are playing on team ")
+
+                Component component = Component.text("You are playing on team ")
                     .append(bpt.getFormattedName())
-                    .append("!").color(COLOR_TEXT)
-                    .create();
-                for (Player p : bpt.getBukkitPlayers()) {
-                    p.sendMessage(components);
-                }
+                    .append(Component.text("!"));
+                Audience.audience(bpt.getBukkitPlayers()).sendMessage(component);
             }
         }
     }

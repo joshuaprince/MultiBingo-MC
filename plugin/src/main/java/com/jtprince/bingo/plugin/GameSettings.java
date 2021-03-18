@@ -22,7 +22,6 @@ import java.util.Arrays;
 public class GameSettings {
     public String gameCode = null;
     public String shape = null;
-    public Integer boardDifficulty = null;
     public String seed = null;
     public String[] forcedGoals = null;
 
@@ -68,9 +67,6 @@ public class GameSettings {
         }
         if (shape != null) {
             obj.put("shape", shape);
-        }
-        if (boardDifficulty != null) {
-            obj.put("board_difficulty", boardDifficulty);
         }
         if (seed != null) {
             obj.put("seed", seed);

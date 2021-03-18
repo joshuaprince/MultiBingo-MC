@@ -69,7 +69,7 @@ public class PlayerManager {
     public @Nullable BingoPlayer getBingoPlayer(@NotNull World world) {
         WorldManager.WorldSet ws = game.plugin.worldManager.findWorldSet(world);
         for (BingoPlayer p : this.getLocalPlayers()) {
-            if (this.getWorldSet(p).equals(ws)) {
+            if (ws.equals(this.getWorldSet(p))) {
                 return p;
             }
         }
@@ -134,7 +134,7 @@ public class PlayerManager {
      * @param player A Local BingoPlayer.
      * @return The player's WorldSet
      */
-    public WorldManager.WorldSet getWorldSet(BingoPlayer player) {
+    public @Nullable WorldManager.WorldSet getWorldSet(BingoPlayer player) {
         if (player instanceof BingoPlayerRemote) {
             throw new UnsupportedOperationException("Cannot call getWorldSet for a Remote player.");
         }
@@ -159,7 +159,10 @@ public class PlayerManager {
      */
     private void unloadWorldSets() {
         for (BingoPlayer player : getLocalPlayers()) {
-            game.plugin.worldManager.unloadWorlds(getWorldSet(player));
+            WorldManager.WorldSet ws = getWorldSet(player);
+            if (ws != null) {
+                game.plugin.worldManager.unloadWorlds(ws);
+            }
         }
     }
 

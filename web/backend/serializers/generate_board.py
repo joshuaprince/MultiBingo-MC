@@ -7,11 +7,10 @@ from generation.board_generator import generate_board
 class GenerateBoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
-        fields = ['game_code', 'shape', 'win_detector', 'board_difficulty', 'seed', 'forced_goals']
+        fields = ['game_code', 'shape', 'win_detector', 'seed', 'forced_goals']
         extra_kwargs = {'game_code': {'required': False}, 'shape': {'required': False},
                         'win_detector': {'required': False}}
 
-    board_difficulty = serializers.IntegerField(required=False, write_only=True)  # TODO max_value
     seed = serializers.CharField(required=False, write_only=True, max_length=256)
     forced_goals = serializers.ListField(required=False, write_only=True,
                                          child=serializers.CharField(max_length=256))

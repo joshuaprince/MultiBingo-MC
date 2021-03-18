@@ -8,7 +8,11 @@ from xml.etree.ElementTree import Element
 import xmltodict
 
 GOAL_XML = os.path.join(os.path.dirname(__file__), 'goals.xml')
-MAX_DIFFICULTY = 4
+MAX_DIFFICULTY = 10
+MAX_NEGATIVES = 3
+
+GOAL_TYPE_NEGATIVE = 'negative'
+
 GOALS: List['GoalTemplate'] = []
 
 
@@ -26,7 +30,6 @@ class GoalTemplate:
         self.weight = 1.0
         self.antisynergy = None
         self.variable_ranges = {}  # type: Dict[str, tuple]
-        self.is_autoactivated = False
         self.triggers_xml = []  # type: List[Element]
 
     def __str__(self):
@@ -120,41 +123,61 @@ class ConcreteGoal:
         return self.description()
 
 
-def get_goals(rand: Random, difficulty_counts: tuple,
+def get_goals(rand: Random, count: int, proportion_easy: float,
               forced_goals: List[str] = None) -> List[ConcreteGoal]:
     # Making a copy of our master Goal (template) list so that we can modify it,
-    #  removing goals as we go to ensure no duplicates.
+    #  modifying goal weights as we go to ensure no duplicates.
     goals_copy = deepcopy(GOALS)
+
     ret: List[ConcreteGoal] = []
+    count_by_difficulty = [0, 0]
+    negatives = 0
 
-    if forced_goals:
-        for fg_id in forced_goals:
-            # Force goals by setting their weight absurdly high, "almost" guaranteeing their pick
-            fg_list = [g for g in goals_copy if g.id == fg_id]
-            if len(fg_list) == 0:
-                print(f"Cannot force unknown goal ID {fg_id}")
-                continue
-            fg_list[0].weight = 9999999
+    def pick(goal_: GoalTemplate):
+        nonlocal goals_copy, ret, negatives
+        count_by_difficulty[goal_.difficulty] += 1
+        ret.append(ConcreteGoal(goal_, rand))
+        # Remove the goal and its antisynergies from the template list so none come up again
+        if goal_.antisynergy:
+            for g in (g for g in goals_copy if g.antisynergy == goal_.antisynergy):
+                g.weight = 0
+        else:
+            goal_.weight = 0
+        # Ensure that a limited number of Negative goals can appear on one board
+        if goal_.type == GOAL_TYPE_NEGATIVE:
+            negatives += 1
+            if negatives >= MAX_NEGATIVES:
+                for g in (g for g in goals_copy if g.type == GOAL_TYPE_NEGATIVE):
+                    g.weight = 0
 
-    for diff, count in enumerate(difficulty_counts):
-        for _ in range(count):
-            goals_this_difficulty: List = [g for g in goals_copy if g.difficulty == diff]
-            if len(goals_this_difficulty) == 0:
-                raise IndexError(f"Ran out of goals of difficulty {diff}")
+    # Add forced goals to the list
+    for fg_id in (forced_goals or ()):
+        try:
+            goal = next(g for g in goals_copy if g.id == fg_id)
+        except StopIteration:
+            print(f"Cannot force unknown goal ID {fg_id}")
+            continue
+        pick(goal)
 
-            # Pick a random goal at this difficulty
-            weights = [goal.weight for goal in goals_this_difficulty]
-            goal_idx = rand.choices(range(len(goals_this_difficulty)), weights=weights)[0]
-            goal = goals_this_difficulty[goal_idx]
+    # Randomize the rest of the list
+    while len(ret) < count:
+        # Decide whether to pick an easy goal next by comparing the current proportion of easy
+        #  goals to the targeted proportion
+        try:
+            curr_proportion_easy = float(count_by_difficulty[0]) / sum(count_by_difficulty)
+        except ZeroDivisionError:
+            curr_proportion_easy = 0
+        difficulty = 0 if curr_proportion_easy < proportion_easy else 1
 
-            # Append it to our returned list
-            ret.append(ConcreteGoal(goal, rand))
+        goals_this_difficulty = list(g for g in goals_copy if g.difficulty == difficulty)
+        if len(goals_this_difficulty) == 0:
+            raise IndexError(f"Ran out of goals of difficulty {difficulty}")
 
-            # Remove the goal and its antisynergies from the template list so none come up again
-            if goal.antisynergy:
-                goals_copy = [g for g in goals_copy if g.antisynergy != goal.antisynergy]
-            else:
-                goals_copy.remove(goal)
+        # Pick a random goal at this difficulty
+        weights = [goal.weight for goal in goals_this_difficulty]
+        goal_idx = rand.choices(range(len(goals_this_difficulty)), weights=weights)[0]
+        goal = goals_this_difficulty[goal_idx]
+        pick(goal)
 
     rand.shuffle(ret)
 
@@ -196,9 +219,6 @@ def parse_xml(filename=GOAL_XML):
             new_goal.variable_ranges[name] = (mini, maxi)
 
         new_goal.triggers_xml = e_goal.findall('ItemTrigger')
-
-        if len(e_goal.findall('ItemTrigger')) > 0 or len(e_goal.findall('Auto')) > 0:
-            new_goal.is_autoactivated = True
 
         goal_type = e_goal.get('type')
         if goal_type:

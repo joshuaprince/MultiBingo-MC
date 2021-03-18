@@ -23,7 +23,6 @@ class MCBCommands {
 
     void registerCommands() {
         MultiLiteralArgument shapeArg = new MultiLiteralArgument("square", "hexagon");
-        IntegerArgument diffArg = new IntegerArgument("difficulty", 0, 9);
         GreedyStringArgument forcedArg = new GreedyStringArgument("forcedGoals");
 
         // All-default form
@@ -48,25 +47,14 @@ class MCBCommands {
                 settings.shape = (String) args[0];
                 commandPrepare(sender, settings);
             });
-        // +Difficulty
-        CommandAPICommand prepareCmdShapedDiff = new CommandAPICommand("prepare")
-            .withAliases("p")
-            .withArguments(shapeArg, diffArg)
-            .executes((sender, args) -> {
-                GameSettings settings = new GameSettings();
-                settings.shape = (String) args[0];
-                settings.boardDifficulty = (int) args[1];
-                commandPrepare(sender, settings);
-            });
         // +Forced goals
         CommandAPICommand prepareCmdShapedDiffForced = new CommandAPICommand("prepare")
             .withAliases("p")
-            .withArguments(shapeArg, diffArg, forcedArg)
+            .withArguments(shapeArg, forcedArg)
             .executes((sender, args) -> {
                 GameSettings settings = new GameSettings();
                 settings.shape = (String) args[0];
-                settings.boardDifficulty = (int) args[1];
-                settings.forcedGoals = ((String) args[2]).split(" ");
+                settings.forcedGoals = ((String) args[1]).split(" ");
                 commandPrepare(sender, settings);
             });
 
@@ -111,7 +99,6 @@ class MCBCommands {
         root.withSubcommand(prepareCmd);
         root.withSubcommand(prepareCmdGameCode);
         root.withSubcommand(prepareCmdShaped);
-        root.withSubcommand(prepareCmdShapedDiff);
         root.withSubcommand(prepareCmdShapedDiffForced);
         root.withSubcommand(startCmd);
         root.withSubcommand(endCmd);

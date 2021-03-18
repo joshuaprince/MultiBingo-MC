@@ -4,8 +4,20 @@
 This script reads in a goals.xml file and outputs a list of goals in an easier-to-read format.
 """
 import argparse
+import pathlib
 
 from goals import GOALS
+
+
+def _has_plugin_trigger(goal):
+    base_plugin_src = (
+        pathlib.Path(__file__).parent.parent.parent
+        / 'plugin' / 'src' / 'main' / 'java' / 'com' / 'jtprince' / 'bingo' / 'plugin'
+    )
+
+    # TODO: Finish this
+    return False
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Read in a goals.xml file and output them.')
@@ -14,7 +26,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.not_auto:
-        GOALS = [g for g in GOALS if not g.is_autoactivated]
+        GOALS = [g for g in GOALS if len(g.triggers_xml) > 0 or _has_plugin_trigger(g)]
 
     for g in GOALS:
         desc_template = g.description_template

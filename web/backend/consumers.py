@@ -7,10 +7,9 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.utils import timezone
 
-from backend.models import PlayerBoardMarking
 from backend.models.board import Board
-from backend.models.board_shape import BoardShape
 from backend.models.player_board import PlayerBoard
+from backend.models.player_board_marking import PlayerBoardMarking
 from backend.serializers.board_player import BoardPlayerSerializer
 from backend.serializers.board_plugin import BoardPluginSerializer
 from backend.serializers.player_board import PlayerBoardSerializer
@@ -234,7 +233,7 @@ def get_board_id(game_code: str):
     try:
         return Board.objects.get(game_code=game_code).pk
     except Board.DoesNotExist:
-        return generate_board(game_code, BoardShape.SQUARE, board_difficulty=2).pk
+        return generate_board(game_code).pk
 
 
 @database_sync_to_async

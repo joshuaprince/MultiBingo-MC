@@ -19,8 +19,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.lang.annotation.Retention;
@@ -270,6 +268,12 @@ class EventTrigger extends AutoMarkTrigger {
     }
 
     @GoalEventTriggerListener
+    private boolean jtp_tame_cat(EntityTameEvent event) {
+        // Tame a cat
+        return event.getEntity().getType() == EntityType.CAT;
+    }
+
+    @GoalEventTriggerListener
     private boolean jm_never__coal44187(FurnaceBurnEvent event) {
         // Never use coal
         // See also CraftItemEvent variant
@@ -312,6 +316,14 @@ class EventTrigger extends AutoMarkTrigger {
     private boolean jm_never_die_37813(PlayerDeathEvent event) {
         // Never die
         return true;
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_get_a_ssage56197(PlayerDeathEvent event) {
+        // TODO: Figure out how to get a death message string from Adventure.
+        @SuppressWarnings("deprecation")
+        String msg = event.getDeathMessage();
+        return msg != null && msg.contains("trying to escape");
     }
 
     @GoalEventTriggerListener

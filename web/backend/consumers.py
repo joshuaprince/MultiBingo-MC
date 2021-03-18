@@ -50,9 +50,9 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
 
         if action == 'board_mark' and self.player_board_id:
             space_id = int(text_data_json['space_id'])
-            to_state = int(text_data_json['to_state'])
-            await self.rx_mark_board(space_id, to_state)
-            broadcast_pboards = True
+            to_state = text_data_json.get('to_state')
+            covert_marked = text_data_json.get('covert_marked')
+            broadcast_pboards = await self.rx_mark_board_player(space_id, to_state, covert_marked)
 
         if action == 'board_mark_admin':
             space_id = int(text_data_json['space_id'])
@@ -96,9 +96,10 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
             self.channel_name
         )
 
-    async def rx_mark_board(self, space_id, to_state):
-        await mark_space(self.player_board_id, space_id, to_state)
+    async def rx_mark_board_player(self, space_id, to_state: int = None, covert_marked: int = None):
+        changed = await mark_space(self.player_board_id, space_id, to_state, covert_marked)
         await mark_disconnected(self.player_board_id, False)
+        return changed
 
     async def rx_mark_board_admin(self, space_id, to_state, player):
         return await mark_space_admin(self.board_id, player, space_id, to_state)
@@ -136,7 +137,7 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         )
 
     async def send_pboards_to_ws(self, event=None):
-        board_states = await get_pboard_states(self.board_id)
+        board_states = await get_pboard_states(self.board_id, self.player_board_id)
         await self.send(text_data=json.dumps(board_states))
 
     async def send_game_state_all_consumers(self, to_state):
@@ -220,7 +221,7 @@ class PluginBackendConsumer(BaseWebConsumer):
 
 
 @database_sync_to_async
-def get_pboard_states(board_id: int):
+def get_pboard_states(board_id: int, for_player_pboard_id: int = None):
     # Only sends board states of players who are not disconnected
     recent_dc_time = timezone.now() - timedelta(minutes=1)
     pboards = PlayerBoard.objects.filter(
@@ -228,7 +229,7 @@ def get_pboard_states(board_id: int):
         board_id=board_id
     )
     data = {
-        'pboards': [pb.to_json() for pb in pboards],
+        'pboards': [pb.to_json(include_covert=(pb.pk == for_player_pboard_id)) for pb in pboards],
     }
     return data
 
@@ -267,13 +268,15 @@ def reveal_board(board_id: str, revealed: bool = True):
 
 
 @database_sync_to_async
-def mark_space(player_board_id: int, space_id: int, to_state: int):
+def mark_space(player_board_id: int, space_id: int,
+               to_state: int = None, covert_marked: bool = None):
     """
     Mark a space on a player's board.
-    :return: True if the board was changed, False otherwise.
+    :return: True if the markings on the board were changed, False otherwise.
+             Returns False if the only change was to covert markings.
     """
     player_board_obj = PlayerBoard.objects.get(pk=player_board_id)
-    return player_board_obj.mark_space(space_id, to_state)
+    return player_board_obj.mark_space(space_id, to_state, covert_marked)
 
 
 @database_sync_to_async

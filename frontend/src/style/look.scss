@@ -40,6 +40,26 @@ body {
   }
 }
 
+.bingo-space.covert-marked {
+  .square & {
+    border: 1px solid crimson;
+    .bingo-space-content {
+      outline: 3px solid crimson;
+    }
+  }
+
+  .hexagon & {
+    background: crimson;
+    .bingo-space-content {
+      outline: 2px solid crimson;
+      left: 3px;
+      top: 3px;
+      height: calc(100% - 6px);
+      width: calc(100% - 6px);
+    }
+  }
+}
+
 .bingo-auto-tip {
   color: gray;
 }

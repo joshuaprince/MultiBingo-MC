@@ -3,7 +3,7 @@ import z from "myzod";
 
 import { IBingoGameState } from "./BingoGame";
 import { TBoard } from "./interface/IBoard";
-import { TPlayerBoard } from "./interface/IPlayerBoard";
+import { IPlayerBoardMarking, TPlayerBoard } from "./interface/IPlayerBoard";
 
 type SetState = React.Dispatch<React.SetStateAction<IBingoGameState>>;
 
@@ -39,11 +39,12 @@ export const getWebSocketUrl = (gameCode: string, playerName?: string) => {
       + encodeURI(gameCode) + encodeURI(playerName ? ('/' + playerName) : '');
 }
 
-export const sendMarkBoard = (spaceId: number, toState: number) => {
+export const sendMarkBoard = (marking: Partial<IPlayerBoardMarking> & Pick<IPlayerBoardMarking, 'space_id'>) => {
   send({
     action: "board_mark",
-    space_id: spaceId,
-    to_state: toState,
+    space_id: marking.space_id,
+    to_state: marking.color,
+    covert_marked: marking.covert_marked,
   });
 }
 

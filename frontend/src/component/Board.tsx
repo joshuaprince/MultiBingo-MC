@@ -21,7 +21,7 @@ export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
 
         const editable = !!(props.playerBoard && !props.board.obscured && props.isPrimary);
 
-        return <Space key={s.space_id} space={s} shape={props.board.shape} marking={marking?.color}
+        return <Space key={s.space_id} space={s} shape={props.board.shape} marking={marking}
                       winning={win} obscured={props.board.obscured} editable={editable}
                       isPrimary={props.isPrimary} />
       })}

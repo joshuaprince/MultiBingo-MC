@@ -11,6 +11,7 @@ export enum Color {
 export const TPlayerBoardMarking = z.object({
   space_id: z.number(),
   color: z.enum(Color),
+  covert_marked: z.boolean().optional(),
 });
 
 export type IPlayerBoardMarking = Infer<typeof TPlayerBoardMarking>;

@@ -22,24 +22,32 @@ class PlayerBoard(models.Model):
     class Meta:
         unique_together = ['board', 'player_name']
 
-    def mark_space(self, space_id: int, to_state: Color):
+    def mark_space(self, space_id: int, to_state: Color = None, covert_marked: bool = None):
         """
         Mark a space on this player's board to a specified state.
         :return: True if the board was changed, False otherwise.
+                 Returns False if the only change was to covert markings.
         """
         marking = self.playerboardmarking_set.get(space_id=space_id)
-        if marking.color != to_state:
+        changed = False
+        return_changed = False
+        if to_state is not None and marking.color != to_state:
             marking.color = to_state
-            marking.save()
-            return True
-        else:
-            return False
+            changed = return_changed = True
+        if covert_marked is not None and marking.covert_marked != covert_marked:
+            marking.covert_marked = covert_marked
+            changed = True  # Don't return covert changes so all player boards don't update
 
-    def to_json(self):
+        if changed:
+            marking.save()
+
+        return return_changed
+
+    def to_json(self, include_covert: bool = False):
         return {
             'player_id': self.pk,
             'player_name': self.player_name,
-            'markings': [mark.to_json() for mark in self.playerboardmarking_set.all()],
+            'markings': [mark.to_json(include_covert) for mark in self.playerboardmarking_set.all()],
             'win': winning_space_ids(self),
             'disconnected_at': self.disconnected_at.isoformat() if self.disconnected_at else None,
         }

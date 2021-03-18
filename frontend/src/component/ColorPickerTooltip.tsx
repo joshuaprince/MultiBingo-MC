@@ -10,7 +10,10 @@ type IProps = {
 export const ColorPickerTooltip: React.FunctionComponent<IProps> = (props: IProps) => {
   const onMouseDown = (e: React.MouseEvent, newMarking: number) => {
     e.preventDefault();
-    sendMarkBoard(props.spaceId, newMarking);
+    sendMarkBoard({
+      space_id: props.spaceId,
+      color: newMarking,
+    });
     return false;
   };
 

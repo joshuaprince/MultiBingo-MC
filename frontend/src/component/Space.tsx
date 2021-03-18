@@ -5,7 +5,7 @@ import "tippy.js/animations/shift-away.css";
 
 import { ISpace } from "../interface/ISpace";
 import { sendMarkBoard } from "../api";
-import { Color } from "../interface/IPlayerBoard";
+import { Color, IPlayerBoardMarking } from "../interface/IPlayerBoard";
 import { IPosition } from "../interface/IPosition";
 import { BoardShape } from "../interface/IBoard";
 import { ColorPickerTooltip } from "./ColorPickerTooltip";
@@ -15,7 +15,7 @@ type IProps = {
   editable: boolean;
   space: ISpace;
   shape: BoardShape;
-  marking?: Color;
+  marking?: IPlayerBoardMarking;
   winning: boolean;
   isPrimary: boolean;
 }
@@ -29,8 +29,16 @@ export const Space: React.FunctionComponent<IProps> = (props: IProps) => {
     }
 
     const isRightClick = e.button === 2;
-    if (!isRightClick) {
-      sendMarkBoard(props.space.space_id, nextColor(props.marking));
+    if (isRightClick) {
+      sendMarkBoard({
+        space_id: props.space.space_id,
+        covert_marked: !props.marking?.covert_marked
+      });
+    } else {
+      sendMarkBoard({
+        space_id: props.space.space_id,
+        color: nextColor(props.marking?.color),
+      });
     }
 
     return false;
@@ -46,7 +54,8 @@ export const Space: React.FunctionComponent<IProps> = (props: IProps) => {
   const innerTooltipText = props.isPrimary && !props.obscured ? props.space.tooltip : undefined;
 
   const spaceDiv = (
-    <div className={"bingo-space mark-" + (props.marking || Color.UNMARKED)
+    <div className={"bingo-space mark-" + (props.marking?.color || Color.UNMARKED)
+                    + (props.marking?.covert_marked ? " covert-marked" : "")
                     + (props.winning ? " winning" : "")
                     + (props.editable ? " editable" : "")}
          style={getPositionStyle(props.space.position, props.shape)}

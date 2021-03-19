@@ -26,22 +26,20 @@ class PlayerBoard(models.Model):
         """
         Mark a space on this player's board to a specified state.
         :return: True if the board was changed, False otherwise.
-                 Returns False if the only change was to covert markings.
         """
         marking = self.playerboardmarking_set.get(space_id=space_id)
         changed = False
-        return_changed = False
         if to_state is not None and marking.color != to_state:
             marking.color = to_state
-            changed = return_changed = True
+            changed = True
         if covert_marked is not None and marking.covert_marked != covert_marked:
             marking.covert_marked = covert_marked
-            changed = True  # Don't return covert changes so all player boards don't update
+            changed = True
 
         if changed:
             marking.save()
 
-        return return_changed
+        return changed
 
     def to_json(self, include_covert: bool = False):
         return {

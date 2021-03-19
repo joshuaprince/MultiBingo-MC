@@ -273,7 +273,6 @@ def mark_space(player_board_id: int, space_id: int,
     """
     Mark a space on a player's board.
     :return: True if the markings on the board were changed, False otherwise.
-             Returns False if the only change was to covert markings.
     """
     player_board_obj = PlayerBoard.objects.get(pk=player_board_id)
     return player_board_obj.mark_space(space_id, to_state, covert_marked)

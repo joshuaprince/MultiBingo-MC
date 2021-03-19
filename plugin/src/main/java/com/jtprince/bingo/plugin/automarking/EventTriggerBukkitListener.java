@@ -5,6 +5,7 @@ import com.jtprince.bingo.plugin.player.BingoPlayer;
 import com.jtprince.bingo.plugin.MCBingoPlugin;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.World;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -20,10 +21,12 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Contract;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Container for all Bukkit Event Listeners.
@@ -188,7 +191,9 @@ public class EventTriggerBukkitListener implements Listener {
             return;
         }
         for (ItemTrigger trigger : itemTriggers) {
-            if (trigger.isSatisfied(player.getInventory())) {
+            Collection<Inventory> inventories = bp.getBukkitPlayers().stream()
+                .map(HumanEntity::getInventory).collect(Collectors.toUnmodifiableSet());
+            if (trigger.isSatisfied(inventories)) {
                 this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoMark(trigger.getSpace());
             } else {
                 this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoRevert(trigger.getSpace());

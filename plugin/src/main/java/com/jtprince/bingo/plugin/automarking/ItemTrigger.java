@@ -79,7 +79,7 @@ class ItemTrigger extends AutoMarkTrigger {
      * Determine whether the given inventory contains some items that can allow a goal to be
      * considered completed.
      */
-    boolean isSatisfied(Inventory inv) {
+    boolean isSatisfied(Collection<Inventory> inventories) {
         int totalMatches = 0;
 
         for (ItemMatchGroup mg : matchGroups) {
@@ -91,12 +91,14 @@ class ItemTrigger extends AutoMarkTrigger {
             /* Maps namespaced name -> number of matching items with that name in the inventory */
             Map<String, Integer> itemNameToCountMap = new HashMap<>();
 
-            for (ItemStack itemStack : inv.getContents()) {
-                int numItemsMatched = mg.match(itemStack);
-                if (numItemsMatched > 0) {
-                    String itemName = namespacedName(itemStack);
-                    // Increments itemNameToCountMap[item name] by numItemsMatched
-                    itemNameToCountMap.merge(itemName, numItemsMatched, Integer::sum);
+            for (Inventory inv : inventories) {
+                for (ItemStack itemStack : inv.getContents()) {
+                    int numItemsMatched = mg.match(itemStack);
+                    if (numItemsMatched > 0) {
+                        String itemName = namespacedName(itemStack);
+                        // Increments itemNameToCountMap[item name] by numItemsMatched
+                        itemNameToCountMap.merge(itemName, numItemsMatched, Integer::sum);
+                    }
                 }
             }
 

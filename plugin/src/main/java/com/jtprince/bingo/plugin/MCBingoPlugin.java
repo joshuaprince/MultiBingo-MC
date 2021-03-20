@@ -8,6 +8,7 @@ import dev.jorel.commandapi.CommandAPI;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -66,9 +67,9 @@ public class MCBingoPlugin extends JavaPlugin {
         return currentGame;
     }
 
-    void prepareNewGame(GameSettings settings) {
+    void prepareNewGame(CommandSender creator, GameSettings settings) {
         this.destroyCurrentGame();
-        this.currentGame = new BingoGame(this, settings, createBingoPlayers());
+        this.currentGame = new BingoGame(this, settings, creator, createBingoPlayers());
     }
 
     void destroyCurrentGame() {

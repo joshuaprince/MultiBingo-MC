@@ -94,8 +94,6 @@ public class Messages {
     }
 
     public void announceWorldsGenerated(Collection<BingoPlayer> players) {
-        players = new HashSet<>(players);
-        players.add(new BingoPlayerRemote("Hello world"));
         TextComponent playersCpnt = ChatUtils.commaSeparated(
             players.stream().map(BingoPlayer::getFormattedName)
                 .collect(Collectors.toUnmodifiableSet())
@@ -107,7 +105,7 @@ public class Messages {
         announceWithHeader(component);
     }
 
-    public void announceGameReady(Collection<BingoPlayer> players) {
+    public void announceGameReady(Collection<BingoPlayer> players, Audience starters) {
         TextComponent component;
         for (BingoPlayer p : players) {
             // Game link for this specific player
@@ -124,13 +122,6 @@ public class Messages {
                         .color(NamedTextColor.YELLOW)
                         .hoverEvent(Component.text(url.toString()))
                         .clickEvent(ClickEvent.openUrl(url))
-                    )
-                    .append(Component.space())
-                    .append(Component.text("[START]")
-                        .decoration(TextDecoration.UNDERLINED, true)
-                        .color(NamedTextColor.GREEN)
-                        .clickEvent(ClickEvent.runCommand("/bingo start"))
-                        .hoverEvent(Component.text("Start Game (/bingo start)"))
                     );
             }
 
@@ -138,6 +129,13 @@ public class Messages {
                 sendWithHeader(bukkitPlayer, component);
             }
         }
+
+        component = Component.text("[START]")
+            .decoration(TextDecoration.UNDERLINED, true)
+            .color(NamedTextColor.GREEN)
+            .clickEvent(ClickEvent.runCommand("/bingo start"))
+            .hoverEvent(Component.text("Start Game (/bingo start)"));
+        sendWithHeader(starters, component);
     }
 
     public void announcePlayerMarking(BingoPlayer player, Space space, boolean invalidated) {

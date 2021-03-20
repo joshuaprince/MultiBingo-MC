@@ -21,12 +21,15 @@ public class BingoGame {
     public BingoWebSocketClient wsClient;
     public final GameBoard gameBoard;
 
+    private final CommandSender creator;
     public String gameCode;
     public State state;
     private int countdown;
 
-    public BingoGame(MCBingoPlugin plugin, GameSettings settings, Collection<BingoPlayer> players) {
+    public BingoGame(MCBingoPlugin plugin, GameSettings settings,
+                     CommandSender creator, Collection<BingoPlayer> players) {
         this.plugin = plugin;
+        this.creator = creator;
 
         this.playerManager = new PlayerManager(this, players);
         this.messages = new Messages(this);
@@ -87,7 +90,7 @@ public class BingoGame {
             && this.wsClient.isOpen()
             && this.gameBoard.isReady()
             && playerManager.getLocalPlayers().stream().allMatch(p -> playerManager.getWorldSet(p) != null)) {
-            this.messages.announceGameReady(playerManager.getLocalPlayers());
+            this.messages.announceGameReady(playerManager.getLocalPlayers(), creator);
             this.state = State.READY;
         }
     }

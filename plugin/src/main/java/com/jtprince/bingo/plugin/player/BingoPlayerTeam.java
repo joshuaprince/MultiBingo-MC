@@ -1,7 +1,9 @@
 package com.jtprince.bingo.plugin.player;
 
+import com.jtprince.util.ChatUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -39,7 +41,14 @@ public class BingoPlayerTeam extends BingoPlayer {
 
     @Override
     public @NotNull TextComponent getFormattedName() {
-        return Component.text(this.teamName).color(color);
+        TextComponent playerNames = ChatUtils.commaSeparated(
+            playerUuids.stream().map(u -> Component.text(
+                Objects.requireNonNull(Bukkit.getOfflinePlayer(u).getName()))
+            ).collect(Collectors.toUnmodifiableSet())
+        );
+        return Component.text(this.teamName)
+            .color(color)
+            .hoverEvent(HoverEvent.showText(playerNames));
     }
 
     @Override

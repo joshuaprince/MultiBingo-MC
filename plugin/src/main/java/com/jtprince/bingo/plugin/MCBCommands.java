@@ -29,7 +29,7 @@ class MCBCommands {
         // All-default form
         CommandAPICommand prepareCmd = new CommandAPICommand("prepare")
             .withAliases("p")
-            .executes((CommandExecutor) (sender, args) -> commandPrepare(new GameSettings()));
+            .executes((CommandExecutor) (sender, args) -> commandPrepare(sender, new GameSettings()));
         // Game code form
         CommandAPICommand prepareCmdGameCode = new CommandAPICommand("prepare")
             .withAliases("p")
@@ -37,7 +37,7 @@ class MCBCommands {
             .executes((sender, args) -> {
                 GameSettings settings = new GameSettings();
                 settings.gameCode = (String) args[0];
-                commandPrepare(settings);
+                commandPrepare(sender, settings);
             });
         // Shape-only form
         CommandAPICommand prepareCmdShaped = new CommandAPICommand("prepare")
@@ -46,7 +46,7 @@ class MCBCommands {
             .executes((sender, args) -> {
                 GameSettings settings = new GameSettings();
                 settings.shape = (String) args[0];
-                commandPrepare(settings);
+                commandPrepare(sender, settings);
             });
         // +Difficulty
         CommandAPICommand prepareCmdShapedDiff = new CommandAPICommand("prepare")
@@ -56,7 +56,7 @@ class MCBCommands {
                 GameSettings settings = new GameSettings();
                 settings.shape = (String) args[0];
                 settings.boardDifficulty = (int) args[1];
-                commandPrepare(settings);
+                commandPrepare(sender, settings);
             });
         // +Forced goals
         CommandAPICommand prepareCmdShapedDiffForced = new CommandAPICommand("prepare")
@@ -67,7 +67,7 @@ class MCBCommands {
                 settings.shape = (String) args[0];
                 settings.boardDifficulty = (int) args[1];
                 settings.forcedGoals = ((String) args[2]).split(" ");
-                commandPrepare(settings);
+                commandPrepare(sender, settings);
             });
 
         CommandAPICommand startCmd = new CommandAPICommand("start")
@@ -125,8 +125,8 @@ class MCBCommands {
         root.register();
     }
 
-    private void commandPrepare(@NotNull GameSettings settings) {
-        this.plugin.prepareNewGame(settings);
+    private void commandPrepare(@NotNull CommandSender sender, @NotNull GameSettings settings) {
+        this.plugin.prepareNewGame(sender, settings);
     }
 
     private void commandStart(CommandSender sender) {

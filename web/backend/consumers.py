@@ -227,7 +227,7 @@ def get_pboard_states(board_id: int, for_player_pboard_id: int = None):
     pboards = PlayerBoard.objects.filter(
         Q(disconnected_at=None) | Q(disconnected_at__gt=recent_dc_time),
         board_id=board_id
-    )
+    ).order_by('pk')
     data = {
         'pboards': [pb.to_json(include_covert=(pb.pk == for_player_pboard_id)) for pb in pboards],
     }

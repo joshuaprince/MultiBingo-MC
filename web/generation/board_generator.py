@@ -5,7 +5,10 @@ from typing import List
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
 
-from backend.models import BoardShape, Board, Position, Space
+from backend.models.board_shape import BoardShape
+from backend.models.board import Board
+from backend.models.position import Position
+from backend.models.space import Space
 from win_detection.win_detection import get_win_detector, get_default_win_detector
 from .goals import get_goals
 

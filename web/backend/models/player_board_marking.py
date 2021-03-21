@@ -12,7 +12,7 @@ class PlayerBoardMarking(models.Model):
 
     def to_json(self, include_covert: bool = False):
         ret = {
-            'space_id': self.space.pk,
+            'space_id': self.space_id,
             'color': self.color,
         }
 

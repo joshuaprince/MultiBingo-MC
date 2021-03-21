@@ -3,10 +3,12 @@ from __future__ import annotations
 from typing import List, Optional, TYPE_CHECKING
 
 from win_detection.registry import WIN_DETECTORS
-from backend.models import BoardShape
+from backend.models.board_shape import BoardShape
+from backend.models.player_board_marking import PlayerBoardMarking
 
 if TYPE_CHECKING:
-    from backend.models import PlayerBoard, Space
+    from backend.models.player_board import PlayerBoard
+    from backend.models.space import Space
 
 # Import all win detectors
 # noinspection PyUnresolvedReferences
@@ -36,7 +38,13 @@ def winning_space_ids(pboard: PlayerBoard) -> Optional[List[int]]:
     if not detector_func:
         return None
 
-    win_markings = detector_func(pboard)  # type: List[Space]
+    try:
+        markings = list(PlayerBoardMarking.objects
+                        .filter(player_board=pboard).select_related('space__position'))
+        win_markings = detector_func(pboard, markings)  # type: List[Space]
+    except Exception as e:
+        win_markings = []
+        print(e)
     if win_markings:
         return [space.pk for space in win_markings]
     else:

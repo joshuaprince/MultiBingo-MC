@@ -6,7 +6,7 @@ You probably want `<consumers.py>`_ instead!
 """
 from rest_framework.generics import CreateAPIView
 
-from backend.models import Board
+from backend.models.board import Board
 from backend.serializers import GenerateBoardSerializer
 
 

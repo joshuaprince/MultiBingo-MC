@@ -9,7 +9,11 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.db.models import Q
 from django.utils import timezone
 
-from backend.models import Board, BoardShape, PlayerBoard, Space, AutoMarker
+from backend.models.auto_marker import AutoMarker
+from backend.models.board import Board
+from backend.models.board_shape import BoardShape
+from backend.models.player_board import PlayerBoard
+from backend.models.space import Space
 from generation.board_generator import generate_board
 
 
@@ -224,7 +228,7 @@ class PluginBackendConsumer(BaseWebConsumer):
 def get_pboard_states(board_id: int, for_player_pboard_id: int = None):
     # Only sends board states of players who are not disconnected
     recent_dc_time = timezone.now() - timedelta(minutes=1)
-    pboards = PlayerBoard.objects.filter(
+    pboards = PlayerBoard.objects.prefetch_related('playerboardmarking_set').filter(
         Q(disconnected_at=None) | Q(disconnected_at__gt=recent_dc_time),
         board_id=board_id
     ).order_by('pk')

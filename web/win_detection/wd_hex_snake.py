@@ -8,7 +8,10 @@ from win_detection.registry import win_detector
 from win_detection.winning_markings import WINNING_MARKINGS
 
 if TYPE_CHECKING:
-    from backend.models import PlayerBoard, PlayerBoardMarking, Position, Space
+    from backend.models.player_board import PlayerBoard
+    from backend.models.player_board_marking import PlayerBoardMarking
+    from backend.models.position import Position
+    from backend.models.space import Space
 
 
 WIN_LENGTH = 6
@@ -20,19 +23,18 @@ long time if set too high.
 
 
 @win_detector("Hexagonal snaking win", ['hexagon'])
-def hex_snake(pboard) -> Optional[List[Space]]:
-    return _hex_snake(pboard, True)
+def hex_snake(pboard, markings) -> Optional[List[Space]]:
+    return _hex_snake(pboard, markings, True)
 
 
 @win_detector("Hexagonal snaking, no neighbor", ['hexagon'])
-def hex_snake_neighborless(pboard) -> Optional[List[Space]]:
-    return _hex_snake(pboard, False)
+def hex_snake_neighborless(pboard, markings) -> Optional[List[Space]]:
+    return _hex_snake(pboard, markings, False)
 
 
-def _hex_snake(pboard: PlayerBoard, allow_neighbors: bool) -> Optional[List[Space]]:
-    marked = pboard.playerboardmarking_set.filter(color__in=WINNING_MARKINGS)\
-        .select_related('space__position')  # type: List[PlayerBoardMarking]
-    positions = (pbm.space.position for pbm in marked)
+def _hex_snake(pboard: PlayerBoard, markings: List[PlayerBoardMarking],
+               allow_neighbors: bool) -> Optional[List[Space]]:
+    positions = (pbm.space.position for pbm in markings if pbm.color in WINNING_MARKINGS)
     start_time = default_timer()
     longest = _longest_chain(tuple(), frozenset(positions), allow_neighbors)
     end_time = default_timer()

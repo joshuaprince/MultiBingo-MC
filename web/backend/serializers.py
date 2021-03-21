@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from backend.models import Board
+from backend.models.board import Board
 from generation.board_generator import generate_board
 
 

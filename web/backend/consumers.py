@@ -1,12 +1,10 @@
 import json
 from abc import ABC, abstractmethod
-from datetime import timedelta
 from random import randrange
 from typing import Set, Dict
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from django.db.models import Q
 from django.utils import timezone
 
 from backend.models import PlayerBoardMarking
@@ -15,6 +13,7 @@ from backend.models.board_shape import BoardShape
 from backend.models.player_board import PlayerBoard
 from backend.serializers.board_player import BoardPlayerSerializer
 from backend.serializers.board_plugin import BoardPluginSerializer
+from backend.serializers.player_board import PlayerBoardSerializer
 from generation.board_generator import generate_board
 
 
@@ -141,7 +140,9 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         )
 
     async def send_pboards_to_ws(self, event=None):
-        board_states = await get_pboard_states(self.board_id, self.player_board_id)
+        board_states = await database_sync_to_async(PlayerBoardSerializer.from_board_id)(
+            self.board_id, self.player_board_id
+        )
         await self.send(text_data=json.dumps(board_states))
 
     async def send_game_state_all_consumers(self, to_state):
@@ -171,7 +172,9 @@ class PlayerWebConsumer(BaseWebConsumer):
         self.client_id = self.scope['url_route']['kwargs'].get('player_name')
 
         if self.client_id:
-            player_board_obj = await get_player_board(self.board_id, self.client_id)
+            player_board_obj = (await database_sync_to_async(PlayerBoard.objects.get_or_create)(
+                board_id=self.board_id, player_name=self.client_id
+            ))[0]
             self.player_board_id = player_board_obj.pk
             await mark_disconnected(self.player_board_id, False)
 
@@ -227,30 +230,11 @@ class PluginBackendConsumer(BaseWebConsumer):
 
 
 @database_sync_to_async
-def get_pboard_states(board_id: int, for_player_pboard_id: int = None):
-    # Only sends board states of players who are not disconnected
-    recent_dc_time = timezone.now() - timedelta(minutes=1)
-    pboards = PlayerBoard.objects.prefetch_related('playerboardmarking_set').filter(
-        Q(disconnected_at=None) | Q(disconnected_at__gt=recent_dc_time),
-        board_id=board_id
-    ).order_by('pk')
-    data = {
-        'pboards': [pb.to_json(include_covert=(pb.pk == for_player_pboard_id)) for pb in pboards],
-    }
-    return data
-
-
-@database_sync_to_async
 def get_board_id(game_code: str):
     try:
         return Board.objects.get(game_code=game_code).pk
     except Board.DoesNotExist:
         return generate_board(game_code, BoardShape.SQUARE, board_difficulty=2).pk
-
-
-@database_sync_to_async
-def get_player_board(board_id: int, player: str):
-    return PlayerBoard.objects.get_or_create(board_id=board_id, player_name=player)[0]
 
 
 @database_sync_to_async

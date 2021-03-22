@@ -4,7 +4,6 @@ from django.dispatch import receiver
 
 from backend.models.color import Color
 from backend.models.player_board_marking import PlayerBoardMarking
-from win_detection.win_detection import winning_space_ids
 
 
 class PlayerBoard(models.Model):
@@ -40,15 +39,6 @@ class PlayerBoard(models.Model):
             marking.save()
 
         return changed
-
-    def to_json(self, include_covert: bool = False):
-        return {
-            'player_id': self.pk,
-            'player_name': self.player_name,
-            'markings': [mark.to_json(include_covert) for mark in self.playerboardmarking_set.all()],
-            'win': winning_space_ids(self),
-            'disconnected_at': self.disconnected_at.isoformat() if self.disconnected_at else None,
-        }
 
 
 @receiver(post_save, sender=PlayerBoard)

@@ -40,7 +40,8 @@ def winning_space_ids(pboard: PlayerBoard) -> Optional[List[int]]:
 
     try:
         markings = list(PlayerBoardMarking.objects
-                        .filter(player_board=pboard).select_related('space__position'))
+                        .filter(player_board=pboard)
+                        .select_related('space__position', 'space__board'))
         win_markings = detector_func(pboard, markings)  # type: List[Space]
     except Exception as e:
         win_markings = []

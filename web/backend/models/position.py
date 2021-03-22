@@ -38,11 +38,5 @@ class Position(models.Model):
         else:
             return str((self.x, self.y))
 
-    def to_json(self):
-        return {
-            'x': self.x,
-            'y': self.y,
-        }
-
     class Meta:
         ordering = ['y', 'x']  # Y first so it goes left-right then top-down

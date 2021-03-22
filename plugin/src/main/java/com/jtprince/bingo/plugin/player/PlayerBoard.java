@@ -3,7 +3,10 @@ package com.jtprince.bingo.plugin.player;
 import com.jtprince.bingo.plugin.BingoGame;
 import com.jtprince.bingo.plugin.MCBingoPlugin;
 import com.jtprince.bingo.plugin.Space;
+import io.github.Skepter.Utils.FireworkUtils;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -31,6 +34,8 @@ public class PlayerBoard {
      * space is announced multiple times (i.e. if the player manually changes it).
      */
     private final Set<Integer> announcedSpaceIds = new HashSet<>();
+
+    private boolean announcedVictory = false;
 
     /**
      * List of spaces on this player's board that this plugin has sent to the webserver, but that
@@ -97,7 +102,7 @@ public class PlayerBoard {
      * Update the latest known markings to the provided list of markings.
      * @param markings A board marking JSON object directly from the websocket.
      */
-    public synchronized void update(JSONArray markings) {
+    public synchronized void updateMarkings(JSONArray markings) {
         if (markings.size() != this.markings.size()) {
             throw new ArrayIndexOutOfBoundsException(
                 "Received board marking of " + markings.size() + " spaces; expected: "
@@ -117,6 +122,19 @@ public class PlayerBoard {
                 this.markings.put(spaceId, toState);
             }
         }
+    }
+
+    /**
+     * Update the latest known list of winning-spaces (indicating that this player has won) and
+     * potentially announce the victory.
+     * @param win A "win" JSON object directly from the websocket.
+     */
+    public synchronized void updateWin(@Nullable JSONArray win) {
+        if (win == null || win.size() == 0) {
+            return;
+        }
+
+        considerAnnounceVictory();
     }
 
     public boolean isSpaceAutomarkedForPlayer(int spaceId) {
@@ -160,5 +178,18 @@ public class PlayerBoard {
             Space space = this.game.gameBoard.getSpaces().get(spaceId);
             this.game.messages.announcePlayerMarking(this.player, space, invalidated);
         }
+    }
+
+    private void considerAnnounceVictory() {
+        if (announcedVictory) {
+            return;
+        }
+
+        for (Player p : player.getBukkitPlayers()) {
+            FireworkUtils.spawnSeveralFireworks(game.plugin, p);
+        }
+
+        this.game.messages.announcePlayerVictory(player);
+        announcedVictory = true;
     }
 }

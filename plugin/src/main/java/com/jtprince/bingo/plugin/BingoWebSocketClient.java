@@ -116,7 +116,10 @@ public class BingoWebSocketClient extends WebSocketClient {
             PlayerBoard pb = game.playerManager.getPlayerBoard(player);
 
             JSONArray markings = (JSONArray) json.get("markings");
-            pb.update(markings);
+            pb.updateMarkings(markings);
+
+            JSONArray win = (JSONArray) json.get("win");
+            pb.updateWin(win);
         }
     }
 

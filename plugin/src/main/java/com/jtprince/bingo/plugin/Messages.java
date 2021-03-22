@@ -12,6 +12,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.units.qual.C;
 
 import java.net.URL;
 import java.util.Collection;
@@ -153,6 +154,15 @@ public class Messages {
                 .append(Component.text(space.text).color(NamedTextColor.RED))
                 .append(Component.text("!"));
         }
+
+        announceWithHeader(component);
+    }
+
+    public void announcePlayerVictory(BingoPlayer player) {
+        TextComponent component = Component.empty()
+            .color(NamedTextColor.GOLD)
+            .append(player.getFormattedName())
+            .append(Component.text(" has won the game!"));
 
         announceWithHeader(component);
     }

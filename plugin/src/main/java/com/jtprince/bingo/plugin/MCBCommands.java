@@ -5,6 +5,7 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.executors.CommandExecutor;
 import dev.jorel.commandapi.executors.PlayerCommandExecutor;
+import io.github.Skepter.Utils.FireworkUtils;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
-import java.util.stream.Collectors;
 
 class MCBCommands {
     private final MCBingoPlugin plugin;
@@ -103,10 +103,8 @@ class MCBCommands {
             .executesPlayer((PlayerCommandExecutor) (sender, args) -> commandGo(sender, (BingoPlayer) args[0]));
 
         CommandAPICommand debugCmd = new CommandAPICommand("debug")
-            .executes((sender, args) -> {
-                sender.sendMessage(String.join(", ",
-                    this.plugin.getServer().getWorlds().stream().map(World::getName)
-                        .collect(Collectors.toUnmodifiableList())));
+            .executesPlayer((sender, args) -> {
+                FireworkUtils.spawnSeveralFireworks(this.plugin, sender);
             });
 
         CommandAPICommand root = new CommandAPICommand("bingo");

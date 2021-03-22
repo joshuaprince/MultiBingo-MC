@@ -12,7 +12,7 @@ class PlayerBoard(models.Model):
     A player's set of markings on a particular game board.
     """
     board = models.ForeignKey('Board', on_delete=models.CASCADE)
-    player_name = models.CharField(blank=False, max_length=128)
+    player_name = models.CharField(blank=False, db_index=True, max_length=128)
     markings = models.ManyToManyField('Space', through='PlayerBoardMarking')
     disconnected_at = models.DateTimeField(null=True)
 

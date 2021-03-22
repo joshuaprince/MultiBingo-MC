@@ -28,7 +28,10 @@ class Space(models.Model):
         """
         if not player_board_id:
             return False
-        return self.automarker_set.filter(player_board_id=player_board_id).exists()
+        return (self.playerboardmarking_set
+                .filter(player_board_id=player_board_id)
+                .exclude(auto_marker_client_id='')
+                .exists())
 
     def initial_state(self):
         cg = ConcreteGoal.from_xml_id(self.xml_id)

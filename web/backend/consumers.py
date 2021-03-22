@@ -9,7 +9,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.db.models import Q
 from django.utils import timezone
 
-from backend.models.auto_marker import AutoMarker
+from backend.models import PlayerBoardMarking
 from backend.models.board import Board
 from backend.models.board_shape import BoardShape
 from backend.models.player_board import PlayerBoard
@@ -31,11 +31,10 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
     async def connect(self):
         self.game_code = self.scope['url_route']['kwargs']['game_code']
 
-        board_obj = await get_board(self.game_code)
-        if not board_obj:
+        self.board_id = await get_board_id(self.game_code)
+        if not self.board_id:
             print(f"Error getting board: {self.game_code} (client: {self.client_id})")
             return  # reject connection
-        self.board_id = board_obj.pk
 
         await self.channel_layer.group_add(self.game_code, self.channel_name)
         await self.accept()
@@ -239,11 +238,11 @@ def get_pboard_states(board_id: int, for_player_pboard_id: int = None):
 
 
 @database_sync_to_async
-def get_board(game_code: str):
-    if Board.objects.filter(game_code=game_code).exists():
-        return Board.objects.get(game_code=game_code)
-    else:
-        return generate_board(game_code, BoardShape.SQUARE, board_difficulty=2)
+def get_board_id(game_code: str):
+    try:
+        return Board.objects.get(game_code=game_code).pk
+    except Board.DoesNotExist:
+        return generate_board(game_code, BoardShape.SQUARE, board_difficulty=2).pk
 
 
 @database_sync_to_async
@@ -302,7 +301,9 @@ def mark_disconnected(player_board_id: int, disconnected: bool):
 @database_sync_to_async
 def get_board_player(board_id: int, player_board_id: int):
     board = Board.objects.get(pk=board_id)
-    spaces = board.space_set.order_by('position')
+    spaces = (Space.objects.filter(board_id=board_id)
+                           .select_related('position')
+                           .order_by('position'))
     return {
         'obscured': board.obscured,
         'shape': board.shape,
@@ -312,7 +313,9 @@ def get_board_player(board_id: int, player_board_id: int):
 
 @database_sync_to_async
 def get_board_plugin(board_id: int):
-    spaces = Space.objects.filter(board_id=board_id).order_by('position')
+    spaces = (Space.objects.filter(board_id=board_id)
+                           .select_related('position')
+                           .order_by('position'))
     return {
         'spaces': [spc.to_plugin_json() for spc in spaces],
     }
@@ -323,20 +326,26 @@ def set_automarks(board_id: int, client_id: str, player_space_ids_map: Dict[str,
     changed = False
 
     # Cross = All combinations of (player name, space ID) tuples in the map
-    current_automark_objs = AutoMarker.objects.filter(client_id=client_id)
-    current_cross = set((a.player_board.player_name, a.space_id) for a in current_automark_objs)
+    current_automark_pbms = (PlayerBoardMarking.objects
+                             .filter(player_board__board_id=board_id, auto_marker_client_id=client_id)
+                             .select_related('player_board'))
+    current_cross = set((a.player_board.player_name, a.space_id) for a in current_automark_pbms)
 
     new_cross = set((pname, spcid) for pname, pset in player_space_ids_map.items() for spcid in pset)
 
-    # Create missing AutoMark objects
+    # Create missing AutoMarks
     for player_name, space_id in new_cross.difference(current_cross):
         player_board = PlayerBoard.objects.get_or_create(board_id=board_id, player_name=player_name)[0]
-        AutoMarker.objects.create(player_board=player_board, space_id=space_id, client_id=client_id)
+        PlayerBoardMarking.objects.filter(
+            player_board=player_board, space_id=space_id
+        ).update(auto_marker_client_id=client_id)
         changed = True
 
-    # Delete removed AutoMark objects
+    # Delete removed AutoMarks
     for player_name, space_id in current_cross.difference(new_cross):
-        current_automark_objs.filter(player_board__player_name=player_name, space_id=space_id).delete()
+        current_automark_pbms.filter(
+            player_board__player_name=player_name, space_id=space_id
+        ).update(auto_marker_client_id='')
         changed = True
 
     return changed

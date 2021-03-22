@@ -13,7 +13,8 @@ from backend.models import PlayerBoardMarking
 from backend.models.board import Board
 from backend.models.board_shape import BoardShape
 from backend.models.player_board import PlayerBoard
-from backend.models.space import Space
+from backend.serializers.board_player import BoardPlayerSerializer
+from backend.serializers.board_plugin import BoardPluginSerializer
 from generation.board_generator import generate_board
 
 
@@ -191,7 +192,9 @@ class PlayerWebConsumer(BaseWebConsumer):
         print(f"{self.client_id} disconnected from game {self.game_code}.")
 
     async def send_board_to_ws(self, event=None):
-        board = await get_board_player(self.board_id, self.player_board_id)
+        board = await database_sync_to_async(BoardPlayerSerializer.from_id)(
+            self.board_id, self.player_board_id
+        )
         await self.send(text_data=json.dumps({
             'board': board,
         }))
@@ -217,7 +220,7 @@ class PluginBackendConsumer(BaseWebConsumer):
         print(f"{self.client_id} disconnected from game {self.game_code}.")
 
     async def send_board_to_ws(self, event=None):
-        board = await get_board_plugin(self.board_id)
+        board = await database_sync_to_async(BoardPluginSerializer.from_id)(self.board_id)
         await self.send(text_data=json.dumps({
             'board': board,
         }))
@@ -296,29 +299,6 @@ def mark_disconnected(player_board_id: int, disconnected: bool):
     player_board_obj = PlayerBoard.objects.get(pk=player_board_id)
     player_board_obj.disconnected_at = timezone.now() if disconnected else None
     player_board_obj.save()
-
-
-@database_sync_to_async
-def get_board_player(board_id: int, player_board_id: int):
-    board = Board.objects.get(pk=board_id)
-    spaces = (Space.objects.filter(board_id=board_id)
-                           .select_related('position')
-                           .order_by('position'))
-    return {
-        'obscured': board.obscured,
-        'shape': board.shape,
-        'spaces': [spc.to_player_json(player_board_id) for spc in spaces],
-    }
-
-
-@database_sync_to_async
-def get_board_plugin(board_id: int):
-    spaces = (Space.objects.filter(board_id=board_id)
-                           .select_related('position')
-                           .order_by('position'))
-    return {
-        'spaces': [spc.to_plugin_json() for spc in spaces],
-    }
 
 
 @database_sync_to_async

@@ -27,16 +27,26 @@ body {
   filter: blur(8px);
 }
 
+@keyframes shine {
+  @import 'colors';
+  0%, 100% {
+    background-color: #ffc858;
+  }
+  50% {
+    background-color: #ffa200;
+  }
+}
+
 .revealed .bingo-space {
   @import 'colors';
   @each $i, $name in $markings {
-    &.mark-#{$i} .bingo-space-content {
+    &.mark-#{$i}:not(.winning) .bingo-space-content {
       background: $name;
     }
   }
 
   &.winning .bingo-space-content {
-    background: $marking-win !important;
+    animation: shine 1.5s infinite;
   }
 }
 

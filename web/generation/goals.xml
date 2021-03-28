@@ -430,7 +430,10 @@
     </ItemTrigger>
   </Goal>
   <Goal difficulty="1" id="jm_fish___item58137">
-    <Description>Fish a Treasure and a Junk item</Description>
+    <Description>Fish a Treasure item</Description>
+  </Goal>
+  <Goal difficulty="1" id="jm_fish_junk48309">
+    <Description>Fish a Junk item</Description>
   </Goal>
   <Goal difficulty="1" id="jm_coars__dirt90305">
     <Description>$var Coarse Dirt</Description>
@@ -523,13 +526,6 @@
       <Name>minecraft:tnt</Name>
       <Quantity>$var</Quantity>
     </ItemTrigger>
-  </Goal>
-  <Goal difficulty="1" id="jm_level__53191">
-    <Description>Level $var</Description>
-    <Weight>0.5</Weight>
-    <Antisynergy>Level</Antisynergy>
-    <Variable min="8" max="15"/>
-    <Auto/>
   </Goal>
   <Goal difficulty="1" id="jm_creat_golem39717">
     <Description>Create a Snow Golem</Description>
@@ -925,9 +921,6 @@
     <Description>Finish where you spawned using a Compass</Description>
     <Tooltip>Be stood close enough to spin your compass within a couple blocks at the end of the game</Tooltip>
     <Antisynergy>Finish</Antisynergy>
-  </Goal>
-  <Goal difficulty="1" id="jm_build__gate55495">
-    <Description>Build a Redstone AND Gate</Description>
   </Goal>
   <Goal difficulty="1" id="jm_stone_18573">
     <Description>$var Stone</Description>
@@ -1415,6 +1408,10 @@
         <Name>minecraft:potato</Name>
       </ItemMatchGroup>
       <ItemMatchGroup max-matches="1">
+        <Name>minecraft:cooked_beef</Name>
+        <Name>minecraft:beef</Name>
+      </ItemMatchGroup>
+      <ItemMatchGroup max-matches="1">
         <Name>minecraft:chicken</Name>
         <Name>minecraft:cooked_chicken</Name>
       </ItemMatchGroup>
@@ -1440,10 +1437,11 @@
       </ItemMatchGroup>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="2" id="jm_withe_skull95034">
-    <Description>Wither Skull</Description>
+  <Goal difficulty="1" id="jm_firew__star89450">
+    <Weight>0.5</Weight>
+    <Description>Firework Star</Description>
     <ItemTrigger>
-      <Name>minecraft:wither_skeleton_skull</Name>
+      <Name>minecraft:firework_star</Name>
     </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_diffe_items12523">
@@ -1556,10 +1554,6 @@
       <Quantity>$var</Quantity>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="2" id="jm_skull_anner15742">
-    <Description>Skull Charge Banner</Description>
-    <!-- TODO -->
-  </Goal>
   <Goal difficulty="2" id="jm_damag_anvil45308">
     <Description>Damaged Anvil</Description>
     <ItemTrigger>
@@ -1620,11 +1614,12 @@
     <Description>Tame a Wolf</Description>
     <Auto/>
   </Goal>
-  <Goal difficulty="2" id="jm_6_fir_arges12920">
-    <Description>6 Fire Charges</Description>
+  <Goal difficulty="2" id="jm_fir_arges12920">
+    <Description>$var Fire Charges</Description>
+    <Variable min="1" max="4"/>
     <ItemTrigger>
       <Name>minecraft:fire_charge</Name>
-      <Quantity>6</Quantity>
+      <Quantity>$var</Quantity>
     </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_magma_cream19435">
@@ -1651,54 +1646,34 @@
       <Name>minecraft:rabbit_stew</Name>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="2" id="jm_potio_tance35580">
-    <Description>Potion of Fire Resistance</Description>
-    <Weight>0.08</Weight>
-    <!-- TODO All potions -->
+  <Goal difficulty="2" id="jtp_peffect_slowness">
+    <Weight>0.15</Weight>
+    <Description>Be afflicted by Slowness</Description>
   </Goal>
-  <Goal difficulty="2" id="jm_potio_aling50542">
-    <Description>Potion of Healing</Description>
-    <Weight>0.08</Weight>
+  <Goal difficulty="2" id="jtp_peffect_poison">
+    <Weight>0.15</Weight>
+    <Description>Be afflicted by Poison</Description>
   </Goal>
-  <Goal difficulty="2" id="jm_potio_oison52997">
-    <Description>Potion of Poison</Description>
-    <Weight>0.08</Weight>
+  <Goal difficulty="2" id="jtp_peffect_weakness">
+    <Weight>0.15</Weight>
+    <Description>Be afflicted by Weakness</Description>
   </Goal>
-  <Goal difficulty="2" id="jm_potio_rming22273">
-    <Description>Potion of Harming</Description>
-    <Weight>0.08</Weight>
+  <Goal difficulty="2" id="jtp_peffect_harming">
+    <Weight>0.15</Weight>
+    <Description>Be afflicted by Harming</Description>
+    <Tooltip>The potion effect.</Tooltip>
   </Goal>
-  <Goal difficulty="2" id="jm_potio_ation30051">
-    <Description>Potion of Regeneration</Description>
-    <Weight>0.08</Weight>
+  <Goal difficulty="2" id="jtp_peffect_mfatigue">
+    <Weight>0.15</Weight>
+    <Description>Be afflicted by Mining Fatigue</Description>
   </Goal>
-  <Goal difficulty="2" id="jm_potio_wness68646">
-    <Description>Potion of Slowness</Description>
-    <Weight>0.08</Weight>
+  <Goal difficulty="2" id="jtp_peffect_fire_res">
+    <Weight>0.15</Weight>
+    <Description>Gain Fire Resistance effect</Description>
   </Goal>
-  <Goal difficulty="2" id="jm_potio_ength34133">
-    <Description>Potion of Strength</Description>
-    <Weight>0.08</Weight>
-  </Goal>
-  <Goal difficulty="2" id="jm_potio_tness59827">
-    <Description>Potion of Swiftness</Description>
-    <Weight>0.08</Weight>
-  </Goal>
-  <Goal difficulty="2" id="jm_potio_kness50036">
-    <Description>Potion of Weakness</Description>
-    <Weight>0.08</Weight>
-  </Goal>
-  <Goal difficulty="2" id="jm_potio_aping54733">
-    <Description>Potion of Leaping</Description>
-    <Weight>0.08</Weight>
-  </Goal>
-  <Goal difficulty="2" id="jm_potio_lling71539">
-    <Description>Potion of Slow Falling</Description>
-    <Weight>0.08</Weight>
-  </Goal>
-  <Goal difficulty="2" id="jm_potio_aster45569">
-    <Description>Potion of the Turtle Master</Description>
-    <Weight>0.08</Weight>
+  <Goal difficulty="2" id="jtp_peffect_absorption">
+    <Weight>0.15</Weight>
+    <Description>Gain Absorption effect</Description>
   </Goal>
   <Goal difficulty="2" id="jm_finis_world38213">
     <Description>Finish by jumping from top to bottom of the world</Description>
@@ -1856,6 +1831,7 @@
     <Description>Put a Pigman in Water</Description>
   </Goal>
   <Goal difficulty="2" id="jm_place_other96044">
+    <Weight>0.25</Weight>
     <Description>Place an Iron, Gold and Diamond block on top of each other</Description>
   </Goal>
   <Goal difficulty="2" id="jm_kill__anvil29958">
@@ -1870,7 +1846,7 @@
     <Description>Level $var</Description>
     <Weight>0.5</Weight>
     <Antisynergy>Level</Antisynergy>
-    <Variable min="16" max="26"/>
+    <Variable min="8" max="15"/>
     <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_diffe_seeds78120">
@@ -1945,12 +1921,6 @@
     <Description>Use a lead on a Rabbit</Description>
     <Auto/>
   </Goal>
-  <Goal difficulty="2" id="jm_firew__star89450">
-    <Description>Firework Star</Description>
-    <ItemTrigger>
-      <Name>minecraft:firework_star</Name>
-    </ItemTrigger>
-  </Goal>
   <Goal difficulty="2" id="jm_hang___lead40092">
     <Description>Hang a mob with a lead</Description>
     <Tooltip>Suspend a mob in mid air using a fence and a lead</Tooltip>
@@ -2005,9 +1975,6 @@
       <Name>minecraft:diamond_sword</Name>
     </ItemTrigger>
   </Goal>
-  <Goal difficulty="2" id="jm_blow__ystal33796">
-    <Description>Blow up an End Crystal</Description>
-  </Goal>
   <Goal difficulty="2" id="jm_prism_stals60686">
     <Description>$var Prismarine Crystals</Description>
     <Weight>0.5</Weight>
@@ -2029,23 +1996,11 @@
     <Description>Deplete an Iron Sword</Description>
     <Tooltip>Use an Iron Sword until it breaks, if you are unsure if you did check the Statistics screen!</Tooltip>
   </Goal>
-  <Goal difficulty="2" id="jm_full__rmour52363">
-    <Description>Full Diamond Armour</Description>
-    <ItemTrigger needed="4">
-      <Name>minecraft:diamond_helmet</Name>
-      <Name>minecraft:diamond_chestplate</Name>
-      <Name>minecraft:diamond_leggings</Name>
-      <Name>minecraft:diamond_boots</Name>
-    </ItemTrigger>
-  </Goal>
   <Goal difficulty="2" id="jm_saddle_99307">
     <Description>Saddle</Description>
     <ItemTrigger>
       <Name>minecraft:saddle</Name>
     </ItemTrigger>
-  </Goal>
-  <Goal difficulty="2" id="jm_give__a_hat33286">
-    <Description>Give a mob a Hat</Description>
   </Goal>
   <Goal difficulty="2" id="jm_clean_anner65935">
     <Description>Clean a Pattern off a Banner</Description>
@@ -2058,14 +2013,9 @@
   </Goal>
   <Goal difficulty="2" id="jm_phant_brane70845">
     <Description>Phantom Membrane</Description>
+    <Weight>0.25</Weight>
     <ItemTrigger>
       <Name>minecraft:phantom_membrane</Name>
-    </ItemTrigger>
-  </Goal>
-  <Goal difficulty="2" id="jm_turtl_shell59551">
-    <Description>Turtle Shell</Description>
-    <ItemTrigger>
-      <Name>minecraft:turtle_helmet</Name>
     </ItemTrigger>
   </Goal>
   <Goal difficulty="2" id="jm_add_a_a_map27949">
@@ -2135,23 +2085,62 @@
     <Auto/>
   </Goal>
   <Goal difficulty="2" id="jm_encha__item90383">
+    <Weight>0.15</Weight>
     <Description>Enchant an item</Description>
   </Goal>
-  <Goal difficulty="2" id="jm_compl_e_map18056">
-    <Description>Complete a full size Map</Description>
-    <Antisynergy>CompleteMap</Antisynergy>
-    <Auto/>
-  </Goal>
-  <Goal difficulty="2" id="jm_blue__harge63619">
-    <Description>Blue Shield with White Flower Charge</Description>
-  </Goal>
-  <Goal difficulty="3" id="jm_grass_block99235">
+  <Goal difficulty="2" id="jm_grass_block99235">
     <Description>Grass Block</Description>
     <Tooltip>If you don't have Silk Touch I know a guy who might pick one up for you...</Tooltip>
     <ItemTrigger>
       <Name>minecraft:grass_block</Name>
     </ItemTrigger>
   </Goal>
+  <Goal difficulty="2" id="jm_sea_l_terns55362">
+    <Description>$var Sea Lanterns</Description>
+    <Variable min="2" max="5"/>
+    <ItemTrigger>
+      <Name>minecraft:sea_lantern</Name>
+      <Quantity>$var</Quantity>
+    </ItemTrigger>
+  </Goal>
+  <Goal difficulty="2" id="jm_sponge_94208">
+    <Description>Sponge</Description>
+    <Tooltip>DRY Sponge, not a wet one</Tooltip>
+    <ItemTrigger>
+      <Name>minecraft:sponge</Name>
+    </ItemTrigger>
+  </Goal>
+  <Goal difficulty="2" id="jm_bounc_block84104">
+    <Description>Bounce on a Slime Block</Description>
+    <Tooltip>Get a Slime Block, place it on the ground and give it a good old bouncin' on</Tooltip>
+  </Goal>
+  <Goal difficulty="2" id="jm_kill__pearl58251">
+    <Description>Kill yourself with an Ender Pearl</Description>
+    <Tooltip>Need to die to the damage taken from USING a pearl (not subsequent fall/other damage)</Tooltip>
+  </Goal>
+  <Goal difficulty="2" id="jm_kill__golem79568">
+    <Description>Kill an Iron Golem</Description>
+  </Goal>
+  <Goal difficulty="2" id="jm_ice_b_block23255">
+    <Description>Ice Block on top of a Magma Block</Description>
+  </Goal>
+  <Goal difficulty="2" id="jtp_tame_cat">
+    <Description>Tame a cat</Description>
+    <!-- TODO -->
+  </Goal>
+  <Goal difficulty="2" id="jm_never_ckets96909" type="negative">
+    <Description>Never use Buckets</Description>
+    <Auto/>
+  </Goal>
+  <Goal difficulty="2" id="jm_cookie_35513">
+    <Description>Cookie</Description>
+    <ItemTrigger>
+      <Name>minecraft:cookie</Name>
+    </ItemTrigger>
+  </Goal>
+
+
+
   <Goal difficulty="3" id="jm_creat_l_10+37096">
     <Description>Create an Enchantment requiring level 10+</Description>
   </Goal>
@@ -2162,18 +2151,6 @@
   <Goal difficulty="3" id="jm_shear_hroom22251">
     <Description>Shear a Mooshroom</Description>
     <Weight>0.5</Weight>
-  </Goal>
-  <Goal difficulty="3" id="jm_sea_l_terns55362">
-    <Description>$var Sea Lanterns</Description>
-    <Variable min="2" max="5"/>
-  </Goal>
-  <Goal difficulty="3" id="jm_sponge_94208">
-    <Description>Sponge</Description>
-    <Tooltip>DRY Sponge, not a wet one</Tooltip>
-  </Goal>
-  <Goal difficulty="3" id="jm_bounc_block84104">
-    <Description>Bounce on a Slime Block</Description>
-    <Tooltip>Get a Slime Block, place it on the ground and give it a good old bouncin' on</Tooltip>
   </Goal>
   <Goal difficulty="3" id="jm_liste__disc48575">
     <Description>Listen to a Music Disc</Description>
@@ -2201,10 +2178,6 @@
   </Goal>
   <Goal difficulty="3" id="jm_namet_erman76175">
     <Description>Nametag an Enderman</Description>
-  </Goal>
-  <Goal difficulty="3" id="jm_kill__pearl58251">
-    <Description>Kill yourself with an Ender Pearl</Description>
-    <Tooltip>Need to die to the damage taken from USING a pearl (not subsequent fall/other damage)</Tooltip>
   </Goal>
   <Goal difficulty="3" id="jm_finis_awner33018">
     <Description>Finish on top of a Blaze spawner</Description>
@@ -2249,12 +2222,6 @@
     <Description>Tame a Parrot</Description>
     <Weight>0.5</Weight>
     <Auto/>
-  </Goal>
-  <Goal difficulty="3" id="jm_kill__golem79568">
-    <Description>Kill an Iron Golem</Description>
-  </Goal>
-  <Goal difficulty="3" id="jm_ice_b_block23255">
-    <Description>Ice Block on top of a Magma Block</Description>
   </Goal>
   <Goal difficulty="3" id="jm_level__50255">
     <Description>Level $var</Description>
@@ -2309,10 +2276,6 @@
   <Goal difficulty="3" id="jm_encha_items79670">
     <Description>Enchant 5 different items</Description>
   </Goal>
-  <Goal difficulty="3" id="jm_never_ckets96909" type="negative">
-    <Description>Never use Buckets</Description>
-    <Auto/>
-  </Goal>
   <Goal difficulty="3" id="jm_conduit_64317">
     <Description>Conduit</Description>
   </Goal>
@@ -2329,9 +2292,6 @@
   </Goal>
   <Goal difficulty="3" id="jm_get_a_ssage98260">
     <Description>Get a '... didn't want to live in the same world as ...' Death message</Description>
-  </Goal>
-  <Goal difficulty="3" id="jm_cookie_35513">
-    <Description>Cookie</Description>
   </Goal>
   <Goal difficulty="3" id="jm_grow___tree94140">
     <Description>Grow a Full Jungle Tree</Description>

@@ -247,15 +247,6 @@ public class EventTriggerBukkitListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onEntityAirChange(EntityAirChangeEvent event) {
-        if (ignore(event.getEntity().getWorld())) {
-            return;
-        }
-
-        impulseEvent(event, event.getEntity().getWorld());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onDirectDamageEntity(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player)) {
             return;

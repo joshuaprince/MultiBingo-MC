@@ -86,25 +86,11 @@ class OccasionalTrigger extends AutoMarkTrigger {
     }
 
     @OccasionalTriggerListener(20)
-    private boolean jm_compl_a_map49710(BingoPlayer player) {
+    private boolean jm_complete_map(BingoPlayer player) {
         // Complete a map (Any zoom)
         for (Player p : player.getBukkitPlayers()) {
             for (ItemStack itemStack : p.getInventory()) {
                 if (ActivationHelpers.isCompletedMap(itemStack, null)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    @OccasionalTriggerListener(20)
-    private boolean jm_compl_e_map18056(BingoPlayer player) {
-        // Complete a full size map (Highest zoom)
-        for (Player p : player.getBukkitPlayers()) {
-            for (ItemStack itemStack : p.getInventory()) {
-                if (ActivationHelpers.isCompletedMap(itemStack, MapView.Scale.FARTHEST)) {
                     return true;
                 }
             }

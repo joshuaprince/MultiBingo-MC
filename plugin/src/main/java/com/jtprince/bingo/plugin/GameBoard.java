@@ -32,8 +32,8 @@ public class GameBoard {
         );
 
         Set<Space> autoSpaces = this.updateAutoMarkedSpaces();
-        MCBingoPlugin.logger().info("Auto activation on: " + String.join(", ",
-            autoSpaces.stream().map(spc -> spc.goalId).collect(Collectors.toUnmodifiableList())));
+        MCBingoPlugin.logger().info("Auto activation on: " +
+            autoSpaces.stream().map(spc -> spc.goalId).collect(Collectors.joining(", ")));
 
         this.game.transitionToReady();
     }

@@ -183,46 +183,20 @@ back to the server when accomplished.
   "board": {
     "spaces": [
       {
-        "id": "cobblestone",
         "space_id": 0,
+        "goal_id": "jm_cobblestone",
+        "text": "32 Cobblestone",
+        "type": "default",
         "variables": {
           "var": 32
-        },
-        "triggers": []
+        }
       },
       {
-        "id": "poppies_dandelions",
         "space_id": 1,
-        "variables": {
-          "var1": 10,
-          "var2": 20
-        },
-        "triggers": [
-          {
-            "ItemTrigger": {
-              "@needed": "4",
-              "Name": [
-                "minecraft:water_bucket",
-                "minecraft:lava_bucket",
-                "minecraft:milk_bucket"
-              ],
-              "ItemMatchGroup": [
-                {
-                  "@max-matches": "1",
-                  "Name": [
-                    "minecraft:cod_bucket",
-                    "minecraft:salmon_bucket",
-                    "minecraft:pufferfish_bucket",
-                    "minecraft:tropical_fish_bucket"
-                  ]
-                }
-              ],
-              "Quantity": [
-                "1"
-              ]
-            }
-          }
-        ]
+        "goal_id": "jm_never_die",
+        "text": "Never Die",
+        "type": "negative",
+        "variables": {}
       }
     ]
   }
@@ -231,16 +205,14 @@ back to the server when accomplished.
 
 `spaces` is a list of 25 Goal objects, each corresponding to a space on the 
 board. Each Goal object consists of:
-- An `id` field, which corresponds to the goal ID in goals.xml.
 - A `space_id` field, which uniquely identifies this space and must be used 
   when the plugin wants to mark this space.
+- A `goal_id` field, which corresponds to the goal ID in goals.yml.
+- A `text` field, which contains the text as it is shown to players 
+  (variables replaced).
+- A `type` field, which contains the goal type (default or negative).
 - An optional `variables` object, which lists any variables present on this 
   goal.
-- An optional `triggers` list, which describes any automated trigger criteria
-  that the plugin can use to automatically trigger goals. This list is 
-  passed exactly as it is specified in the XML, converted to JSON as 
-  specified by [xmltodict](https://pypi.org/project/xmltodict/) where all 
-  objects are converted to lists (force_list=True).
 
 ### Player Boards
 

@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -179,7 +180,7 @@ public class WorldManager implements Listener {
         }
     }
 
-    public WorldSet findWorldSet(World world) {
+    public @Nullable WorldSet findWorldSet(World world) {
         for (WorldSet ws : worldSetMap.values()) {
             for (Environment env : Environment.values()) {
                 if (world.equals(ws.getWorld(env))) {

@@ -30,6 +30,8 @@ CHANNEL_LAYERS = {
 
 STATIC_URL = '/static/'
 
+LOG_DATABASE_ACCESS = True
+
 LOGGING = {
     'version': 1,
     'filters': {
@@ -47,8 +49,7 @@ LOGGING = {
     'loggers': {
         'django.db.backends': {
             'level': 'DEBUG',
-            'handlers': [],
-            # 'handlers': ['console'],
+            'handlers': ['console'] if LOG_DATABASE_ACCESS else [],
         }
     }
 }

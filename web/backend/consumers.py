@@ -7,6 +7,7 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.utils import timezone
 
+from backend.log_consumer_exceptions import log_consumer_exceptions
 from backend.models.board import Board
 from backend.models.player_board import PlayerBoard
 from backend.models.player_board_marking import PlayerBoardMarking
@@ -16,6 +17,7 @@ from backend.serializers.player_board import PlayerBoardSerializer
 from generation.board_generator import generate_board
 
 
+@log_consumer_exceptions
 class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -158,6 +160,7 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         }))
 
 
+@log_consumer_exceptions
 class PlayerWebConsumer(BaseWebConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -202,6 +205,7 @@ class PlayerWebConsumer(BaseWebConsumer):
         }))
 
 
+@log_consumer_exceptions
 class PluginBackendConsumer(BaseWebConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

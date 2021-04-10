@@ -6,8 +6,10 @@ from backend.models.board import Board
 from backend.models.player_board_marking import PlayerBoardMarking
 from backend.models.space import Space
 from backend.serializers.position import PositionSerializer
+from generation.goals import ConcreteGoal
 
 
+# noinspection PyMethodMayBeStatic
 class SpacePlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Space
@@ -15,7 +17,15 @@ class SpacePlayerSerializer(serializers.ModelSerializer):
 
     space_id = serializers.IntegerField(source='pk')
     position = PositionSerializer()
+    text = serializers.SerializerMethodField()
+    tooltip = serializers.SerializerMethodField()
     auto = serializers.SerializerMethodField()
+
+    def get_text(self, obj):
+        return ConcreteGoal.from_space(obj).description()
+
+    def get_tooltip(self, obj):
+        return ConcreteGoal.from_space(obj).tooltip()
 
     def get_auto(self, obj):
         markings = self.context.get('player_board_markings')
@@ -31,7 +41,8 @@ class BoardPlayerSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def from_id(board_id: int, player_board_id: Optional[int]):
-        board = Board.objects.prefetch_related('space_set__position').get(pk=board_id)
+        board = Board.objects.prefetch_related('space_set__position')\
+            .prefetch_related('space_set__setvariable_set').get(pk=board_id)
         markings = PlayerBoardMarking.objects.filter(
             player_board__board_id=board_id, player_board_id=player_board_id
         )

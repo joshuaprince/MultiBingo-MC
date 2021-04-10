@@ -1,22 +1,22 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.Space;
-import org.json.simple.JSONArray;
+import com.jtprince.bingo.plugin.automarking.itemtrigger.ItemTrigger;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 public abstract class AutoMarkTrigger {
-    private final Space space;
+    protected final Space space;
 
     protected AutoMarkTrigger(Space space) {
         this.space = space;
     }
 
-    public static Collection<AutoMarkTrigger> createAllTriggers(Space space, JSONArray xmlTriggers) {
+    public static Collection<AutoMarkTrigger> createAllTriggers(Space space) {
         HashSet<AutoMarkTrigger> set = new HashSet<>();
 
-        set.addAll(ItemTrigger.createTriggers(space, xmlTriggers));
+        set.addAll(ItemTrigger.createTriggers(space));
         set.addAll(EventTrigger.createTriggers(space));
         set.addAll(OccasionalTrigger.createTriggers(space));
 

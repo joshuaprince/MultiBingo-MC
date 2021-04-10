@@ -1,0 +1,1190 @@
+goals:
+  jm_different_fish:
+    difficulty: 0
+    var: 2..4
+    text: $var Different Fish
+
+  jm_tree_nether:
+    difficulty: 0
+    text: Grow a Tree in the Nether
+
+  jm_colors_terracotta:
+    difficulty: 0
+    weight: 0.25
+    var: 4..7
+    text: $var Colors of Terracotta
+    antisynergy: TerracottaColor
+
+  jm_mushroom_stew:
+    difficulty: 0
+    var: 1..5
+    text: $var Mushroom Stew
+
+  jm_arrow_button:
+    difficulty: 0
+    text: Shoot a Button with an Arrow
+
+  jm_book_quill:
+    difficulty: 0
+    text: Book and Quill
+
+  jm_flint:
+    difficulty: 0
+    var: 16..64
+    text: $var Flint
+
+  jm_cake:
+    difficulty: 0
+    text: Cake
+
+  jm_pumpkin_pie:
+    difficulty: 0
+    text: Pumpkin Pie
+
+  jm_fish_treasure:
+    difficulty: 0
+    text: Fish a Treasure item
+
+  jm_fish_junk:
+    difficulty: 0
+    text: Fish a Junk item
+
+  jm_coarse_dirt:
+    difficulty: 0
+    var: 16..64
+    text: $var Coarse Dirt
+
+  jm_clocks:
+    difficulty: 0
+    var: 2..3
+    text: $var Clocks
+
+  jm_iron_blocks:
+    difficulty: 0
+    weight: 0.5
+    var: 2..4
+    text: $var Iron Blocks
+    antisynergy: IronBlocks
+
+  jm_gold_blocks:
+    difficulty: 0
+    weight: 0.5
+    var: 2..3
+    text: $var Gold Blocks
+    antisynergy: GoldBlocks
+
+  jm_golden_apple:
+    difficulty: 0
+    text: Golden Apple
+
+  jm_bookshelves:
+    difficulty: 0
+    var: 2..4
+    text: $var Bookshelves
+
+  jm_never_chestplates:
+    difficulty: 0
+    type: negative
+    text: Never wear Chestplates
+
+  jm_never_shield:
+    difficulty: 0
+    type: negative
+    text: Never use a Shield
+
+  jm_jukebox:
+    difficulty: 0
+    text: Jukebox
+
+  jm_lava_glass_cube:
+    difficulty: 0
+    text: Build a glass cube and fill the inner with lava
+
+  jm_moss_stone:
+    difficulty: 0
+    var: 16..32
+    text: $var Moss Stone
+
+  jm_cactus:
+    difficulty: 0
+    var: 5..15
+    text: $var Cacti
+
+  jm_tnt:
+    difficulty: 0
+    var: 1..3
+    text: $var TNT
+
+  jm_build_golem_snow:
+    difficulty: 0
+    text: Create a Snow Golem
+
+  jm_note_blocks:
+    difficulty: 0
+    weight: 0.5
+    var: 5..15
+    text: $var Note Blocks
+    antisynergy: NoteBlocks
+
+  jm_ink_sacks:
+    difficulty: 0
+    weight: 0.5
+    var: 5..15
+    text: $var Ink Sacks
+    antisynergy: InkSacks
+
+  jm_bread:
+    difficulty: 0
+    weight: 0.5
+    var: 6..10
+    text: $var Bread
+    antisynergy: Bread
+
+  jm_hay_bales:
+    difficulty: 0
+    weight: 0.5
+    var: 2..3
+    text: $var Hay Bales
+    antisynergy: HayBale
+
+  jm_colors_wool:
+    difficulty: 0
+    weight: 0.25
+    var: 5..8
+    text: $var colors of Wool
+    antisynergy: WoolColor
+
+  jm_pistons:
+    difficulty: 0
+    var: 5..10
+    text: $var Pistons
+    tooltip: They may or may not be sticky.
+
+  jm_full_armor_iron:
+    difficulty: 0
+    weight: 0.33
+    text: Full Iron Armor
+
+  jm_full_armor_leather:
+    difficulty: 0
+    weight: 0.33
+    text: Full Leather Armor
+
+  jm_full_armor_gold:
+    difficulty: 0
+    weight: 0.33
+    text: Full Gold Armor
+
+  jm_cauldron_water:
+    difficulty: 0
+    text: Cauldron with Water
+    tooltip: You must add the water yourself.
+
+  jm_complete_map:
+    difficulty: 0
+    text: Complete a Map
+    antisynergy: CompleteMap
+
+  jm_soul_sand:
+    difficulty: 0
+    var: 16..64
+    text: $var Soul Sand
+
+  jm_pumpkins:
+    difficulty: 0
+    var: 5..10
+    text: $var Pumpkins
+
+  jm_carved_pumpkins:
+    difficulty: 0
+    var: 2..5
+    text: $var Carved Pumpkins
+
+  jm_vines:
+    difficulty: 0
+    var: 10..30
+    text: $var Vines
+
+  jm_every_sword:
+    difficulty: 0
+    text: 5 types of Sword
+
+  jm_every_pickaxe:
+    difficulty: 0
+    text: 5 types of Pickaxe
+
+  jm_brick_blocks:
+    difficulty: 0
+    var: 16..64
+    text: $var Brick Blocks
+
+  jm_nether_bricks:
+    difficulty: 0
+    var: 16..32
+    text: $var Nether Brick Blocks
+
+  jm_arrows:
+    difficulty: 0
+    var: 16..64
+    text: $var Arrows
+
+  jm_sleep_nether:
+    difficulty: 0
+    text: (Try to) Sleep in the Nether
+
+  jm_fermented_eye:
+    difficulty: 0
+    text: Fermented Spider Eye
+
+  jm_different_slabs:
+    difficulty: 0
+    weight: 0.5
+    var: 5..7
+    text: $var Different Slabs
+    antisynergy: Slabs
+
+  jm_different_stairs:
+    difficulty: 0
+    weight: 0.5
+    var: 5..7
+    text: $var Different Stairs
+    antisynergy: Stairs
+
+  jm_ender_pearls:
+    difficulty: 0
+    weight: 0.5
+    var: 2..3
+    text: $var Ender Pearls
+    antisynergy: EnderPearl
+
+  jm_eggs:
+    difficulty: 0
+    text: 16 Chicken Eggs
+
+  jm_4x4_paintings:
+    difficulty: 0
+    text: Hang up 3 Different 4x4 Paintings
+
+  jm_bone_blocks:
+    difficulty: 0
+    var: 5..10
+    text: $var Bone Blocks
+
+  jm_2_creepers_boat:
+    difficulty: 0
+    text: 2 Creepers in the same Boat
+    tooltip: The 2 Creepers must be in the same boat at the same time
+
+  jm_trade_any:
+    difficulty: 0
+    text: Trade with a Villager
+
+  jm_different_shields:
+    difficulty: 0
+    var: 2..3
+    text: $var Different Pattern / Color Shields
+
+  jm_dead_bush:
+    difficulty: 0
+    text: Dead Bush
+
+  jm_grass:
+    difficulty: 0
+    var: 15..32
+    text: $var Grass
+    tooltip: The plant, NOT the block
+
+  jm_dye_cyan:
+    difficulty: 0
+    weight: 0.1
+    text: Cyan Dye
+
+  jm_dye_light_gray_light_blue:
+    difficulty: 0
+    weight: 0.1
+    text: Light Gray Dye and Light Blue Dye
+
+  jm_dye_magenta:
+    difficulty: 0
+    weight: 0.1
+    text: Magenta Dye
+
+  jm_dye_red:
+    difficulty: 0
+    weight: 0.1
+    text: Red Dye
+
+  jm_dye_orange:
+    difficulty: 0
+    weight: 0.1
+    text: Orange Dye
+
+  jm_dye_yellow:
+    difficulty: 0
+    weight: 0.1
+    text: Yellow Dye
+
+  jm_dye_green:
+    difficulty: 0
+    weight: 0.1
+    text: Green Dye
+
+  jm_dye_pink:
+    difficulty: 0
+    weight: 0.1
+    text: Pink Dye
+
+  jm_dye_purple:
+    difficulty: 0
+    weight: 0.1
+    text: Purple Dye
+
+  jm_dye_lime:
+    difficulty: 0
+    weight: 0.1
+    text: Lime Dye
+
+  jm_never_sleep:
+    difficulty: 0
+    type: negative
+    text: Never Sleep
+
+  jm_grow_mushroom:
+    difficulty: 0
+    text: Grow a Huge Mushroom
+
+  jm_buckets_3:
+    difficulty: 0
+    text: Water Bucket, Lava Bucket and Milk Bucket
+    antisynergy: BucketTypes
+
+  jm_different_flowers:
+    difficulty: 0
+    weight: 0.33
+    var: 3..6
+    text: $var Different Flowers
+    antisynergy: Flowers
+
+  jm_colors_concrete:
+    difficulty: 0
+    weight: 0.25
+    var: 3..6
+    text: $var Colors of Concrete
+    antisynergy: ConcreteColor
+
+  jm_colors_glazed_terracotta:
+    difficulty: 0
+    weight: 0.25
+    var: 3..6
+    text: $var Colors of Glazed Terracotta
+    antisynergy: GlazedColor
+
+  jm_colors_beds:
+    difficulty: 0
+    weight: 0.25
+    var: 3..6
+    text: $var Colors of Beds
+    antisynergy: BedColor
+
+  jm_finish_spawnpoint:
+    difficulty: 0
+    text: Finish where you spawned using a Compass
+    tooltip: Be stood close enough to spin your compass within a couple blocks at
+      the end of the game
+    antisynergy: Finish
+
+  jm_stone:
+    difficulty: 0
+    weight: 0.5
+    var: 32..64
+    text: $var Stone
+    tooltip: NOT Cobblestone
+    antisynergy: Stone
+
+  jm_kill_animals_fire:
+    difficulty: 0
+    var: 4..8
+    text: Kill $var Animals with only fire
+
+  jm_kill_creeper_fire:
+    difficulty: 0
+    text: Kill a Creeper with only fire
+
+  jm_iron_nuggets:
+    difficulty: 0
+    var: 32..64
+    text: $var Iron Nuggets
+
+  jm_gold_nuggets:
+    difficulty: 0
+    var: 32..64
+    text: $var Gold Nuggets
+
+  jm_rotten_flesh:
+    difficulty: 0
+    weight: 0.5
+    var: 16..32
+    text: $var Rotten Flesh
+    antisynergy: RotFlesh
+
+  jm_redstone:
+    difficulty: 0
+    weight: 0.5
+    var: 16..64
+    text: $var Redstone
+    antisynergy: Redstone
+
+  jm_golden_carrot:
+    difficulty: 0
+    text: Golden Carrot
+
+  jm_mob_drops:
+    difficulty: 0
+    text: Rotten Flesh, Spider Eye, Bone, Gunpowder and Ender Pearl
+
+  jm_feathers:
+    difficulty: 0
+    weight: 0.5
+    var: 32..64
+    text: $var Feathers
+    antisynergy: Feathers
+
+  jm_lily_pads:
+    difficulty: 0
+    var: 2..10
+    text: $var Lily Pads
+
+  jm_sticks:
+    difficulty: 0
+    weight: 0.5
+    var: 65..128
+    text: $var Sticks
+    antisynergy: Sticks
+
+  jm_armor_leather_colors:
+    difficulty: 0
+    text: Wear 4 different color Leather Armor at the same time
+
+  jm_wood_planks_oak:
+    difficulty: 0
+    weight: 0.04
+    var: 65..128
+    text: $var Oak Wood Planks
+    antisynergy: OakPlanks
+
+  jm_wood_planks_spruce:
+    difficulty: 0
+    weight: 0.04
+    var: 65..128
+    text: $var Spruce Wood Planks
+    antisynergy: SprucePlanks
+
+  jm_wood_planks_birch:
+    difficulty: 0
+    weight: 0.04
+    var: 65..128
+    text: $var Birch Wood Planks
+    antisynergy: BirchPlanks
+
+  jm_wood_planks_dark_oak:
+    difficulty: 0
+    weight: 0.04
+    var: 65..128
+    text: $var Dark Oak Wood Planks
+    antisynergy: DarkOakPlanks
+
+  jm_wood_planks_acacia:
+    difficulty: 0
+    weight: 0.04
+    var: 65..128
+    text: $var Acacia Wood Planks
+    antisynergy: AcaciaPlanks
+
+  jm_wood_logs_oak:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Oak Logs
+    antisynergy: OakLogs
+
+  jm_wood_logs_spruce:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Spruce Logs
+    antisynergy: SpruceLogs
+
+  jm_wood_logs_birch:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Birch Logs
+    antisynergy: BirchLogs
+
+  jm_wood_logs_dark_oak:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Dark Oak Logs
+    antisynergy: DarkOakLogs
+
+  jm_wood_logs_acacia:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Acacia Logs
+    antisynergy: AcaciaLogs
+
+  jm_wood_stripped_oak:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Stripped Oak Logs
+    antisynergy: StrippedOakLog
+
+  jm_wood_stripped_spruce:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Stripped Spruce Logs
+    antisynergy: StrippedSpruceLog
+
+  jm_wood_stripped_birch:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Stripped Birch Logs
+    antisynergy: StrippedBirchLog
+
+  jm_wood_stripped_dark_oak:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Stripped Dark Oak Logs
+    antisynergy: StrippedDarkOakLog
+
+  jm_wood_stripped_acacia:
+    difficulty: 0
+    weight: 0.04
+    var: 16..32
+    text: $var Stripped Acacia Logs
+    antisynergy: StrippedAcaciaLog
+
+  jm_seagrass:
+    difficulty: 0
+    var: 15..32
+    text: $var Seagrass
+
+  jm_tropical_fish:
+    difficulty: 0
+    var: 2..5
+    text: $var Tropical Fish
+
+  jm_pufferfish:
+    difficulty: 0
+    var: 2..5
+    text: $var Pufferfish
+
+  jm_raw_cod:
+    difficulty: 0
+    weight: 0.5
+    var: 15..32
+    text: $var Raw Cod
+    antisynergy: RawCod
+
+  jm_raw_salmon:
+    difficulty: 0
+    weight: 0.5
+    var: 11..20
+    text: $var Raw Salmon
+    antisynergy: RawSalmon
+
+  jm_never_fish:
+    difficulty: 0
+    type: negative
+    text: Never use a Fishing Rod
+
+  jm_never_boat:
+    difficulty: 0
+    type: negative
+    text: Never use a Boat
+    tooltip: Only entering the boat counts, you may still place them
+
+  jm_nether_fish:
+    difficulty: 0
+    text: Get a Fish into Nether
+
+  jm_dried_kelp_blocks:
+    difficulty: 0
+    var: 11..20
+    text: $var Dried Kelp Blocks
+    antisynergy: KelpBlocks
+
+  jm_drown_zombie:
+    difficulty: 0
+    text: Drown a Zombie
+
+  jm_gunpowder:
+    difficulty: 0
+    weight: 0.5
+    var: 2..5
+    text: $var Gunpowder
+    antisynergy: Gunpowder
+
+  jm_spider_eyes:
+    difficulty: 0
+    weight: 0.5
+    var: 2..5
+    text: $var Spider Eyes
+    antisynergy: SpiderEye
+
+  jm_edible_items:
+    difficulty: 0
+    weight: 0.5
+    var: 4..5
+    text: $var Different Edible Items
+    tooltip: Raw and cooked variants count as one (e.g. Raw Beef and Steak)
+    antisynergy: EdibleItems
+
+  jm_firework_star:
+    difficulty: 0
+    weight: 0.5
+    text: Firework Star
+
+  jm_edible_items_hard:
+    difficulty: 1
+    weight: 0.5
+    var: 6..7
+    text: $var Different Edible Items
+    tooltip: Raw and cooked variants count as one (e.g. Raw Beef and Steak)
+    antisynergy: EdibleItems
+
+  jm_different_gold:
+    difficulty: 1
+    var: 3..5
+    text: $var Different Gold Items
+    tooltip: Axe, Boots, Chestplate, Helmet, Hoe, Horse Armor, Leggings, Pickaxe,
+      Shovel, Sword
+
+  jm_beetroot_soup:
+    difficulty: 1
+    text: Beetroot Soup
+
+  jm_emerald:
+    difficulty: 1
+    text: Emerald
+
+  jm_tame_horse:
+    difficulty: 1
+    text: Tame a Horse
+
+  jm_flower_pot_cactus:
+    difficulty: 1
+    text: Place a Cactus in a Flower Pot
+
+  jm_tnt_minecart_detonate:
+    difficulty: 1
+    text: Detonate a TNT-Minecart
+
+  jm_magma_blocks:
+    difficulty: 1
+    var: 10..30
+    text: $var Magma Blocks
+
+  jm_damaged_anvil:
+    difficulty: 1
+    text: Damaged Anvil
+
+  jm_melon_slices:
+    difficulty: 1
+    var: 16..64
+    text: $var Melons (Slices)
+
+  jm_sleep_village:
+    difficulty: 1
+    text: Sleep inside a village
+
+  jm_kill_skeleton_own_arrow:
+    difficulty: 1
+    text: Kill a Skeleton with it's own Arrow
+
+  jm_never_armor_any:
+    difficulty: 1
+    type: negative
+    text: Never wear any Armor
+
+  jm_get_skeleton_bow:
+    difficulty: 1
+    text: Get a Skeleton's Bow
+    tooltip: Get the rare Bow item drop from a Skeleton
+
+  jm_diamond_block:
+    difficulty: 1
+    weight: 0.5
+    text: Diamond Block
+    antisynergy: DiamondBlock
+
+  jm_lapis_blocks:
+    difficulty: 1
+    var: 2..3
+    text: $var Lapis Lazuli Blocks
+
+  jm_destroy_spawner:
+    difficulty: 1
+    text: Destroy a Monster Spawner
+
+  jm_different_saplings:
+    difficulty: 1
+    var: 2..5
+    text: $var Different Saplings
+
+  jm_tame_wolf:
+    difficulty: 1
+    text: Tame a Wolf
+
+  jm_fire_charges:
+    difficulty: 1
+    var: 1..4
+    text: $var Fire Charges
+
+  jm_magma_cream:
+    difficulty: 1
+    var: 1..3
+    text: $var Magma Cream
+
+  jm_build_golem_iron:
+    difficulty: 1
+    text: Create an Iron Golem
+
+  jm_eye_of_ender:
+    difficulty: 1
+    text: Eye of Ender
+
+  jm_rabbit_stew:
+    difficulty: 1
+    text: Rabbit Stew
+
+  jtp_effect_slowness:
+    difficulty: 1
+    weight: 0.15
+    text: Be afflicted by Slowness
+
+  jtp_effect_poison:
+    difficulty: 1
+    weight: 0.15
+    text: Be afflicted by Poison
+
+  jtp_effect_weakness:
+    difficulty: 1
+    weight: 0.15
+    text: Be afflicted by Weakness
+
+  jtp_effect_harming:
+    difficulty: 1
+    weight: 0.15
+    text: Be afflicted by Harming
+    tooltip: The potion effect.
+
+  jtp_effect_mfatigue:
+    difficulty: 1
+    weight: 0.15
+    text: Be afflicted by Mining Fatigue
+
+  jtp_effect_fire_res:
+    difficulty: 1
+    weight: 0.15
+    text: Gain Fire Resistance effect
+
+  jtp_effect_absorption:
+    difficulty: 1
+    weight: 0.15
+    text: Gain Absorption effect
+
+  jm_finish_jump_world:
+    difficulty: 1
+    text: Finish by jumping from top to bottom of the world
+    tooltip: Dig a hole to bedrock and build to 256 Y (height limit), then jump from
+      top to bottom at the end of the game
+    antisynergy: Finish
+
+  jm_vegetarian:
+    difficulty: 1
+    type: negative
+    text: Vegetarian
+    tooltip: Never eat meat, fish, or any food prepared with them
+    antisynergy: Food
+
+  jm_carnivore:
+    difficulty: 1
+    type: negative
+    text: Carnivore
+    tooltip: Only eat meat, fish, and any food prepared with them
+    antisynergy: Food
+
+  jm_kill_self_arrow:
+    difficulty: 1
+    text: Kill yourself with your own arrow
+
+  jm_death_msg_escape:
+    difficulty: 1
+    text: Get a '... while trying to escape ...' Death message
+    tooltip: 'Example: ''PLAYER'' drowned while trying to escape a Skeleton'
+
+  jm_fire_village:
+    difficulty: 1
+    text: Set fire to a Villager's House
+
+  jm_finish_top_world:
+    difficulty: 1
+    text: Finish on top of the world
+    tooltip: Build up to 256 Y (the height limit) and stand on the top at the end
+      of the game
+    antisynergy: Finish
+
+  jm_kill_mob_gravel:
+    difficulty: 1
+    text: Kill a hostile mob with Gravel/Sand
+
+  jm_carpet_llama:
+    difficulty: 1
+    text: Put a Carpet on a Llama
+
+  jm_nether_portal_size:
+    difficulty: 1
+    var1: 4..6
+    var2: 4..6
+    text: Activate a $var1x$var2 Nether Portal (not counting corners)
+    tooltip: Width/height of the obsidian frame, disregarding corners (or in other
+      words, width/height of the - once activated - purple portal area).
+
+  jm_obsidian:
+    difficulty: 1
+    var: 5..15
+    text: $var Obsidian
+
+  jm_iron_blocks_hard:
+    difficulty: 1
+    weight: 0.5
+    var: 5..7
+    text: $var Iron Blocks
+    antisynergy: IronBlocks
+
+  jm_gold_blocks_hard:
+    difficulty: 1
+    weight: 0.5
+    var: 3..4
+    text: $var Gold Blocks
+    antisynergy: GoldBlocks
+
+  jm_daylight_sensor:
+    difficulty: 1
+    text: Daylight Sensor
+
+  jm_enchanted_gold_sword:
+    difficulty: 1
+    text: Enchanted Golden Sword
+
+  jm_colors_wool_hard:
+    difficulty: 1
+    weight: 0.25
+    var: 8..11
+    text: $var colors of Wool
+    antisynergy: WoolColor
+
+  jm_colors_terracotta_hard:
+    difficulty: 1
+    weight: 0.25
+    var: 8..11
+    text: $var Colors of Terracotta
+    antisynergy: TerracottaColor
+
+  jm_colors_glazed_terracotta_hard:
+    difficulty: 1
+    weight: 0.25
+    var: 7..10
+    text: $var Colors of Glazed Terracotta
+    antisynergy: GlazedColor
+
+  jm_colors_concrete_hard:
+    difficulty: 1
+    weight: 0.25
+    var: 7..10
+    text: $var Colors of Concrete
+    antisynergy: ConcreteColor
+
+  jm_colors_beds_hard:
+    difficulty: 1
+    weight: 0.25
+    var: 7..10
+    text: $var Colors of Beds
+    antisynergy: BedColor
+
+  jm_power_redstone_lamp:
+    difficulty: 1
+    text: Power a Redstone Lamp
+
+  jm_different_flowers_hard:
+    difficulty: 1
+    weight: 0.33
+    var: 7..10
+    text: $var Different Flowers
+    antisynergy: Flowers
+
+  jm_pigman_water:
+    difficulty: 1
+    text: Put a Pigman in Water
+
+  jm_pimp_tower:
+    difficulty: 1
+    weight: 0.25
+    text: Place an Iron, Gold and Diamond block on top of each other
+
+  jm_kill_mob_anvil:
+    difficulty: 1
+    text: Kill a hostile mob with an Anvil
+
+  jm_never_die:
+    difficulty: 1
+    type: negative
+    text: Never Die
+    tooltip: No death allowed, including if immediately caused by completing the last
+      goal (e.g. inadvertently dying to the explosion of "Detonate a TNT-Minecart")
+
+  jm_level:
+    difficulty: 1
+    weight: 0.5
+    var: 8..15
+    text: Level $var
+    antisynergy: Level
+
+  jm_different_seeds:
+    difficulty: 1
+    var: 2..3
+    text: $var Different Seeds
+    tooltip: 'Includes: Beetroot Seeds, Melon Seeds, Nether Wart, Pumpkin Seeds and
+      (Wheat) Seeds. As per the ''A Seedy Place'' advancement.'
+    antisynergy: Seeds
+
+  jm_armor_different_types:
+    difficulty: 1
+    text: Wear 4 Different Armor types at the same time
+    tooltip: 'Example: GOLD shoes, LEATHER Trousers, IRON Chestplate and DIAMOND Helmet'
+
+  jm_fill_hopper:
+    difficulty: 1
+    text: Fill a Hopper with 320 items
+
+  jm_red_nether_brick_blocks:
+    difficulty: 1
+    var: 16..32
+    text: $var Red Nether Brick Blocks
+
+  jm_spectral_arrows:
+    difficulty: 1
+    var: 16..32
+    text: $var Spectral Arrows
+
+  jm_nether_portal_village:
+    difficulty: 1
+    text: Activate a Nether Portal inside of a Village
+
+  jm_rotten_flesh_hard:
+    difficulty: 1
+    weight: 0.5
+    var: 33..64
+    text: $var Rotten Flesh
+    antisynergy: RotFlesh
+
+  jm_ink_sacks_hard:
+    difficulty: 1
+    weight: 0.5
+    var: 16..32
+    text: $var Ink Sacks
+    antisynergy: InkSacks
+
+  jm_slimeballs:
+    difficulty: 1
+    var: 2..6
+    text: $var Slimeballs
+
+  jm_lead_rabbit:
+    difficulty: 1
+    text: Use a lead on a Rabbit
+
+  jm_lead_hang:
+    difficulty: 1
+    text: Hang a mob with a lead
+    tooltip: Suspend a mob in mid air using a fence and a lead
+
+  jm_blaze_rod:
+    difficulty: 1
+    text: Blaze Rod
+
+  jm_ghast_tear:
+    difficulty: 1
+    text: Ghast Tear
+
+  jm_never_coal:
+    difficulty: 1
+    type: negative
+    text: Never use Coal
+    tooltip: Never use Coal for any crafting recipes, fuel in a furnace or trades,
+      CAN use Charcoal
+
+  jm_glowstone_dust:
+    difficulty: 1
+    var: 32..64
+    text: $var Glowstone Dust
+
+  jm_item_frames:
+    difficulty: 1
+    var: 10..32
+    text: $var Item Frames
+
+  jm_diamond_items:
+    difficulty: 1
+    var: 2..3
+    text: $var Different Diamond Items
+    tooltip: Axe, Boots, Chestplate, Helmet, Hoe, Horse Armor, Leggings, Pickaxe,
+      Shovel, Sword
+
+  jm_prismarine_crystals:
+    difficulty: 1
+    weight: 0.5
+    var: 2..5
+    text: $var Prismarine Crystals
+
+  jm_dig_bedrock:
+    difficulty: 1
+    text: Dig straight down to Bedrock from Sea level (1x1 hole)
+
+  jm_never_sword:
+    difficulty: 1
+    type: negative
+    text: Never use a Sword
+    tooltip: Never use a Sword for Combat or Block Breaking. Holding or crafting is
+      fine.
+
+  jm_deplete_sword_iron:
+    difficulty: 1
+    text: Deplete an Iron Sword
+    tooltip: Use an Iron Sword until it breaks, if you are unsure if you did check
+      the Statistics screen!
+
+  jm_saddle:
+    difficulty: 1
+    text: Saddle
+
+  jm_clean_banner:
+    difficulty: 1
+    text: Clean a Pattern off a Banner
+
+  jm_heart_sea:
+    difficulty: 1
+    text: Heart of the Sea
+
+  jm_phantom_membrane:
+    difficulty: 1
+    weight: 0.25
+    text: Phantom Membrane
+
+  jm_map_marker:
+    difficulty: 1
+    text: Add a Marker to a Map
+
+  jm_buckets_4:
+    difficulty: 1
+    text: Water Bucket, Lava Bucket, Milk Bucket, Bucket of Fish
+    tooltip: Can be any of the types of Fish
+    antisynergy: BucketTypes
+
+  jm_lead_dolphin:
+    difficulty: 1
+    text: Leash a Dolphin to a Fence
+
+  jm_dried_kelp_blocks_hard:
+    difficulty: 1
+    var: 21..32
+    text: $var Dried Kelp Blocks
+    antisynergy: KelpBlocks
+
+  jm_gunpowder_hard:
+    difficulty: 1
+    weight: 0.5
+    var: 6..15
+    text: $var Gunpowder
+    antisynergy: Gunpowder
+
+  jm_spider_eyes_hard:
+    difficulty: 1
+    weight: 0.5
+    var: 6..15
+    text: $var Spider Eyes
+    antisynergy: SpiderEye
+
+  jm_ender_pearls_hard:
+    difficulty: 1
+    weight: 0.5
+    var: 4..6
+    text: $var Ender Pearls
+    antisynergy: EnderPearl
+
+  jm_never_axe:
+    difficulty: 1
+    type: negative
+    text: Never use an Axe
+    tooltip: Never use an Axe for Combat or Block Breaking. Holding or crafting is
+      fine.
+
+  jm_enchant_any:
+    difficulty: 1
+    weight: 0.15
+    text: Enchant an item
+
+  jm_grass_block:
+    difficulty: 1
+    text: Grass Block
+    tooltip: If you don't have Silk Touch I know a guy who might pick one up for you...
+
+  jm_sea_lanterns:
+    difficulty: 1
+    var: 2..5
+    text: $var Sea Lanterns
+
+  jm_sponge:
+    difficulty: 1
+    text: Sponge
+    tooltip: DRY Sponge, not a wet one
+
+  jm_bounce_slime:
+    difficulty: 1
+    text: Bounce on a Slime Block
+    tooltip: Get a Slime Block, place it on the ground and give it a good old bouncin'
+      on
+
+  jm_kill_self_pearl:
+    difficulty: 1
+    text: Kill yourself with an Ender Pearl
+    tooltip: Need to die to the damage taken from USING a pearl (not subsequent fall/other
+      damage)
+
+  jm_kill_golem_iron:
+    difficulty: 1
+    text: Kill an Iron Golem
+
+  jm_ice_magma:
+    difficulty: 1
+    text: Ice Block on top of a Magma Block
+
+  jtp_tame_cat:
+    difficulty: 1
+    text: Tame a cat
+
+  jm_never_buckets:
+    difficulty: 1
+    type: negative
+    text: Never use Buckets
+
+  jm_cookie:
+    difficulty: 1
+    text: Cookie

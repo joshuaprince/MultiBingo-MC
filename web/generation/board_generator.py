@@ -9,6 +9,7 @@ from backend.models.board_shape import BoardShape
 from backend.models.board import Board
 from backend.models.position import Position
 from backend.models.space import Space
+from backend.models.set_variable import SetVariable
 from win_detection.win_detection import get_win_detector, get_default_win_detector
 from .goals import get_goals
 
@@ -47,8 +48,9 @@ def generate_board(game_code: str = None,
     goals = get_goals(rand, len(positions), easy_proportion, forced_goals=forced_goals)
     for pos, goal in zip(positions, goals):
         pos.save()
-        Space.objects.create(board=board, position=pos, text=goal.description(),
-                             tooltip=goal.tooltip(), xml_id=goal.xml_id())
+        spc = Space.objects.create(board=board, position=pos, goal_id=goal.template.id)
+        for variable_name, variable_value in goal.variables.items():
+            SetVariable.objects.create(space=spc, name=variable_name, value=variable_value)
 
     print(f"Created a new {shape} board {game_code}")
     return board

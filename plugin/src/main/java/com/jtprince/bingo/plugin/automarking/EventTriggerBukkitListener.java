@@ -1,11 +1,12 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.BingoGame;
+import com.jtprince.bingo.plugin.automarking.itemtrigger.ItemTrigger;
 import com.jtprince.bingo.plugin.player.BingoPlayer;
 import com.jtprince.bingo.plugin.MCBingoPlugin;
+import com.jtprince.bingo.plugin.player.PlayerBoard;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.World;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -21,12 +22,12 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Container for all Bukkit Event Listeners.
@@ -69,7 +70,7 @@ public class EventTriggerBukkitListener implements Listener {
         }
     }
 
-    void register(ItemTrigger itemTrigger) {
+    public void register(ItemTrigger itemTrigger) {
         boolean added = itemTriggers.add(itemTrigger);
         if (!added) {
             plugin.getLogger().severe(
@@ -86,7 +87,7 @@ public class EventTriggerBukkitListener implements Listener {
         }
     }
 
-    void unregister(ItemTrigger itemTrigger) {
+    public void unregister(ItemTrigger itemTrigger) {
         boolean existed = itemTriggers.remove(itemTrigger);
 
         if (!existed) {
@@ -190,13 +191,24 @@ public class EventTriggerBukkitListener implements Listener {
         if (bp == null) {
             return;
         }
+
+        PlayerBoard pb = this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp);
+
+        // Collection of all items in all Bukkit Player inventory/ies
+        Collection<@NotNull ItemStack> items = new ArrayList<>();
+        for (Player p : bp.getBukkitPlayers()) {
+            for (ItemStack itemStack : p.getInventory()) {
+                if (itemStack != null) {
+                    items.add(itemStack);
+                }
+            }
+        }
+
         for (ItemTrigger trigger : itemTriggers) {
-            Collection<Inventory> inventories = bp.getBukkitPlayers().stream()
-                .map(HumanEntity::getInventory).collect(Collectors.toUnmodifiableSet());
-            if (trigger.isSatisfied(inventories)) {
-                this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoMark(trigger.getSpace());
+            if (trigger.isSatisfiedBy(items)) {
+                pb.autoMark(trigger.getSpace());
             } else {
-                this.plugin.getCurrentGame().playerManager.getPlayerBoard(bp).autoRevert(trigger.getSpace());
+                pb.autoRevert(trigger.getSpace());
             }
         }
     }

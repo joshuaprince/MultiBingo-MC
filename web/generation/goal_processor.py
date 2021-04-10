@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-This script reads in a goals.xml file and outputs a list of goals in an easier-to-read format.
+This script reads in a goals.yml file and outputs a list of goals in an easier-to-read format.
 """
 import argparse
 import pathlib
@@ -20,15 +20,16 @@ def _has_plugin_trigger(goal):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Read in a goals.xml file and output them.')
+    parser = argparse.ArgumentParser(description='Read in a goals.Yml file and output them.')
     parser.add_argument('--not-auto', help='Only show goals that have not been automated',
                         action='store_true')
     args = parser.parse_args()
 
     if args.not_auto:
-        GOALS = [g for g in GOALS if len(g.triggers_xml) > 0 or _has_plugin_trigger(g)]
+        # TODO
+        pass
 
-    for g in GOALS:
+    for g in GOALS.values():
         desc_template = g.description_template
         weight = f" {{{g.weight}}}" if g.weight != 1 else ''
         for varname, (mini, maxi) in g.variable_ranges.items():

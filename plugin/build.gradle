@@ -26,8 +26,11 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'org.java-websocket:Java-WebSocket:1.5.1'
     implementation 'dev.jorel:commandapi-shade:5.8'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.2'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testImplementation 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 

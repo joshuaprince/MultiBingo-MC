@@ -68,9 +68,11 @@ public class PlayerManager {
      */
     public @Nullable BingoPlayer getBingoPlayer(@NotNull World world) {
         WorldManager.WorldSet ws = game.plugin.worldManager.findWorldSet(world);
-        for (BingoPlayer p : this.getLocalPlayers()) {
-            if (ws.equals(this.getWorldSet(p))) {
-                return p;
+        if (ws != null) {
+            for (BingoPlayer p : this.getLocalPlayers()) {
+                if (ws.equals(this.getWorldSet(p))) {
+                    return p;
+                }
             }
         }
         MCBingoPlugin.logger().fine(

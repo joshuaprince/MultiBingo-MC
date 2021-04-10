@@ -1,7 +1,6 @@
 package com.jtprince.bingo.plugin;
 
 import com.jtprince.bingo.plugin.automarking.AutoMarkTrigger;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.Collection;
@@ -19,27 +18,24 @@ public class Space {
 
     public final Collection<AutoMarkTrigger> autoMarkTriggers;
 
-    public Space(GameBoard board, JSONObject obj) {
+    public Space(GameBoard board, String goalId, String goalType, String text, int spaceId,
+                 Map<String, Integer> variables) {
         this.board = board;
-
-        this.goalId = (String) obj.get("goal_id");
-        this.goalType = (String) obj.get("type");
-        this.text = (String) obj.get("text");
-        this.spaceId = ((Long) obj.get("space_id")).intValue();
-
-        JSONObject vars = (JSONObject) obj.get("variables");
-        if (vars != null) {
-            for (Object o : vars.keySet()) {
-                String k = (String) o;
-                int v = Integer.parseInt((String) vars.get(k));
-                variables.put(k, v);
-            }
+        this.goalId = goalId;
+        this.goalType = goalType;
+        this.text = text;
+        this.spaceId = spaceId;
+        if (variables != null) {
+            this.variables.putAll(variables);
         }
 
-        /* List of Auto-Triggers defined in goals.xml and passed to the plugin as JSON */
-        JSONArray xmlTriggers = (JSONArray) obj.get("triggers");
+        this.autoMarkTriggers = AutoMarkTrigger.createAllTriggers(this);
+    }
 
-        this.autoMarkTriggers = AutoMarkTrigger.createAllTriggers(this, xmlTriggers);
+    public Space(GameBoard board, JSONObject obj) {
+        this(board, (String) obj.get("goal_id"), (String) obj.get("type"),
+            (String) obj.get("text"), ((Long) obj.get("space_id")).intValue(),
+            parseVariablesMap((JSONObject) obj.get("variables")));
     }
 
     public void destroy() {
@@ -50,5 +46,17 @@ public class Space {
 
     public boolean isAutoMarked() {
         return autoMarkTriggers.size() > 0;
+    }
+
+    private static Map<String, Integer> parseVariablesMap(JSONObject variables) {
+        Map<String, Integer> ret = new HashMap<>();
+        if (variables != null) {
+            for (Object o : variables.keySet()) {
+                String k = (String) o;
+                int v = ((Long) variables.get(k)).intValue();
+                ret.put(k, v);
+            }
+        }
+        return ret;
     }
 }

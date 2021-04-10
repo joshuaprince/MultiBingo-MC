@@ -5,32 +5,29 @@ from backend.models.space import Space
 from generation.goals import ConcreteGoal
 
 
+# noinspection PyMethodMayBeStatic
 class SpacePluginSerializer(serializers.ModelSerializer):
     class Meta:
         model = Space
-        fields = ['space_id', 'goal_id', 'text', 'type', 'variables', 'triggers']
+        fields = ['space_id', 'goal_id', 'text', 'type', 'variables']
 
     space_id = serializers.IntegerField(source='pk')
     goal_id = serializers.SerializerMethodField()
+    text = serializers.SerializerMethodField()
     type = serializers.SerializerMethodField()
     variables = serializers.SerializerMethodField()
-    triggers = serializers.SerializerMethodField()
-
-    @staticmethod
-    def _concrete_goal(instance):
-        return ConcreteGoal.from_xml_id(instance.xml_id) if instance else None
 
     def get_goal_id(self, obj):
-        return self._concrete_goal(obj).template.id
+        return ConcreteGoal.from_space(obj).template.id
+
+    def get_text(self, obj):
+        return ConcreteGoal.from_space(obj).description()
 
     def get_type(self, obj):
-        return self._concrete_goal(obj).template.type
+        return ConcreteGoal.from_space(obj).template.type
 
     def get_variables(self, obj):
-        return self._concrete_goal(obj).variables
-
-    def get_triggers(self, obj):
-        return self._concrete_goal(obj).triggers()
+        return ConcreteGoal.from_space(obj).variables
 
 
 class BoardPluginSerializer(serializers.ModelSerializer):
@@ -42,5 +39,5 @@ class BoardPluginSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def from_id(board_id: int):
-        board = Board.objects.prefetch_related('space_set').get(pk=board_id)
+        board = Board.objects.prefetch_related('space_set__setvariable_set').get(pk=board_id)
         return BoardPluginSerializer(board).data

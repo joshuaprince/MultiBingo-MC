@@ -3,21 +3,29 @@ package com.jtprince.bingo.plugin.automarking;
 import com.jtprince.bingo.plugin.MCBingoPlugin;
 import com.jtprince.bingo.plugin.Space;
 import io.papermc.paper.event.player.PlayerTradeEvent;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.jetbrains.annotations.Nullable;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.lang.annotation.Retention;
@@ -159,6 +167,19 @@ class EventTrigger extends AutoMarkTrigger {
     }
 
     @GoalEventTriggerListener
+    private boolean jm_ice_magma(BlockPlaceEvent event) {
+        // Ice Block on top of a Magma Block
+        Material placed = event.getBlock().getType();
+        if (placed == Material.MAGMA_BLOCK) {
+            return TriggerDefinition.ICE_BLOCKS.contains(event.getBlock().getRelative(BlockFace.UP).getType());
+        } else if (TriggerDefinition.ICE_BLOCKS.contains(placed)) {
+            return event.getBlock().getRelative(BlockFace.DOWN).getType() == Material.MAGMA_BLOCK;
+        } else {
+            return false;
+        }
+    }
+
+    @GoalEventTriggerListener
     private boolean jm_never_rches51018(BlockPlaceEvent event) {
         // Never place torches
         // Not currently in goals.yml
@@ -200,6 +221,12 @@ class EventTrigger extends AutoMarkTrigger {
         // Going through a portal still fires this event, so no need for other EventTriggers.
         return (event.getLocation().getWorld().getEnvironment() == World.Environment.NETHER
             && TriggerDefinition.FISH_ENTITIES.contains(event.getEntityType()));
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_enchant_any(EnchantItemEvent event) {
+        // Enchant an item
+        return true;
     }
 
     @GoalEventTriggerListener
@@ -300,6 +327,39 @@ class EventTrigger extends AutoMarkTrigger {
     }
 
     @GoalEventTriggerListener
+    private boolean jm_armor_leather_colors(InventoryCloseEvent event) {
+        // Wear 4 different color Leather Armor at the same time
+        Player p = (Player) event.getPlayer();
+        Set<Color> armorColorsFound = new HashSet<>();
+
+        //noinspection NullableProblems - Array members can be null if no armor in that slot
+        for (@Nullable ItemStack item : p.getInventory().getArmorContents()) {
+            if (item != null && TriggerDefinition.LEATHER_ARMOR.contains(item.getType())) {
+                ItemMeta meta = item.getItemMeta();
+                if (meta instanceof LeatherArmorMeta) {
+                    armorColorsFound.add(((LeatherArmorMeta)meta).getColor());
+                }
+            }
+        }
+        return armorColorsFound.size() >= 4;
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_carpet_llama(InventoryCloseEvent event) {
+        // Put a Carpet on a Llama
+        return (event.getInventory().getHolder() instanceof Llama
+                && Arrays.stream(event.getInventory().getContents()).filter(Objects::nonNull)
+                   .anyMatch(i -> TriggerDefinition.CARPETS.contains(i.getType())));
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_fill_hopper(InventoryCloseEvent event) {
+        // Fill a Hopper with 320 items
+        return (event.getInventory().getType() == InventoryType.HOPPER
+                && ActivationHelpers.inventoryContainsQuantity(event.getInventory(), 320));
+    }
+
+    @GoalEventTriggerListener
     private boolean jm_never_armor_any(InventoryCloseEvent event) {
         // Never use armor
         Player p = (Player) event.getPlayer();
@@ -328,7 +388,6 @@ class EventTrigger extends AutoMarkTrigger {
             && ActivationHelpers.inVillage(event.getPlayer().getLocation());
     }
 
-    @SuppressWarnings("SameReturnValue")
     @GoalEventTriggerListener
     private boolean jm_never_die(PlayerDeathEvent event) {
         // Never die
@@ -341,6 +400,42 @@ class EventTrigger extends AutoMarkTrigger {
         @SuppressWarnings("deprecation")
         String msg = event.getDeathMessage();
         return msg != null && msg.contains("trying to escape");
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_fish_junk(PlayerFishEvent event) {
+        // Fish a Junk Item
+        Entity caught = event.getCaught();
+        if (!(caught instanceof Item)) {
+            return false;
+        }
+        Item item = (Item) caught;
+        Material material = item.getItemStack().getType();
+
+        /* Special case - Fishing Rods are treasure when enchanted, junk when not */
+        if (material == Material.FISHING_ROD) {
+            return item.getItemStack().getEnchantments().size() == 0;
+        }
+
+        return TriggerDefinition.FISHING_JUNK.contains(material);
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_fish_treasure(PlayerFishEvent event) {
+        // Fish a Treasure Item
+        Entity caught = event.getCaught();
+        if (!(caught instanceof Item)) {
+            return false;
+        }
+        Item item = (Item) caught;
+        Material material = item.getItemStack().getType();
+
+        /* Special case - Fishing Rods are treasure when enchanted, junk when not */
+        if (material == Material.FISHING_ROD) {
+            return item.getItemStack().getEnchantments().size() > 0;
+        }
+
+        return TriggerDefinition.FISHING_TREASURES.contains(material);
     }
 
     @GoalEventTriggerListener

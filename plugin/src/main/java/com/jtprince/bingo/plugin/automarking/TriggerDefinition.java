@@ -49,4 +49,33 @@ public class TriggerDefinition {
     static final Set<EntityType> FISH_ENTITIES = Set.of(
         EntityType.COD, EntityType.SALMON, EntityType.PUFFERFISH, EntityType.TROPICAL_FISH
     );
+
+    static final Set<Material> FISHING_TREASURES = Set.of(
+        Material.BOW, Material.ENCHANTED_BOOK, Material.NAME_TAG, Material.NAUTILUS_SHELL,
+        Material.SADDLE  /* Fishing Rod item is treasure only if enchanted */
+    );
+
+    static final Set<Material> FISHING_JUNK = Set.of(
+        Material.LILY_PAD, Material.BOWL, Material.LEATHER, Material.LEATHER_BOOTS,
+        Material.ROTTEN_FLESH, Material.STICK, Material.STRING, Material.POTION, /* Water Bottle */
+        Material.BONE, Material.INK_SAC, Material.TRIPWIRE_HOOK
+        /* Fishing Rod item is junk only if unenchanted */
+    );
+
+    static final Set<Material> LEATHER_ARMOR = Set.of(
+        Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS,
+        Material.LEATHER_BOOTS
+    );
+
+    static final Set<Material> ICE_BLOCKS = Set.of(
+        Material.ICE, Material.FROSTED_ICE, Material.BLUE_ICE, Material.PACKED_ICE
+    );
+
+    static final Set<Material> CARPETS = Set.of(
+        Material.BLACK_CARPET, Material.BLUE_CARPET, Material.CYAN_CARPET, Material.BROWN_CARPET,
+        Material.GRAY_CARPET, Material.GREEN_CARPET, Material.LIGHT_BLUE_CARPET,
+        Material.LIGHT_GRAY_CARPET, Material.LIME_CARPET, Material.MAGENTA_CARPET,
+        Material.ORANGE_CARPET, Material.PINK_CARPET, Material.PURPLE_CARPET, Material.RED_CARPET,
+        Material.WHITE_CARPET, Material.YELLOW_CARPET
+    );
 }

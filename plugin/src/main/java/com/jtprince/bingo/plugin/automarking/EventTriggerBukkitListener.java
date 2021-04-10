@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
@@ -259,6 +260,15 @@ public class EventTriggerBukkitListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onItemEnchant(EnchantItemEvent event) {
+        if (ignore(event.getEnchanter())) {
+            return;
+        }
+
+        impulseEvent(event, event.getEnchanter());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onDirectDamageEntity(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player)) {
             return;
@@ -357,6 +367,15 @@ public class EventTriggerBukkitListener implements Listener {
         // 1 tick later so player's inventory is empty
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(
             plugin, () -> impulseInventory(p), 1);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerFish(PlayerFishEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        impulseEvent(event, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

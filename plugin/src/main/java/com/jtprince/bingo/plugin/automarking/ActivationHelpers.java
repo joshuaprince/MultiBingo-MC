@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.StructureType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapCanvas;
@@ -28,25 +29,6 @@ public class ActivationHelpers {
         nearestVillage.setY(location.getY());
 
         return location.distance(nearestVillage) < 100;
-    }
-
-    private static class MapCompletionRenderer extends MapRenderer {
-        double completedPercent = 0;
-        @Override
-        public void render(@NotNull MapView map, @NotNull MapCanvas canvas, @NotNull Player player) {
-            int totalPixels = 0;
-            int mappedPixels = 0;
-            for (int x = 0; x < 128; x++) {
-                for (int y = 0; y < 128; y++) {
-                    totalPixels++;
-                    if (canvas.getBasePixel(x, y) != 0) {
-                        mappedPixels++;
-                    }
-                }
-            }
-
-            completedPercent = ((double) mappedPixels) / totalPixels;
-        }
     }
 
     /**
@@ -88,5 +70,37 @@ public class ActivationHelpers {
                 .filter(r -> r instanceof MapCompletionRenderer).findFirst().orElseThrow();
 
         return renderer.completedPercent > 0.99;
+    }
+
+    /**
+     * Determine whether an Inventory contains x or more total items.
+     */
+    public static boolean inventoryContainsQuantity(@NotNull Inventory inv, int quantity) {
+        int q = 0;
+        for (ItemStack i : inv.getContents()) {
+            if (i != null) {
+                q += i.getAmount();
+            }
+        }
+        return q >= quantity;
+    }
+
+    private static class MapCompletionRenderer extends MapRenderer {
+        double completedPercent = 0;
+        @Override
+        public void render(@NotNull MapView map, @NotNull MapCanvas canvas, @NotNull Player player) {
+            int totalPixels = 0;
+            int mappedPixels = 0;
+            for (int x = 0; x < 128; x++) {
+                for (int y = 0; y < 128; y++) {
+                    totalPixels++;
+                    if (canvas.getBasePixel(x, y) != 0) {
+                        mappedPixels++;
+                    }
+                }
+            }
+
+            completedPercent = ((double) mappedPixels) / totalPixels;
+        }
     }
 }

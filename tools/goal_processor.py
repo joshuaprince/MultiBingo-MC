@@ -31,6 +31,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Read in a goals.Yml file and output them.')
     parser.add_argument('--not-auto', help='Only show goals that have not been automated',
                         action='store_true')
+    parser.add_argument('--tooltip', help='Include tooltips', action='store_true')
     args = parser.parse_args()
 
     conditions = []  # type: List[Callable]
@@ -51,7 +52,10 @@ if __name__ == '__main__':
         desc_template = g.description_template
         weight = f" {{{g.weight}}}" if g.weight != 1 else ''
         auto = '[A]' if g.id in _PLUGIN_TRIGGERED_GOAL_IDS else '[ ]'
+        tooltip = f'  ("{g.tooltip_template}")' if args.tooltip and g.tooltip_template else ''
         for varname, (mini, maxi) in g.variable_ranges.items():
             desc_template = desc_template.replace(f'${varname}', f'({mini}-{maxi})')
 
-        print(f'[{g.difficulty}]{auto}\t{desc_template}{weight}')
+        print(f'[{g.difficulty}]{auto}\t{desc_template}{weight}{tooltip}')
+
+    print(f"{len(GOALS)} total goals, {len(_PLUGIN_TRIGGERED_GOAL_IDS)} automated")

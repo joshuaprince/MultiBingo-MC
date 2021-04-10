@@ -6,7 +6,6 @@ import com.jtprince.bingo.plugin.MCBingoPlugin;
 import com.jtprince.bingo.plugin.Space;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.map.MapView;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.lang.annotation.Retention;
@@ -14,7 +13,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -84,7 +82,7 @@ class OccasionalTrigger extends AutoMarkTrigger {
 
     public static Set<String> allAutomatedGoals() {
         Set<String> ret = new HashSet<>();
-        for (Method method : EventTrigger.class.getDeclaredMethods()) {
+        for (Method method : OccasionalTrigger.class.getDeclaredMethods()) {
             OccasionalTriggerListener anno = method.getAnnotation(OccasionalTriggerListener.class);
             if (anno == null) {
                 continue;

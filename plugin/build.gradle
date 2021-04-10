@@ -44,10 +44,22 @@ processResources {
     }
 }
 
-project.tasks.assemble.dependsOn project.tasks.shadowJar
-
 shadowJar {
     archiveBaseName.set("Bingo")
     archiveClassifier.set("")
     archiveVersion.set("")
 }
+
+task(listAutoGoals, type: JavaExec) {
+    main = 'com.jtprince.bingo.plugin.automarking.AutomatedGoalList'
+    classpath = sourceSets.main.runtimeClasspath + sourceSets.main.compileClasspath
+}
+
+task(dumpAutoGoals, type: JavaExec) {
+    main = 'com.jtprince.bingo.plugin.automarking.AutomatedGoalList'
+    classpath = sourceSets.main.runtimeClasspath + sourceSets.main.compileClasspath
+    args 'automated_goals.txt'
+}
+
+project.tasks.assemble.dependsOn shadowJar
+project.tasks.assemble.dependsOn dumpAutoGoals

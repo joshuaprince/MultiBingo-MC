@@ -173,3 +173,5 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+automated_goals.txt

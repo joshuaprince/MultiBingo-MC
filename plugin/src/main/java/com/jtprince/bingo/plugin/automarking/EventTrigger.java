@@ -4,7 +4,6 @@ import com.jtprince.bingo.plugin.MCBingoPlugin;
 import com.jtprince.bingo.plugin.Space;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.Material;
-import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
@@ -27,6 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 
 /**
  * Container class that maps a Space on a board to a Method that can check if that space should be
@@ -114,6 +114,19 @@ class EventTrigger extends AutoMarkTrigger {
                 "Failed to pass " + event.getClass().getName() + " to listeners", e);
             return null;
         }
+    }
+
+    public static Set<String> allAutomatedGoals() {
+        Set<String> ret = new HashSet<>();
+        for (Method method : EventTrigger.class.getDeclaredMethods()) {
+            GoalEventTriggerListener anno = method.getAnnotation(GoalEventTriggerListener.class);
+            if (anno == null) {
+                continue;
+            }
+            Collections.addAll(ret, anno.extraGoals());
+            ret.add(method.getName());
+        }
+        return ret;
     }
 
     @Retention(RetentionPolicy.RUNTIME)

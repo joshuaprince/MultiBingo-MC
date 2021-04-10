@@ -59,6 +59,10 @@ public class ItemTriggerYaml {
         }
     }
 
+    public Set<String> allAutomatedGoals() {
+        return itemTriggers.keySet();
+    }
+
     /**
      * Get the specifications for the Item Trigger that is configured for a given goal ID. If the
      * goal ID is not present in item_triggers.yml, returns null. The return value is an Item Match

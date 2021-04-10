@@ -14,6 +14,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -77,6 +80,18 @@ class OccasionalTrigger extends AutoMarkTrigger {
             MCBingoPlugin.logger().log(Level.SEVERE,
                 "Failed to OccasionalTrigger " + this.method.getName(), e);
         }
+    }
+
+    public static Set<String> allAutomatedGoals() {
+        Set<String> ret = new HashSet<>();
+        for (Method method : EventTrigger.class.getDeclaredMethods()) {
+            OccasionalTriggerListener anno = method.getAnnotation(OccasionalTriggerListener.class);
+            if (anno == null) {
+                continue;
+            }
+            ret.add(method.getName());
+        }
+        return ret;
     }
 
     @Retention(RetentionPolicy.RUNTIME)

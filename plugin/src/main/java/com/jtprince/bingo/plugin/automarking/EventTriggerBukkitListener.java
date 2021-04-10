@@ -283,6 +283,16 @@ public class EventTriggerBukkitListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityDeath(EntityDeathEvent event) {
+        World world = event.getEntity().getWorld();
+        if (ignore(world)) {
+            return;
+        }
+
+        impulseEvent(event, world);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityExplode(EntityExplodeEvent event) {
         if (ignore(event.getLocation().getWorld())) {
             return;

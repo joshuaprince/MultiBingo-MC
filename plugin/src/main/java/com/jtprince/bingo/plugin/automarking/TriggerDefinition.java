@@ -1,5 +1,6 @@
 package com.jtprince.bingo.plugin.automarking;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.entity.EntityType;
@@ -11,6 +12,8 @@ import java.util.Set;
  * what counts as a "meat".
  */
 public class TriggerDefinition {
+    static final Component SKELETON_DROPPED_BOW = Component.text("Dropped by a Skeleton");
+
     static final Set<Material> MEATS = Set.of( // Invalidate Vegetarian
         Material.CHICKEN, Material.COOKED_CHICKEN, Material.COD, Material.COOKED_COD,
         Material.BEEF, Material.COOKED_BEEF, Material.MUTTON, Material.COOKED_MUTTON,

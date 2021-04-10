@@ -3,6 +3,7 @@ package com.jtprince.bingo.plugin.automarking;
 import com.jtprince.bingo.plugin.MCBingoPlugin;
 import com.jtprince.bingo.plugin.Space;
 import io.papermc.paper.event.player.PlayerTradeEvent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -21,7 +22,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -34,7 +34,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Stream;
 
 /**
  * Container class that maps a Space on a board to a Method that can check if that space should be
@@ -246,6 +245,26 @@ class EventTrigger extends AutoMarkTrigger {
     }
 
     @GoalEventTriggerListener
+    private boolean jm_get_skeleton_bow(EntityDeathEvent event) {
+        // Get a Skeleton's Bow
+        // This callback ONLY adds item lore to the dropped bow. See EntityPickupItemEvent
+        //  variant for the part that actually activates the goal.
+        if (event.getEntity().getType() == EntityType.SKELETON) {
+            for (ItemStack i : event.getDrops()) {
+                if (i.getType() == Material.BOW) {
+                    List<Component> currentLore = i.lore();
+                    if (currentLore == null) {
+                        currentLore = new ArrayList<>();
+                    }
+                    currentLore.add(TriggerDefinition.SKELETON_DROPPED_BOW);
+                    i.lore(currentLore);
+                }
+            }
+        }
+        return false;
+    }
+
+    @GoalEventTriggerListener
     private boolean jm_tnt_minecart_detonate(EntityExplodeEvent event) {
         // Detonate a TNT minecart
         return event.getEntity().getType() == EntityType.MINECART_TNT;
@@ -277,6 +296,15 @@ class EventTrigger extends AutoMarkTrigger {
         // Never use (enter) boats
         return event.getEntity() instanceof Player
             && event.getMount() instanceof Boat;
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_get_skeleton_bow(EntityPickupItemEvent event) {
+        // Get a Skeleton's Bow
+        // This callback relies on the EntityDeathEvent variant, which adds a custom lore to any
+        //  bows dropped by a Skeleton.
+        @Nullable List<Component> lore = event.getItem().getItemStack().lore();
+        return (lore != null && lore.contains(TriggerDefinition.SKELETON_DROPPED_BOW));
     }
 
     @GoalEventTriggerListener

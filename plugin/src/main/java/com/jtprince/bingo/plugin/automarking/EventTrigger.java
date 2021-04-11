@@ -654,6 +654,18 @@ class EventTrigger extends AutoMarkTrigger {
     }
 
     @GoalEventTriggerListener
+    private boolean jm_nether_portal_size(PortalCreateEvent event) {
+        // Activate a $var1x$var2 Nether Portal (not counting corners)
+        int width = this.getSpace().variables.get("var1");
+        int height = this.getSpace().variables.get("var2");
+        long portalBlocksActivated =
+            event.getBlocks().stream().filter(b -> b.getType()==Material.NETHER_PORTAL).count();
+        /* Just counting the total blocks is a little bit of a cheat vs actually measuring the
+         * width and height, but it's way simpler. */
+        return portalBlocksActivated >= ((long) width * height);
+    }
+
+    @GoalEventTriggerListener
     private boolean jm_tree_nether(StructureGrowEvent event) {
         // Grow a tree in the nether
         return event.getWorld().getEnvironment() == World.Environment.NETHER

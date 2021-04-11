@@ -7,13 +7,14 @@ import com.jtprince.bingo.plugin.MCBingoPlugin;
 import com.jtprince.bingo.plugin.player.PlayerBoard;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.World;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
@@ -102,7 +103,7 @@ public class EventTriggerBukkitListener implements Listener {
      * a game.
      */
     @Contract("null -> true")
-    private boolean ignore(LivingEntity player) {
+    private boolean ignore(Entity player) {
         if (plugin.getCurrentGame() == null
             || plugin.getCurrentGame().state != BingoGame.State.RUNNING) {
             return true;
@@ -231,6 +232,15 @@ public class EventTriggerBukkitListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        if (ignore(event.getBlock().getWorld())) {
+            return;
+        }
+
+        impulseEvent(event, event.getBlock().getWorld());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlaceBlock(BlockPlaceEvent event) {
         if (ignore(event.getPlayer())) {
             return;
@@ -270,16 +280,12 @@ public class EventTriggerBukkitListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onDirectDamageEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) {
+        World world = event.getEntity().getWorld();
+        if (ignore(world)) {
             return;
         }
 
-        Player damager = (Player) event.getDamager();
-        if (ignore(damager)) {
-            return;
-        }
-
-        impulseEvent(event, damager);
+        impulseEvent(event, world);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -321,6 +327,15 @@ public class EventTriggerBukkitListener implements Listener {
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(
             plugin, () -> impulseInventory(p), 1);
         impulseEvent(event, p);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPotionEffect(EntityPotionEffectEvent event) {
+        if (ignore(event.getEntity())) {
+            return;
+        }
+
+        impulseEvent(event, (Player) event.getEntity());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -400,6 +415,15 @@ public class EventTriggerBukkitListener implements Listener {
     // No ignoreCancelled because Bukkit cancels air interact events for some reason...
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInteract(PlayerInteractEvent event) {
+        if (ignore(event.getPlayer())) {
+            return;
+        }
+
+        impulseEvent(event, event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onItemBreak(PlayerItemBreakEvent event) {
         if (ignore(event.getPlayer())) {
             return;
         }

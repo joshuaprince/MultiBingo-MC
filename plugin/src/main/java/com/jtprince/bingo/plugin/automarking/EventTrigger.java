@@ -12,6 +12,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
@@ -25,6 +26,7 @@ import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 import org.spigotmc.event.entity.EntityMountEvent;
 
@@ -166,6 +168,14 @@ class EventTrigger extends AutoMarkTrigger {
     }
 
     @GoalEventTriggerListener
+    private boolean jm_fire_village(BlockIgniteEvent event) {
+        // Set fire to a Villager's House
+        // This is a hard one to make specific...
+        return (event.getCause() == BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL
+                && ActivationHelpers.inVillage(event.getBlock().getLocation()));
+    }
+
+    @GoalEventTriggerListener
     private boolean jm_ice_magma(BlockPlaceEvent event) {
         // Ice Block on top of a Magma Block
         Material placed = event.getBlock().getType();
@@ -229,19 +239,31 @@ class EventTrigger extends AutoMarkTrigger {
     }
 
     @GoalEventTriggerListener
+    private boolean jtp_effect_harming(EntityDamageByEntityEvent event) {
+        // Be afflicted by Harming
+        if (!(event.getDamager() instanceof ThrownPotion)) {
+            return false;
+        }
+        return ((ThrownPotion)event.getDamager()).getEffects().stream()
+            .anyMatch(e -> e.getType().equals(PotionEffectType.HARM));
+    }
+
+    @GoalEventTriggerListener
     private boolean jm_never_sword(EntityDamageByEntityEvent event) {
         // Never use a sword
         // See also BlockBreakEvent variant
-        return ((Player) event.getDamager()).getInventory().getItemInMainHand()
-            .getType().getKey().toString().contains("_sword");
+        return (event.getDamager() instanceof Player
+                && ((Player) event.getDamager()).getInventory().getItemInMainHand()
+                   .getType().getKey().toString().contains("_sword"));
     }
 
     @GoalEventTriggerListener
     private boolean jm_never_axe(EntityDamageByEntityEvent event) {
         // Never use an axe
         // See also BlockBreakEvent variant
-        return ((Player) event.getDamager()).getInventory().getItemInMainHand()
-            .getType().getKey().toString().contains("_axe");
+        return (event.getDamager() instanceof Player
+                && ((Player) event.getDamager()).getInventory().getItemInMainHand()
+                   .getType().getKey().toString().contains("_axe"));
     }
 
     @GoalEventTriggerListener
@@ -262,6 +284,35 @@ class EventTrigger extends AutoMarkTrigger {
             }
         }
         return false;
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_kill_golem_iron(EntityDeathEvent event) {
+        // Kill an Iron Golem
+        return (event.getEntityType() == EntityType.IRON_GOLEM
+                && event.getEntity().getKiller() != null);
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_kill_mob_anvil(EntityDeathEvent event) {
+        // Kill a hostile mob with an Anvil
+        if (!(event.getEntity() instanceof Monster)) {
+            return false;
+        }
+
+        EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+        if (!(damageEvent instanceof EntityDamageByEntityEvent)) {
+            return false;
+        }
+
+        EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) damageEvent;
+        Entity damager = damageByEntityEvent.getDamager();
+        if (!(damager instanceof FallingBlock)) {
+            return false;
+        }
+
+        return ((FallingBlock)damager).getBlockData()
+            .getMaterial().getKey().toString().contains("anvil");
     }
 
     @GoalEventTriggerListener
@@ -305,6 +356,30 @@ class EventTrigger extends AutoMarkTrigger {
         //  bows dropped by a Skeleton.
         @Nullable List<Component> lore = event.getItem().getItemStack().lore();
         return (lore != null && lore.contains(TriggerDefinition.SKELETON_DROPPED_BOW));
+    }
+
+    private static final Map<String, PotionEffectType> goalPotionEffectMap = Map.of(
+        "jtp_effect_slowness", PotionEffectType.SLOW,
+        "jtp_effect_poison", PotionEffectType.POISON,
+        "jtp_effect_weakness", PotionEffectType.WEAKNESS,
+        "jtp_effect_mfatigue", PotionEffectType.SLOW_DIGGING,
+        "jtp_effect_fire_res", PotionEffectType.FIRE_RESISTANCE,
+        "jtp_effect_absorption", PotionEffectType.ABSORPTION
+        /* WARNING: When adding a potion effect, also add it to the extraGoals below */
+    );
+
+    @GoalEventTriggerListener(extraGoals = {"jtp_effect_poison", "jtp_effect_weakness",
+        "jtp_effect_mfatigue", "jtp_effect_fire_res", "jtp_effect_absorption"})
+    private boolean jtp_effect_slowness(EntityPotionEffectEvent event) {
+        // Be afflicted by <Potion Effect>
+        // Instant effects (harming, instant health) must listen to EntityDamageByEntityEvent
+        PotionEffectType effectType = goalPotionEffectMap.get(this.getSpace().goalId);
+        if (effectType == null) {
+            MCBingoPlugin.logger().severe("Potion effect not defined for goal "
+                + this.getSpace().goalId);
+            return false;
+        }
+        return event.getModifiedType().equals(effectType);
     }
 
     @GoalEventTriggerListener
@@ -484,6 +559,16 @@ class EventTrigger extends AutoMarkTrigger {
     }
 
     @GoalEventTriggerListener
+    private boolean jm_map_marker(PlayerInteractEvent event) {
+        // Add a Marker to a Map (by right clicking a banner with the map)
+        return event.getItem() != null
+            && event.getItem().getType() == Material.FILLED_MAP
+            && event.getClickedBlock() != null
+            && event.getClickedBlock().getType().getKey().toString().contains("_banner")
+            && event.getAction() == Action.RIGHT_CLICK_BLOCK;
+    }
+
+    @GoalEventTriggerListener
     private boolean jm_cauldron_water(PlayerInteractEvent event) {
         // Cauldron with water (put water in a cauldron)
         return event.getClickedBlock() != null
@@ -528,6 +613,12 @@ class EventTrigger extends AutoMarkTrigger {
             && event.getItem().getType().getKey().toString().contains("bucket")
             && (event.getAction() == Action.RIGHT_CLICK_AIR
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK);
+    }
+
+    @GoalEventTriggerListener
+    private boolean jm_deplete_sword_iron(PlayerItemBreakEvent event) {
+        // Deplete an Iron Sword
+        return event.getBrokenItem().getType() == Material.IRON_SWORD;
     }
 
     @GoalEventTriggerListener

@@ -1068,8 +1068,7 @@ goals:
   jm_deplete_sword_iron:
     difficulty: 1
     text: Deplete an Iron Sword
-    tooltip: Use an Iron Sword until it breaks, if you are unsure if you did check
-      the Statistics screen!
+    tooltip: Use an Iron Sword until it breaks
 
   jm_saddle:
     difficulty: 1

@@ -30,7 +30,7 @@ CHANNEL_LAYERS = {
 
 STATIC_URL = '/static/'
 
-LOG_DATABASE_ACCESS = True
+LOG_DATABASE_ACCESS = False
 
 LOGGING = {
     'version': 1,

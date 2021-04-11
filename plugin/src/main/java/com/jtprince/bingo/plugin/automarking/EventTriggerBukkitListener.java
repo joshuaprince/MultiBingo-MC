@@ -52,8 +52,8 @@ public class EventTriggerBukkitListener implements Listener {
     private final Map<Class<? extends Event>, Set<EventTrigger>> activeEventListenerMap = new HashMap<>();
 
     /**
-     * A set of ItemTriggers that are currently being tracked. These will be impulsed whenever
-     * a Bukkit event is raised that changes a player inventory.
+     * A set of ItemTriggers AND SpecialItemTriggers that are currently being tracked. These will
+     * be impulsed whenever a Bukkit event is raised that changes a player inventory.
      */
     private final Set<ItemTrigger> itemTriggers = new HashSet<>();
 

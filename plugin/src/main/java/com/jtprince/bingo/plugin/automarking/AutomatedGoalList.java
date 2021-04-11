@@ -1,6 +1,7 @@
 package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.automarking.itemtrigger.ItemTriggerYaml;
+import com.jtprince.bingo.plugin.automarking.itemtrigger.SpecialItemTrigger;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -30,6 +31,7 @@ public class AutomatedGoalList {
         ret.addAll(EventTrigger.allAutomatedGoals());
         ret.addAll(OccasionalTrigger.allAutomatedGoals());
         ret.addAll(ItemTriggerYaml.defaultYaml().allAutomatedGoals());
+        ret.addAll(SpecialItemTrigger.allAutomatedGoals());
         return ret;
     }
 }

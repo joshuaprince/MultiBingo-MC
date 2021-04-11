@@ -22,7 +22,6 @@ public class ItemTrigger extends AutoMarkTrigger {
             return Collections.emptySet();
         }
         ItemTrigger it = new ItemTrigger(space, mg, space.variables);
-        MCBingoPlugin.instance().autoMarkListener.register(it);
         return Set.of(it);
     }
 
@@ -35,7 +34,6 @@ public class ItemTrigger extends AutoMarkTrigger {
             return Collections.emptySet();
         }
         ItemTrigger it = new ItemTrigger(null, mg, variables);
-        MCBingoPlugin.instance().autoMarkListener.register(it);
         return Set.of(it);
     }
 
@@ -54,11 +52,12 @@ public class ItemTrigger extends AutoMarkTrigger {
             && rootUT.t >= rootMatchGroup.getTotal(variables);
     }
 
-    private ItemTrigger(Space space, ItemTriggerYaml.MatchGroup rootMatchGroup,
-                        Map<String, Integer> variables) {
+    protected ItemTrigger(Space space, ItemTriggerYaml.MatchGroup rootMatchGroup,
+                          Map<String, Integer> variables) {
         super(space);
         this.rootMatchGroup = rootMatchGroup;
         this.variables = variables;
+        MCBingoPlugin.instance().autoMarkListener.register(this);
     }
 
     /**

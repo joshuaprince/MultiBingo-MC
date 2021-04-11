@@ -2,6 +2,7 @@ package com.jtprince.bingo.plugin.automarking;
 
 import com.jtprince.bingo.plugin.Space;
 import com.jtprince.bingo.plugin.automarking.itemtrigger.ItemTrigger;
+import com.jtprince.bingo.plugin.automarking.itemtrigger.SpecialItemTrigger;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ public abstract class AutoMarkTrigger {
         set.addAll(ItemTrigger.createTriggers(space));
         set.addAll(EventTrigger.createTriggers(space));
         set.addAll(OccasionalTrigger.createTriggers(space));
+        set.addAll(SpecialItemTrigger.createTriggers(space));
 
         return set;
     }

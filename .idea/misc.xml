@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <list size="5">
+    <list size="6">
       <item index="0" class="java.lang.String" itemvalue="com.fasterxml.jackson.annotation.JsonCreator" />
-      <item index="1" class="java.lang.String" itemvalue="com.jtprince.bingo.plugin.automarking.EventTrigger.GoalEventTriggerListener" />
-      <item index="2" class="java.lang.String" itemvalue="com.jtprince.bingo.plugin.automarking.OccasionalTrigger.OccasionalTriggerListener" />
-      <item index="3" class="java.lang.String" itemvalue="com.jtprince.bingo.plugin.automarking.itemtrigger.SpecialItemTrigger.SpecialItemTriggerDef" />
-      <item index="4" class="java.lang.String" itemvalue="org.bukkit.event.EventHandler" />
+      <item index="1" class="java.lang.String" itemvalue="com.jtprince.bingo.kplugin.automark.EventTrigger.EventTriggerListener" />
+      <item index="2" class="java.lang.String" itemvalue="com.jtprince.bingo.plugin.automarking.EventTrigger.GoalEventTriggerListener" />
+      <item index="3" class="java.lang.String" itemvalue="com.jtprince.bingo.plugin.automarking.OccasionalTrigger.OccasionalTriggerListener" />
+      <item index="4" class="java.lang.String" itemvalue="com.jtprince.bingo.plugin.automarking.itemtrigger.SpecialItemTrigger.SpecialItemTriggerDef" />
+      <item index="5" class="java.lang.String" itemvalue="org.bukkit.event.EventHandler" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/kotlinplugin" />
     <file type="web" url="file://$PROJECT_DIR$/plugin" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="14" project-jdk-type="JavaSDK" />
   <component name="PythonCompatibilityInspectionAdvertiser">
     <option name="version" value="3" />
+  </component>
+  <component name="SuppressKotlinCodeStyleNotification">
+    <option name="disableForAll" value="true" />
   </component>
 </project>

@@ -1,0 +1,731 @@
+item_triggers:
+  jm_different_fish:
+    unique: $var
+    groups:
+      - name:
+          - minecraft:cod
+          - minecraft:cooked_cod
+          - minecraft:cod_bucket
+      - name:
+          - minecraft:salmon
+          - minecraft:cooked_salmon
+          - minecraft:salmon_bucket
+      - name:
+          - minecraft:pufferfish
+          - minecraft:pufferfish_bucket
+      - name:
+          - minecraft:tropical_fish
+          - minecraft:tropical_fish_bucket
+
+  jm_colors_terracotta:
+    unique: $var
+    name: minecraft:.*_terracotta
+
+  jm_mushroom_stew:
+    total: $var
+    name: minecraft:mushroom_stew
+
+  jm_book_quill:
+    name: minecraft:writable_book
+
+  jm_flint:
+    total: $var
+    name: minecraft:flint
+
+  jm_cake:
+    name: minecraft:cake
+
+  jm_pumpkin_pie:
+    name: minecraft:pumpkin_pie
+
+  jm_coarse_dirt:
+    total: $var
+    name: minecraft:coarse_dirt
+
+  jm_clocks:
+    total: $var
+    name: minecraft:clock
+
+  jm_iron_blocks:
+    total: $var
+    name: minecraft:iron_block
+
+  jm_gold_blocks:
+    total: $var
+    name: minecraft:gold_block
+
+  jm_golden_apple:
+    name:
+      - minecraft:golden_apple
+      - minecraft:enchanted_golden_apple
+
+  jm_bookshelves:
+    total: $var
+    name: minecraft:bookshelf
+
+  jm_jukebox:
+    name: minecraft:jukebox
+
+  jm_moss_stone:
+    total: $var
+    name: minecraft:mossy_cobblestone
+
+  jm_cactus:
+    total: $var
+    name: minecraft:cactus
+
+  jm_tnt:
+    total: $var
+    name: minecraft:tnt
+
+  jm_note_blocks:
+    total: $var
+    name: minecraft:note_block
+
+  jm_ink_sacks:
+    total: $var
+    name: minecraft:ink_sac
+
+  jm_bread:
+    total: $var
+    name: minecraft:bread
+
+  jm_hay_bales:
+    total: $var
+    name: minecraft:hay_block
+
+  jm_colors_wool:
+    unique: $var
+    name: minecraft:.*_wool
+
+  jm_pistons:
+    total: $var
+    name:
+      - minecraft:piston
+      - minecraft:sticky_piston
+
+  jm_full_armor_iron:
+    unique: 4
+    name:
+      - minecraft:iron_helmet
+      - minecraft:iron_chestplate
+      - minecraft:iron_leggings
+      - minecraft:iron_boots
+
+  jm_full_armor_leather:
+    unique: 4
+    name:
+      - minecraft:leather_helmet
+      - minecraft:leather_chestplate
+      - minecraft:leather_leggings
+      - minecraft:leather_boots
+
+  jm_full_armor_gold:
+    unique: 4
+    name:
+      - minecraft:golden_helmet
+      - minecraft:golden_chestplate
+      - minecraft:golden_leggings
+      - minecraft:golden_boots
+
+  jm_soul_sand:
+    total: $var
+    name: minecraft:soul_sand
+
+  jm_pumpkins:
+    total: $var
+    name: minecraft:pumpkin
+
+  jm_carved_pumpkins:
+    total: $var
+    name: minecraft:carved_pumpkin
+
+  jm_vines:
+    total: $var
+    name: minecraft:vine
+
+  jm_every_sword:
+    unique: 5
+    name: minecraft:.*_sword
+
+  jm_every_pickaxe:
+    unique: 5
+    name: minecraft:.*_pickaxe
+
+  jm_brick_blocks:
+    total: $var
+    name: minecraft:bricks
+
+  jm_nether_bricks:
+    total: $var
+    name: minecraft:nether_bricks
+
+  jm_arrows:
+    total: $var
+    name: minecraft:arrow
+
+  jm_fermented_eye:
+    name: minecraft:fermented_spider_eye
+
+  jm_different_slabs:
+    unique: $var
+    name: minecraft:.*_slab
+
+  jm_different_stairs:
+    unique: $var
+    name: minecraft:.*_stairs
+
+  jm_ender_pearls:
+    total: $var
+    name: minecraft:ender_pearl
+
+  jm_eggs:
+    total: 16
+    name: minecraft:egg
+
+  jm_bone_blocks:
+    total: $var
+    name: minecraft:bone_block
+
+  jm_dead_bush:
+    name: minecraft:dead_bush
+
+  jm_grass:
+    total: $var
+    name: minecraft:grass
+
+  jm_dye_cyan:
+    name: minecraft:cyan_dye
+
+  jm_dye_light_gray_light_blue:
+    unique: 2
+    name:
+      - minecraft:light_gray_dye
+      - minecraft:light_blue_dye
+
+  jm_dye_magenta:
+    name: minecraft:magenta_dye
+
+  jm_dye_red:
+    name: minecraft:red_dye
+
+  jm_dye_orange:
+    name: minecraft:orange_dye
+
+  jm_dye_yellow:
+    name: minecraft:yellow_dye
+
+  jm_dye_green:
+    name: minecraft:green_dye
+
+  jm_dye_pink:
+    name: minecraft:pink_dye
+
+  jm_dye_purple:
+    name: minecraft:purple_dye
+
+  jm_dye_lime:
+    name: minecraft:lime_dye
+
+  jm_buckets_3:
+    unique: 3
+    name:
+      - minecraft:water_bucket
+      - minecraft:lava_bucket
+      - minecraft:milk_bucket
+
+  jm_different_flowers:
+    unique: $var
+    name:
+      - minecraft:dandelion
+      - minecraft:poppy
+      - minecraft:blue_orchid
+      - minecraft:allium
+      - minecraft:azure_bluet
+      - minecraft:.*_tulip
+      - minecraft:oxeye_daisy
+      - minecraft:cornflower
+      - minecraft:lily_of_the_valley
+      - minecraft:wither_rose
+      - minecraft:sunflower
+      - minecraft:lilac
+      - minecraft:rose_bush
+      - minecraft:peony
+
+  jm_colors_concrete:
+    unique: $var
+    name: minecraft:.*_concrete
+
+  jm_colors_glazed_terracotta:
+    unique: $var
+    name: minecraft:.*_glazed_terracotta
+
+  jm_colors_beds:
+    unique: $var
+    name: minecraft:.*_bed
+
+  jm_stone:
+    total: $var
+    name: minecraft:stone
+
+  jm_iron_nuggets:
+    total: $var
+    name: minecraft:iron_nugget
+
+  jm_gold_nuggets:
+    total: $var
+    name: minecraft:gold_nugget
+
+  jm_rotten_flesh:
+    total: $var
+    name: minecraft:rotten_flesh
+
+  jm_redstone:
+    total: $var
+    name: minecraft:redstone
+
+  jm_golden_carrot:
+    name: minecraft:golden_carrot
+
+  jm_mob_drops:
+    unique: 5
+    name:
+      - minecraft:rotten_flesh
+      - minecraft:spider_eye
+      - minecraft:bone
+      - minecraft:gunpowder
+      - minecraft:ender_pearl
+
+  jm_feathers:
+    total: $var
+    name: minecraft:feather
+
+  jm_lily_pads:
+    total: $var
+    name: minecraft:lily_pad
+
+  jm_sticks:
+    total: $var
+    name: minecraft:stick
+
+  jm_wood_planks_oak:
+    total: $var
+    name: minecraft:oak_planks
+
+  jm_wood_planks_spruce:
+    total: $var
+    name: minecraft:spruce_planks
+
+  jm_wood_planks_birch:
+    total: $var
+    name: minecraft:birch_planks
+
+  jm_wood_planks_dark_oak:
+    total: $var
+    name: minecraft:dark_oak_planks
+
+  jm_wood_planks_acacia:
+    total: $var
+    name: minecraft:acacia_planks
+
+  jm_wood_logs_oak:
+    total: $var
+    name: minecraft:oak_log
+
+  jm_wood_logs_spruce:
+    total: $var
+    name: minecraft:spruce_log
+
+  jm_wood_logs_birch:
+    total: $var
+    name: minecraft:birch_log
+
+  jm_wood_logs_dark_oak:
+    total: $var
+    name: minecraft:dark_oak_log
+
+  jm_wood_logs_acacia:
+    total: $var
+    name: minecraft:acacia_log
+
+  jm_wood_stripped_oak:
+    total: $var
+    name: minecraft:stripped_oak_log
+
+  jm_wood_stripped_spruce:
+    total: $var
+    name: minecraft:stripped_spruce_log
+
+  jm_wood_stripped_birch:
+    total: $var
+    name: minecraft:stripped_birch_log
+
+  jm_wood_stripped_dark_oak:
+    total: $var
+    name: minecraft:stripped_dark_oak_log
+
+  jm_wood_stripped_acacia:
+    total: $var
+    name: minecraft:stripped_acacia_log
+
+  jm_seagrass:
+    total: $var
+    name: minecraft:seagrass
+
+  jm_tropical_fish:
+    total: $var
+    name: minecraft:tropical_fish
+
+  jm_pufferfish:
+    total: $var
+    name: minecraft:pufferfish
+
+  jm_raw_cod:
+    total: $var
+    name: minecraft:cod
+
+  jm_raw_salmon:
+    total: $var
+    name: minecraft:salmon
+
+  jm_dried_kelp_blocks:
+    total: $var
+    name: minecraft:dried_kelp_block
+
+  jm_gunpowder:
+    total: $var
+    name: minecraft:gunpowder
+
+  jm_spider_eyes:
+    total: $var
+    name: minecraft:spider_eye
+
+  jm_edible_items:
+    unique: $var
+    name:
+      - minecraft:apple
+      - minecraft:beetroot
+      - minecraft:beetroot_soup
+      - minecraft:bread
+      - minecraft:cake
+      - minecraft:carrot
+      - minecraft:chorus_fruit
+      - minecraft:cookie
+      - minecraft:dried_kelp
+      - minecraft:enchanted_golden_apple
+      - minecraft:golden_apple
+      - minecraft:golden_carrot
+      - minecraft:honey_bottle
+      - minecraft:melon_slice
+      - minecraft:mushroom_stew
+      - minecraft:poisonous_potato
+      - minecraft:pufferfish
+      - minecraft:pumpkin_pie
+      - minecraft:rabbit_stew
+      - minecraft:rotten_flesh
+      - minecraft:spider_eye
+      - minecraft:suspicious_stew
+      - minecraft:sweet_berries
+      - minecraft:tropical_fish
+    groups:
+      - name:
+          - minecraft:beef
+          - minecraft:cooked_beef
+      - name:
+          - minecraft:baked_potato
+          - minecraft:potato
+      - name:
+          - minecraft:chicken
+          - minecraft:cooked_chicken
+      - name:
+          - minecraft:cod
+          - minecraft:cooked_cod
+      - name:
+          - minecraft:mutton
+          - minecraft:cooked_mutton
+      - name:
+          - minecraft:porkchop
+          - minecraft:cooked_porkchop
+      - name:
+          - minecraft:rabbit
+          - minecraft:cooked_rabbit
+      - name:
+          - minecraft:salmon
+          - minecraft:cooked_salmon
+
+  jm_firework_star:
+    name: minecraft:firework_star
+
+  jm_edible_items_hard:
+    unique: $var
+    name:
+      - minecraft:apple
+      - minecraft:beetroot
+      - minecraft:beetroot_soup
+      - minecraft:bread
+      - minecraft:cake
+      - minecraft:carrot
+      - minecraft:chorus_fruit
+      - minecraft:cookie
+      - minecraft:dried_kelp
+      - minecraft:enchanted_golden_apple
+      - minecraft:golden_apple
+      - minecraft:golden_carrot
+      - minecraft:honey_bottle
+      - minecraft:melon_slice
+      - minecraft:mushroom_stew
+      - minecraft:poisonous_potato
+      - minecraft:pufferfish
+      - minecraft:pumpkin_pie
+      - minecraft:rabbit_stew
+      - minecraft:rotten_flesh
+      - minecraft:spider_eye
+      - minecraft:suspicious_stew
+      - minecraft:sweet_berries
+      - minecraft:tropical_fish
+    groups:
+      - name:
+          - minecraft:beef
+          - minecraft:cooked_beef
+      - name:
+          - minecraft:baked_potato
+          - minecraft:potato
+      - name:
+          - minecraft:chicken
+          - minecraft:cooked_chicken
+      - name:
+          - minecraft:cod
+          - minecraft:cooked_cod
+      - name:
+          - minecraft:mutton
+          - minecraft:cooked_mutton
+      - name:
+          - minecraft:porkchop
+          - minecraft:cooked_porkchop
+      - name:
+          - minecraft:rabbit
+          - minecraft:cooked_rabbit
+      - name:
+          - minecraft:salmon
+          - minecraft:cooked_salmon
+
+  jm_different_gold:
+    unique: $var
+    name:
+      - minecraft:golden_axe
+      - minecraft:golden_boots
+      - minecraft:golden_chestplate
+      - minecraft:golden_helmet
+      - minecraft:golden_hoe
+      - minecraft:golden_horse_armor
+      - minecraft:golden_leggings
+      - minecraft:golden_pickaxe
+      - minecraft:golden_shovel
+      - minecraft:golden_sword
+
+  jm_beetroot_soup:
+    name: minecraft:beetroot_soup
+
+  jm_emerald:
+    name: minecraft:emerald
+
+  jm_magma_blocks:
+    total: $var
+    name: minecraft:magma_block
+
+  jm_damaged_anvil:
+    name: minecraft:damaged_anvil
+
+  jm_melon_slices:
+    total: $var
+    name: minecraft:melon_slice
+
+  jm_diamond_block:
+    name: minecraft:diamond_block
+
+  jm_lapis_blocks:
+    total: $var
+    name: minecraft:lapis_block
+
+  jm_different_saplings:
+    unique: $var
+    name: minecraft:.*_sapling
+
+  jm_fire_charges:
+    total: $var
+    name: minecraft:fire_charge
+
+  jm_magma_cream:
+    total: $var
+    name: minecraft:magma_cream
+
+  jm_eye_of_ender:
+    name: minecraft:ender_eye
+
+  jm_rabbit_stew:
+    name: minecraft:rabbit_stew
+
+  jm_obsidian:
+    total: $var
+    name: minecraft:obsidian
+
+  jm_iron_blocks_hard:
+    total: $var
+    name: minecraft:iron_block
+
+  jm_gold_blocks_hard:
+    total: $var
+    name: minecraft:gold_block
+
+  jm_daylight_sensor:
+    name: minecraft:daylight_detector
+
+  jm_colors_wool_hard:
+    unique: $var
+    name: minecraft:.*_wool
+
+  jm_colors_terracotta_hard:
+    unique: $var
+    name: minecraft:.*_terracotta
+
+  jm_colors_glazed_terracotta_hard:
+    unique: $var
+    name: minecraft:.*_glazed_terracotta
+
+  jm_colors_concrete_hard:
+    unique: $var
+    name: minecraft:.*_concrete
+
+  jm_colors_beds_hard:
+    unique: $var
+    name: minecraft:.*_bed
+
+  jm_different_flowers_hard:
+    unique: $var
+    name:
+      - minecraft:dandelion
+      - minecraft:poppy
+      - minecraft:blue_orchid
+      - minecraft:allium
+      - minecraft:azure_bluet
+      - minecraft:.*_tulip
+      - minecraft:oxeye_daisy
+      - minecraft:cornflower
+      - minecraft:lily_of_the_valley
+      - minecraft:wither_rose
+      - minecraft:sunflower
+      - minecraft:lilac
+      - minecraft:rose_bush
+      - minecraft:peony
+
+  jm_different_seeds:
+    unique: $var
+    name:
+      - minecraft:beetroot_seeds
+      - minecraft:melon_seeds
+      - minecraft:nether_wart
+      - minecraft:pumpkin_seeds
+      - minecraft:wheat_seeds
+
+  jm_red_nether_brick_blocks:
+    total: $var
+    name: minecraft:red_nether_bricks
+
+  jm_spectral_arrows:
+    total: $var
+    name: minecraft:spectral_arrow
+
+  jm_rotten_flesh_hard:
+    total: $var
+    name: minecraft:rotten_flesh
+
+  jm_ink_sacks_hard:
+    total: $var
+    name: minecraft:ink_sac
+
+  jm_slimeballs:
+    total: $var
+    name: minecraft:slime_ball
+
+  jm_blaze_rod:
+    name: minecraft:blaze_rod
+
+  jm_ghast_tear:
+    name: minecraft:ghast_tear
+
+  jm_glowstone_dust:
+    total: $var
+    name: minecraft:glowstone_dust
+
+  jm_item_frames:
+    total: $var
+    name: minecraft:item_frame
+
+  jm_diamond_items:
+    unique: $var
+    name:
+      - minecraft:diamond_axe
+      - minecraft:diamond_boots
+      - minecraft:diamond_chestplate
+      - minecraft:diamond_helmet
+      - minecraft:diamond_hoe
+      - minecraft:diamond_horse_armor
+      - minecraft:diamond_leggings
+      - minecraft:diamond_pickaxe
+      - minecraft:diamond_shovel
+      - minecraft:diamond_sword
+
+  jm_prismarine_crystals:
+    total: $var
+    name: minecraft:prismarine_crystals
+
+  jm_saddle:
+    name: minecraft:saddle
+
+  jm_heart_sea:
+    name: minecraft:heart_of_the_sea
+
+  jm_phantom_membrane:
+    name: minecraft:phantom_membrane
+
+  jm_buckets_4:
+    unique: 4
+    name:
+      - minecraft:water_bucket
+      - minecraft:lava_bucket
+      - minecraft:milk_bucket
+    groups:
+      name:
+        - minecraft:cod_bucket
+        - minecraft:salmon_bucket
+        - minecraft:pufferfish_bucket
+        - minecraft:tropical_fish_bucket
+
+  jm_dried_kelp_blocks_hard:
+    total: $var
+    name: minecraft:dried_kelp_block
+
+  jm_gunpowder_hard:
+    total: $var
+    name: minecraft:gunpowder
+
+  jm_spider_eyes_hard:
+    total: $var
+    name: minecraft:spider_eye
+
+  jm_ender_pearls_hard:
+    total: $var
+    name: minecraft:ender_pearl
+
+  jm_grass_block:
+    name: minecraft:grass_block
+
+  jm_sea_lanterns:
+    total: $var
+    name: minecraft:sea_lantern
+
+  jm_sponge:
+    name: minecraft:sponge
+
+  jm_cookie:
+    name: minecraft:cookie

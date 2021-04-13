@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import path, re_path
 
 from . import consumers, views
@@ -11,7 +11,8 @@ websocket_urlpatterns = [
 ]
 
 urlpatterns = [
-    path(r'rest/generate_board', views.GenerateBoardView.as_view())
+    path(r'rest/generate_board', views.GenerateBoardView.as_view()),
+    path(r'ping', lambda req: HttpResponse('Success')),
 ]
 
 if settings.DEBUG:

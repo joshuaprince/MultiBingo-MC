@@ -8,13 +8,17 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.utils import timezone
 
 from backend.log_consumer_exceptions import log_consumer_exceptions
+from backend.models import Color, Space
 from backend.models.board import Board
 from backend.models.player_board import PlayerBoard
 from backend.models.player_board_marking import PlayerBoardMarking
 from backend.serializers.board_player import BoardPlayerSerializer
 from backend.serializers.board_plugin import BoardPluginSerializer
+from backend.serializers.message_relay import MessageRelaySerializer
 from backend.serializers.player_board import PlayerBoardSerializer
 from generation.board_generator import generate_board
+from generation.goals import ConcreteGoal
+from win_detection.win_detection import winning_space_ids
 
 
 @log_consumer_exceptions
@@ -49,7 +53,7 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         action = text_data_json.get('action')
 
         if action not in self.allowed_actions:
-            print("WebSocket " + self.client_id + " attempted disallowed action " + action)
+            print(f"WebSocket {self.client_id} attempted disallowed action {{{action}}}")
             return
 
         if action == 'board_mark' and self.player_board_id:
@@ -80,6 +84,14 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
             if changed:
                 broadcast_board = True
 
+        if action == 'message_relay':
+            content_mc_tellraw = text_data_json.get('json')
+            msg = MessageRelaySerializer({
+                'sender': self.client_id,
+                'json': content_mc_tellraw,
+            })
+            await self.send_message_relay_all_consumers(msg.data)
+
         if broadcast_board:
             await self.send_board_all_consumers()
 
@@ -101,17 +113,28 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         )
 
     async def rx_mark_board_player(self, space_id, to_state: int = None, covert_marked: int = None):
-        changed = await mark_space(self.player_board_id, space_id, to_state, covert_marked)
+        changed, game_state_msg, winner = await mark_space(
+            self.player_board_id, space_id, to_state, covert_marked)
         await mark_disconnected(self.player_board_id, False)
+        if game_state_msg is not None:
+            await self.send_game_state_all_consumers(game_state_msg)
+        if winner:
+            await self.send_game_state_all_consumers({'state': 'end', 'winner': winner})
         return changed
 
     async def rx_mark_board_admin(self, space_id, to_state, player):
-        return await mark_space_admin(self.board_id, player, space_id, to_state)
+        changed, game_state_msg, winner = await mark_space_admin(
+            self.board_id, player, space_id, to_state)
+        if game_state_msg is not None:
+            await self.send_game_state_all_consumers(game_state_msg)
+        if winner:
+            await self.send_game_state_all_consumers({'state': 'end', 'winner': winner})
+        return changed
 
     async def rx_game_state(self, to_state):
         valid_states = ['start', 'end']
         if to_state in valid_states:
-            await self.send_game_state_all_consumers(to_state)
+            await self.send_game_state_all_consumers({'state': to_state})
 
     async def rx_reveal_board(self):
         changed = await reveal_board(self.board_id)
@@ -146,17 +169,30 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         )
         await self.send(text_data=json.dumps(board_states))
 
-    async def send_game_state_all_consumers(self, to_state):
+    async def send_game_state_all_consumers(self, game_state):
         await self.channel_layer.group_send(
             self.game_code, {
                 'type': 'send_game_state_to_ws',
-                'to_state': to_state,
+                'game_state': game_state,
             }
         )
 
     async def send_game_state_to_ws(self, event=None):
         await self.send(text_data=json.dumps({
-            'game_state': event['to_state']
+            'game_state': event['game_state']
+        }))
+
+    async def send_message_relay_all_consumers(self, message):
+        await self.channel_layer.group_send(
+            self.game_code, {
+                'type': 'send_message_relay_to_ws',
+                'message': message,
+            }
+        )
+
+    async def send_message_relay_to_ws(self, event=None):
+        await self.send(text_data=json.dumps({
+            'message_relay': event['message']
         }))
 
 
@@ -167,6 +203,7 @@ class PlayerWebConsumer(BaseWebConsumer):
         self.allowed_actions = [
             'board_mark',
             'reveal_board',
+            # 'message',
         ]
 
     async def connect(self):
@@ -214,16 +251,17 @@ class PluginBackendConsumer(BaseWebConsumer):
             'game_state',
             'reveal_board',
             'set_automarks',
+            'message_relay',
         ]
 
     async def connect(self):
         await super().connect()
-        self.client_id = '{' + self.scope['url_route']['kwargs'].get('client_id') + '}'
-        print(f"{self.client_id} joined game {self.game_code}.")
+        self.client_id = self.scope['url_route']['kwargs'].get('client_id')
+        print(f"{{{self.client_id}}} joined game {self.game_code}.")
 
     async def disconnect(self, code):
         await super().disconnect(code)
-        print(f"{self.client_id} disconnected from game {self.game_code}.")
+        print(f"{{{self.client_id}}} disconnected from game {self.game_code}.")
 
     async def send_board_to_ws(self, event=None):
         board = await database_sync_to_async(BoardPluginSerializer.from_id)(self.board_id)
@@ -265,20 +303,59 @@ def mark_space(player_board_id: int, space_id: int,
                to_state: int = None, covert_marked: bool = None):
     """
     Mark a space on a player's board.
-    :return: True if the markings on the board were changed, False otherwise.
+    :return: (changed, announcement) - changed is a bool that indicates whether the board was
+             changed with this marking. announcement is an optional object that contains the
+             announcement that should be made, if any.
     """
-    player_board_obj = PlayerBoard.objects.get(pk=player_board_id)
-    return player_board_obj.mark_space(space_id, to_state, covert_marked)
+    player_board_obj = PlayerBoard.objects.select_related('board').get(pk=player_board_id)
+    changed, announce = player_board_obj.mark_space(space_id, to_state, covert_marked)
+
+    winner = None
+    if player_board_obj.board.winner is None and winning_space_ids(player_board_obj):
+        winner = player_board_obj.player_name
+        player_board_obj.board.winner = player_board_obj
+        player_board_obj.board.save()
+
+    if announce:
+        space = Space.objects.get(pk=space_id)
+        game_state = {
+            'state': 'marking',
+            'marking_type': 'invalidate' if Color(to_state) == Color.INVALIDATED else 'complete',
+            'player': player_board_obj.player_name,
+            'goal': ConcreteGoal.from_space(space).description(),
+        }
+        return changed, game_state, winner
+    else:
+        return changed, None, winner
 
 
 @database_sync_to_async
 def mark_space_admin(board_id: int, player_name: str, space_id: int, to_state: int):
     """
     Mark a space on a player's board.
-    :return: True if the board was changed, False otherwise.
+    :return: (changed, announce) - a pair of booleans that indicate whether the board was
+             changed and whether it should be announced.
     """
     player_board_obj = PlayerBoard.objects.get_or_create(board_id=board_id, player_name=player_name)[0]
-    return player_board_obj.mark_space(space_id, to_state)
+    changed, announce = player_board_obj.mark_space(space_id, to_state)
+
+    winner = None
+    if player_board_obj.board.winner is None and winning_space_ids(player_board_obj):
+        winner = player_board_obj.player_name
+        player_board_obj.board.winner = player_board_obj
+        player_board_obj.board.save()
+
+    if announce:
+        space = Space.objects.get(pk=space_id)
+        game_state = {
+            'state': 'marking',
+            'marking_type': 'invalidate' if Color(to_state) == Color.INVALIDATED else 'complete',
+            'player': player_board_obj.player_name,
+            'goal': ConcreteGoal.from_space(space).description(),
+        }
+        return changed, game_state, winner
+    else:
+        return changed, None, winner
 
 
 @database_sync_to_async

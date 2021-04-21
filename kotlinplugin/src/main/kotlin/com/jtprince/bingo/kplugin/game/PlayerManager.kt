@@ -69,6 +69,7 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) {
         if (player != null || !createRemote) return player
 
         /* Player does not exist. Create a new one. */
+        BingoPlugin.logger.info("Creating new Remote player $name.")
         val newBingoPlayer = BingoPlayerRemote(name)
         remotePlayers.add(newBingoPlayer)
         return newBingoPlayer

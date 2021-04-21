@@ -33,10 +33,7 @@ object BingoConfig {
     val saveWorlds: Boolean
         get() = BingoPlugin.config.getBoolean("save_worlds", true)
 
-    fun websocketUrl(gameCode: String, players: Collection<BingoPlayer>): Url {
-        val playersStr = players.map(BingoPlayer::slugName).joinToString(",")
-        val clientId = "KotlinPlugin${hashCode() % 10000}:${playersStr}"
-
+    fun websocketUrl(gameCode: String, clientId: String): Url {
         val builder = URLBuilder(webUrl)
         builder.path("ws", "board-plugin", gameCode, clientId)
         builder.protocol = when(builder.protocol) {

@@ -18,21 +18,25 @@ repositories {
 }
 
 dependencies {
-    shadow("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
+    val paperVersion = "1.16.5"
+    val ktorVersion = "1.5.3"
+    val jacksonVersion = "2.12.2"
+
+    shadow("com.destroystokyo.paper", "paper-api", "$paperVersion-R0.1-SNAPSHOT")
 
     implementation(kotlin("stdlib"))
-    implementation("io.ktor", "ktor-client-core", "1.5.3")
-    implementation("io.ktor", "ktor-client-websockets", "1.5.3")
-    implementation("io.ktor", "ktor-client-cio", "1.5.3")
-    implementation("io.ktor", "ktor-client-jackson", "1.5.3")
+    implementation("io.ktor", "ktor-client-core", ktorVersion)
+    implementation("io.ktor", "ktor-client-websockets", ktorVersion)
+    implementation("io.ktor", "ktor-client-cio", ktorVersion)
+    implementation("io.ktor", "ktor-client-jackson", ktorVersion)
     implementation("dev.jorel", "commandapi-shade", "5.9")
-    implementation("com.fasterxml.jackson.core", "jackson-core", "2.12.2")
-    implementation("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", "2.12.2")
-    implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", "2.12.2")
+    implementation("com.fasterxml.jackson.core", "jackson-core", jacksonVersion)
+    implementation("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", jacksonVersion)
+    implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", jacksonVersion)
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
-    testImplementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
+    testImplementation("com.destroystokyo.paper", "paper-api", "$paperVersion-R0.1-SNAPSHOT")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
 }
 
@@ -40,7 +44,7 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>() {
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 
@@ -53,7 +57,6 @@ tasks.processResources {
 
 tasks {
     assemble {
-        dependsOn.add(project.tasks.shadowJar)
         dependsOn.add(project.tasks.shadowJar)
     }
 

@@ -24,7 +24,8 @@ class PlayerBoard(models.Model):
     def mark_space(self, space_id: int, to_state: Color = None, covert_marked: bool = None):
         """
         Mark a space on this player's board to a specified state.
-        :return: True if the board was changed, False otherwise.
+        :return: (changed, announce) - a pair of booleans that indicate whether the board was
+                 changed and whether it should be announced.
         """
         marking = self.playerboardmarking_set.get(space_id=space_id)
         changed = False
@@ -35,10 +36,15 @@ class PlayerBoard(models.Model):
             marking.covert_marked = covert_marked
             changed = True
 
+        announce = False
+        if changed and to_state in [Color.COMPLETE, Color.INVALIDATED] and not marking.announced:
+            marking.announced = True
+            announce = True
+
         if changed:
             marking.save()
 
-        return changed
+        return changed, announce
 
 
 @receiver(post_save, sender=PlayerBoard)

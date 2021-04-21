@@ -29,6 +29,13 @@ export const onApiMessage = (setState: SetState, message: any) => {
     const pbs = z.array(TPlayerBoard).parse(message["pboards"]);
     setState(state => ({...state, playerBoards: pbs}));
   }
+
+  if (message.hasOwnProperty("message")) {
+    /* TODO
+    const msg = TMessage.parse(message["message"]);
+    setState(state => ({...state, messages: [msg, ...state.messages]}));
+     */
+  }
 }
 
 export const getWebSocketUrl = (gameCode: string, playerName?: string) => {

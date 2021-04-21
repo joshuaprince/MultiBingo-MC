@@ -31,6 +31,8 @@ def generate_board(game_code: str = None,
     :return: The newly created Board instance.
     """
     game_code = game_code or _get_random_game_code()
+    # TODO: In theory, game_code could be randomized to one that already exists. This would cause
+    #       the response to be a 400 most likely.
     rand = random.Random(seed)
     easy_proportion = rand.uniform(0.25, 0.4)  # Proportion of goals on the board that are easier
 

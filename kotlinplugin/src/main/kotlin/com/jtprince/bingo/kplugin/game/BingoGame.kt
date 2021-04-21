@@ -1,6 +1,6 @@
 package com.jtprince.bingo.kplugin.game
 
-import com.jtprince.bingo.kplugin.Messages.bingoTell
+import com.jtprince.bingo.kplugin.Messages.bingoTellError
 import com.jtprince.bingo.kplugin.board.SetVariables
 import com.jtprince.bingo.kplugin.board.Space
 import com.jtprince.bingo.kplugin.player.BingoPlayer
@@ -70,15 +70,17 @@ abstract class BingoGame(
                 val protoGame = currentGame ?: return@generateBoard
 
                 if (gameCode == null) {
-                    creator.bingoTell("Board generation failed.")
+                    creator.bingoTellError(
+                        "Board generation failed. Check the server log for errors."
+                    )
                     protoGame.state = State.FAILED
                     return@generateBoard
                 }
 
                 if (protoGame.state == State.BOARD_GENERATING) {
                     // Only move to the WebBackedGame if nothing else changed in the meantime.
-                    currentGame = WebBackedGame(
-                        creator, gameCode, BingoPlayerFactory.createPlayers())
+                    val bingoPlayers = BingoPlayerFactory.createPlayers()
+                    currentGame = WebBackedGame(creator, gameCode, bingoPlayers)
                 }
             }
         }

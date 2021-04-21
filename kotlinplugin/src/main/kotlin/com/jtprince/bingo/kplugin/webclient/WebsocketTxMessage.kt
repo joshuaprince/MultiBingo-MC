@@ -11,6 +11,7 @@ abstract class WebsocketTxMessage(
         REVEAL_BOARD("reveal_board"),
         MARK_SPACE("board_mark_admin"),
         SET_AUTO_MARKS("set_automarks"),
+        MESSAGE_RELAY("message_relay"),
     }
 }
 
@@ -31,3 +32,7 @@ class TxMessageMarkSpace(
 class TxMessageSetAutoMarks(
     @JsonProperty("space_ids") val playerSpaceIdsMap: Map<String, Collection<Int>>,
 ) : WebsocketTxMessage(Action.SET_AUTO_MARKS)
+
+class TxMessageMessageRelay(  // Oh boy, this is a good one to rename.
+    @JsonProperty("json") val json: String,
+) : WebsocketTxMessage(Action.MESSAGE_RELAY)

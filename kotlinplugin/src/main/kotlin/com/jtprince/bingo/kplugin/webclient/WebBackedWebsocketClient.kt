@@ -2,10 +2,10 @@ package com.jtprince.bingo.kplugin.webclient
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.jtprince.bingo.kplugin.BingoConfig
 import com.jtprince.bingo.kplugin.BingoPlugin
 import io.ktor.client.*
 import io.ktor.client.features.websocket.*
-import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
 import io.ktor.utils.io.errors.*
 import kotlinx.coroutines.*
@@ -17,7 +17,7 @@ import java.util.logging.Level
 
 class WebBackedWebsocketClient(
     private val gameCode: String,
-    private val url: Url,
+    internal val clientId: String,
     private val onReceive: (WebsocketRxMessage) -> Unit,
     private val onFailure: () -> Unit,
 ) {
@@ -25,6 +25,7 @@ class WebBackedWebsocketClient(
     private val client = HttpClient {
         install(WebSockets)
     }
+    private val url = BingoConfig.websocketUrl(gameCode, clientId)
 
     private val txQueue = Channel<WebsocketTxMessage>(32, BufferOverflow.DROP_OLDEST) {
         BingoPlugin.logger.severe("Dropping websocket message ${it.action}")
@@ -122,5 +123,9 @@ class WebBackedWebsocketClient(
 
     fun sendAutoMarks(playerSpaceIdsMap: Map<String, Collection<Int>>) {
         txQueue.sendBlocking(TxMessageSetAutoMarks(playerSpaceIdsMap))
+    }
+
+    fun sendMessage(msgJson: String) {
+        txQueue.sendBlocking(TxMessageMessageRelay(msgJson))
     }
 }

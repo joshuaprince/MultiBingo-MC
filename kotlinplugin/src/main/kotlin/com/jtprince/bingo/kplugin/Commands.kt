@@ -1,6 +1,6 @@
 package com.jtprince.bingo.kplugin
 
-import com.jtprince.bingo.kplugin.Messages.bingoTell
+import com.jtprince.bingo.kplugin.Messages.bingoTellError
 import com.jtprince.bingo.kplugin.automark.AutoMarkTrigger
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.game.WebBackedGameProto
@@ -133,7 +133,7 @@ object Commands {
 
     private fun commandStart(sender: CommandSender) {
         val game = BingoGame.currentGame ?: run {
-            sender.bingoTell("No game is prepared! Use /bingo prepare")
+            sender.bingoTellError("No game is prepared! Use /bingo prepare")
             return
         }
 
@@ -142,7 +142,7 @@ object Commands {
 
     private fun commandEnd(sender: CommandSender) {
         val game = BingoGame.currentGame ?: run {
-            sender.bingoTell("No game is running!")
+            sender.bingoTellError("No game is running!")
             return
         }
 
@@ -162,7 +162,7 @@ object Commands {
                     world(World.Environment.NORMAL)?.spawnLocation
 
             if (loc == null) {
-                sender.bingoTell("Couldn't send you to that player's world.")
+                sender.bingoTellError("Couldn't send you to that player's world.")
             } else {
                 sender.teleport(loc)
             }

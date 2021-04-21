@@ -1,15 +1,17 @@
 package com.jtprince.bingo.kplugin.game
 
-import com.jtprince.bingo.kplugin.BingoConfig
 import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.Messages
 import com.jtprince.bingo.kplugin.Messages.bingoTell
+import com.jtprince.bingo.kplugin.Messages.bingoTellError
 import com.jtprince.bingo.kplugin.Messages.bingoTellNotReady
 import com.jtprince.bingo.kplugin.board.Space
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.webclient.WebBackedWebsocketClient
+import com.jtprince.bingo.kplugin.webclient.WebMessageRelay
 import com.jtprince.bingo.kplugin.webclient.WebsocketRxMessage
 import com.jtprince.bingo.kplugin.webclient.model.WebModelBoard
+import com.jtprince.bingo.kplugin.webclient.model.WebModelGameState
 import com.jtprince.bingo.kplugin.webclient.model.WebModelPlayerBoard
 import org.bukkit.command.CommandSender
 
@@ -20,9 +22,13 @@ class WebBackedGame(
 ) : BingoGame(creator, gameCode, players) {
 
     override var state: State = State.WAITING_FOR_WEBSOCKET
+    private val clientId = "KotlinPlugin${hashCode() % 10000}:" +
+            players.map(BingoPlayer::slugName).joinToString(",")
     private val websocketClient = WebBackedWebsocketClient(
-        gameCode, BingoConfig.websocketUrl(gameCode, players), this::receiveMessage,
-        this::receiveFailedConnection)
+        gameCode, clientId, this::receiveMessage,
+        this::receiveFailedConnection
+    )
+    private val messageRelay = WebMessageRelay(websocketClient)
     private val playerBoardCache = players.associateWith(::PlayerBoardCache)
 
     /* Both of the following must be ready for the game to be put in the "READY" state */
@@ -48,6 +54,7 @@ class WebBackedGame(
         BingoPlugin.server.scheduler.runTask(BingoPlugin) { ->
             Messages.bingoAnnouncePreparingGame(gameCode)
             val players = playerManager.localPlayers
+            Messages.bingoTellTeams(players)
             for (p in players) {
                 playerManager.prepareWorldSet(gameCode, p)
                 /* Allow for early destruction. */
@@ -83,7 +90,7 @@ class WebBackedGame(
 
     override fun signalEnd(sender: CommandSender?) {
         if (state <= State.READY) {
-            sender?.bingoTell("The game is not running!")
+            sender?.bingoTellError("The game is not running!")
             return
         }
 
@@ -93,6 +100,7 @@ class WebBackedGame(
     override fun signalDestroy(sender: CommandSender?) {
         // Spaces are destroyed in the superclass.
         sender?.bingoTell("Game destroyed.")
+        messageRelay.destroy()
         websocketClient.destroy()
         startEffects.destroy()
     }
@@ -114,7 +122,8 @@ class WebBackedGame(
     private fun receiveMessage(msg: WebsocketRxMessage) {
         msg.board?.run(this::receiveBoard)
         msg.pboards?.run(this::receivePlayerBoards)
-        msg.gameState?.run(this::receiveGameStateTransition)
+        msg.gameState?.run(this::receiveGameState)
+        msg.messageRelay?.run(messageRelay::receive)
     }
 
     private fun receiveFailedConnection() {
@@ -125,7 +134,7 @@ class WebBackedGame(
 
     private fun receiveBoard(board: WebModelBoard) {
         if (spaces.isNotEmpty()) {
-            BingoPlugin.logger.warning("Received another board, ignoring it.")  // TODO
+            BingoPlugin.logger.fine("Received another board, ignoring it.")  // TODO
             return
         }
 
@@ -149,20 +158,14 @@ class WebBackedGame(
 
     private fun receivePlayerBoards(playerBoards: List<WebModelPlayerBoard>) {
         for (pb in playerBoards) {
-            // TODO Do we even need remote players any more?
             val player = playerManager.bingoPlayer(pb.playerName, false) ?: continue
             playerBoardCache[player]?.updateFromWeb(pb)
-            if (pb.win && winner == null) {
-                winner = player
-                // TODO The backend should send the "game end" state transition.
-                receiveGameStateTransition("end")
-            }
         }
     }
 
-    private fun receiveGameStateTransition(newGameState: String) {
-        when (newGameState) {
-            "start" -> {
+    private fun receiveGameState(msg: WebModelGameState) {
+        return when (msg) {
+            is WebModelGameState.Start -> {
                 if (state != State.READY) {
                     BingoPlugin.logger.warning(
                         "Web backend sent a Start Game message when game is not ready. Ignoring."
@@ -173,7 +176,19 @@ class WebBackedGame(
                 state = State.COUNTING_DOWN
                 startEffects.doStartEffects()
             }
-            "end" -> {
+            is WebModelGameState.Marking -> {
+                val player = playerManager.bingoPlayer(msg.player, true)!!
+                val invalidate = when (msg.markingType) {
+                    "complete" -> false
+                    "invalidate" -> true
+                    else -> run {
+                        BingoPlugin.logger.severe("Unknown game_state marking_type ${msg.markingType}")
+                        return
+                    }
+                }
+                Messages.bingoAnnouncePlayerMarking(player, msg.goalText, invalidate)
+            }
+            is WebModelGameState.End -> {
                 if (state != State.RUNNING && state != State.COUNTING_DOWN) {
                     BingoPlugin.logger.warning(
                         "Web backend sent an End Game message when game is not running. Ignoring."
@@ -182,12 +197,10 @@ class WebBackedGame(
                 }
 
                 state = State.DONE
-                Messages.bingoAnnounceEnd()
+
+                val winner = msg.winner?.let { playerManager.bingoPlayer(it, false) }
+                Messages.bingoAnnounceEnd(winner)
                 startEffects.doEndEffects(winner)
-            }
-            else -> {
-                BingoPlugin.logger.severe(
-                    "Web backend sent an unrecognized game state transition: $newGameState")
             }
         }
     }

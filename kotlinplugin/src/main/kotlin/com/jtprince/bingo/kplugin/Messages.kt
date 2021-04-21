@@ -1,6 +1,5 @@
 package com.jtprince.bingo.kplugin
 
-import com.jtprince.bingo.kplugin.Messages.bingoTell
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.BingoPlayerTeam
@@ -8,7 +7,6 @@ import com.jtprince.util.ChatUtils
 import io.ktor.http.*
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.NamedTextColor
@@ -24,7 +22,7 @@ object Messages {
     private val HEADER = Component.text("[BINGO]")
         .color(COLOR_HEADER).decoration(TextDecoration.BOLD, true)
 
-    private fun TextComponent.withBingoHeader(): TextComponent {
+    private fun Component.withBingoHeader(): Component {
         val gameCode = BingoGame.currentGame?.gameCode
         var builder = Component.empty().color(COLOR_TEXT)
         builder = if (gameCode != null) {
@@ -37,11 +35,11 @@ object Messages {
         return builder.append(Component.space()).append(this)
     }
 
-    private fun sendWithHeader(a: Audience, component: TextComponent) {
+    private fun sendWithHeader(a: Audience, component: Component) {
         a.sendMessage(component.withBingoHeader())
     }
 
-    private fun announceWithHeader(component: TextComponent) {
+    private fun announceWithHeader(component: Component) {
         Bukkit.getServer().sendMessage(component.withBingoHeader())
     }
 
@@ -51,7 +49,11 @@ object Messages {
         bingoTell(Component.text(msg))
     }
 
-    fun Audience.bingoTell(msg: TextComponent) {
+    fun Audience.bingoTellError(msg: String) {
+        bingoTell(Component.text(msg).color(NamedTextColor.RED))
+    }
+
+    fun Audience.bingoTell(msg: Component) {
         sendWithHeader(this, msg)
     }
 
@@ -59,18 +61,20 @@ object Messages {
         bingoAnnounce(Component.text(msg))
     }
 
-    fun bingoAnnounce(msg: TextComponent) {
+    fun bingoAnnounce(msg: Component) {
         announceWithHeader(msg)
     }
 
     fun bingoAnnouncePreparingGame(gameCode: String) {
-        var component: TextComponent = Component
+        val component = Component
             .text("Generating worlds for new game ")
             .append(Component.text(gameCode).color(NamedTextColor.BLUE))
             .append(Component.text("."))
         announceWithHeader(component)
-        component = Component.text("This will cause the server to lag!")
-        announceWithHeader(component)
+        Bukkit.getServer().sendActionBar(
+            Component.text("Generating Worlds - Server will lag!")
+                .color(NamedTextColor.GOLD)
+        )
     }
 
     fun bingoAnnounceGameFailed() {
@@ -81,7 +85,7 @@ object Messages {
     }
 
     fun bingoAnnounceWorldsGenerated(players: Collection<BingoPlayer>) {
-        val playersCpnt: TextComponent = ChatUtils.commaSeparated(
+        val playersCpnt = ChatUtils.commaSeparated(
             players.map(BingoPlayer::formattedName))
         val component = Component
             .text("Bingo worlds have been generated for ")
@@ -93,11 +97,10 @@ object Messages {
     }
 
     fun bingoAnnounceGameReady(gameCode: String, players: Collection<BingoPlayer>, starters: Audience) {
-        var component: TextComponent
         for (p in players) {
             // Game link for this specific player
             val url: Url = BingoConfig.gameUrl(gameCode, p)
-            component = Component.empty()
+            val component = Component.empty()
                 .append(
                     Component.text("[Open Board]")
                         .decoration(TextDecoration.UNDERLINED, true)
@@ -109,7 +112,7 @@ object Messages {
                 sendWithHeader(bukkitPlayer, component)
             }
         }
-        component = Component.text("[START]")
+        val component = Component.text("[START]")
             .decoration(TextDecoration.UNDERLINED, true)
             .color(NamedTextColor.GREEN)
             .clickEvent(ClickEvent.runCommand("/bingo start"))
@@ -118,7 +121,7 @@ object Messages {
     }
 
     fun bingoAnnouncePlayerMarking(player: BingoPlayer, spaceText: String, invalidated: Boolean) {
-        val component: TextComponent = if (!invalidated) {
+        val component = if (!invalidated) {
             Component.empty()
                 .append(player.formattedName)
                 .append(Component.text(" has marked "))
@@ -134,27 +137,25 @@ object Messages {
         announceWithHeader(component)
     }
 
-    fun bingoAnnounceEnd() {
+    fun bingoAnnounceEnd(winner: BingoPlayer?) {
         bingoAnnounce(Component.text("The game has ended!"))
-    }
-
-    fun bingoAnnouncePlayerVictory(player: BingoPlayer) {
-        val component: TextComponent = Component.empty()
-            .color(NamedTextColor.GOLD)
-            .append(player.formattedName)
-            .append(Component.text(" has won the game!"))
-        announceWithHeader(component)
+        winner?.also {
+            val component = Component.empty()
+                .color(NamedTextColor.GOLD)
+                .append(it.formattedName)
+                .append(Component.text(" is the winner!"))
+            announceWithHeader(component)
+        }
     }
 
     fun Audience.bingoTellNotReady() {
-        bingoTell(Component.text("The game is not ready to be started!")
-            .color(NamedTextColor.RED))
+        bingoTellError("The game is not ready to be started!")
     }
 
     fun bingoTellTeams(players: Collection<BingoPlayer>) {
         for (bp in players) {
             if (bp is BingoPlayerTeam) {
-                val component: Component = Component.text("You are playing on team ")
+                val component = Component.text("You are playing on team ")
                     .append(bp.formattedName)
                     .append(Component.text("!"))
                 Audience.audience(bp.bukkitPlayers).sendMessage(component)

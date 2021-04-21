@@ -117,6 +117,23 @@ Indicates to the server that this client is tracking and automatically marking
 the board for these space IDs.
 
 
+### message_relay
+Example:
+```json
+{
+  "action": "message_relay",
+  "json": "{\"text\": \"a\"}"
+}
+```
+
+Availability: Plugin socket only.
+
+Sends a message that will be relayed to all connected clients, intended to be
+used to broadcast server events such as chat, player advancements, deaths, and
+so on in Minecraft. The `message.minecraft` field must contain the message
+formatted
+as [Raw Minecraft JSON](https://minecraft.fandom.com/wiki/Raw_JSON_text_format).
+
 ## Server to Client API
 
 ### Board (Player)
@@ -213,6 +230,10 @@ board. Each Goal object consists of:
 - A `type` field, which contains the goal type (default or negative).
 - An optional `variables` object, which lists any variables present on this 
   goal.
+  
+The web backend may send multiple copies of this packet to a Plugin during the
+course of a game. Any packets after the first may be ignored. This means that
+a board may not be modified after a Plugin websocket is opened.
 
 ### Player Boards
 
@@ -257,12 +278,71 @@ game, or null if the plyer is still connected.
 
 ### Game State Change
 
-This packet is relayed directly from the client-to-server `game_state` API. 
-It indicates to any plugin backends connected to either start or end the game.
-Example:
+This packet signals game state changes (start, end) and board markings.
+There are multiple types of `game_state` packets:
+
+#### Game Start
 
 ```json
 {
-  "game_state": "start"
+  "game_state": {
+    "state": "start"
+  }
 }
 ```
+
+Signals to all clients that the game is starting in 7 seconds.
+
+#### Marking
+
+```json
+{
+  "game_state": {
+    "state": "marking",
+    "marking_type": "complete",
+    "player": "Alice",
+    "goal": "64 Cobblestone"
+  }
+}
+```
+
+Indicates that a player has marked a space *for the first time*. This packet
+must only be used to display a message to the player that something has been
+marked; for an authoritative callback for marking changes, use [Player 
+Boards](#player-boards) instead.
+
+`marking_type` is either "complete" or "invalidate".
+
+#### Game End
+
+```json
+{
+  "game_state": {
+    "state": "end",
+    "winner": "Alice"
+  }
+}
+```
+
+Indicates that the game has ended, along with the winner if there is one.
+`winner` may be null.
+
+### Minecraft Message Relay
+
+This packet relays a message from one Minecraft server to another, such as a 
+chat or player death message. Example:
+
+```json
+{
+  "message_relay": {
+    "sender": "KotlinPlugin1234:Alice,Bob",
+    "json": "{\"text\": \"a\"}"
+  }
+}
+```
+
+`sender` is the client ID of the Bingo Plugin that sent this message. To 
+avoid doubled messages, a client should not print a message whose sender is its
+own client ID.
+
+

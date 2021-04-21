@@ -8,6 +8,7 @@ import { SecondaryBoardsSidebar } from "./component/SecondaryBoardsSidebar";
 import { getWebSocketUrl, onApiMessage, updateWebSocket } from "./api";
 import { LoadingSpinner } from "./component/LoadingSpinner";
 import { RevealButton } from "./component/RevealButton";
+import { IGameMessage } from "./interface/IGameMessage";
 
 type IProps = {
   gameCode: string;
@@ -17,6 +18,7 @@ type IProps = {
 export type IBingoGameState = {
   board: IBoard;
   playerBoards: IPlayerBoard[];
+  messages: IGameMessage[];
   connecting: boolean;
 }
 
@@ -55,6 +57,7 @@ export const BingoGame: React.FunctionComponent<IProps> = (props: IProps) => {
       <SecondaryBoardsSidebar board={state.board} playerBoards={secondaryPlayers}/>
       {state.connecting && <LoadingSpinner/>}
       {state.board.obscured && <RevealButton/>}
+      {/*<ChatBox messages={state.messages}/>*/}
     </div>
   );
 }
@@ -70,5 +73,6 @@ const getInitialState: (() => IBingoGameState) = () => {
     board: board,
     connecting: true,
     playerBoards: [],
+    messages: [],
   };
 }

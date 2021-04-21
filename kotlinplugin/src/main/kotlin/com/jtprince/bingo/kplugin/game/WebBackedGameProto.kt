@@ -3,8 +3,8 @@ package com.jtprince.bingo.kplugin.game
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.Messages
-import com.jtprince.bingo.kplugin.Messages.bingoTell
 import com.jtprince.bingo.kplugin.Messages.bingoTellNotReady
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import org.bukkit.command.CommandSender
@@ -38,7 +38,7 @@ class WebBackedGameProto(
 
     override fun signalEnd(sender: CommandSender?) {
         state = State.DONE
-        Messages.bingoAnnounceEnd()
+        Messages.bingoAnnounceEnd(null)
     }
 
     override fun signalDestroy(sender: CommandSender?) {
@@ -46,6 +46,9 @@ class WebBackedGameProto(
     }
 
     override fun receiveAutomark(bingoPlayer: BingoPlayer, spaceId: Int, satisfied: Boolean) {
-        TODO("Not yet implemented")
+        BingoPlugin.logger.severe(
+            "Received an automarking for ${bingoPlayer.name} during a Proto Game... " +
+                    "that shouldn't be possible, nag the developer."
+        )
     }
 }

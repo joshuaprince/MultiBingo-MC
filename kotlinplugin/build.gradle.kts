@@ -55,9 +55,21 @@ tasks.processResources {
     }
 }
 
+val dumpAutomatedGoals = task("dumpAutomatedGoals", JavaExec::class) {
+    val outfile = "automated_goals.txt"
+    inputs.dir("src/main/kotlin/com/jtprince/bingo/kplugin/automark")
+    inputs.dir("src/main/resources")
+    outputs.file(outfile)
+
+    main = "com.jtprince.bingo.kplugin.automark.AutomatedGoalList"
+    classpath = sourceSets.main.get().runtimeClasspath + sourceSets.main.get().compileClasspath
+    args(outfile)
+}
+
 tasks {
     assemble {
         dependsOn.add(project.tasks.shadowJar)
+        dependsOn.add(dumpAutomatedGoals)
     }
 
     named<ShadowJar>("shadowJar") {

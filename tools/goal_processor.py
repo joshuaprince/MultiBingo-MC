@@ -17,7 +17,7 @@ def _load_plugin_triggers():
     if _PLUGIN_TRIGGERED_GOAL_IDS:
         return
 
-    auto_goals_txt = pathlib.Path(__file__).parent.parent / 'plugin' / 'automated_goals.txt'
+    auto_goals_txt = pathlib.Path(__file__).parent.parent / 'kotlinplugin' / 'automated_goals.txt'
 
     if not auto_goals_txt.exists():
         raise FileNotFoundError("Assemble the plugin to generate automated_goals.txt")

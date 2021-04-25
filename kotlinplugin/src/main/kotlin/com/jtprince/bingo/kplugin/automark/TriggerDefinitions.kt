@@ -378,7 +378,7 @@ val dslRegistry = TriggerDslRegistry {
         event.throughNight() && event.player.location.inVillage()
     }
 
-    eventTrigger<EntityTameEvent>("jm_tame_cat") {
+    eventTrigger<EntityTameEvent>("jtp_tame_cat") {
         // Tame a cat
         event.entityType == EntityType.CAT
     }

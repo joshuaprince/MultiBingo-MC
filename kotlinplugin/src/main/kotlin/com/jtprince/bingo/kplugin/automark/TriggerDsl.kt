@@ -8,7 +8,6 @@ package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import org.bukkit.event.Event
-import org.bukkit.inventory.ItemStack
 import kotlin.reflect.KClass
 
 /**
@@ -91,8 +90,9 @@ internal class EventTriggerDefinition<EventType: Event>(
 ) : TriggerDslDefinition() {
     class Parameters<EventType: Event>(
         val event: EventType,
-        val trigger: EventTrigger<EventType>,
+        trigger: EventTrigger<EventType>,
     ) {
+        val goalId = trigger.goalId
         val vars = trigger.variables
     }
 }
@@ -114,8 +114,7 @@ internal class SpecialItemTriggerDefinition(
     val function: (Parameters) -> Boolean
 ) : TriggerDslDefinition() {
     class Parameters(
-        val player: BingoPlayer,
-        val inventory: Collection<ItemStack>,
+        val inventory: BingoInventory,
         trigger: SpecialItemTrigger,
     ) {
         val vars = trigger.variables

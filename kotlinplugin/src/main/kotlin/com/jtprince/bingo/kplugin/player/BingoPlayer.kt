@@ -1,11 +1,13 @@
 package com.jtprince.bingo.kplugin.player
 
+import com.jtprince.bingo.kplugin.automark.BingoInventory
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.ForwardingAudience
 import net.kyori.adventure.text.Component
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.PlayerInventory
 
 abstract class BingoPlayer : ForwardingAudience {
     /**
@@ -32,8 +34,12 @@ abstract class BingoPlayer : ForwardingAudience {
     /**
      * The list of [ItemStack]s made up of the collective of all online players' inventories.
      */
-    val inventory: Collection<ItemStack>
-        get() = bukkitPlayers.map { p -> p.inventory + p.itemOnCursor }.flatten().filterNotNull()
+    val inventory = object: BingoInventory {
+        override val items: Collection<ItemStack>
+            get() = bukkitPlayers.map { it.inventory + it.itemOnCursor }.flatten().filterNotNull()
+        override val playerInventories: Collection<PlayerInventory>
+            get() = bukkitPlayers.map { it.inventory }
+    }
 
     /**
      * The Player's name with Spaces stripped out.

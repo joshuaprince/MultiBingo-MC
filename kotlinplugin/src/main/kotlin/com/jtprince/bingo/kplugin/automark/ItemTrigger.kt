@@ -1,49 +1,49 @@
 package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.board.SetVariables
-import com.jtprince.bingo.kplugin.game.PlayerManager
-import com.jtprince.bingo.kplugin.player.BingoPlayer
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
 import kotlin.math.min
 
 open class ItemTrigger internal constructor(
-    goalId: String,
-    spaceId: Int,
-    variables: SetVariables,
-    playerManager: PlayerManager,
-    callback: AutoMarkCallback,
+    val goalId: String,
+    val spaceId: Int,
+    val variables: SetVariables,
+    private val playerMapper: EventPlayerMapper,
+    private val listener: AutoMarkBukkitListener?,
+    private val callback: AutoMarkCallback?,
     private val rootMatchGroup: ItemTriggerYaml.MatchGroup?,
-) : AutoMarkTrigger(goalId, spaceId, variables, playerManager, callback) {
+) : AutoMarkTrigger {
 
-    override val revertible = true
+    protected open val revertible = true
 
-    private val listenerRegistryId = AutoMarkBukkitListener.registerInventoryChange(
+    private val listenerRegistryId = listener?.registerInventoryChange(
         AutoMarkBukkitListener.Callback(Event::class) {
             eventRaised(it)
         })
 
     override fun destroy() {
-        AutoMarkBukkitListener.unregister(listenerRegistryId)
+        listenerRegistryId?.let { listener?.unregister(it) }
     }
 
     /**
      * Listener callback that is called EVERY time anyone on the server's inventory changes.
      */
     private fun eventRaised(event: Event) {
-        val player = EventTrigger.forWhom(playerManager, event) ?: return
-        val satisfied = satisfiedBy(player)
-        // Always call callback, since ItemTriggers are always revertible.
-        callback(player, spaceId, satisfied)
+        val player = playerMapper.mapEvent(event) ?: return
+        val satisfied = satisfiedBy(player.inventory)
+
+        if (revertible || satisfied) {
+            callback?.invoke(player, spaceId, satisfied)
+        }
     }
 
     /**
      * Returns whether a set of items meets the criteria for this Item Trigger.
      */
-    protected open fun satisfiedBy(player: BingoPlayer): Boolean {
-        val inventory = player.inventory
+    internal open fun satisfiedBy(inventory: BingoInventory): Boolean {
         val rootMatchGroup = rootMatchGroup ?: return false
-        val rootUT = effectiveUT(rootMatchGroup, inventory)
+        val rootUT = effectiveUT(rootMatchGroup, inventory.items)
         return rootUT.u >= rootMatchGroup.unique(variables)
                 && rootUT.t >= rootMatchGroup.total(variables)
     }

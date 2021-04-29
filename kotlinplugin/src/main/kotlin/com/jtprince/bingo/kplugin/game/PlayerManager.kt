@@ -2,16 +2,27 @@ package com.jtprince.bingo.kplugin.game
 
 import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.WorldManager
+import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.BingoPlayerRemote
 import org.bukkit.OfflinePlayer
 import org.bukkit.World
 import org.bukkit.entity.Player
+import org.bukkit.event.Event
+import org.bukkit.event.block.BlockEvent
+import org.bukkit.event.entity.EntityEvent
+import org.bukkit.event.entity.PlayerLeashEntityEvent
+import org.bukkit.event.hanging.HangingEvent
+import org.bukkit.event.inventory.InventoryEvent
+import org.bukkit.event.player.PlayerEvent
+import org.bukkit.event.vehicle.VehicleEvent
+import org.bukkit.event.weather.WeatherEvent
+import org.bukkit.event.world.WorldEvent
 
 /**
  * Single-game container for all players in that game and functionality relating to them.
  */
-class PlayerManager(localPlayers: Collection<BingoPlayer>) {
+class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
     private val localPlayersMap: HashMap<OfflinePlayer, BingoPlayer> = run {
         val ret = HashMap<OfflinePlayer, BingoPlayer>()
         for (p in localPlayers) {
@@ -30,7 +41,7 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) {
      * A list of BingoPlayers that are participating in this game. This includes all
      * remote players (i.e. that are not logged in to this server).
      */
-    val allPlayers: Collection<BingoPlayer>
+    override val allPlayers: Collection<BingoPlayer>
         get() = localPlayersMap.values + remotePlayers
 
     /**
@@ -121,6 +132,29 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) {
     fun destroy() {
         for (ws in playerWorldSetMap.values) {
             ws.unloadWorlds()
+        }
+    }
+
+    /**
+     * Determine which BingoPlayer an Event is associated with, for determining who to
+     * potentially automark for.
+     */
+    override fun mapEvent(event: Event): BingoPlayer? {
+        return when (event) {
+            is PlayerEvent -> bingoPlayer(event.player)
+            is WorldEvent -> bingoPlayer(event.world)
+            is InventoryEvent -> bingoPlayer(event.view.player as Player)
+            is BlockEvent -> bingoPlayer(event.block.world)
+            is EntityEvent -> bingoPlayer(event.entity.world)
+            is HangingEvent -> bingoPlayer(event.entity.world)
+            is PlayerLeashEntityEvent -> bingoPlayer(event.player)
+            is VehicleEvent -> bingoPlayer(event.vehicle.world)
+            is WeatherEvent -> bingoPlayer(event.world)
+            else -> run {
+                BingoPlugin.logger.warning("Received a ${event::class}, but don't know " +
+                        "how to assign it to a Bingo Player")
+                null
+            }
         }
     }
 }

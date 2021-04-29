@@ -52,11 +52,11 @@ val dslRegistry = TriggerDslRegistry {
 
     specialItemTrigger("jm_armor_leather_colors", revertible = false) {
         // Wear 4 different color Leather Armor at the same time
-        player.bukkitPlayers.any { bktPlayer ->
+        inventory.playerInventories.any { playerInv ->
             val colorsFound = HashSet<Color>()
 
             @Suppress("UselessCallOnCollection") // Bukkit annotation on `armorContents` is incorrect
-            val leatherArmor = bktPlayer.inventory.armorContents.filterNotNull().filter {
+            val leatherArmor = playerInv.armorContents.filterNotNull().filter {
                 ActivationHelpers.LEATHER_ARMOR.contains(it.type)
             }
 
@@ -99,7 +99,7 @@ val dslRegistry = TriggerDslRegistry {
 
     occasionalTrigger("jm_complete_map", ticks = 20) {
         // Complete a map (Any zoom)
-        player.inventory.any { i -> i.isCompletedMap() }
+        player.inventory.items.any { i -> i.isCompletedMap() }
     }
 
     eventTrigger<PlayerDeathEvent>("jm_death_msg_escape") {
@@ -130,7 +130,7 @@ val dslRegistry = TriggerDslRegistry {
     eventTrigger<EntityPotionEffectEvent>(*goalPotEffectMap.keys.toTypedArray()) {
         // Be afflicted by <Potion Effect>
         // Instant effects (harming, instant health) must listen to EntityDamageByEntityEvent
-        event.modifiedType == goalPotEffectMap[trigger.goalId]
+        event.modifiedType == goalPotEffectMap[goalId]
     }
 
     eventTrigger<EnchantItemEvent>("jm_enchant_any") {
@@ -138,7 +138,7 @@ val dslRegistry = TriggerDslRegistry {
         true
     }
 
-    specialItemTrigger("jm_enchanted_gold_sword") { inventory.any {
+    specialItemTrigger("jm_enchanted_gold_sword") { inventory.items.any {
         // Enchanted Golden Sword
         it.type == Material.GOLDEN_SWORD && it.enchantments.isNotEmpty()
     }}
@@ -290,7 +290,7 @@ val dslRegistry = TriggerDslRegistry {
     specialItemTrigger("jm_never_armor_any", revertible = false) {
         // Never use armor
         @Suppress("UselessCallOnCollection") // Bukkit annotation on `armorContents` is incorrect
-        player.bukkitPlayers.any { bktPlayer -> bktPlayer.inventory.armorContents.filterNotNull().any() }
+        inventory.playerInventories.any { playerInv -> playerInv.armorContents.filterNotNull().any() }
     }
 
     eventTrigger<BlockBreakEvent>("jm_never_axe") {
@@ -318,7 +318,7 @@ val dslRegistry = TriggerDslRegistry {
     specialItemTrigger("jm_never_chestplates", revertible = false) {
         // Never wear chestplates
         @Suppress("SENSELESS_COMPARISON") // Bukkit annotation on `armorContents` is incorrect
-        player.bukkitPlayers.any { bktPlayer -> bktPlayer.inventory.armorContents[2] != null }
+        inventory.playerInventories.any { playerInv -> playerInv.armorContents[2] != null }
     }
 
     eventTrigger<CraftItemEvent>("jm_never_coal") {

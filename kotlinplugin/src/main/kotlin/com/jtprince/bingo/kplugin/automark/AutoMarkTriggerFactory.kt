@@ -2,13 +2,12 @@ package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.board.SetVariables
-import com.jtprince.bingo.kplugin.game.PlayerManager
 
 class AutoMarkTriggerFactory(
     private var itemTriggerYaml: ItemTriggerYaml = ItemTriggerYaml.defaultYaml
 ) {
     fun create(goalId: String, spaceId: Int, variables: SetVariables,
-               playerManager: PlayerManager, callback: AutoMarkCallback
+               playerMapper: EventPlayerMapper, callback: AutoMarkCallback
     ): Collection<AutoMarkTrigger> {
         val ret = HashSet<AutoMarkTrigger>()
 
@@ -16,11 +15,11 @@ class AutoMarkTriggerFactory(
         dslRegistry[goalId]?.forEach { def ->
             when (def) {
                 is EventTriggerDefinition<*> ->
-                    EventTrigger(goalId, spaceId, variables, playerManager, callback, def)
+                    EventTrigger(goalId, spaceId, variables, playerMapper, callback, def)
                 is OccasionalTriggerDefinition ->
-                    OccasionalTrigger(goalId, spaceId, variables, playerManager, callback, def)
+                    OccasionalTrigger(goalId, spaceId, variables, playerMapper, callback, def)
                 is SpecialItemTriggerDefinition ->
-                    SpecialItemTrigger(goalId, spaceId, variables, playerManager, callback, def)
+                    SpecialItemTrigger(goalId, spaceId, variables, playerMapper, callback, def)
                 else -> {
                     BingoPlugin.logger.severe("Unknown DSL trigger type ${def::class}")
                     null
@@ -30,7 +29,7 @@ class AutoMarkTriggerFactory(
 
         /* Create Item Trigger YML-specified triggers */
         itemTriggerYaml[goalId]?.also {
-            ret += ItemTrigger(goalId, spaceId, variables, playerManager, callback, it)
+            ret += ItemTrigger(goalId, spaceId, variables, playerMapper, AutoMarkBukkitListener, callback, it)
         }
 
         return ret.toSet()

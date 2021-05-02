@@ -41,3 +41,6 @@ echo "Building plugin..."
 echo "Adding plugin to server..."
 mkdir -p ./plugins
 cp ../kotlinplugin/build/libs/MultiBingo.jar ./plugins
+
+echo "Install script ran successfully. Press any key to exit."
+read -n 1 -r

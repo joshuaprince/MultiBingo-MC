@@ -21,16 +21,10 @@ import com.jtprince.bingo.kplugin.automark.ActivationHelpers.throughNight
 import com.jtprince.util.KotlinUtils.decrement
 import com.jtprince.util.KotlinUtils.increment
 import io.papermc.paper.event.player.PlayerTradeEvent
-import org.bukkit.Art
-import org.bukkit.Color
-import org.bukkit.Material
-import org.bukkit.World
+import org.bukkit.*
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.*
-import org.bukkit.event.block.Action
-import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.event.block.BlockIgniteEvent
-import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.block.*
 import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.entity.*
 import org.bukkit.event.hanging.HangingBreakEvent
@@ -45,6 +39,7 @@ import org.bukkit.event.world.StructureGrowEvent
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.potion.PotionEffectType
 import org.spigotmc.event.entity.EntityMountEvent
+import java.util.*
 
 val dslRegistry = TriggerDslRegistry {
     eventTrigger<EntityMountEvent>("jm_2_creepers_boat") {
@@ -122,6 +117,32 @@ val dslRegistry = TriggerDslRegistry {
         }
     }
 
+    eventTrigger<BlockRedstoneEvent>("jm_arrow_button") {
+        // Shoot a Button with an Arrow
+        if (!event.block.type.key.key.contains("_button")) return@eventTrigger false
+
+        /* A list of Locations where a player pressed a button themselves. Make sure we don't
+         * award the trigger for any of these locations. */
+        val playerPressed = playerState.extra { mutableSetOf<Location>() }
+
+        if (event.newCurrent == 0) {
+            playerPressed -= event.block.location
+            return@eventTrigger false
+        }
+
+        event.block.location !in playerPressed
+                && event.block.location.getNearbyEntitiesByType(Arrow::class.java, 1.0).isNotEmpty()
+    }
+    eventTrigger<PlayerInteractEvent>("jm_arrow_button") {
+        // Shoot a Button with an Arrow
+        /* Prevent the player from just clicking a button with an arrow nearby */
+        val block = event.clickedBlock ?: return@eventTrigger false
+        if (block.type.key.key.contains("_button")) {
+            playerState.extra { mutableSetOf<Location>() } += block.location
+        }
+        false
+    }
+
     eventTrigger<CreatureSpawnEvent>("jm_build_golem_iron") {
         // Create an Iron Golem
         event.spawnReason == CreatureSpawnEvent.SpawnReason.BUILD_IRONGOLEM
@@ -172,6 +193,35 @@ val dslRegistry = TriggerDslRegistry {
     eventTrigger<BlockBreakEvent>("jm_destroy_spawner") {
         // Destroy a monster spawner
         event.block.type == Material.SPAWNER
+    }
+
+    eventTrigger<BlockBreakEvent>("jm_dig_bedrock") {
+        // Dig straight down to Bedrock from Sea level (1x1 hole)
+        /* `diggers` are all Bukkit player UUIDs who are currently digging straight down. */
+        val diggers = playerState.extra { mutableMapOf<UUID, Location>() }
+        if (event.block.y > 63) {
+            /* Any block broken over sea level makes a player a digger. */
+            diggers[event.player.uniqueId] = event.block.location
+        }
+
+        false
+    }
+    occasionalTrigger("jm_dig_bedrock", ticks = 10) {
+        // Dig straight down to Bedrock from Sea level (1x1 hole)
+        /* If the player moves out of their 1x1 column, they are no longer a digger. */
+        val diggers = playerState.extra { mutableMapOf<UUID, Location>() }
+        diggers.any { (playerUuid, loc) ->
+            val player = Bukkit.getPlayer(playerUuid) ?: return@any false
+            if (loc.blockX != player.location.blockX || loc.blockZ != player.location.blockZ) {
+                diggers -= playerUuid
+                return@any false
+            }
+
+            if (player.location.block.getRelative(BlockFace.DOWN).type == Material.BEDROCK) {
+                diggers -= playerUuid
+                true
+            } else false
+        }
     }
 
     val goalPotEffectMap = mapOf(
@@ -454,6 +504,11 @@ val dslRegistry = TriggerDslRegistry {
         val damager = event.damager
         damager is Player
                 && damager.inventory.itemInMainHand.type.key.asString().contains("_sword")
+    }
+
+    eventTrigger<BlockRedstoneEvent>("jm_power_redstone_lamp") {
+        // Power a Redstone Lamp
+        event.block.type == Material.REDSTONE_LAMP
     }
 
     eventTrigger<PlayerInteractEvent>("jm_sleep_nether") {

@@ -1,5 +1,6 @@
 package com.jtprince.bingo.kplugin.automark
 
+import com.jtprince.bingo.kplugin.WorldManager
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import org.bukkit.event.Event
 
@@ -15,4 +16,6 @@ interface EventPlayerMapper {
     fun mapEvent(event: Event): BingoPlayer?
 
     val allPlayers: Collection<BingoPlayer>
+
+    fun worldSet(player: BingoPlayer) : WorldManager.WorldSet
 }

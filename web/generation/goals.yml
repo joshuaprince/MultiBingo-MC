@@ -625,6 +625,7 @@ goals:
   jm_drown_zombie:
     difficulty: 0
     text: Drown a Zombie
+    tooltip: The Zombie must have seen you in order to consider you responsible.
 
   jm_gunpowder:
     difficulty: 0
@@ -708,7 +709,7 @@ goals:
 
   jm_kill_skeleton_own_arrow:
     difficulty: 1
-    text: Kill a Skeleton with it's own Arrow
+    text: Kill a Skeleton with its own Arrow
 
   jm_never_armor_any:
     difficulty: 1
@@ -846,6 +847,7 @@ goals:
   jm_kill_mob_gravel:
     difficulty: 1
     text: Kill a hostile mob with Gravel/Sand
+    tooltip: You must hear the mob suffocate for it to count. Who's the real monster here?
 
   jm_carpet_llama:
     difficulty: 1

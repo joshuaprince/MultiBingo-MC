@@ -100,13 +100,14 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      * @param player A Local BingoPlayer.
      * @return The player's WorldSet, or null if the player does not have one.
      */
-    fun worldSet(player: BingoPlayer) : WorldManager.WorldSet? {
+    override fun worldSet(player: BingoPlayer) : WorldManager.WorldSet {
         if (player is BingoPlayerRemote) {
-            BingoPlugin.logger.severe("Tried to get WorldSet for remote player ${player.name}")
-            return null
+            throw WorldManager.MissingWorldSetException(
+                "Tried to get WorldSet for remote player ${player.name}")
         }
 
-        return playerWorldSetMap[player]
+        return playerWorldSetMap[player] ?: throw WorldManager.MissingWorldSetException(
+            "Failed to get WorldSet for ${player.name}")
     }
 
     /**

@@ -21,9 +21,14 @@ class OccasionalTrigger internal constructor(
     }
 
     private fun invoke() {
-        playerMapper.allPlayers.forEach {
-            if (triggerDefinition.function(OccasionalTriggerDefinition.Parameters(it, this))) {
-                callback.trigger(it, space, true)
+        for (player in playerMapper.allPlayers) {
+            val worlds = playerMapper.worldSet(player)
+            val satisfied = triggerDefinition.function(
+                OccasionalTriggerDefinition.Parameters(player, worlds, this))
+
+            /* Occasional triggers are never revertible. */
+            if (satisfied) {
+                callback.trigger(player, space, true)
             }
         }
     }

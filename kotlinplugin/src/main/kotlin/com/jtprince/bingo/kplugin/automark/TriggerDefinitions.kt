@@ -22,7 +22,9 @@ import com.jtprince.util.KotlinUtils.decrement
 import com.jtprince.util.KotlinUtils.increment
 import io.papermc.paper.event.player.PlayerTradeEvent
 import org.bukkit.*
+import org.bukkit.block.Banner
 import org.bukkit.block.BlockFace
+import org.bukkit.block.data.Levelled
 import org.bukkit.entity.*
 import org.bukkit.event.block.*
 import org.bukkit.event.enchantment.EnchantItemEvent
@@ -36,6 +38,9 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.*
 import org.bukkit.event.world.PortalCreateEvent
 import org.bukkit.event.world.StructureGrowEvent
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.BannerMeta
+import org.bukkit.inventory.meta.BlockStateMeta
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.potion.PotionEffectType
 import org.spigotmc.event.entity.EntityMountEvent
@@ -173,6 +178,17 @@ val dslRegistry = TriggerDslRegistry {
                 && event.action == Action.RIGHT_CLICK_BLOCK
     }
 
+    eventTrigger<PlayerInteractEvent>("jm_clean_banner") {
+        // Clean a Pattern off a Banner
+        val item = event.item ?: return@eventTrigger false
+        val block = event.clickedBlock ?: return@eventTrigger false
+
+        item.type.key.key.contains("_banner")
+                && block.type == Material.CAULDRON
+                && ((item.itemMeta as? BannerMeta)?.numberOfPatterns() ?: 0) > 0
+                && ((block.blockData as? Levelled)?.level ?: 0) > 0
+    }
+
     occasionalTrigger("jm_complete_map", ticks = 20) {
         // Complete a map (Any zoom)
         player.inventory.items.any { i -> i.isCompletedMap() }
@@ -193,6 +209,18 @@ val dslRegistry = TriggerDslRegistry {
     eventTrigger<BlockBreakEvent>("jm_destroy_spawner") {
         // Destroy a monster spawner
         event.block.type == Material.SPAWNER
+    }
+
+    specialItemTrigger("jm_different_shields", revertible = true) {
+        // $var Different Pattern / Color Shields
+        val shields = inventory.items.asSequence()
+            .filter { it.type == Material.SHIELD }.map(ItemStack::getItemMeta)
+            .filterIsInstance<BlockStateMeta>().map { it.blockState }
+            .filterIsInstance<Banner>().map { it.baseColor to it.patterns }
+            .filterNot { it.second.isEmpty() }
+            .toSet()
+
+        shields.size >= vars["var"] ?: throw MissingVariableException("var")
     }
 
     eventTrigger<BlockBreakEvent>("jm_dig_bedrock") {
@@ -222,6 +250,21 @@ val dslRegistry = TriggerDslRegistry {
                 true
             } else false
         }
+    }
+
+    eventTrigger<EntityTransformEvent>("jm_drown_zombie") {
+        // Drown a Zombie
+        event.entityType == EntityType.ZOMBIE
+                && event.transformReason == EntityTransformEvent.TransformReason.DROWNED
+                && event.entity.scoreboardTags.contains("hasTargetedPlayer")
+    }
+    eventTrigger<EntityTargetEvent>("jm_drown_zombie") {
+        // Drown a Zombie
+        /* Only Zombies that have seen the player count - to prevent drowning far away */
+        if (event.entityType == EntityType.ZOMBIE && event.target?.type == EntityType.PLAYER) {
+            event.entity.addScoreboardTag("hasTargetedPlayer")
+        }
+        false
     }
 
     val goalPotEffectMap = mapOf(
@@ -387,6 +430,25 @@ val dslRegistry = TriggerDslRegistry {
         damager.blockData.material.key.toString().contains("anvil")
     }
 
+    eventTrigger<EntityDeathEvent>("jm_kill_mob_gravel") {
+        // Kill a hostile mob with Gravel/Sand
+        event.entity is Monster
+                && event.entity.lastDamageCause?.cause == EntityDamageEvent.DamageCause.SUFFOCATION
+                && event.entity.location.getNearbyPlayers(20.0).isNotEmpty()
+    }
+
+    eventTrigger<PlayerDeathEvent>("jm_kill_self_arrow") {
+        // Kill yourself with your own arrow
+        ((event.entity.lastDamageCause as? EntityDamageByEntityEvent)?.damager as? Arrow)?.shooter == event.entity
+    }
+
+    eventTrigger<EntityDeathEvent>("jm_kill_skeleton_own_arrow") {
+        // Kill a Skeleton with its own Arrow
+        event.entityType == EntityType.SKELETON
+                && ((event.entity.lastDamageCause as? EntityDamageByEntityEvent)?.damager as? Arrow)
+                    ?.shooter == event.entity
+    }
+
     eventTrigger<PlayerInteractEntityEvent>("jm_lead_rabbit") {
         // Use a lead on a rabbit
         val hand = event.player.inventory.getItem(event.hand)
@@ -504,6 +566,26 @@ val dslRegistry = TriggerDslRegistry {
         val damager = event.damager
         damager is Player
                 && damager.inventory.itemInMainHand.type.key.asString().contains("_sword")
+    }
+
+//    occasionalTrigger("jm_pigman_water", ticks = 10) {
+//        worlds.world(World.Environment.NORMAL).getEntitiesByClass(PigZombie::class.java).any {
+//            it.location.block.type == Material.WATER
+//        }
+//    }
+
+    eventTrigger<BlockPlaceEvent>("jm_pimp_tower") {
+        // Place an Iron, Gold and Diamond block on top of each other
+        val blocks = setOf(Material.GOLD_BLOCK, Material.DIAMOND_BLOCK, Material.IRON_BLOCK)
+        if (event.block.type !in blocks) return@eventTrigger false
+
+        val counts = blocks.associateWith { 0 }.toMutableMap()
+        for (i in -2..2) {
+            val mat = event.block.getRelative(0, i, 0).type
+            if (mat in blocks) counts.increment(mat)
+        }
+
+        counts.all { (_, v) -> v > 0 }
     }
 
     eventTrigger<BlockRedstoneEvent>("jm_power_redstone_lamp") {

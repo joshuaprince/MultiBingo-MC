@@ -11,14 +11,14 @@ import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
 object WorldManager {
-    val ENVIRONMENTS = mapOf(
+    private val ENVIRONMENTS = mapOf(
         World.Environment.NORMAL to "overworld",
         World.Environment.NETHER to "nether",
         World.Environment.THE_END to "end"
     )
 
-    internal val worldSetNameMap = HashMap<String, WorldSet>()
-    internal val worldSetWorldMap = HashMap<World, WorldSet>()
+    private val worldSetNameMap = HashMap<String, WorldSet>()
+    private val worldSetWorldMap = HashMap<World, WorldSet>()
 
     val spawnWorld: World
         get() = Bukkit.getWorlds()[0]
@@ -56,13 +56,15 @@ object WorldManager {
     class WorldSet internal constructor(private val worldSetCode: String,
                                         private val map: Map<World.Environment, World>) {
         internal fun world(env: World.Environment) = map[env]
+            ?: throw MissingWorldSetException("No environment ${env.name} found in WorldSet $worldSetCode")
+
         val worlds: Collection<World> = map.values
 
         fun unloadWorlds() {
             BingoPlugin.logger.info("Unloading WorldSet $worldSetCode")
 
             for (env in ENVIRONMENTS.keys) {
-                val world = world(env) ?: continue
+                val world = world(env)
 
                 // Move all players in this world to the spawn world
                 world.players.forEach {
@@ -115,11 +117,9 @@ object WorldManager {
             }
 
             val targetWorld = ws.world(to)
-            if (targetWorld != null) {
-                val toLoc = event.to
-                toLoc.world = targetWorld
-                event.to = toLoc
-            }
+            val toLoc = event.to
+            toLoc.world = targetWorld
+            event.to = toLoc
         }
 
         @EventHandler
@@ -138,11 +138,9 @@ object WorldManager {
             }
 
             val targetWorld = ws.world(to)
-            if (targetWorld != null) {
-                val toLoc = event.to
-                toLoc!!.world = targetWorld
-                event.to = toLoc
-            }
+            val toLoc = event.to
+            toLoc!!.world = targetWorld
+            event.to = toLoc
         }
 
         @EventHandler
@@ -154,7 +152,9 @@ object WorldManager {
             }
 
             val ws: WorldSet = worldSetWorldMap[event.player.world] ?: return
-            event.respawnLocation = ws.world(World.Environment.NORMAL)!!.spawnLocation
+            event.respawnLocation = ws.world(World.Environment.NORMAL).spawnLocation
         }
     }
+
+    class MissingWorldSetException(msg: String) : Exception(msg)
 }

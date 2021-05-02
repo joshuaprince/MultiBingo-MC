@@ -36,8 +36,8 @@ if [ ! -e eula.txt ]; then
 fi
 
 echo "Building plugin..."
-(cd ../plugin && ./gradlew assemble)
+(cd ../kotlinplugin && ./gradlew assemble)
 
 echo "Adding plugin to server..."
 mkdir -p ./plugins
-cp ../plugin/build/libs/Bingo.jar ./plugins
+cp ../kotlinplugin/build/libs/MultiBingo.jar ./plugins

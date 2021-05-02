@@ -93,10 +93,10 @@ internal class EventTriggerDefinition<EventType: Event>(
         val player: BingoPlayer,
         val trigger: EventTrigger<EventType>,
     ) {
-        val goalId = trigger.goalId
-        val vars = trigger.variables
+        val goalId = trigger.space.goalId
+        val vars = trigger.space.variables
         val playerState
-            get() = trigger.playerStates.getOrPut(player) { PlayerTriggerProgress(player, vars) }
+            get() = trigger.space.playerProgress.getOrPut(player) { PlayerTriggerProgress(trigger.space, player, vars) }
     }
 }
 
@@ -108,9 +108,9 @@ internal class OccasionalTriggerDefinition(
         val player: BingoPlayer,
         val trigger: OccasionalTrigger,
     ) {
-        val vars = trigger.variables
+        val vars = trigger.space.variables
         val playerState
-            get() = trigger.playerStates.getOrPut(player) { PlayerTriggerProgress(player, vars) }
+            get() = trigger.space.playerProgress.getOrPut(player) { PlayerTriggerProgress(trigger.space, player, vars) }
     }
 }
 
@@ -122,6 +122,6 @@ internal class SpecialItemTriggerDefinition(
         val inventory: BingoInventory,
         trigger: SpecialItemTrigger,
     ) {
-        val vars = trigger.variables
+        val vars = trigger.space.variables
     }
 }

@@ -67,7 +67,6 @@ val dslRegistry = TriggerDslRegistry {
         // Hang up 3 Different 4x4 Paintings
         /* This event reduces the player's progress when a painting is broken, to prevent the player
          * from using the same painting item 3 times. */
-        // TODO Doesn't work yet
         val state = playerState.extra<MutableMap<Art, Int>> { mutableMapOf() }
 
         val art = event.entity.get4x4Art() ?: return@eventTrigger false
@@ -267,9 +266,37 @@ val dslRegistry = TriggerDslRegistry {
         // Kill $var Animals with only fire
         if (event.entity is Animals
             && event.entity.lastDamageCause?.cause in ActivationHelpers.FIRE_DAMAGE_CAUSES
+            && !event.entity.scoreboardTags.contains("playerHurt")
+            && event.entity.location.getNearbyPlayers(30.0).isNotEmpty()
         ) {
             playerState.advance("var")
         } else false
+    }
+    eventTrigger<EntityDamageByEntityEvent>("jm_kill_animals_fire") {
+        // Kill $var Animals with only fire
+        // Exclude animals that were hit by the player directly
+        if (event.entity is Animals && event.damager.type == EntityType.PLAYER) {
+            event.entity.addScoreboardTag("playerHurt")
+        }
+
+        false
+    }
+
+    eventTrigger<EntityDeathEvent>("jm_kill_creeper_fire") {
+        // Kill a Creeper with only fire
+        event.entity.type == EntityType.CREEPER
+            && event.entity.lastDamageCause?.cause in ActivationHelpers.FIRE_DAMAGE_CAUSES
+            && !event.entity.scoreboardTags.contains("playerHurt")
+            && event.entity.location.getNearbyPlayers(50.0).isNotEmpty()
+    }
+    eventTrigger<EntityDamageByEntityEvent>("jm_kill_creeper_fire") {
+        // Kill a Creeper with only fire
+        // Exclude creepers that were hit by the player directly
+        if (event.entity.type == EntityType.CREEPER && event.damager.type == EntityType.PLAYER) {
+            event.entity.addScoreboardTag("playerHurt")
+        }
+
+        false
     }
 
     eventTrigger<EntityDeathEvent>("jm_kill_golem_iron") {

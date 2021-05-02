@@ -1,17 +1,19 @@
 package com.jtprince.bingo.kplugin.board
 
-import com.jtprince.bingo.kplugin.automark.AutoMarkCallback
 import com.jtprince.bingo.kplugin.automark.AutoMarkTrigger
 import com.jtprince.bingo.kplugin.automark.AutoMarkTriggerFactory
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
+import com.jtprince.bingo.kplugin.automark.PlayerTriggerProgress
 import com.jtprince.bingo.kplugin.game.PlayerManager
+import com.jtprince.bingo.kplugin.player.BingoPlayer
 
 class Space(
-    val spaceId: Int,
-    val goalId: String,
+    override val spaceId: Int,
+    override val goalId: String,
     val goalType: GoalType,
-    val text: String,
-    val variables: SetVariables,
-) {
+    override val text: String,
+    override val variables: SetVariables,
+) : AutomatedSpace {
     enum class Marking(val value: Int) {
         UNMARKED(0),
         COMPLETE(1),
@@ -46,9 +48,8 @@ class Space(
      * Receive callbacks when a player in this [PlayerManager] does something that should mark the
      * space.
      */
-    fun startListening(playerManager: PlayerManager, callback: AutoMarkCallback) {
-        triggers = AutoMarkTriggerFactory().create(
-            goalId, spaceId, variables, playerManager, callback)
+    fun startListening(playerManager: PlayerManager, callback: AutoMarkTrigger.Callback) {
+        triggers = AutoMarkTriggerFactory().create(this, playerManager, callback)
     }
 
     /**
@@ -61,4 +62,6 @@ class Space(
     fun destroy() {
         stopListening()
     }
+
+    override val playerProgress: MutableMap<BingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
 }

@@ -2,15 +2,22 @@ package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 
-typealias AutoMarkCallback = (BingoPlayer, spaceId: Int, fulfilled: Boolean) -> Unit
-
 abstract class AutoMarkTrigger {
+    /**
+     * Callback that is executed whenever a BingoPlayer performs an action that activates this
+     * trigger.
+     *
+     * For some triggers, the player can undo their progress, which will result in this being called
+     * with `fulfilled = false`.
+     */
+    fun interface Callback {
+        fun trigger(player: BingoPlayer, space: AutomatedSpace, fulfilled: Boolean)
+    }
+
     companion object {
         val allAutomatedGoals
             get() = ItemTriggerYaml.defaultYaml.allAutomatedGoals + dslRegistry.allAutomatedGoals
     }
 
     abstract fun destroy()
-
-    internal val playerStates: MutableMap<BingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
 }

@@ -2,6 +2,7 @@ package com.jtprince.bingo.kplugin.game
 
 import com.jtprince.bingo.kplugin.Messages
 import com.jtprince.bingo.kplugin.Messages.bingoTell
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.board.SetVariables
 import com.jtprince.bingo.kplugin.board.Space
 import com.jtprince.bingo.kplugin.player.BingoPlayer
@@ -42,7 +43,7 @@ class DebugGame(
         // Nothing needs to be done. Spaces are destroyed in the superclass.
     }
 
-    override fun receiveAutomark(bingoPlayer: BingoPlayer, spaceId: Int, satisfied: Boolean) {
+    override fun receiveAutomark(bingoPlayer: BingoPlayer, space: AutomatedSpace, satisfied: Boolean) {
         if (satisfied) {
             bingoPlayer.bingoTell("You have activated $goalId.")
         }

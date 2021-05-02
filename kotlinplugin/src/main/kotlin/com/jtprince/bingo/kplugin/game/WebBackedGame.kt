@@ -5,6 +5,7 @@ import com.jtprince.bingo.kplugin.Messages
 import com.jtprince.bingo.kplugin.Messages.bingoTell
 import com.jtprince.bingo.kplugin.Messages.bingoTellError
 import com.jtprince.bingo.kplugin.Messages.bingoTellNotReady
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.board.Space
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.webclient.WebBackedWebsocketClient
@@ -105,18 +106,20 @@ class WebBackedGame(
         startEffects.destroy()
     }
 
-    override fun receiveAutomark(bingoPlayer: BingoPlayer, spaceId: Int, satisfied: Boolean) {
+    override fun receiveAutomark(bingoPlayer: BingoPlayer, space: AutomatedSpace, satisfied: Boolean) {
         if (state != State.RUNNING) return
+
+        if (space !is Space) {
+            BingoPlugin.logger.severe(
+                "Got automark for space of type ${space::class}, which is not of expected Space type.")
+            return
+        }
 
         /* Not filtered - first must filter to ensure no excessive backend requests. */
         val cache = playerBoardCache[bingoPlayer] ?: return
-        val goalType = spaces[spaceId]?.goalType ?: run {
-            BingoPlugin.logger.severe("Want to mark space $spaceId, but can't determine goal type")
-            return
-        }
-        val newMarking = cache.canSendMarking(spaceId, goalType, satisfied) ?: return
+        val newMarking = cache.canSendMarking(space.spaceId, space.goalType, satisfied) ?: return
 
-        websocketClient.sendMarkSpace(bingoPlayer.name, spaceId, newMarking.value)
+        websocketClient.sendMarkSpace(bingoPlayer.name, space.spaceId, newMarking.value)
     }
 
     private fun receiveMessage(msg: WebsocketRxMessage) {

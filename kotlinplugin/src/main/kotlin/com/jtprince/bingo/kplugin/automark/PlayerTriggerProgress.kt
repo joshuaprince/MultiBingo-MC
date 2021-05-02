@@ -14,7 +14,11 @@ import kotlin.reflect.KClass
  *                     make progress.
  * @param vars Set Variables associated with the space being triggered.
  */
-class PlayerTriggerProgress(private val notifyPlayer: BingoPlayer, private val vars: SetVariables) {
+class PlayerTriggerProgress(
+    private val space: AutomatedSpace,
+    private val notifyPlayer: BingoPlayer,
+    private val vars: SetVariables
+) {
     private var highestProgress = 0
     private var completed = false
     var progress: Int = 0
@@ -43,7 +47,7 @@ class PlayerTriggerProgress(private val notifyPlayer: BingoPlayer, private val v
         if (progress > highestProgress) {
             highestProgress = progress
             if (!completed && progress < towards) {
-                notifyPlayer.bingoTellGoalProgress(progress)
+                notifyPlayer.bingoTellGoalProgress(space, progress, towards)
             }
         }
 

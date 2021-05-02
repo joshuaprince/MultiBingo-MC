@@ -1,17 +1,14 @@
 package com.jtprince.bingo.kplugin.automark
 
-import com.jtprince.bingo.kplugin.board.SetVariables
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
 import kotlin.math.min
 
 open class ItemTrigger internal constructor(
-    val goalId: String,
-    val spaceId: Int,
-    val variables: SetVariables,
+    val space: AutomatedSpace,
     private val playerMapper: EventPlayerMapper,
     private val listener: AutoMarkBukkitListener?,
-    private val callback: AutoMarkCallback?,
+    private val callback: Callback?,
     private val rootMatchGroup: ItemTriggerYaml.MatchGroup?,
 ) : AutoMarkTrigger() {
 
@@ -34,7 +31,7 @@ open class ItemTrigger internal constructor(
         val satisfied = satisfiedBy(player.inventory)
 
         if (revertible || satisfied) {
-            callback?.invoke(player, spaceId, satisfied)
+            callback?.trigger(player, space, satisfied)
         }
     }
 
@@ -44,8 +41,8 @@ open class ItemTrigger internal constructor(
     internal open fun satisfiedBy(inventory: BingoInventory): Boolean {
         val rootMatchGroup = rootMatchGroup ?: return false
         val rootUT = effectiveUT(rootMatchGroup, inventory.items)
-        return rootUT.u >= rootMatchGroup.unique(variables)
-                && rootUT.t >= rootMatchGroup.total(variables)
+        return rootUT.u >= rootMatchGroup.unique(space.variables)
+                && rootUT.t >= rootMatchGroup.total(space.variables)
     }
 
     internal class UT {
@@ -70,18 +67,18 @@ open class ItemTrigger internal constructor(
                 continue
             }
             if (!seenItemNames.contains(namespacedName)) {
-                if (ret.u < matchGroup.unique(variables)) {
+                if (ret.u < matchGroup.unique(space.variables)) {
                     ret.u++
                 }
                 seenItemNames.add(namespacedName)
             }
-            ret.t = min(matchGroup.total(variables), ret.t + itemStack.amount)
+            ret.t = min(matchGroup.total(space.variables), ret.t + itemStack.amount)
         }
 
         for (child in matchGroup.children) {
             val childUT = effectiveUT(child, inventory)
             ret.t += childUT.t
-            if (childUT.t >= child.total(variables)) {
+            if (childUT.t >= child.total(space.variables)) {
                 ret.u += childUT.u
             }
         }

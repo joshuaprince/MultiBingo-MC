@@ -1,5 +1,6 @@
 package com.jtprince.bingo.kplugin
 
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.BingoPlayerTeam
@@ -120,10 +121,16 @@ object Messages {
         sendWithHeader(starters, component)
     }
 
-    fun Audience.bingoTellGoalProgress(progress: Int) {
-        val component = Component.text("Progress: $progress")
+    fun Audience.bingoTellGoalProgress(space: AutomatedSpace, progress: Int, towards: Int) {
+        val number = Component.text("$progress/$towards")
+            .color(NamedTextColor.WHITE)
+            .decoration(TextDecoration.ITALIC, false)
+        val component = Component.text("Progress: ")
+            .append(number)
+            .append(Component.text("  [${space.text}]"))
             .color(NamedTextColor.GRAY)
             .decorate(TextDecoration.ITALIC)
+            .hoverEvent(HoverEvent.showText(Component.text(space.text)))
         sendWithHeader(this, component)
     }
 

@@ -1,18 +1,15 @@
 package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.BingoPlugin
-import com.jtprince.bingo.kplugin.board.SetVariables
 
 /**
  * Defines a Trigger that is called at a regular interval to check if a player has completed a
  * goal.
  */
 class OccasionalTrigger internal constructor(
-    val goalId: String,
-    val spaceId: Int,
-    val variables: SetVariables,
+    val space: AutomatedSpace,
     private val playerMapper: EventPlayerMapper,
-    val callback: AutoMarkCallback,
+    private val callback: Callback,
     private val triggerDefinition: OccasionalTriggerDefinition,
 ) : AutoMarkTrigger() {
 
@@ -26,7 +23,7 @@ class OccasionalTrigger internal constructor(
     private fun invoke() {
         playerMapper.allPlayers.forEach {
             if (triggerDefinition.function(OccasionalTriggerDefinition.Parameters(it, this))) {
-                callback(it, spaceId, true)
+                callback.trigger(it, space, true)
             }
         }
     }

@@ -1,14 +1,11 @@
 package com.jtprince.bingo.kplugin.automark
 
-import com.jtprince.bingo.kplugin.board.SetVariables
 import org.bukkit.event.Event
 
 class EventTrigger<EventType : Event> internal constructor(
-    val goalId: String,
-    val spaceId: Int,
-    val variables: SetVariables,
+    val space: AutomatedSpace,
     private val playerMapper: EventPlayerMapper,
-    val callback: AutoMarkCallback,
+    private val callback: Callback,
     private val triggerDefinition: EventTriggerDefinition<EventType>,
 ) : AutoMarkTrigger() {
 
@@ -32,7 +29,7 @@ class EventTrigger<EventType : Event> internal constructor(
 
         /* Event triggers are never revertible. */
         if (satisfied) {
-            callback(player, spaceId, satisfied)
+            callback.trigger(player, space, satisfied)
         }
     }
 }

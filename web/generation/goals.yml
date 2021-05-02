@@ -405,10 +405,12 @@ goals:
     difficulty: 0
     var: 4..8
     text: Kill $var Animals with only fire
+    tooltip: ONLY fire - If you hit the animal yourself, it won't count
 
   jm_kill_creeper_fire:
     difficulty: 0
     text: Kill a Creeper with only fire
+    tooltip: ONLY fire - If you hit the Creeper yourself, it won't count
 
   jm_iron_nuggets:
     difficulty: 0

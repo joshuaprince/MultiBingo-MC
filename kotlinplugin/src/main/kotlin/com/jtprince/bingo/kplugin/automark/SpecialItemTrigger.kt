@@ -1,15 +1,11 @@
 package com.jtprince.bingo.kplugin.automark
 
-import com.jtprince.bingo.kplugin.board.SetVariables
-
 class SpecialItemTrigger internal constructor(
-    goalId: String,
-    spaceId: Int,
-    variables: SetVariables,
+    space: AutomatedSpace,
     playerMapper: EventPlayerMapper,
-    callback: AutoMarkCallback,
+    callback: Callback,
     private val triggerDefinition: SpecialItemTriggerDefinition,
-) : ItemTrigger(goalId, spaceId, variables, playerMapper, AutoMarkBukkitListener, callback, null) {
+) : ItemTrigger(space, playerMapper, AutoMarkBukkitListener, callback, null) {
 
     override val revertible = triggerDefinition.revertible
 

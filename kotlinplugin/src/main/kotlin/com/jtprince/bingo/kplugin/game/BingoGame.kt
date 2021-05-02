@@ -1,6 +1,7 @@
 package com.jtprince.bingo.kplugin.game
 
 import com.jtprince.bingo.kplugin.Messages.bingoTellError
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.board.SetVariables
 import com.jtprince.bingo.kplugin.board.Space
 import com.jtprince.bingo.kplugin.player.BingoPlayer
@@ -48,7 +49,7 @@ abstract class BingoGame(
      * Called when a space in [spaces] should be marked a certain way. Not filtered, meaning
      * that this might be called several times with the same inputs.
      */
-    protected abstract fun receiveAutomark(bingoPlayer: BingoPlayer, spaceId: Int,
+    protected abstract fun receiveAutomark(bingoPlayer: BingoPlayer, space: AutomatedSpace,
                                            satisfied: Boolean)
 
     companion object Manager {

@@ -60,7 +60,7 @@ internal class TriggerDslRegistryBuilder {
 
     internal fun specialItemTrigger(
         vararg goalIds: String,
-        revertible: Boolean = true,
+        revertible: Boolean,
         check: SpecialItemTriggerDefinition.Parameters.() -> Boolean
     ) {
         for (goalId in goalIds) {

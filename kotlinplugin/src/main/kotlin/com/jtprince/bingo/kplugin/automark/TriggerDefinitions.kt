@@ -18,6 +18,8 @@ import com.jtprince.bingo.kplugin.automark.ActivationHelpers.get4x4Art
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.inVillage
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.isCompletedMap
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.throughNight
+import com.jtprince.util.KotlinUtils.decrement
+import com.jtprince.util.KotlinUtils.increment
 import io.papermc.paper.event.player.PlayerTradeEvent
 import org.bukkit.Art
 import org.bukkit.Color
@@ -60,7 +62,7 @@ val dslRegistry = TriggerDslRegistry {
 
         val art = event.entity.get4x4Art() ?: return@eventTrigger false
 
-        val newCountThisArt = state.merge(art, 1, Int::plus)
+        val newCountThisArt = state.increment(art)
         playerState.advance(towards = 3, amount = (if (newCountThisArt == 1) 1 else 0))
     }
     eventTrigger<HangingBreakEvent>("jm_4x4_paintings") {
@@ -73,13 +75,34 @@ val dslRegistry = TriggerDslRegistry {
 
         val currentCount = state[art] ?: 0
         if (currentCount > 0) {
-            val newCountThisArt = state.merge(art, 1, Int::minus)
+            val newCountThisArt = state.decrement(art)
             if (newCountThisArt == 0) {
                 playerState.advance(towards = 999, amount = -1)
             }
         }
 
         false
+    }
+
+    specialItemTrigger("jm_armor_different_types", revertible = false) {
+        // Wear 4 Different Armor types at the same time
+        inventory.playerInventories.any { playerInv ->
+            val types = setOf("leather", "golden", "iron", "chainmail", "diamond", "netherite")
+            val counts = types.associateWith { 0 }.toMutableMap()
+
+            @Suppress("UselessCallOnCollection") // Bukkit annotation on `armorContents` is incorrect
+            for (armor in playerInv.armorContents.filterNotNull()) {
+                var type: String? = null
+                for (t in types) {
+                    if (armor.type.key.key.contains(t)) {
+                        type = t
+                    }
+                }
+                type?.also { counts.increment(it) }
+            }
+
+            counts.filterValues { it > 0 }.size >= 4
+        }
     }
 
     specialItemTrigger("jm_armor_leather_colors", revertible = false) {
@@ -170,7 +193,7 @@ val dslRegistry = TriggerDslRegistry {
         true
     }
 
-    specialItemTrigger("jm_enchanted_gold_sword") { inventory.items.any {
+    specialItemTrigger("jm_enchanted_gold_sword", revertible = true) { inventory.items.any {
         // Enchanted Golden Sword
         it.type == Material.GOLDEN_SWORD && it.enchantments.isNotEmpty()
     }}

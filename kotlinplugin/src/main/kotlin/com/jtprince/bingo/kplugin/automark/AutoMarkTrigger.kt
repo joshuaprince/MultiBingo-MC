@@ -4,11 +4,13 @@ import com.jtprince.bingo.kplugin.player.BingoPlayer
 
 typealias AutoMarkCallback = (BingoPlayer, spaceId: Int, fulfilled: Boolean) -> Unit
 
-interface AutoMarkTrigger {
+abstract class AutoMarkTrigger {
     companion object {
         val allAutomatedGoals
             get() = ItemTriggerYaml.defaultYaml.allAutomatedGoals + dslRegistry.allAutomatedGoals
     }
 
-    fun destroy()
+    abstract fun destroy()
+
+    internal val playerStates: MutableMap<BingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
 }

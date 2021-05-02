@@ -14,7 +14,7 @@ class OccasionalTrigger internal constructor(
     private val playerMapper: EventPlayerMapper,
     val callback: AutoMarkCallback,
     private val triggerDefinition: OccasionalTriggerDefinition,
-) : AutoMarkTrigger {
+) : AutoMarkTrigger() {
 
     private val taskId = BingoPlugin.server.scheduler.scheduleSyncRepeatingTask(
             BingoPlugin, this::invoke, triggerDefinition.ticks.toLong(), triggerDefinition.ticks.toLong())

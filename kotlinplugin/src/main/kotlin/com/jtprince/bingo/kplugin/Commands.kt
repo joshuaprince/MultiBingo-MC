@@ -48,7 +48,7 @@ object Commands {
             .withArguments(shapeArg, forcedArg)
             .executes(CommandExecutor { sender: CommandSender, args: Array<Any> ->
                 val settings = WebBackedGameProto.WebGameSettings(
-                    gameCode = args[0] as String,
+                    shape = args[0] as String,
                     forcedGoals = (args[1] as String).split(" "))
                 commandPrepare(sender, settings)
             })

@@ -90,10 +90,13 @@ internal class EventTriggerDefinition<EventType: Event>(
 ) : TriggerDslDefinition() {
     class Parameters<EventType: Event>(
         val event: EventType,
-        trigger: EventTrigger<EventType>,
+        val player: BingoPlayer,
+        val trigger: EventTrigger<EventType>,
     ) {
         val goalId = trigger.goalId
         val vars = trigger.variables
+        val playerState
+            get() = trigger.playerStates.getOrPut(player) { PlayerTriggerProgress(player, vars) }
     }
 }
 
@@ -103,9 +106,11 @@ internal class OccasionalTriggerDefinition(
 ) : TriggerDslDefinition() {
     class Parameters(
         val player: BingoPlayer,
-        trigger: OccasionalTrigger,
+        val trigger: OccasionalTrigger,
     ) {
         val vars = trigger.variables
+        val playerState
+            get() = trigger.playerStates.getOrPut(player) { PlayerTriggerProgress(player, vars) }
     }
 }
 

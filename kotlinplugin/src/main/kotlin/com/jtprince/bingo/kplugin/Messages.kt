@@ -120,6 +120,13 @@ object Messages {
         sendWithHeader(starters, component)
     }
 
+    fun Audience.bingoTellGoalProgress(progress: Int) {
+        val component = Component.text("Progress: $progress")
+            .color(NamedTextColor.GRAY)
+            .decorate(TextDecoration.ITALIC)
+        sendWithHeader(this, component)
+    }
+
     fun bingoAnnouncePlayerMarking(player: BingoPlayer, spaceText: String, invalidated: Boolean) {
         val component = if (!invalidated) {
             Component.empty()

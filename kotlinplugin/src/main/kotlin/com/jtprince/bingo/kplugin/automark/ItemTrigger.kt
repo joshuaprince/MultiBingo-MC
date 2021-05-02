@@ -13,7 +13,7 @@ open class ItemTrigger internal constructor(
     private val listener: AutoMarkBukkitListener?,
     private val callback: AutoMarkCallback?,
     private val rootMatchGroup: ItemTriggerYaml.MatchGroup?,
-) : AutoMarkTrigger {
+) : AutoMarkTrigger() {
 
     protected open val revertible = true
 

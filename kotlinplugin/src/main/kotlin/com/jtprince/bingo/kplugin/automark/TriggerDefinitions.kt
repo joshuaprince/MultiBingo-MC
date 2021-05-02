@@ -14,10 +14,12 @@ package com.jtprince.bingo.kplugin.automark
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.FISH_ENTITIES
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.ICE_BLOCKS
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.containsQuantity
+import com.jtprince.bingo.kplugin.automark.ActivationHelpers.get4x4Art
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.inVillage
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.isCompletedMap
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.throughNight
 import io.papermc.paper.event.player.PlayerTradeEvent
+import org.bukkit.Art
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.World
@@ -29,6 +31,8 @@ import org.bukkit.event.block.BlockIgniteEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.entity.*
+import org.bukkit.event.hanging.HangingBreakEvent
+import org.bukkit.event.hanging.HangingPlaceEvent
 import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.inventory.FurnaceBurnEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -48,6 +52,35 @@ val dslRegistry = TriggerDslRegistry {
                 && event.entity is Creeper
                 // Only check for 1 because this event is adding the second Creeper
                 && event.mount.passengers.filterIsInstance<Creeper>().size >= 1
+    }
+
+    eventTrigger<HangingPlaceEvent>("jm_4x4_paintings") {
+        // Hang up 3 Different 4x4 Paintings
+        val state = playerState.extra<MutableMap<Art, Int>> { mutableMapOf() }
+
+        val art = event.entity.get4x4Art() ?: return@eventTrigger false
+
+        val newCountThisArt = state.merge(art, 1, Int::plus)
+        playerState.advance(towards = 3, amount = (if (newCountThisArt == 1) 1 else 0))
+    }
+    eventTrigger<HangingBreakEvent>("jm_4x4_paintings") {
+        // Hang up 3 Different 4x4 Paintings
+        /* This event reduces the player's progress when a painting is broken, to prevent the player
+         * from using the same painting item 3 times. */
+        // TODO Doesn't work yet
+        val state = playerState.extra<MutableMap<Art, Int>> { mutableMapOf() }
+
+        val art = event.entity.get4x4Art() ?: return@eventTrigger false
+
+        val currentCount = state[art] ?: 0
+        if (currentCount > 0) {
+            val newCountThisArt = state.merge(art, 1, Int::minus)
+            if (newCountThisArt == 0) {
+                playerState.advance(towards = 999, amount = -1)
+            }
+        }
+
+        false
     }
 
     specialItemTrigger("jm_armor_leather_colors", revertible = false) {
@@ -228,6 +261,15 @@ val dslRegistry = TriggerDslRegistry {
             }
             else -> false
         }
+    }
+
+    eventTrigger<EntityDeathEvent>("jm_kill_animals_fire") {
+        // Kill $var Animals with only fire
+        if (event.entity is Animals
+            && event.entity.lastDamageCause?.cause in ActivationHelpers.FIRE_DAMAGE_CAUSES
+        ) {
+            playerState.advance("var")
+        } else false
     }
 
     eventTrigger<EntityDeathEvent>("jm_kill_golem_iron") {

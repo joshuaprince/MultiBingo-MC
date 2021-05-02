@@ -1,12 +1,12 @@
 package com.jtprince.bingo.kplugin.automark
 
 import net.kyori.adventure.text.Component
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.StructureType
-import org.bukkit.TreeType
+import org.bukkit.*
+import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Painting
 import org.bukkit.entity.Player
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerBedLeaveEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -85,6 +85,11 @@ object ActivationHelpers {
         Material.WHITE_CARPET, Material.YELLOW_CARPET
     )
 
+    val FIRE_DAMAGE_CAUSES = setOf(
+        EntityDamageEvent.DamageCause.FIRE, EntityDamageEvent.DamageCause.FIRE_TICK,
+        EntityDamageEvent.DamageCause.HOT_FLOOR
+    )
+
     fun Location.inVillage(): Boolean {
         val nearestVillage = world.locateNearestStructure(
             this, StructureType.VILLAGE, 8, false
@@ -136,6 +141,16 @@ object ActivationHelpers {
      */
     fun PlayerBedLeaveEvent.throughNight() : Boolean {
         return player.world.time < 1000
+    }
+
+    /**
+     * If this entity is a 4x4 or above Painting, return the Art on it. Otherwise, returns null.
+     */
+    fun Entity.get4x4Art(): Art? {
+        return when {
+            this is Painting && art.blockHeight >= 4 && art.blockWidth >= 4 -> art
+            else -> null
+        }
     }
 
     private class MapCompletionRenderer : MapRenderer() {

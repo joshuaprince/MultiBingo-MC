@@ -10,7 +10,7 @@ class EventTrigger<EventType : Event> internal constructor(
     private val playerMapper: EventPlayerMapper,
     val callback: AutoMarkCallback,
     private val triggerDefinition: EventTriggerDefinition<EventType>,
-) : AutoMarkTrigger {
+) : AutoMarkTrigger() {
 
     private val listenerRegistryId = AutoMarkBukkitListener.register(triggerDefinition.eventType,
         AutoMarkBukkitListener.Callback(triggerDefinition.eventType) {
@@ -27,7 +27,7 @@ class EventTrigger<EventType : Event> internal constructor(
     private fun eventRaised(event: EventType) {
         val player = playerMapper.mapEvent(event) ?: return
 
-        val triggerDefParams = EventTriggerDefinition.Parameters(event, this)
+        val triggerDefParams = EventTriggerDefinition.Parameters(event, player, this)
         val satisfied = triggerDefinition.function.invoke(triggerDefParams)
 
         /* Event triggers are never revertible. */

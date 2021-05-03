@@ -1,0 +1,121 @@
+.game {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+._boardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.bcPrimary {
+  composes: _boardContainer;
+  width: 100%;
+  max-width: 900px;
+}
+
+.bcSecondary {
+  composes: _boardContainer;
+  margin: 10px;
+  width: 300px;
+}
+
+.bcAllSecondary {
+
+}
+
+/***** Mobile *****/
+@media (max-width: 600px) {
+  .bcPrimary {
+    margin: 2px;
+  }
+  .bcSecondary {
+    width: 40vw;
+  }
+  .bcAllSecondary {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+}
+
+/***** Thin Desktop *****/
+@media (min-width: 600px) {
+  .bcPrimary {
+    margin-left: 1vw;
+    margin-right: 1vw;
+  }
+  .bcAllSecondary {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+}
+
+/***** Wide Desktop *****/
+@media (min-width: 1366px) {
+  .bcPrimary {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+  .bcAllSecondary {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+}
+
+.boardName {
+  .bcPrimary & {
+    font-size: 2em;
+    font-weight: bold;
+  }
+  .bcSecondary & {
+    font-size: 1.2em;
+  }
+}
+
+.tapModeSelector {
+  /* Explicitly hidden on desktop & spectator mode by useMediaQuery in BingoGame.tsx */
+
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  label:not(:global(.chakra-switch)) {
+    margin: -3px 8px 0;
+  }
+  margin-bottom: 5px;
+}
+
+.playerNameInput {
+
+}
+
+.boardSkeleton {
+  width: 50%;
+  height: 100%;
+}
+
+.cornerLoading {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: center;
+  background: white;
+  border: 1px solid black;
+  padding: 5px;
+  & > div {
+    margin-left: 10px;
+  }
+}

@@ -1,0 +1,287 @@
+$hex-clip-path-horz: polygon(0 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0, 0 25%);
+$hex-clip-path-vert: polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0);
+
+.board {
+  display: grid;
+  margin: 0;
+  padding: 2px;
+  grid-gap: 2px;
+  width: 100%;
+  position: relative;
+
+  /* Main board in the center of the page */
+  &.primary {}
+
+  /* Board off to a side, representing another player */
+  &.secondary {}
+}
+
+.space {
+  position: relative;
+  user-select: none;
+}
+
+.spaceInner {
+  background: white;
+  position: absolute;
+
+  .secondary & * {
+    display: none;
+  }
+}
+
+.spaceContents {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 100%;
+  line-height: 1.2;
+}
+
+/***** SQUARE *****/
+
+.square {
+  .space {
+    height: 0;
+    padding-bottom: 100%;
+    border: 1px solid black;
+  }
+  .spaceInner {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+/***** HEXAGON *****/
+
+.hexagonHorz {
+  .space {
+    background: black;
+    height: 0;
+    clip-path: $hex-clip-path-horz;
+    padding-bottom: 110%;
+  }
+  .spaceInner {
+    /* Below are overridden fairly heavily when covert-marked */
+    left: 1px;
+    top: 1px;
+    height: calc(100% - 2px);
+    width: calc(100% - 2px);
+    clip-path: $hex-clip-path-horz;
+  }
+  .goalText {
+    padding-left: 0.6em;
+    padding-right: 0.6em;
+    max-height: 75%;
+    max-width: 100%;
+  }
+  .pendingChangeSpinner {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.hexagonVert {
+  .space {
+    background: black;
+    height: 0;
+    clip-path: $hex-clip-path-vert;
+    padding-bottom: 90%;
+  }
+  .spaceInner {
+    /* Below are overridden fairly heavily when covert-marked */
+    left: 1px;
+    top: 1px;
+    height: calc(100% - 2px);
+    width: calc(100% - 2px);
+    clip-path: $hex-clip-path-vert;
+  }
+  .goalText {
+    max-height: 100%;
+    max-width: 75%;
+  }
+  .pendingChangeSpinner {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/***** END SHAPES *****/
+
+.space.covertMarked {
+  .square & {
+    border: 1px solid crimson;
+    .spaceInner {
+      outline: 3px solid crimson;
+    }
+  }
+
+  .hexagonHorz &, .hexagonVert & {
+    background: crimson;
+    .spaceInner {
+      outline: 2px solid crimson;
+      left: 3px;
+      top: 3px;
+      height: calc(100% - 6px);
+      width: calc(100% - 6px);
+    }
+  }
+}
+
+.revealed .space.editable {
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+}
+
+.revealed .space {
+  @import "space-colors.module";
+  @each $i, $name in $markings {
+    &.mark-#{$i}:not(.winning) .spaceInner {
+      background: $name;
+    }
+  }
+}
+
+.obscured .spaceContents {
+  filter: blur(8px);
+}
+
+.board.revealed .space.winning .spaceInner {
+  @keyframes shine {
+    @import "space-colors.module";
+    0%, 100% {
+      background-color: #ffc858;
+    }
+    50% {
+      background-color: #ffa200;
+    }
+  }
+  animation: shine 1.5s infinite;
+}
+
+.goalText {
+  margin: 0;
+  position: relative;
+  font-weight: bold;
+  line-height: 1.1;
+  .hexagonHorz & {
+    .goalTextAfter {
+      width: 50%;
+      height: 100%;
+      content: "";
+      float: right;
+    }
+  }
+  .hexagonVert & {
+    //max-width: 75%;
+    max-height: 75%;
+  }
+}
+
+.goalTooltip {
+  position: absolute;
+  .square & {
+    top: 0;
+    right: 0;
+    padding: 10px;
+  }
+  .hexagonHorz & {
+    width: 100%;
+    top: 8px;
+  }
+  .hexagonVert & {
+    margin: auto;
+    left: 5px;
+  }
+}
+
+.goalAutoA {
+  color: gray;
+  .square & {
+    position: absolute;
+    bottom: 0;
+    left: 4px;
+    padding: 5px;
+    font-size: x-small;
+  }
+  .hexagonHorz &, .hexagonVert & {
+    width: 100%;
+    position: absolute;
+    bottom: 5px;
+    font-size: x-small;
+  }
+}
+
+.colorPickerTooltip {
+  display: flex;
+  flex-direction: row;
+}
+
+@media (min-width: 1000px) {
+  .spaceInner {
+    font-size: 1.3em;
+    .small {
+      font-size: 0.8em;
+    }
+  }
+}
+@media (max-width: 1000px) {
+  .spaceInner {
+    font-size: 2.2vw;
+    .small {
+      font-size: 1.6vw;
+    }
+  }
+}
+@media (max-width: 600px) {
+  .spaceInner {
+    font-size: 3vw;
+    .small {
+      font-size: 2.5vw;
+    }
+  }
+  .goalAutoA {
+    display: none;
+  }
+  .goalTooltip {
+    display: none;
+  }
+  .goalText.hasTooltip::after {
+    content: "\a0?";  // nbsp + question mark
+    vertical-align: super;
+    font-size: 2vw;
+  }
+}
+
+.revealButton {
+  position: absolute !important;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 999;
+}
+
+.space.pendingChange {
+  filter: brightness(0.9);
+  .pendingChangeSpinner {
+  }
+}

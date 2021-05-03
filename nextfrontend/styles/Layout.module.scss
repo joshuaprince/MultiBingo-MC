@@ -1,0 +1,36 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: linear-gradient(#363636, black);
+  color: white;
+  padding: 12px;
+  margin-bottom: 30px;
+  @media (max-width: 600px) {
+    margin-bottom: 10px;
+  }
+}
+
+.logo, .link {
+  margin: 0 10px;
+  &:hover, &:active, &:focus {
+    text-decoration: underline;
+  }
+}
+
+.logo, .gameCode {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+.link, {
+  font-size: large;
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+.gameCode {
+  margin-right: 10px;
+  align-self: flex-end;
+}

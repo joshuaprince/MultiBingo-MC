@@ -11,4 +11,4 @@ python ./manage.py migrate
 
 # Start server
 echo "Starting server"
-daphne -b 0.0.0.0 -p 8000 MCBingo.asgi:application
+daphne -b 0.0.0.0 -p 8000 MultiBingo.asgi:application

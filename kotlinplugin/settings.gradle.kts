@@ -1,2 +1,2 @@
-rootProject.name = "MultiBingo"
+rootProject.name = "KotlinPlugin"
 

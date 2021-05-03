@@ -13,7 +13,7 @@ The following must be installed and accessible from the command line:
 
 1. Clone the repository with Git.
 ```commandline
-git clone https://github.com/joshuaprince/MCBingo.git
+git clone https://github.com/joshuaprince/MultiBingo.git
 ```
 2. Run the `INSTALL.sh` script in the easy-server directory.
 

@@ -78,10 +78,7 @@ class GameEffects(
 
     private fun teleportToWorld(player: BingoPlayer, worldSet: WorldManager.WorldSet) {
         if (player is BingoPlayerRemote) return
-        val world = worldSet.world(World.Environment.NORMAL) ?: run {
-            BingoPlugin.logger.severe("Could not find a world to teleport ${player.name} to!")
-            return
-        }
+        val world = worldSet.world(World.Environment.NORMAL)
         world.time = 0
         player.bukkitPlayers.forEach { p -> p.teleport(world.spawnLocation) }
     }

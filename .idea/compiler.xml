@@ -5,6 +5,11 @@
       <module name="kotlinplugin" target="14" />
       <module name="kotlinplugin.main" target="14" />
       <module name="kotlinplugin.test" target="14" />
+      <module name="MultiBingo" target="14" />
+      <module name="MultiBingo.main" target="14" />
+      <module name="MultiBingo.test" target="14" />
+      <module name="MultiBingoPlugin.main" target="14" />
+      <module name="MultiBingoPlugin.test" target="14" />
     </bytecodeTargetLevel>
   </component>
 </project>

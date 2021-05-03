@@ -1,5 +1,5 @@
 """
-ASGI config for MCBingo project.
+ASGI config for MultiBingo project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

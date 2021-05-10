@@ -73,18 +73,6 @@ object ActivationHelpers {
         Material.LEATHER_BOOTS
     )
 
-    val ICE_BLOCKS = setOf(
-        Material.ICE, Material.FROSTED_ICE, Material.BLUE_ICE, Material.PACKED_ICE
-    )
-
-    val CARPETS = setOf(
-        Material.BLACK_CARPET, Material.BLUE_CARPET, Material.CYAN_CARPET, Material.BROWN_CARPET,
-        Material.GRAY_CARPET, Material.GREEN_CARPET, Material.LIGHT_BLUE_CARPET,
-        Material.LIGHT_GRAY_CARPET, Material.LIME_CARPET, Material.MAGENTA_CARPET,
-        Material.ORANGE_CARPET, Material.PINK_CARPET, Material.PURPLE_CARPET, Material.RED_CARPET,
-        Material.WHITE_CARPET, Material.YELLOW_CARPET
-    )
-
     val FIRE_DAMAGE_CAUSES = setOf(
         EntityDamageEvent.DamageCause.FIRE, EntityDamageEvent.DamageCause.FIRE_TICK,
         EntityDamageEvent.DamageCause.HOT_FLOOR

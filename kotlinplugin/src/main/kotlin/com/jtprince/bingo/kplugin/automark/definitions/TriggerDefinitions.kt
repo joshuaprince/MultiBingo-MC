@@ -14,7 +14,6 @@ package com.jtprince.bingo.kplugin.automark.definitions
 import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.FISH_ENTITIES
-import com.jtprince.bingo.kplugin.automark.ActivationHelpers.ICE_BLOCKS
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.containsQuantity
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.get4x4Art
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.inVillage
@@ -179,7 +178,7 @@ val dslRegistry = TriggerDslRegistry {
         // Put a Carpet on a Llama
         event.inventory.holder is Llama
                 && event.inventory.contents.filterNotNull().any {
-            ActivationHelpers.CARPETS.contains(it.type)
+            Tag.CARPETS.isTagged(it.type)
         }
     }
 
@@ -417,9 +416,9 @@ val dslRegistry = TriggerDslRegistry {
         // Ice Block on top of a Magma Block
         when (event.block.type) {
             Material.MAGMA_BLOCK -> {
-                event.block.getRelative(BlockFace.UP).type in ICE_BLOCKS
+                Tag.ICE.isTagged(event.block.getRelative(BlockFace.UP).type)
             }
-            in ICE_BLOCKS -> {
+            in Tag.ICE.values -> {
                 event.block.getRelative(BlockFace.DOWN).type == Material.MAGMA_BLOCK
             }
             else -> false
@@ -610,7 +609,7 @@ val dslRegistry = TriggerDslRegistry {
     eventTrigger<PlayerInteractEvent>("jm_map_marker") {
         // Add a Marker to a Map (by right clicking a banner with the map)
         event.item?.type == Material.FILLED_MAP
-                && event.clickedBlock?.type?.key.toString().contains("_banner")
+                && event.clickedBlock?.type?.let { Tag.BANNERS.isTagged(it) } == true
                 && event.action == Action.RIGHT_CLICK_BLOCK
     }
 
@@ -743,7 +742,7 @@ val dslRegistry = TriggerDslRegistry {
         val block = event.clickedBlock
         block != null
                 && block.world.environment == World.Environment.NETHER
-                && block.type.key.toString().contains("_bed")
+                && Tag.BEDS.isTagged(block.type)
                 && event.action == Action.RIGHT_CLICK_BLOCK
     }
 

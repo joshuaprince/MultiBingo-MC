@@ -4,6 +4,7 @@ import com.jtprince.bingo.kplugin.automark.AutoMarkBukkitListener
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.webclient.WebHttpClient
 import dev.jorel.commandapi.CommandAPI
+import dev.jorel.commandapi.CommandAPIConfig
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -34,7 +35,9 @@ class BingoPluginClass : JavaPlugin() {
             logger.info("Debug mode is enabled.")
         }
 
-        CommandAPI.onLoad(debug)
+        val cfg = CommandAPIConfig()
+        cfg.verboseOutput = debug
+        CommandAPI.onLoad(cfg)
     }
 
     override fun onDisable() {

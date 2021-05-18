@@ -15,8 +15,9 @@ abstract class AutoMarkTrigger {
     }
 
     companion object {
-        val allAutomatedGoals
-            get() = ItemTriggerYaml.defaultYaml.allAutomatedGoals + dslRegistry.allAutomatedGoals
+        val allAutomatedGoals by lazy {
+            ItemTriggerYaml.defaultYaml.allAutomatedGoals + dslRegistry.allAutomatedGoals
+        }
     }
 
     abstract fun destroy()

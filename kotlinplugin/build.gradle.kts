@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.4.32"
+    kotlin("jvm") version "1.5.0"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("com.palantir.git-version") version "0.12.3"
 }
@@ -14,22 +14,24 @@ version = gitVersion()
 repositories {
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/")
-    maven("https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/")
+    maven("https://jitpack.io")
 }
 
 dependencies {
+    val kotlinVersion = "1.5.0"
     val paperVersion = "1.16.5"
-    val ktorVersion = "1.5.3"
-    val jacksonVersion = "2.12.2"
+    val ktorVersion = "1.5.4"
+    val jacksonVersion = "2.12.3"
 
     shadow("com.destroystokyo.paper", "paper-api", "$paperVersion-R0.1-SNAPSHOT")
 
-    implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib", kotlinVersion))
+    implementation(kotlin("reflect", kotlinVersion))
     implementation("io.ktor", "ktor-client-core", ktorVersion)
     implementation("io.ktor", "ktor-client-websockets", ktorVersion)
     implementation("io.ktor", "ktor-client-cio", ktorVersion)
     implementation("io.ktor", "ktor-client-jackson", ktorVersion)
-    implementation("dev.jorel", "commandapi-shade", "5.9")
+    implementation("dev.jorel.CommandAPI", "commandapi-shade", "5.12")
     implementation("com.fasterxml.jackson.core", "jackson-core", jacksonVersion)
     implementation("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", jacksonVersion)
     implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", jacksonVersion)

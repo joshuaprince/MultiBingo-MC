@@ -98,7 +98,7 @@ object Commands {
             })
 
         val goalIdsArg = StringArgument("goalId")
-            .overrideSuggestions(AutoMarkTrigger.allAutomatedGoals)
+            .overrideSuggestions { _ -> AutoMarkTrigger.allAutomatedGoals.toTypedArray() }
         val debugCmd = CommandAPICommand("debug")
             .withArguments(goalIdsArg)
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->

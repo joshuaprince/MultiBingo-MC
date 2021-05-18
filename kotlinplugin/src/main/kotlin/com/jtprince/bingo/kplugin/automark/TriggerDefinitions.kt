@@ -307,6 +307,42 @@ val dslRegistry = TriggerDslRegistry {
                 && event.inventory.containsQuantity(320)
     }
 
+    occasionalTrigger("jm_finish_jump_world", ticks = 5) {
+        // Finish by jumping from top to bottom of the world
+        for (player in player.bukkitPlayers) {
+            if (player.location.y >= 256) {
+                player.setMetadata("lastTickAtHeightLimit", FixedMetadataValue(BingoPlugin, Bukkit.getCurrentTick()))
+            }
+        }
+        false
+    }
+    eventTrigger<PlayerDeathEvent>("jm_finish_jump_world", revertAfterTicks = 60) {
+        // Finish by jumping from top to bottom of the world
+        val lastTickAtHeightLimit = event.entity.getMetadata("lastTickAtHeightLimit")
+            .find { it.owningPlugin == BingoPlugin }?.asInt() ?: return@eventTrigger false
+        event.entity.lastDamageCause?.cause == EntityDamageEvent.DamageCause.FALL
+                && event.entity.location.block.getRelative(BlockFace.DOWN).type == Material.BEDROCK
+                && (Bukkit.getCurrentTick() - lastTickAtHeightLimit) < 200
+    }
+
+    occasionalTrigger("jm_finish_spawnpoint", ticks = 20, revertAfterTicks = 40) {
+        // Finish where you spawned using a Compass
+        player.bukkitPlayers.any {
+            val spawnLocIgnoreY = it.world.spawnLocation
+            spawnLocIgnoreY.y = it.location.y
+            it.inventory.contains(Material.COMPASS)
+                    && it.world.environment == World.Environment.NORMAL
+                    && it.location.distanceSquared(spawnLocIgnoreY) < 5
+        }
+    }
+
+    occasionalTrigger("jm_finish_top_world", ticks = 20, revertAfterTicks = 40) {
+        // Finish on top of the world
+        player.bukkitPlayers.any {
+            it.location.y >= 256
+        }
+    }
+
     eventTrigger<BlockIgniteEvent>("jm_fire_village") {
         // Set fire to a Villager's House
         // This is a hard one to make specific...

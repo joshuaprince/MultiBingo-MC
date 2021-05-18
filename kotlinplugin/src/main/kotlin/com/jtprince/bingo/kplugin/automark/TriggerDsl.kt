@@ -40,22 +40,24 @@ internal class TriggerDslRegistryBuilder {
 
     internal inline fun <reified EventType : Event> eventTrigger(
         vararg goalIds: String,
+        revertAfterTicks: Int? = null,
         noinline check: EventTriggerDefinition.Parameters<out EventType>.() -> Boolean
     ) {
         for (goalId in goalIds) {
             val lst = triggers.getOrPut(goalId) { mutableListOf() }
-            lst += EventTriggerDefinition(EventType::class, check)
+            lst += EventTriggerDefinition(EventType::class, revertAfterTicks, check)
         }
     }
 
     internal fun occasionalTrigger(
         vararg goalIds: String,
         ticks: Int,
+        revertAfterTicks: Int? = null,
         check: OccasionalTriggerDefinition.Parameters.() -> Boolean
     ) {
         for (goalId in goalIds) {
             val lst = triggers.getOrPut(goalId) { mutableListOf() }
-            lst += OccasionalTriggerDefinition(ticks, check)
+            lst += OccasionalTriggerDefinition(ticks, revertAfterTicks, check)
         }
     }
 
@@ -87,6 +89,7 @@ internal abstract class TriggerDslDefinition
 
 internal class EventTriggerDefinition<EventType: Event>(
     val eventType: KClass<EventType>,
+    val revertAfterTicks: Int?,
     val function: (Parameters<EventType>) -> Boolean
 ) : TriggerDslDefinition() {
     class Parameters<EventType: Event>(
@@ -103,6 +106,7 @@ internal class EventTriggerDefinition<EventType: Event>(
 
 internal class OccasionalTriggerDefinition(
     val ticks: Int,
+    val revertAfterTicks: Int?,
     val function: (Parameters) -> Boolean
 ) : TriggerDslDefinition() {
     class Parameters(

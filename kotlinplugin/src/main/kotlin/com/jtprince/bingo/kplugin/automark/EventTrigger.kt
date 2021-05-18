@@ -14,8 +14,14 @@ class EventTrigger<EventType : Event> internal constructor(
             eventRaised(it)
         })
 
+    private val timedReverter: TimedGoalReverter? = when (triggerDefinition.revertAfterTicks) {
+        null -> null
+        else -> TimedGoalReverter(triggerDefinition.revertAfterTicks, callback)
+    }
+
     override fun destroy() {
         AutoMarkBukkitListener.unregister(listenerRegistryId)
+        timedReverter?.destroy()
     }
 
     /**
@@ -30,6 +36,7 @@ class EventTrigger<EventType : Event> internal constructor(
         /* Event triggers are never revertible. */
         if (satisfied) {
             callback.trigger(player, space, satisfied)
+            timedReverter?.revertLater(player, space)
         }
     }
 }

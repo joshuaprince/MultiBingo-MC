@@ -5,7 +5,6 @@ import com.jtprince.bingo.kplugin.WorldManager
 import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.BingoPlayerRemote
-import org.bukkit.OfflinePlayer
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
@@ -18,16 +17,17 @@ import org.bukkit.event.player.PlayerEvent
 import org.bukkit.event.vehicle.VehicleEvent
 import org.bukkit.event.weather.WeatherEvent
 import org.bukkit.event.world.WorldEvent
+import java.util.*
 
 /**
  * Single-game container for all players in that game and functionality relating to them.
  */
 class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
-    private val localPlayersMap: HashMap<OfflinePlayer, BingoPlayer> = run {
-        val ret = HashMap<OfflinePlayer, BingoPlayer>()
+    private val localPlayersMap: HashMap<UUID, BingoPlayer> = run {
+        val ret = HashMap<UUID, BingoPlayer>()
         for (p in localPlayers) {
             for (op in p.offlinePlayers) {
-                ret[op] = p
+                ret[op.uniqueId] = p
             }
         }
         ret
@@ -64,7 +64,7 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      * @return The BingoPlayer object, or null if this Player is not part of this game.
      */
     fun bingoPlayer(player: Player): BingoPlayer? {
-        return localPlayersMap[player]
+        return localPlayersMap[player.uniqueId]
     }
 
     /**

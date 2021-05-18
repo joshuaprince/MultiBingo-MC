@@ -16,8 +16,14 @@ class OccasionalTrigger internal constructor(
     private val taskId = BingoPlugin.server.scheduler.scheduleSyncRepeatingTask(
             BingoPlugin, this::invoke, triggerDefinition.ticks.toLong(), triggerDefinition.ticks.toLong())
 
+    private val timedReverter: TimedGoalReverter? = when (triggerDefinition.revertAfterTicks) {
+        null -> null
+        else -> TimedGoalReverter(triggerDefinition.revertAfterTicks, callback)
+    }
+
     override fun destroy() {
         BingoPlugin.server.scheduler.cancelTask(taskId)
+        timedReverter?.destroy()
     }
 
     private fun invoke() {
@@ -29,6 +35,7 @@ class OccasionalTrigger internal constructor(
             /* Occasional triggers are never revertible. */
             if (satisfied) {
                 callback.trigger(player, space, true)
+                timedReverter?.revertLater(player, space)
             }
         }
     }

@@ -99,6 +99,7 @@ goals:
   jm_lava_glass_cube:
     difficulty: 0
     text: Build a glass cube and fill the inner with lava
+    tooltip: Must be a fully enclosed 3x3x3 cube of unstained regular glass
 
   jm_moss_stone:
     difficulty: 0

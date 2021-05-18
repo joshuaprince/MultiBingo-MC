@@ -11,6 +11,7 @@
 
 package com.jtprince.bingo.kplugin.automark
 
+import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.FISH_ENTITIES
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.ICE_BLOCKS
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.containsQuantity
@@ -23,6 +24,7 @@ import com.jtprince.util.KotlinUtils.increment
 import io.papermc.paper.event.player.PlayerTradeEvent
 import org.bukkit.*
 import org.bukkit.block.Banner
+import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.Levelled
 import org.bukkit.entity.*
@@ -42,6 +44,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BannerMeta
 import org.bukkit.inventory.meta.BlockStateMeta
 import org.bukkit.inventory.meta.LeatherArmorMeta
+import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.potion.PotionEffectType
 import org.spigotmc.event.entity.EntityMountEvent
 import java.util.*
@@ -146,6 +149,13 @@ val dslRegistry = TriggerDslRegistry {
             playerState.extra { mutableSetOf<Location>() } += block.location
         }
         false
+    }
+
+    occasionalTrigger("jm_bounce_slime", ticks = 4) {
+        // Bounce on a Slime Block
+        player.bukkitPlayers.any {
+            it.location.block.getRelative(BlockFace.DOWN).type == Material.SLIME_BLOCK
+        }
     }
 
     eventTrigger<CreatureSpawnEvent>("jm_build_golem_iron") {
@@ -442,6 +452,29 @@ val dslRegistry = TriggerDslRegistry {
         ((event.entity.lastDamageCause as? EntityDamageByEntityEvent)?.damager as? Arrow)?.shooter == event.entity
     }
 
+    eventTrigger<ProjectileHitEvent>("jm_kill_self_pearl") {
+        // Kill yourself with an Ender Pearl
+        val proj = event.entity
+        val shooter = event.entity.shooter
+        if (proj is EnderPearl && shooter is Player) {
+            /* There is no inherent way in Bukkit to detect if the player died to an Ender pearl,
+             *  those deaths are just shown as fall deaths. To hack around this, every time a Bukkit
+             *  player teleports with an Ender pearl, set that player's "last pearl tick" to the
+             *  current tick. If a player died to an ender pearl, then their last pearl tick will
+             *  be equal to the current tick. */
+            val lastPearlTick = playerState.extra { mutableMapOf<Player, Int>() }
+            lastPearlTick[shooter] = event.entity.server.currentTick
+        }
+        false
+    }
+    eventTrigger<PlayerDeathEvent>("jm_kill_self_pearl") {
+        // Kill yourself with an Ender Pearl
+        /* See above ProjectileHitEvent eventTrigger */
+        val lastPearlTick = playerState.extra { mutableMapOf<Player, Int>() }
+        event.entity.lastDamageCause?.cause == EntityDamageEvent.DamageCause.FALL
+                && lastPearlTick[event.entity]?.let { event.entity.server.currentTick == it } == true
+    }
+
     eventTrigger<EntityDeathEvent>("jm_kill_skeleton_own_arrow") {
         // Kill a Skeleton with its own Arrow
         event.entityType == EntityType.SKELETON
@@ -449,11 +482,85 @@ val dslRegistry = TriggerDslRegistry {
                     ?.shooter == event.entity
     }
 
-    eventTrigger<PlayerInteractEntityEvent>("jm_lead_rabbit") {
+    eventTrigger<BlockPlaceEvent>("jm_lava_glass_cube") {
+        // Build a glass cube and fill the inner with lava
+        /* No need to check lava place event - impossible to place with an enclosed cube */
+        if (event.block.type != Material.GLASS) return@eventTrigger false
+
+        /* Find lava nearby */
+        val lavaBlocks = mutableSetOf<Block>()
+        for (dx in -1..1) {
+            for (dy in -1..1) {
+                for (dz in -1..1) {
+                    val blk = event.block.getRelative(dx, dy, dz)
+                    if (blk.type == Material.LAVA) {
+                        lavaBlocks += blk
+                    }
+                }
+            }
+        }
+
+        /* Check if each lava is fully enclosed by glass */
+        lavaBlocks.any { lava ->
+            for (dx in -1..1) {
+                for (dy in -1..1) {
+                    for (dz in -1..1) {
+                        if (dx == 0 && dy == 0 && dz == 0) continue
+                        val blk = lava.getRelative(dx, dy, dz)
+                        if (blk.location == event.block.location) continue
+                        if (blk.type != Material.GLASS) {
+                            return@any false
+                        }
+                    }
+                }
+            }
+            true
+        }
+    }
+
+    eventTrigger<PlayerLeashEntityEvent>("jm_lead_dolphin") {
+        // Leash a Dolphin to a Fence
+        event.entity.type == EntityType.DOLPHIN && event.leashHolder.type == EntityType.LEASH_HITCH
+    }
+
+    eventTrigger<PlayerLeashEntityEvent>("jm_lead_hang") {
+        // Hang a mob with a lead
+        if (event.leashHolder.type == EntityType.LEASH_HITCH) {
+            val hitchedEntities = playerState.extra { mutableSetOf<UUID>() }
+            hitchedEntities += event.entity.uniqueId
+        }
+        false
+    }
+    eventTrigger<EntityUnleashEvent>("jm_lead_hang") {
+        // Hang a mob with a lead
+        val hitchedEntities = playerState.extra { mutableSetOf<UUID>() }
+        hitchedEntities -= event.entity.uniqueId
+        false
+    }
+    occasionalTrigger("jm_lead_hang", ticks = 10) {
+        // Hang a mob with a lead
+        val hitchedEntities = playerState.extra { mutableSetOf<UUID>() }
+        for (uuid in hitchedEntities) {
+            val entity = Bukkit.getEntity(uuid) ?: continue
+            /* The mob must remain off the ground for 3 consecutive iterations of the
+             *  occasionalTrigger to be considered hanged. */
+            if (!entity.isOnGround) {
+                val hangTime = entity.getMetadata("bingoHangTime")
+                    .find { it.owningPlugin == BingoPlugin }?.asInt() ?: 0
+                entity.setMetadata("bingoHangTime", FixedMetadataValue(BingoPlugin, hangTime + 1))
+                if (hangTime > 2) {
+                    return@occasionalTrigger true
+                }
+            } else {
+                entity.setMetadata("bingoHangTime", FixedMetadataValue(BingoPlugin, 0))
+            }
+        }
+        false
+    }
+
+    eventTrigger<PlayerLeashEntityEvent>("jm_lead_rabbit") {
         // Use a lead on a rabbit
-        val hand = event.player.inventory.getItem(event.hand)
-        event.rightClicked.type == EntityType.RABBIT
-                && hand != null && hand.type == Material.LEAD
+        event.entity.type == EntityType.RABBIT
     }
 
     eventTrigger<PlayerLevelChangeEvent>("jm_level") {
@@ -568,11 +675,11 @@ val dslRegistry = TriggerDslRegistry {
                 && damager.inventory.itemInMainHand.type.key.asString().contains("_sword")
     }
 
-//    occasionalTrigger("jm_pigman_water", ticks = 10) {
-//        worlds.world(World.Environment.NORMAL).getEntitiesByClass(PigZombie::class.java).any {
-//            it.location.block.type == Material.WATER
-//        }
-//    }
+    occasionalTrigger("jm_pigman_water", ticks = 10) {
+        worlds.world(World.Environment.NORMAL).getEntitiesByClass(PigZombie::class.java).any {
+            it.location.block.type == Material.WATER
+        }
+    }
 
     eventTrigger<BlockPlaceEvent>("jm_pimp_tower") {
         // Place an Iron, Gold and Diamond block on top of each other

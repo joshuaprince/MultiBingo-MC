@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 /**
  * Container for one BingoPlayer's progress towards a single Auto Mark Trigger. This should only
  * be used by goals that require a persistent state to be tracked between actions that the player
- * can do, for example performing an Event more than once.
+ * can do, such as performing an Event more than once.
  *
  * @param notifyPlayer The BingoPlayer that owns this Progress, and who will be notified as they
  *                     make progress.

@@ -1,5 +1,7 @@
 package com.jtprince.bingo.kplugin.automark
 
+import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import org.bukkit.event.Event
 
 class EventTrigger<EventType : Event> internal constructor(
@@ -9,8 +11,8 @@ class EventTrigger<EventType : Event> internal constructor(
     private val triggerDefinition: EventTriggerDefinition<EventType>,
 ) : AutoMarkTrigger() {
 
-    private val listenerRegistryId = AutoMarkBukkitListener.register(triggerDefinition.eventType,
-        AutoMarkBukkitListener.Callback(triggerDefinition.eventType) {
+    private val listenerRegistryId = BingoPlugin.eventRegistry.register(triggerDefinition.eventType,
+        BukkitEventRegistry.Callback(triggerDefinition.eventType) {
             eventRaised(it)
         })
 
@@ -20,7 +22,7 @@ class EventTrigger<EventType : Event> internal constructor(
     }
 
     override fun destroy() {
-        AutoMarkBukkitListener.unregister(listenerRegistryId)
+        BingoPlugin.eventRegistry.unregister(listenerRegistryId)
         timedReverter?.destroy()
     }
 

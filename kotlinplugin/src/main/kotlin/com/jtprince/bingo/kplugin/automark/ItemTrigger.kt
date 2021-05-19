@@ -1,5 +1,6 @@
 package com.jtprince.bingo.kplugin.automark
 
+import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
 import kotlin.math.min
@@ -7,7 +8,7 @@ import kotlin.math.min
 open class ItemTrigger internal constructor(
     val space: AutomatedSpace,
     private val playerMapper: EventPlayerMapper,
-    private val listener: AutoMarkBukkitListener?,
+    private val listener: BukkitEventRegistry?,
     private val callback: Callback?,
     private val rootMatchGroup: ItemTriggerYaml.MatchGroup?,
 ) : AutoMarkTrigger() {
@@ -15,7 +16,7 @@ open class ItemTrigger internal constructor(
     protected open val revertible = true
 
     private val listenerRegistryId = listener?.registerInventoryChange(
-        AutoMarkBukkitListener.Callback(Event::class) {
+        BukkitEventRegistry.Callback(Event::class) {
             eventRaised(it)
         })
 

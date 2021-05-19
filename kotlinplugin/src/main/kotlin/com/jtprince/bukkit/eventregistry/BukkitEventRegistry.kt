@@ -1,6 +1,6 @@
-package com.jtprince.bingo.kplugin.automark
+package com.jtprince.bukkit.eventregistry
 
-import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bukkit.eventregistry.BukkitEventRegistry.RegistryId
 import org.bukkit.Bukkit
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
@@ -12,23 +12,42 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.plugin.EventExecutor
 import org.bukkit.plugin.IllegalPluginAccessException
+import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.superclasses
 
 /**
- * Container for all Bukkit Event Listeners.
+ * A complete wrapper for the Bukkit event system.
  *
- * Rather than each Goal having its own listener that hooks into Bukkit, we register all
- * Bukkit Event Listeners here. Individual goal triggers can register here to be called back
- * whenever that event occurs.
+ * Basic usage is to register event callbacks with the [register] function. The provided callback
+ * will be executed whenever that event is raised on the server.
+ *
+ * The [register] function returns a [RegistryId] object, which is a unique handle on that
+ * Event-callback mapping. This mapping can be undone by providing that same RegistryId to the
+ * [unregister] function.
+ *
+ * @param plugin The Bukkit plugin instance that will be used to register underlying Bukkit
+ *               listeners.
+ *
+ * Goals of the BukkitEventRegistry:
+ *   - Kotlin-first support.
+ *   - Optimization for many individual registered listeners.
+ *   - Ease of unregistering registered listeners.
+ *   - Hiding of Bukkit's Handler system, whose use of abstract Event classes and HandlerLists makes
+ *     the above confusing.
+ *   - Addition of Inventory Change listeners.
  */
-object AutoMarkBukkitListener : Listener, EventExecutor {
+class BukkitEventRegistry(private val plugin: Plugin) : Listener, EventExecutor {
     class Callback<EventType : Event>(
-        internal val eventType: KClass<EventType>,
-        internal val callback: (EventType) -> Unit
+        val eventType: KClass<EventType>,
+        val callback: (EventType) -> Unit
     ) : (EventType) -> Unit by callback
+
+    /** A handle on an EventType-callback mapping provided by [register] that can be [unregister]ed */
+    @JvmInline
+    value class RegistryId internal constructor(internal val id: Int)
 
     /** Event Classes that we already have a Bukkit Listener for. */
     private val registeredEventTypes = HashSet<KClass<out Event>>()
@@ -38,12 +57,12 @@ object AutoMarkBukkitListener : Listener, EventExecutor {
     private val activeEventListenerMap = HashMap<KClass<out Event>, HashSet<Callback<*>>>()
 
     /** Maps the ID given in [register] to a callback so we can unregister it. */
-    private val regEventListeners = HashMap<Int, Callback<*>>()
+    private val regEventListeners = HashMap<RegistryId, Callback<*>>()
 
     /** Maps the ID given in [registerInventoryChange] to a callback so we can unregister. */
-    private val regInvListeners = HashMap<Int, Callback<Event>>()
+    private val regInvListeners = HashMap<RegistryId, Callback<Event>>()
 
-    private var lastId = 0
+    private var lastId = RegistryId(0)
     private val inventoryChangeEventClasses = setOf(
         InventoryCloseEvent::class, EntityPickupItemEvent::class, InventoryClickEvent::class,
         PlayerDropItemEvent::class
@@ -55,16 +74,17 @@ object AutoMarkBukkitListener : Listener, EventExecutor {
      * @return A unique "registry ID" that can be used to unregister this callback.
      */
     fun <EventType: Event> register(eventType: KClass<EventType>,
-                                    callback: Callback<EventType>): Int {
+                                    callback: Callback<EventType>
+    ): RegistryId {
         listenToEvent(eventType)
 
         val list = activeEventListenerMap.getOrPut(eventType) { hashSetOf() }
         list += callback
 
         /* Give the caller a unique identifier that they can use to unregister */
-        val id = lastId++
-        regEventListeners[id] = callback
-        return id
+        lastId = RegistryId(lastId.id + 1)
+        regEventListeners[lastId] = callback
+        return lastId
     }
 
     /**
@@ -72,27 +92,31 @@ object AutoMarkBukkitListener : Listener, EventExecutor {
      * whenever an inventory changes.
      * @return A unique "registry ID" that can be used to unregister this callback.
      */
-    fun registerInventoryChange(callback: Callback<Event>): Int {
-        inventoryChangeEventClasses.forEach{
-            listenToEvent(it)
+    fun registerInventoryChange(callback: Callback<Event>): RegistryId {
+        for (clazz in inventoryChangeEventClasses) {
+            listenToEvent(clazz)
         }
 
-        val id = lastId++
-        regInvListeners[id] = callback
-        return id
+        lastId = RegistryId(lastId.id + 1)
+        regInvListeners[lastId] = callback
+        return lastId
     }
 
     /**
      * Stop passing an event to a callback.
      * @param registryId A registry ID provided by a [register] call.
      */
-    fun unregister(registryId: Int) {
+    fun unregister(registryId: RegistryId) {
         val eventMapEntry = regEventListeners[registryId]
         val invMapEntry = regInvListeners[registryId]
 
         when {
             eventMapEntry != null -> {
-                val lst = activeEventListenerMap[eventMapEntry.eventType]!!
+                val lst = activeEventListenerMap[eventMapEntry.eventType] ?: run {
+                    plugin.logger.severe(
+                        "${eventMapEntry.eventType} is not in the active Bukkit Event Listener map.")
+                    return
+                }
                 lst -= eventMapEntry
                 regEventListeners -= registryId
             }
@@ -100,10 +124,19 @@ object AutoMarkBukkitListener : Listener, EventExecutor {
                 regInvListeners -= registryId
             }
             else -> {
-                BingoPlugin.logger.severe("Tried to unregister unknown listener registry ID $registryId")
+                plugin.logger.severe("Tried to unregister unknown listener registry ID $registryId")
                 return
             }
         }
+    }
+
+    /**
+     * Stop passing ALL events to callbacks registered with this BukkitEventRegistry instance, and
+     * unregister all internal Bukkit listeners. No more callbacks should be registered after this
+     * is called. This should only be called at Plugin disable.
+     */
+    fun unregisterAll() {
+        HandlerList.unregisterAll(this)
     }
 
     /**
@@ -172,13 +205,13 @@ object AutoMarkBukkitListener : Listener, EventExecutor {
 
             handlerList
         } catch (exc: Exception) {
-            BingoPlugin.logger.log(Level.SEVERE, "Failed to listen to event of type ${eventType.simpleName}", exc)
+            plugin.logger.log(Level.SEVERE, "Failed to listen to event of type ${eventType.simpleName}", exc)
             return
         }
 
         /* Both caches missed. Register a new listener for this Event. */
         Bukkit.getServer().pluginManager.registerEvent(
-            eventType.java, this, EventPriority.MONITOR, this, BingoPlugin
+            eventType.java, this, EventPriority.MONITOR, this, plugin
         )
         registeredHandlerLists += handlerList
         registeredEventTypes += eventType
@@ -189,7 +222,7 @@ object AutoMarkBukkitListener : Listener, EventExecutor {
      * is updated when any callbacks receive the event.
      */
     private fun receiveInventoryChange(event: Event) {
-        BingoPlugin.server.scheduler.scheduleSyncDelayedTask(BingoPlugin, {
+        plugin.server.scheduler.scheduleSyncDelayedTask(plugin, {
             for (callback in regInvListeners.values) {
                 callback(event)
             }

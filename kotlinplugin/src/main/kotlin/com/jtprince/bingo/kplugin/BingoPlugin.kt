@@ -1,8 +1,8 @@
 package com.jtprince.bingo.kplugin
 
-import com.jtprince.bingo.kplugin.automark.AutoMarkBukkitListener
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.webclient.WebHttpClient
+import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIConfig
 import org.bukkit.Bukkit
@@ -17,6 +17,8 @@ class BingoPluginClass : JavaPlugin() {
         pluginInstance = this
     }
 
+    lateinit var eventRegistry: BukkitEventRegistry
+
     override fun onEnable() {
         CommandAPI.onEnable(this)
         Commands.registerCommands()
@@ -24,7 +26,7 @@ class BingoPluginClass : JavaPlugin() {
 
         WebHttpClient.pingBackend()
 
-        server.pluginManager.registerEvents(AutoMarkBukkitListener, this)
+        eventRegistry = BukkitEventRegistry(this)
         server.pluginManager.registerEvents(WorldManager.WorldManagerListener, this)
     }
 
@@ -42,5 +44,6 @@ class BingoPluginClass : JavaPlugin() {
 
     override fun onDisable() {
         BingoGame.destroyCurrentGame(Bukkit.getConsoleSender())
+        eventRegistry.unregisterAll()
     }
 }

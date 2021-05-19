@@ -28,7 +28,7 @@ class AutoMarkTriggerFactory(
 
         /* Create Item Trigger YML-specified triggers */
         itemTriggerYaml[space.goalId]?.also {
-            ret += ItemTrigger(space, playerMapper, AutoMarkBukkitListener, callback, it)
+            ret += ItemTrigger(space, playerMapper, BingoPlugin.eventRegistry, callback, it)
         }
 
         return ret.toSet()

@@ -6,8 +6,8 @@
 
 package com.jtprince.bingo.kplugin.automark
 
-import com.jtprince.bingo.kplugin.WorldManager
 import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.event.Event
 import kotlin.reflect.KClass
 
@@ -111,7 +111,7 @@ internal class OccasionalTriggerDefinition(
 ) : TriggerDslDefinition() {
     class Parameters(
         val player: BingoPlayer,
-        val worlds: WorldManager.WorldSet,
+        val worlds: WorldSet,
         val trigger: OccasionalTrigger,
     ) {
         val vars = trigger.space.variables

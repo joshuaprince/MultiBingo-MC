@@ -1,10 +1,13 @@
 package com.jtprince.bingo.kplugin.game
 
+import com.jtprince.bingo.kplugin.BingoConfig
 import com.jtprince.bingo.kplugin.BingoPlugin
-import com.jtprince.bingo.kplugin.WorldManager
+import com.jtprince.bingo.kplugin.Messages.bingoTell
 import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.BingoPlayerRemote
+import com.jtprince.bingo.kplugin.player.BingoRemotePlayerUnsupportedException
+import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
@@ -34,7 +37,7 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
     }
     private val remotePlayers = HashSet<BingoPlayer>()
 
-    internal val playerWorldSetMap = HashMap<BingoPlayer, WorldManager.WorldSet>()
+    internal val playerWorldSetMap = HashMap<BingoPlayer, WorldSet>()
     internal val worldPlayerMap = HashMap<World, BingoPlayer>()
 
     /**
@@ -100,13 +103,13 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      * @param player A Local BingoPlayer.
      * @return The player's WorldSet, or null if the player does not have one.
      */
-    override fun worldSet(player: BingoPlayer) : WorldManager.WorldSet {
+    override fun worldSet(player: BingoPlayer) : WorldSet {
         if (player is BingoPlayerRemote) {
-            throw WorldManager.MissingWorldSetException(
+            throw BingoRemotePlayerUnsupportedException(
                 "Tried to get WorldSet for remote player ${player.name}")
         }
 
-        return playerWorldSetMap[player] ?: throw WorldManager.MissingWorldSetException(
+        return playerWorldSetMap[player] ?: throw RuntimeException(
             "Failed to get WorldSet for ${player.name}")
     }
 
@@ -120,7 +123,11 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
             return
         }
 
-        val worldSet = WorldManager.createWorlds("${gameCode}_${player.slugName}", gameCode)
+        val worldSet = BingoPlugin.worldSetManager.createWorldSet(
+            worldSetCode = "${gameCode}_${player.slugName}",
+            seed = gameCode
+        )
+
         playerWorldSetMap[player] = worldSet
         for (w in worldSet.worlds) {
             worldPlayerMap[w] = player
@@ -132,7 +139,9 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      */
     fun destroy() {
         for (ws in playerWorldSetMap.values) {
-            ws.unloadWorlds()
+            ws.unload(BingoConfig.saveWorlds) { playerInWorldSet ->
+                playerInWorldSet.bingoTell("The game is over, returning you to the spawn world.")
+            }
         }
     }
 

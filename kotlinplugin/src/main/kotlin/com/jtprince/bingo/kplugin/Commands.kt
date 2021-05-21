@@ -11,6 +11,7 @@ import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException
 import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder
 import dev.jorel.commandapi.executors.CommandExecutor
 import dev.jorel.commandapi.executors.PlayerCommandExecutor
+import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -151,12 +152,12 @@ object Commands {
 
     private fun commandDestroy(sender: CommandSender) {
         /* Must call the Manager function directly so currentGame can be set to null */
-        BingoGame.destroyCurrentGame(sender)
+        BingoGame.destroyCurrentGame(sender, true)
     }
 
     private fun commandGo(sender: Player, destination: BingoPlayer?) {
         if (destination == null) {
-            sender.teleport(WorldManager.spawnWorld.spawnLocation)
+            sender.teleport(Bukkit.getWorlds()[0].spawnLocation)
         } else {
             val loc = BingoGame.currentGame?.playerManager?.worldSet(destination)?.
                     world(World.Environment.NORMAL)?.spawnLocation

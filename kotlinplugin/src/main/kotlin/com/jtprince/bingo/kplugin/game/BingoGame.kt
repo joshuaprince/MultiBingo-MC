@@ -56,7 +56,11 @@ abstract class BingoGame(
         var currentGame: BingoGame? = null
             private set
 
-        fun destroyCurrentGame(sender: CommandSender) {
+        fun destroyCurrentGame(sender: CommandSender, explicit: Boolean = false) {
+            if (explicit && currentGame == null) {
+                sender.bingoTellError("No game to destroy!")
+                return
+            }
             currentGame?.destroyCurrentGame(sender)
             currentGame = null
         }

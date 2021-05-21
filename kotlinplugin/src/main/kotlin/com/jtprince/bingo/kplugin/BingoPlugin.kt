@@ -3,6 +3,7 @@ package com.jtprince.bingo.kplugin
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.webclient.WebHttpClient
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
+import com.jtprince.bukkit.worldset.WorldSetManager
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIConfig
 import org.bukkit.Bukkit
@@ -18,6 +19,7 @@ class BingoPluginClass : JavaPlugin() {
     }
 
     lateinit var eventRegistry: BukkitEventRegistry
+    lateinit var worldSetManager: WorldSetManager
 
     override fun onEnable() {
         CommandAPI.onEnable(this)
@@ -26,8 +28,8 @@ class BingoPluginClass : JavaPlugin() {
 
         WebHttpClient.pingBackend()
 
+        worldSetManager = WorldSetManager(this, "bingo", baseWorld = { Bukkit.getWorlds()[0] })
         eventRegistry = BukkitEventRegistry(this)
-        server.pluginManager.registerEvents(WorldManager.WorldManagerListener, this)
     }
 
     override fun onLoad() {
@@ -45,5 +47,6 @@ class BingoPluginClass : JavaPlugin() {
     override fun onDisable() {
         BingoGame.destroyCurrentGame(Bukkit.getConsoleSender())
         eventRegistry.unregisterAll()
+        worldSetManager.destroy(BingoConfig.saveWorlds)
     }
 }

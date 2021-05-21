@@ -1,9 +1,9 @@
 package com.jtprince.bingo.kplugin.game
 
 import com.jtprince.bingo.kplugin.BingoPlugin
-import com.jtprince.bingo.kplugin.WorldManager
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.BingoPlayerRemote
+import com.jtprince.bukkit.worldset.WorldSet
 import io.github.skepter.utils.FireworkUtils
 import org.bukkit.GameMode
 import org.bukkit.Sound
@@ -76,7 +76,7 @@ class GameEffects(
         BingoPlugin.server.dispatchCommand(consoleSender, "clear @a")
     }
 
-    private fun teleportToWorld(player: BingoPlayer, worldSet: WorldManager.WorldSet) {
+    private fun teleportToWorld(player: BingoPlayer, worldSet: WorldSet) {
         if (player is BingoPlayerRemote) return
         val world = worldSet.world(World.Environment.NORMAL)
         world.time = 0

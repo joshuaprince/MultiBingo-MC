@@ -12,7 +12,8 @@ import com.jtprince.bingo.kplugin.webclient.model.WebModelPlayerBoard
  * version.
  */
 class PlayerBoardCache(val owner: BingoPlayer) {
-    private val knownMarkings = HashMap<Int, Space.Marking>()
+    private val knownMarkings = mutableMapOf<Int, Space.Marking>()
+    private var ignoredSpaceIds = setOf<Int>()
 
     /**
      * Parse a change in this Player Board sent from the web.
@@ -21,6 +22,10 @@ class PlayerBoardCache(val owner: BingoPlayer) {
         for (marking in webPlayerBoard.markings) {
             knownMarkings[marking.spaceId] = Space.Marking.valueOf(marking.color)
         }
+
+        ignoredSpaceIds = webPlayerBoard.markings
+            .filter { m -> m.markedByPlayer }
+            .map { m -> m.spaceId }.toSet()
     }
 
     /**
@@ -31,6 +36,8 @@ class PlayerBoardCache(val owner: BingoPlayer) {
      */
     fun canSendMarking(spaceId: Int, goalType: Space.GoalType, satisfied: Boolean): Space.Marking? {
         val currentMarking = knownMarkings[spaceId] ?: return null
+
+        if (spaceId in ignoredSpaceIds) return null
 
         val newMarking = when(goalType) {
             Space.GoalType.DEFAULT -> {

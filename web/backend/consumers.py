@@ -113,7 +113,7 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
         )
 
     async def rx_mark_board_player(self, space_id, to_state: int = None, covert_marked: int = None):
-        changed, game_state_msg, winner = await mark_space(
+        changed, game_state_msg, winner = await mark_space_player(
             self.player_board_id, space_id, to_state, covert_marked)
         await mark_disconnected(self.player_board_id, False)
         if game_state_msg is not None:
@@ -299,7 +299,7 @@ def reveal_board(board_id: str, revealed: bool = True):
 
 
 @database_sync_to_async
-def mark_space(player_board_id: int, space_id: int,
+def mark_space_player(player_board_id: int, space_id: int,
                to_state: int = None, covert_marked: bool = None):
     """
     Mark a space on a player's board.
@@ -308,7 +308,8 @@ def mark_space(player_board_id: int, space_id: int,
              announcement that should be made, if any.
     """
     player_board_obj = PlayerBoard.objects.select_related('board').get(pk=player_board_id)
-    changed, announce = player_board_obj.mark_space(space_id, to_state, covert_marked)
+    changed, announce = player_board_obj.mark_space(
+        space_id, to_state, covert_marked, as_player=True)
 
     winner = None
     if player_board_obj.board.winner is None and winning_space_ids(player_board_obj):

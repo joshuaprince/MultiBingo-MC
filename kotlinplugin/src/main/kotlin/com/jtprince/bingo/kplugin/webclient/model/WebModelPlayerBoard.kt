@@ -15,5 +15,6 @@ class WebModelPlayerBoard (
     class WebPlayerBoardMarking (
         @JsonProperty("space_id") val spaceId: Int,
         @JsonProperty("color") val color: Int,
+        @JsonProperty("marked_by_player") val markedByPlayer: Boolean,
     )
 }

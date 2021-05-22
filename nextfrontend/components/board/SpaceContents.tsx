@@ -1,5 +1,6 @@
 import Tippy from "@tippyjs/react"
 import classNames from "classnames"
+import { IPlayerBoardMarking } from "interface/IPlayerBoard"
 
 import { ISpace } from "interface/ISpace"
 import React from "react"
@@ -10,11 +11,14 @@ import "tippy.js/animations/shift-away.css"
 type IProps = {
   obscured: boolean
   space: ISpace
+  marking?: IPlayerBoardMarking
   isPrimary: boolean
+  pendingChange: boolean
 }
 
 export const SpaceContents: React.FunctionComponent<IProps> = (props) => {
-  const autoAStyle = props.space.auto && styles.goalAutoA
+  const autoAStyle = (!props.pendingChange && props.space.auto && !props.marking?.marked_by_player)
+    && styles.goalAutoA
   const textSizeStyle = (props.space.text.length > 32) && styles.small
 
   const goalTooltipText = (props.isPrimary && !props.obscured) && props.space.tooltip

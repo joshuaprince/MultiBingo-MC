@@ -150,7 +150,7 @@ class WebBackedGame(
 
         val autoSpaces = spaces.values.filter(Space::automarking)
         BingoPlugin.logger.info("Automated goals: " +
-                autoSpaces.map(Space::goalId).joinToString(", "))
+                autoSpaces.map(Space::goalId).sorted().joinToString(", "))
 
         val autoMarkMap = HashMap<String, List<Int>>()
         for (player in playerManager.localPlayers) {

@@ -13,7 +13,7 @@ from win_detection.win_detection import winning_space_ids
 class PlayerBoardMarkingSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerBoardMarking
-        fields = ['space_id', 'color', 'covert_marked']
+        fields = ['space_id', 'color', 'covert_marked', 'marked_by_player']
 
     covert_marked = serializers.SerializerMethodField()
 

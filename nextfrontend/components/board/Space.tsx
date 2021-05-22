@@ -137,6 +137,8 @@ export const Space: React.FunctionComponent<IProps> = (props) => {
           obscured={props.obscured}
           space={props.space}
           isPrimary={props.isPrimary}
+          marking={props.marking}
+          pendingChange={!!pendingChange}
         />
       </div>
     </div>

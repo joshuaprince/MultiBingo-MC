@@ -29,7 +29,9 @@ class SpacePlayerSerializer(serializers.ModelSerializer):
 
     def get_auto(self, obj):
         markings = self.context.get('player_board_markings')
-        return obj.pk in (m.space_id for m in markings if m.auto_marker_client_id != '')
+        return obj.pk in (
+            m.space_id for m in markings if not m.marked_by_player and m.auto_marker_client_id != ''
+        )
 
 
 class BoardPlayerSerializer(serializers.ModelSerializer):

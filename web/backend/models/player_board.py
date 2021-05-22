@@ -21,19 +21,27 @@ class PlayerBoard(models.Model):
     class Meta:
         unique_together = ['board', 'player_name']
 
-    def mark_space(self, space_id: int, to_state: Color = None, covert_marked: bool = None):
+    def mark_space(self, space_id: int, to_state: Color = None, covert_marked: bool = None,
+                   as_player: bool = False):
         """
         Mark a space on this player's board to a specified state.
         :return: (changed, announce) - a pair of booleans that indicate whether the board was
                  changed and whether it should be announced.
         """
         marking = self.playerboardmarking_set.get(space_id=space_id)
+
+        if not as_player and marking.marked_by_player:
+            return False, False
+
         changed = False
         if to_state is not None and marking.color != to_state:
             marking.color = to_state
             changed = True
         if covert_marked is not None and marking.covert_marked != covert_marked:
             marking.covert_marked = covert_marked
+            changed = True
+        if to_state is not None and as_player:
+            marking.marked_by_player = True
             changed = True
 
         announce = False

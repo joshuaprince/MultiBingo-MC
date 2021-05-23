@@ -134,6 +134,33 @@ so on in Minecraft. The `message.minecraft` field must contain the message
 formatted
 as [Raw Minecraft JSON](https://minecraft.fandom.com/wiki/Raw_JSON_text_format).
 
+### plugin_parity
+Example:
+```json
+{
+  "action": "plugin_parity",
+  "is_echo": true,
+  "my_settings": {
+    "Difficulty": "EASY",
+    "View Distance": 10
+  }
+}
+```
+
+Availability: Plugin socket only.
+
+Sends a message that will be relayed to all connected plugin clients, describing
+the sender's current Minecraft configuration. This includes settings such as
+Game Rules, difficulty, view distance, and entity tracking distance that may
+give players on one server an advantage if they mismatch.
+
+When sending a parity check for the first time, `is_echo` should be false. If
+a client detects a parity mismatch, the client should send another 
+`plugin_parity` message with `is_echo` set to true. The client should not
+respond with another `plugin_parity` message if `is_echo` is true, to avoid 
+an endless cycle of parity mismatches.
+
+
 ## Server to Client API
 
 ### Board (Player)
@@ -346,3 +373,26 @@ avoid doubled messages, a client should not print a message whose sender is its
 own client ID.
 
 
+### Minecraft Plugin Parity
+
+This packet relays settings on a plugin client to all other plugin clients to
+check that the Minecraft game is configured identically. See 
+[plugin_parity](#plugin_parity) for more info.
+
+```json
+{
+  "plugin_parity": {
+    "sender": "KotlinPlugin1234:Alice,Bob",
+    "is_echo": true,
+    "settings": {
+      "Difficulty": "EASY",
+      "View Distance": 10
+    }
+  }
+}
+```
+
+`sender` is the client ID of the Bingo Plugin that sent this message.
+
+The client should not respond with another `plugin_parity` message if `is_echo`
+is true, to avoid an endless cycle of parity mismatches.

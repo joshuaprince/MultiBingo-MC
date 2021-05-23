@@ -2,6 +2,7 @@ package com.jtprince.bingo.kplugin.webclient
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
+import com.jtprince.bingo.kplugin.PluginParity
 
 abstract class WebsocketTxMessage(
     @JsonProperty("action") val action: Action
@@ -12,6 +13,7 @@ abstract class WebsocketTxMessage(
         MARK_SPACE("board_mark_admin"),
         SET_AUTO_MARKS("set_automarks"),
         MESSAGE_RELAY("message_relay"),
+        PLUGIN_PARITY("plugin_parity"),
     }
 }
 
@@ -36,3 +38,8 @@ class TxMessageSetAutoMarks(
 class TxMessageMessageRelay(  // Oh boy, this is a good one to rename.
     @JsonProperty("json") val json: String,
 ) : WebsocketTxMessage(Action.MESSAGE_RELAY)
+
+class TxMessagePluginParity(
+    @JsonProperty("is_echo") val isEcho: Boolean,
+    @JsonProperty("my_settings") val mySettings: PluginParity.Settings,
+) : WebsocketTxMessage(Action.PLUGIN_PARITY)

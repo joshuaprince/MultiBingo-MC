@@ -1,10 +1,12 @@
 package com.jtprince.bingo.kplugin.game
 
+import com.jtprince.bingo.kplugin.BingoConfig
 import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.Messages
 import com.jtprince.bingo.kplugin.Messages.bingoTell
 import com.jtprince.bingo.kplugin.Messages.bingoTellError
 import com.jtprince.bingo.kplugin.Messages.bingoTellNotReady
+import com.jtprince.bingo.kplugin.PluginParity
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.board.Space
 import com.jtprince.bingo.kplugin.player.BingoPlayer
@@ -14,6 +16,7 @@ import com.jtprince.bingo.kplugin.webclient.WebsocketRxMessage
 import com.jtprince.bingo.kplugin.webclient.model.WebModelBoard
 import com.jtprince.bingo.kplugin.webclient.model.WebModelGameState
 import com.jtprince.bingo.kplugin.webclient.model.WebModelPlayerBoard
+import org.bukkit.World
 import org.bukkit.command.CommandSender
 
 class WebBackedGame(
@@ -30,6 +33,7 @@ class WebBackedGame(
         this::receiveFailedConnection
     )
     private val messageRelay = WebMessageRelay(websocketClient)
+    private lateinit var pluginParity: PluginParity
     private val playerBoardCache = players.associateWith(::PlayerBoardCache)
 
     /* Both of the following must be ready for the game to be put in the "READY" state */
@@ -76,8 +80,27 @@ class WebBackedGame(
             else -> {
                 state = State.READY
                 Messages.bingoAnnounceGameReady(gameCode, playerManager.localPlayers, creator)
+                startPluginParity()
             }
         }
+    }
+
+    private fun startPluginParity() {
+        val anyPlayerWorld = playerManager.localPlayers.firstOrNull()?.let {
+            playerManager.worldSet(it).world(World.Environment.NORMAL)
+        } ?: return
+
+        pluginParity = PluginParity(gameCode, anyPlayerWorld, sendEcho = { settings ->
+            websocketClient.sendPluginParity(true, settings)
+        })
+
+        if (BingoConfig.debug) {
+            for (setting in pluginParity.getMySettings()) {
+                BingoPlugin.logger.info("[Parity] ${setting.key} = ${setting.value}")
+            }
+        }
+
+        websocketClient.sendPluginParity(false, pluginParity.getMySettings())
     }
 
     override fun signalStart(sender: CommandSender?) {
@@ -127,6 +150,7 @@ class WebBackedGame(
         msg.pboards?.run(this::receivePlayerBoards)
         msg.gameState?.run(this::receiveGameState)
         msg.messageRelay?.run(messageRelay::receive)
+        msg.pluginParity?.run(pluginParity::receiveSettings)
     }
 
     private fun receiveFailedConnection() {

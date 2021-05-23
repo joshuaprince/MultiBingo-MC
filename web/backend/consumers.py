@@ -92,6 +92,15 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
             })
             await self.send_message_relay_all_consumers(msg.data)
 
+        if action == 'plugin_parity':
+            my_settings = text_data_json.get('my_settings')
+            is_echo = text_data_json.get('is_echo')
+            await self.send_plugin_parity_all_consumers({
+                'sender': self.client_id,
+                'is_echo': is_echo,
+                'settings': my_settings,
+            })
+
         if broadcast_board:
             await self.send_board_all_consumers()
 
@@ -195,6 +204,19 @@ class BaseWebConsumer(AsyncJsonWebsocketConsumer, ABC):
             'message_relay': event['message']
         }))
 
+    async def send_plugin_parity_all_consumers(self, message):
+        await self.channel_layer.group_send(
+            self.game_code, {
+                'type': 'send_plugin_parity_to_ws',
+                'message': message,
+            }
+        )
+
+    async def send_plugin_parity_to_ws(self, event=None):
+        await self.send(text_data=json.dumps({
+            'plugin_parity': event['message']
+        }))
+
 
 @log_consumer_exceptions
 class PlayerWebConsumer(BaseWebConsumer):
@@ -252,6 +274,7 @@ class PluginBackendConsumer(BaseWebConsumer):
             'reveal_board',
             'set_automarks',
             'message_relay',
+            'plugin_parity',
         ]
 
     async def connect(self):

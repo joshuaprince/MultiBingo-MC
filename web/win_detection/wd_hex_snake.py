@@ -39,8 +39,8 @@ def _hex_snake(pboard: PlayerBoard, markings: List[PlayerBoardMarking],
     longest = _longest_chain(tuple(), frozenset(positions), allow_neighbors)
     end_time = default_timer()
     # _makes_snake(positions)
-    print(end_time - start_time)
-    print(_longest_chain.cache_info())
+    # print(end_time - start_time)
+    # print(_longest_chain.cache_info())
     return [pos.space for pos in longest] if len(longest) >= WIN_LENGTH else None
 
 

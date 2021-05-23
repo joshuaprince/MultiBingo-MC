@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.jtprince.bingo.kplugin.BingoConfig
 import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bingo.kplugin.PluginParity
 import io.ktor.client.*
 import io.ktor.client.features.websocket.*
 import io.ktor.http.cio.websocket.*
@@ -135,5 +136,9 @@ class WebBackedWebsocketClient(
 
     fun sendMessage(msgJson: String) {
         txQueue.sendBlocking(TxMessageMessageRelay(msgJson))
+    }
+
+    fun sendPluginParity(isEcho: Boolean, mySettings: PluginParity.Settings) {
+        txQueue.sendBlocking(TxMessagePluginParity(isEcho, mySettings))
     }
 }

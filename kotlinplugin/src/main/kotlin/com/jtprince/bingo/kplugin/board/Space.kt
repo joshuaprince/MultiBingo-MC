@@ -56,7 +56,9 @@ class Space(
      * Stop receiving callbacks for all players on this space.
      */
     fun stopListening() {
-        triggers.forEach(AutoMarkTrigger::destroy)
+        if (::triggers.isInitialized) {
+            triggers.forEach(AutoMarkTrigger::destroy)
+        }
     }
 
     fun destroy() {

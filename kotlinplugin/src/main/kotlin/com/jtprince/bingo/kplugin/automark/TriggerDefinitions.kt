@@ -221,7 +221,7 @@ val dslRegistry = TriggerDslRegistry {
         event.block.type == Material.SPAWNER
     }
 
-    specialItemTrigger("jm_different_shields", revertible = true) {
+    specialItemTrigger("jm_different_shields", true, vars("var")) {
         // $var Different Pattern / Color Shields
         val shields = inventory.items.asSequence()
             .filter { it.type == Material.SHIELD }.map(ItemStack::getItemMeta)
@@ -285,7 +285,7 @@ val dslRegistry = TriggerDslRegistry {
         "jtp_effect_fire_res" to PotionEffectType.FIRE_RESISTANCE,
         "jtp_effect_absorption" to PotionEffectType.ABSORPTION
     )
-    eventTrigger<EntityPotionEffectEvent>(*goalPotEffectMap.keys.toTypedArray()) {
+    eventTrigger<EntityPotionEffectEvent>(goalPotEffectMap.keys.toTypedArray()) {
         // Be afflicted by <Potion Effect>
         // Instant effects (harming, instant health) must listen to EntityDamageByEntityEvent
         event.modifiedType == goalPotEffectMap[goalId]
@@ -424,7 +424,7 @@ val dslRegistry = TriggerDslRegistry {
         }
     }
 
-    eventTrigger<EntityDeathEvent>("jm_kill_animals_fire") {
+    eventTrigger<EntityDeathEvent>("jm_kill_animals_fire", vars("var")) {
         // Kill $var Animals with only fire
         if (event.entity is Animals
             && event.entity.lastDamageCause?.cause in ActivationHelpers.FIRE_DAMAGE_CAUSES
@@ -434,7 +434,7 @@ val dslRegistry = TriggerDslRegistry {
             playerState.advance("var")
         } else false
     }
-    eventTrigger<EntityDamageByEntityEvent>("jm_kill_animals_fire") {
+    eventTrigger<EntityDamageByEntityEvent>("jm_kill_animals_fire", vars("var")) {
         // Kill $var Animals with only fire
         // Exclude animals that were hit by the player directly
         if (event.entity is Animals && event.damager.type == EntityType.PLAYER) {
@@ -599,7 +599,7 @@ val dslRegistry = TriggerDslRegistry {
         event.entity.type == EntityType.RABBIT
     }
 
-    eventTrigger<PlayerLevelChangeEvent>("jm_level") {
+    eventTrigger<PlayerLevelChangeEvent>("jm_level", vars("var")) {
         // Level <x>
         val required = vars["var"] ?: throw MissingVariableException("var")
         event.newLevel >= required
@@ -619,7 +619,7 @@ val dslRegistry = TriggerDslRegistry {
                 && event.entityType in FISH_ENTITIES
     }
 
-    eventTrigger<PortalCreateEvent>("jm_nether_portal_size") {
+    eventTrigger<PortalCreateEvent>("jm_nether_portal_size", vars("var1", "var2")) {
         // Activate a $var1x$var2 Nether Portal (not counting corners)
         val width = vars["var1"] ?: throw MissingVariableException("var1")
         val height = vars["var2"] ?: throw MissingVariableException("var2")

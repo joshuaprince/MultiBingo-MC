@@ -38,39 +38,64 @@ class TriggerDslRegistry private constructor(
 internal class TriggerDslRegistryBuilder {
     private val triggers = mutableMapOf<String, MutableList<TriggerDslDefinition>>()
 
+    internal fun ids(vararg goalIds: String) = arrayOf(*goalIds)
+    internal fun vars(vararg variableNames: String) = arrayOf(*variableNames)
+
     internal inline fun <reified EventType : Event> eventTrigger(
-        vararg goalIds: String,
+        goalIds: Array<String>,
+        vars: Array<String> = emptyArray(),
         revertAfterTicks: Int? = null,
         noinline check: EventTriggerDefinition.Parameters<out EventType>.() -> Boolean
     ) {
         for (goalId in goalIds) {
             val lst = triggers.getOrPut(goalId) { mutableListOf() }
-            lst += EventTriggerDefinition(EventType::class, revertAfterTicks, check)
+            lst += EventTriggerDefinition(EventType::class, vars, revertAfterTicks, check)
         }
     }
+    internal inline fun <reified EventType : Event> eventTrigger(  /* 1-goalId variant */
+        goalId: String,
+        vars: Array<String> = emptyArray(),
+        revertAfterTicks: Int? = null,
+        noinline check: EventTriggerDefinition.Parameters<out EventType>.() -> Boolean
+    ) = eventTrigger(ids(goalId), vars, revertAfterTicks, check)
 
     internal fun occasionalTrigger(
-        vararg goalIds: String,
+        goalIds: Array<String>,
         ticks: Int,
+        vars: Array<String> = emptyArray(),
         revertAfterTicks: Int? = null,
         check: OccasionalTriggerDefinition.Parameters.() -> Boolean
     ) {
         for (goalId in goalIds) {
             val lst = triggers.getOrPut(goalId) { mutableListOf() }
-            lst += OccasionalTriggerDefinition(ticks, revertAfterTicks, check)
+            lst += OccasionalTriggerDefinition(ticks, vars, revertAfterTicks, check)
         }
     }
+    internal fun occasionalTrigger(  /* 1-goalId variant */
+        goalId: String,
+        ticks: Int,
+        vars: Array<String> = emptyArray(),
+        revertAfterTicks: Int? = null,
+        check: OccasionalTriggerDefinition.Parameters.() -> Boolean
+    ) = occasionalTrigger(ids(goalId), ticks, vars, revertAfterTicks, check)
 
     internal fun specialItemTrigger(
-        vararg goalIds: String,
+        goalIds: Array<String>,
         revertible: Boolean,
+        vars: Array<String> = emptyArray(),
         check: SpecialItemTriggerDefinition.Parameters.() -> Boolean
     ) {
         for (goalId in goalIds) {
             val lst = triggers.getOrPut(goalId) { mutableListOf() }
-            lst += SpecialItemTriggerDefinition(revertible, check)
+            lst += SpecialItemTriggerDefinition(revertible, vars, check)
         }
     }
+    internal fun specialItemTrigger(
+        goalId: String,
+        revertible: Boolean,
+        vars: Array<String> = emptyArray(),
+        check: SpecialItemTriggerDefinition.Parameters.() -> Boolean
+    ) = specialItemTrigger(ids(goalId), revertible, vars, check)
 
     fun build(): Map<String, List<TriggerDslDefinition>> {
         // Have to convert each MutableList to an immutable one
@@ -85,13 +110,16 @@ internal class TriggerDslRegistryBuilder {
  * TriggerDslDefinitions commonly include an inner "Parameters" class that wraps any information
  * that can be passed to this definition when determining whether the goal is fulfilled.
  */
-internal abstract class TriggerDslDefinition
+internal abstract class TriggerDslDefinition(
+    val neededVars: Array<String>,
+)
 
 internal class EventTriggerDefinition<EventType: Event>(
     val eventType: KClass<EventType>,
+    neededVars: Array<String>,
     val revertAfterTicks: Int?,
     val function: (Parameters<EventType>) -> Boolean
-) : TriggerDslDefinition() {
+) : TriggerDslDefinition(neededVars) {
     class Parameters<EventType: Event>(
         val event: EventType,
         val player: BingoPlayer,
@@ -106,9 +134,10 @@ internal class EventTriggerDefinition<EventType: Event>(
 
 internal class OccasionalTriggerDefinition(
     val ticks: Int,
+    neededVars: Array<String>,
     val revertAfterTicks: Int?,
     val function: (Parameters) -> Boolean
-) : TriggerDslDefinition() {
+) : TriggerDslDefinition(neededVars) {
     class Parameters(
         val player: BingoPlayer,
         val worlds: WorldSet,
@@ -122,8 +151,9 @@ internal class OccasionalTriggerDefinition(
 
 internal class SpecialItemTriggerDefinition(
     val revertible: Boolean,
+    neededVars: Array<String>,
     val function: (Parameters) -> Boolean
-) : TriggerDslDefinition() {
+) : TriggerDslDefinition(neededVars) {
     class Parameters(
         val inventory: BingoInventory,
         trigger: SpecialItemTrigger,

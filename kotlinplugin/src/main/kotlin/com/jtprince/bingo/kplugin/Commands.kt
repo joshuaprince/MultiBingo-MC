@@ -2,6 +2,7 @@ package com.jtprince.bingo.kplugin
 
 import com.jtprince.bingo.kplugin.Messages.bingoTellError
 import com.jtprince.bingo.kplugin.automark.AutoMarkTrigger
+import com.jtprince.bingo.kplugin.automark.MissingVariableException
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.game.WebBackedGameProto
 import com.jtprince.bingo.kplugin.player.BingoPlayer
@@ -15,6 +16,7 @@ import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import kotlin.random.Random
 
 object Commands {
     fun registerCommands() {
@@ -179,6 +181,17 @@ object Commands {
             vars[varArgs[i]] = varArgs[i+1].toInt()
         }
 
-        BingoGame.prepareDebugGame(sender, args[0], vars.toMap())
+        val goalId = args[0]
+
+        try {
+            BingoGame.prepareDebugGame(sender, goalId, vars.toMap())
+        } catch (ex: MissingVariableException) {
+            val randomNum = Random.nextInt(10) + 1
+            sender.bingoTellError(
+                "Goal $goalId requires variable \"${ex.varname}\" to be set. " +
+                        "Try /bingo debug $goalId ${ex.varname} $randomNum"
+            )
+            return
+        }
     }
 }

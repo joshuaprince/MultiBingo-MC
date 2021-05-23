@@ -12,6 +12,12 @@ class AutoMarkTriggerFactory(
 
         /* Create DSL-specified triggers */
         dslRegistry[space.goalId]?.forEach { def ->
+            for (neededVar in def.neededVars) {
+                if (neededVar !in space.variables.keys) {
+                    throw MissingVariableException(neededVar)
+                }
+            }
+
             when (def) {
                 is EventTriggerDefinition<*> ->
                     EventTrigger(space, playerMapper, callback, def)
@@ -27,8 +33,16 @@ class AutoMarkTriggerFactory(
         }
 
         /* Create Item Trigger YML-specified triggers */
-        itemTriggerYaml[space.goalId]?.also {
-            ret += ItemTrigger(space, playerMapper, BingoPlugin.eventRegistry, callback, it)
+        itemTriggerYaml[space.goalId]?.also { yamlDefinition ->
+            for (neededVar in yamlDefinition.neededVariables()) {
+                if (neededVar !in space.variables.keys) {
+                    throw MissingVariableException(neededVar)
+                }
+            }
+            val newTrigger = ItemTrigger(
+                space, playerMapper, BingoPlugin.eventRegistry, callback, yamlDefinition
+            )
+            ret += newTrigger
         }
 
         return ret.toSet()

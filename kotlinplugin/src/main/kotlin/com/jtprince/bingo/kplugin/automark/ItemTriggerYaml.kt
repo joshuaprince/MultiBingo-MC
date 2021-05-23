@@ -67,6 +67,12 @@ class ItemTriggerYaml private constructor(
         private val total: Variable = Variable(total, 1)
         internal val children: List<MatchGroup> = children ?: emptyList()
 
+        fun neededVariables(): Set<String> {
+            val v = setOfNotNull(this.unique.name, this.total.name).toMutableSet()
+            this.children.forEach { c -> v.addAll(c.neededVariables()) }
+            return v
+        }
+
         fun nameMatches(name: String): Boolean {
             return names.any { it.matches(name) }
         }
@@ -78,10 +84,11 @@ class ItemTriggerYaml private constructor(
         fun total(setVariables: SetVariables): Int {
             return total.getSetVariable(setVariables)
         }
+
     }
 
     internal class Variable(yamlVarValue: String?, defaultConstant: Int) {
-        private val name: String?
+        internal val name: String?
         private val constant: Int?
 
         init {

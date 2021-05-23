@@ -1,6 +1,10 @@
-package com.jtprince.bingo.kplugin.automark
+package com.jtprince.bingo.kplugin.automark.trigger
 
 import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
+import com.jtprince.bingo.kplugin.automark.BingoInventory
+import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
+import com.jtprince.bingo.kplugin.automark.definitions.SpecialItemTriggerDefinition
 
 class SpecialItemTrigger internal constructor(
     space: AutomatedSpace,

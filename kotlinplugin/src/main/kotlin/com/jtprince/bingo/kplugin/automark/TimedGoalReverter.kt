@@ -1,6 +1,7 @@
 package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bingo.kplugin.automark.trigger.AutoMarkTrigger
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import org.bukkit.Bukkit
 

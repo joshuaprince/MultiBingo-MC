@@ -1,7 +1,7 @@
 package com.jtprince.bingo.kplugin.board
 
-import com.jtprince.bingo.kplugin.automark.AutoMarkTrigger
-import com.jtprince.bingo.kplugin.automark.AutoMarkTriggerFactory
+import com.jtprince.bingo.kplugin.automark.trigger.AutoMarkTrigger
+import com.jtprince.bingo.kplugin.automark.trigger.AutoMarkTriggerFactory
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.automark.PlayerTriggerProgress
 import com.jtprince.bingo.kplugin.game.PlayerManager

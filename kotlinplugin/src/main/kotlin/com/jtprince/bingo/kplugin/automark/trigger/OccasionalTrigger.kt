@@ -1,6 +1,10 @@
-package com.jtprince.bingo.kplugin.automark
+package com.jtprince.bingo.kplugin.automark.trigger
 
-import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
+import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
+import com.jtprince.bingo.kplugin.automark.TimedGoalReverter
+import com.jtprince.bingo.kplugin.automark.definitions.OccasionalTriggerDefinition
+import org.bukkit.plugin.Plugin
 
 /**
  * Defines a Trigger that is called at a regular interval to check if a player has completed a
@@ -8,13 +12,14 @@ import com.jtprince.bingo.kplugin.BingoPlugin
  */
 class OccasionalTrigger internal constructor(
     val space: AutomatedSpace,
+    private val plugin: Plugin,
     private val playerMapper: EventPlayerMapper,
     private val callback: Callback,
     private val triggerDefinition: OccasionalTriggerDefinition,
 ) : AutoMarkTrigger() {
 
-    private val taskId = BingoPlugin.server.scheduler.scheduleSyncRepeatingTask(
-            BingoPlugin, this::invoke, triggerDefinition.ticks.toLong(), triggerDefinition.ticks.toLong())
+    private val taskId = plugin.server.scheduler.scheduleSyncRepeatingTask(
+            plugin, this::invoke, triggerDefinition.ticks.toLong(), triggerDefinition.ticks.toLong())
 
     private val timedReverter: TimedGoalReverter? = when (triggerDefinition.revertAfterTicks) {
         null -> null
@@ -22,7 +27,7 @@ class OccasionalTrigger internal constructor(
     }
 
     override fun destroy() {
-        BingoPlugin.server.scheduler.cancelTask(taskId)
+        plugin.server.scheduler.cancelTask(taskId)
         timedReverter?.destroy()
     }
 

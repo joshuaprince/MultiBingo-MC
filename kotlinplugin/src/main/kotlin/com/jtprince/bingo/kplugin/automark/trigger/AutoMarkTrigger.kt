@@ -1,5 +1,8 @@
-package com.jtprince.bingo.kplugin.automark
+package com.jtprince.bingo.kplugin.automark.trigger
 
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
+import com.jtprince.bingo.kplugin.automark.definitions.ItemTriggerYaml
+import com.jtprince.bingo.kplugin.automark.definitions.dslRegistry
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 
 abstract class AutoMarkTrigger {
@@ -12,12 +15,6 @@ abstract class AutoMarkTrigger {
      */
     fun interface Callback {
         fun trigger(player: BingoPlayer, space: AutomatedSpace, fulfilled: Boolean)
-    }
-
-    companion object {
-        val allAutomatedGoals by lazy {
-            ItemTriggerYaml.defaultYaml.allAutomatedGoals + dslRegistry.allAutomatedGoals
-        }
     }
 
     abstract fun destroy()

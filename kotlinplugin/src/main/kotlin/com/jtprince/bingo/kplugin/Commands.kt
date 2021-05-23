@@ -1,8 +1,9 @@
 package com.jtprince.bingo.kplugin
 
 import com.jtprince.bingo.kplugin.Messages.bingoTellError
-import com.jtprince.bingo.kplugin.automark.AutoMarkTrigger
+import com.jtprince.bingo.kplugin.automark.trigger.AutoMarkTrigger
 import com.jtprince.bingo.kplugin.automark.MissingVariableException
+import com.jtprince.bingo.kplugin.automark.definitions.TriggerDefinition
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.game.WebBackedGameProto
 import com.jtprince.bingo.kplugin.player.BingoPlayer
@@ -101,7 +102,7 @@ object Commands {
             })
 
         val goalIdsArg = StringArgument("goalId")
-            .overrideSuggestions { _ -> AutoMarkTrigger.allAutomatedGoals.toTypedArray() }
+            .overrideSuggestions { _ -> TriggerDefinition.allAutomatedGoals.toTypedArray() }
         val debugCmd = CommandAPICommand("debug")
             .withArguments(goalIdsArg)
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->

@@ -4,15 +4,21 @@
  * TriggerDefinitions.kt.
  */
 
-package com.jtprince.bingo.kplugin.automark
+package com.jtprince.bingo.kplugin.automark.definitions
 
+import com.jtprince.bingo.kplugin.automark.*
+import com.jtprince.bingo.kplugin.automark.trigger.EventTrigger
+import com.jtprince.bingo.kplugin.automark.trigger.OccasionalTrigger
+import com.jtprince.bingo.kplugin.automark.trigger.SpecialItemTrigger
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.event.Event
 import kotlin.reflect.KClass
 
 /**
- * Container that provides mapping from Goal IDs to any automated trigger definitions for that goal.
+ * Container that provides mapping from Goal IDs to DSL-specified automated trigger definitions for
+ * that goal. This currently includes Event Triggers, Occasional Triggers, and Special Item
+ * Triggers.
  */
 class TriggerDslRegistry private constructor(
     private val regs: Map<String, List<TriggerDslDefinition>>
@@ -110,9 +116,9 @@ internal class TriggerDslRegistryBuilder {
  * TriggerDslDefinitions commonly include an inner "Parameters" class that wraps any information
  * that can be passed to this definition when determining whether the goal is fulfilled.
  */
-internal abstract class TriggerDslDefinition(
-    val neededVars: Array<String>,
-)
+internal sealed class TriggerDslDefinition(
+    override val neededVars: Array<String>
+) : TriggerDefinition
 
 internal class EventTriggerDefinition<EventType: Event>(
     val eventType: KClass<EventType>,

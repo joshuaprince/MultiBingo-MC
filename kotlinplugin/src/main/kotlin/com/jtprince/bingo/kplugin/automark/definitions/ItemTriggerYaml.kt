@@ -1,11 +1,13 @@
-package com.jtprince.bingo.kplugin.automark
+package com.jtprince.bingo.kplugin.automark.definitions
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bingo.kplugin.automark.MissingVariableException
 import com.jtprince.bingo.kplugin.board.SetVariables
 import java.io.IOException
 import java.io.InputStream
@@ -17,8 +19,17 @@ import java.util.logging.Level
  * specifications of these files, see README.md in this file's directory.
  */
 class ItemTriggerYaml private constructor(
-    @JsonProperty("item_triggers") private val itemTriggers: Map<String, MatchGroup>
+    @JsonProperty("item_triggers") private val rootMatchGroups: Map<String, MatchGroup>
 ) {
+    class Definition internal constructor(
+        internal val rootMatchGroup: MatchGroup
+    ) : TriggerDefinition {
+        override val neededVars: Array<String>
+            get() = rootMatchGroup.neededVars
+    }
+
+    private val definitionCache = mutableMapOf<String, Definition?>()
+
     companion object {
         val defaultYaml: ItemTriggerYaml by lazy {
             fromFile(ItemTriggerYaml::class.java.getResourceAsStream("/item_triggers.yml"))
@@ -41,22 +52,24 @@ class ItemTriggerYaml private constructor(
     }
 
     val allAutomatedGoals: Set<String>
-        get() = itemTriggers.keys
+        get() = rootMatchGroups.keys
 
     /**
      * Get the specifications for the Item Trigger that is configured for a given goal ID. If the
      * goal ID is not present in item_triggers.yml, returns null. The return value is an Item Match
      * Group that can be considered the Root Item Match Group for this goal ID.
      */
-    operator fun get(goalId: String): MatchGroup? {
-        return itemTriggers[goalId]
+    operator fun get(goalId: String): Definition? {
+        return definitionCache.getOrPut(goalId) {
+            rootMatchGroups[goalId]?.let { Definition(it) }
+        }
     }
 
     /**
      * An Item Match Group is a node in a tree of Item Match Group objects, with the root of this
      * tree belonging to a goal ID. This mechanism is described in detail in README.md.
      */
-    class MatchGroup @JsonCreator constructor(
+    class MatchGroup @JsonCreator private constructor(
         @JsonProperty("name") names: List<String>?,
         @JsonProperty("unique") unique: String?,
         @JsonProperty("total") total: String?,
@@ -67,11 +80,12 @@ class ItemTriggerYaml private constructor(
         private val total: Variable = Variable(total, 1)
         internal val children: List<MatchGroup> = children ?: emptyList()
 
-        fun neededVariables(): Set<String> {
-            val v = setOfNotNull(this.unique.name, this.total.name).toMutableSet()
-            this.children.forEach { c -> v.addAll(c.neededVariables()) }
-            return v
-        }
+        val neededVars: Array<String>
+            get() {
+                val v = setOfNotNull(this.unique.name, this.total.name).toMutableSet()
+                this.children.forEach { c -> v.addAll(c.neededVars) }
+                return v.toTypedArray()
+            }
 
         fun nameMatches(name: String): Boolean {
             return names.any { it.matches(name) }

@@ -9,9 +9,10 @@
  * Regular Item Triggers should be registered in item_triggers.yml.
  */
 
-package com.jtprince.bingo.kplugin.automark
+package com.jtprince.bingo.kplugin.automark.definitions
 
 import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bingo.kplugin.automark.ActivationHelpers
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.FISH_ENTITIES
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.ICE_BLOCKS
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.containsQuantity
@@ -19,6 +20,7 @@ import com.jtprince.bingo.kplugin.automark.ActivationHelpers.get4x4Art
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.inVillage
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.isCompletedMap
 import com.jtprince.bingo.kplugin.automark.ActivationHelpers.throughNight
+import com.jtprince.bingo.kplugin.automark.MissingVariableException
 import com.jtprince.util.KotlinUtils.decrement
 import com.jtprince.util.KotlinUtils.increment
 import io.papermc.paper.event.player.PlayerTradeEvent
@@ -237,7 +239,7 @@ val dslRegistry = TriggerDslRegistry {
         // Dig straight down to Bedrock from Sea level (1x1 hole)
         /* `diggers` are all Bukkit player UUIDs who are currently digging straight down. */
         val diggers = playerState.extra { mutableMapOf<UUID, Location>() }
-        if (event.block.y > 63) {
+        if (event.block.y > 60) {
             /* Any block broken over sea level makes a player a digger. */
             diggers[event.player.uniqueId] = event.block.location
         }

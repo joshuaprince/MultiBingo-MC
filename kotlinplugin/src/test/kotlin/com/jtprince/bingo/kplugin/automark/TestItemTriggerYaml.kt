@@ -1,5 +1,6 @@
 package com.jtprince.bingo.kplugin.automark
 
+import com.jtprince.bingo.kplugin.automark.definitions.ItemTriggerYaml
 import org.junit.jupiter.api.Test
 import kotlin.test.*
 

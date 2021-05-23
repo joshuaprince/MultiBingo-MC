@@ -1,17 +1,21 @@
-package com.jtprince.bingo.kplugin.automark
+package com.jtprince.bingo.kplugin.automark.trigger
 
-import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
+import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
+import com.jtprince.bingo.kplugin.automark.TimedGoalReverter
+import com.jtprince.bingo.kplugin.automark.definitions.EventTriggerDefinition
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import org.bukkit.event.Event
 
 class EventTrigger<EventType : Event> internal constructor(
     val space: AutomatedSpace,
+    private val eventRegistry: BukkitEventRegistry,
     private val playerMapper: EventPlayerMapper,
     private val callback: Callback,
     private val triggerDefinition: EventTriggerDefinition<EventType>,
 ) : AutoMarkTrigger() {
 
-    private val listenerRegistryId = BingoPlugin.eventRegistry.register(triggerDefinition.eventType,
+    private val listenerRegistryId = eventRegistry.register(triggerDefinition.eventType,
         BukkitEventRegistry.Callback(triggerDefinition.eventType) {
             eventRaised(it)
         })
@@ -22,7 +26,7 @@ class EventTrigger<EventType : Event> internal constructor(
     }
 
     override fun destroy() {
-        BingoPlugin.eventRegistry.unregister(listenerRegistryId)
+        eventRegistry.unregister(listenerRegistryId)
         timedReverter?.destroy()
     }
 

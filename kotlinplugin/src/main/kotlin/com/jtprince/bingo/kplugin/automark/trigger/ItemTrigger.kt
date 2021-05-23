@@ -1,5 +1,9 @@
-package com.jtprince.bingo.kplugin.automark
+package com.jtprince.bingo.kplugin.automark.trigger
 
+import com.jtprince.bingo.kplugin.automark.AutomatedSpace
+import com.jtprince.bingo.kplugin.automark.BingoInventory
+import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
+import com.jtprince.bingo.kplugin.automark.definitions.ItemTriggerYaml
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
@@ -10,7 +14,7 @@ open class ItemTrigger internal constructor(
     private val playerMapper: EventPlayerMapper,
     private val listener: BukkitEventRegistry?,
     private val callback: Callback?,
-    private val rootMatchGroup: ItemTriggerYaml.MatchGroup?,
+    private val definition: ItemTriggerYaml.Definition?,  /* Nullable so SpecialItemTrigger overrides */
 ) : AutoMarkTrigger() {
 
     protected open val revertible = true
@@ -40,7 +44,7 @@ open class ItemTrigger internal constructor(
      * Returns whether a set of items meets the criteria for this Item Trigger.
      */
     internal open fun satisfiedBy(inventory: BingoInventory): Boolean {
-        val rootMatchGroup = rootMatchGroup ?: return false
+        val rootMatchGroup = definition?.rootMatchGroup ?: return false
         val rootUT = effectiveUT(rootMatchGroup, inventory.items)
         return rootUT.u >= rootMatchGroup.unique(space.variables)
                 && rootUT.t >= rootMatchGroup.total(space.variables)

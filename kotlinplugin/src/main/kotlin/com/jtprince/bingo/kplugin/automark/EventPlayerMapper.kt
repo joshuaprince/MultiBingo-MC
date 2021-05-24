@@ -15,7 +15,7 @@ interface EventPlayerMapper {
      */
     fun mapEvent(event: Event): BingoPlayer?
 
-    val allPlayers: Collection<BingoPlayer>
+    val players: Collection<BingoPlayer>
 
     fun worldSet(player: BingoPlayer) : WorldSet
 }

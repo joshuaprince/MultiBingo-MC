@@ -1,5 +1,6 @@
 package com.jtprince.bingo.kplugin.automark.trigger
 
+import com.jtprince.bingo.kplugin.automark.AutoMarkConsumer
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
 import com.jtprince.bingo.kplugin.automark.TimedGoalReverter
@@ -14,7 +15,7 @@ class OccasionalTrigger internal constructor(
     val space: AutomatedSpace,
     private val plugin: Plugin,
     private val playerMapper: EventPlayerMapper,
-    private val callback: Callback,
+    private val consumer: AutoMarkConsumer,
     private val triggerDefinition: OccasionalTriggerDefinition,
 ) : AutoMarkTrigger() {
 
@@ -23,7 +24,7 @@ class OccasionalTrigger internal constructor(
 
     private val timedReverter: TimedGoalReverter? = when (triggerDefinition.revertAfterTicks) {
         null -> null
-        else -> TimedGoalReverter(triggerDefinition.revertAfterTicks, callback)
+        else -> TimedGoalReverter(triggerDefinition.revertAfterTicks, consumer)
     }
 
     override fun destroy() {
@@ -32,14 +33,14 @@ class OccasionalTrigger internal constructor(
     }
 
     private fun invoke() {
-        for (player in playerMapper.allPlayers) {
+        for (player in playerMapper.players) {
             val worlds = playerMapper.worldSet(player)
             val satisfied = triggerDefinition.function(
                 OccasionalTriggerDefinition.Parameters(player, worlds, this))
 
             /* Occasional triggers are never revertible. */
             if (satisfied) {
-                callback.trigger(player, space, true)
+                consumer.receiveAutoMark(player, space, true)
                 timedReverter?.revertLater(player, space)
             }
         }

@@ -1,6 +1,7 @@
 package com.jtprince.bingo.kplugin.game
 
 import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bingo.kplugin.game.web.PlayerManager
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.BingoPlayerRemote
 import com.jtprince.bukkit.worldset.WorldSet

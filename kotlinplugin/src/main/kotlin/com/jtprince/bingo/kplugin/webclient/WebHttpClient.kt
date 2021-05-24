@@ -2,7 +2,7 @@ package com.jtprince.bingo.kplugin.webclient
 
 import com.jtprince.bingo.kplugin.BingoConfig
 import com.jtprince.bingo.kplugin.BingoPlugin
-import com.jtprince.bingo.kplugin.game.WebBackedGameProto
+import com.jtprince.bingo.kplugin.game.web.WebBackedGameProto
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*

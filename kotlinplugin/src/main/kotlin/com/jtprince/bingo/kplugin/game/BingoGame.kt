@@ -1,9 +1,12 @@
 package com.jtprince.bingo.kplugin.game
 
 import com.jtprince.bingo.kplugin.Messages.bingoTellError
+import com.jtprince.bingo.kplugin.automark.AutoMarkConsumer
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.board.SetVariables
-import com.jtprince.bingo.kplugin.board.Space
+import com.jtprince.bingo.kplugin.game.debug.DebugGame
+import com.jtprince.bingo.kplugin.game.web.WebBackedGame
+import com.jtprince.bingo.kplugin.game.web.WebBackedGameProto
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.BingoPlayerFactory
 import com.jtprince.bingo.kplugin.webclient.WebHttpClient
@@ -13,8 +16,8 @@ import org.bukkit.entity.Player
 abstract class BingoGame(
     val creator: CommandSender,
     val gameCode: String,
-    players: Collection<BingoPlayer>
-) {
+    val players: Collection<BingoPlayer>
+) : AutoMarkConsumer {
     enum class State {
         BOARD_GENERATING,
         WAITING_FOR_WEBSOCKET,
@@ -29,15 +32,9 @@ abstract class BingoGame(
 
     abstract var state: State
         protected set
-    val playerManager = PlayerManager(players)
-    val spaces = HashMap<Int, Space>()
 
     private fun destroyCurrentGame(sender: CommandSender?) {
         state = State.DESTROYING
-        playerManager.destroy()
-        for (space in spaces.values) {
-            space.destroy()
-        }
         signalDestroy(sender)
     }
 
@@ -45,12 +42,8 @@ abstract class BingoGame(
     abstract fun signalEnd(sender: CommandSender?)
     protected abstract fun signalDestroy(sender: CommandSender?)
 
-    /**
-     * Called when a space in [spaces] should be marked a certain way. Not filtered, meaning
-     * that this might be called several times with the same inputs.
-     */
-    protected abstract fun receiveAutomark(bingoPlayer: BingoPlayer, space: AutomatedSpace,
-                                           satisfied: Boolean)
+    abstract override fun receiveAutoMark(player: BingoPlayer, space: AutomatedSpace,
+                                          fulfilled: Boolean)
 
     companion object Manager {
         var currentGame: BingoGame? = null

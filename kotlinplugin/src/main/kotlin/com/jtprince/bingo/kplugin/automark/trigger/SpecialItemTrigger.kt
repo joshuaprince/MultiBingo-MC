@@ -1,6 +1,7 @@
 package com.jtprince.bingo.kplugin.automark.trigger
 
 import com.jtprince.bingo.kplugin.BingoPlugin
+import com.jtprince.bingo.kplugin.automark.AutoMarkConsumer
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.automark.BingoInventory
 import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
@@ -9,9 +10,9 @@ import com.jtprince.bingo.kplugin.automark.definitions.SpecialItemTriggerDefinit
 class SpecialItemTrigger internal constructor(
     space: AutomatedSpace,
     playerMapper: EventPlayerMapper,
-    callback: Callback,
+    consumer: AutoMarkConsumer,
     private val triggerDefinition: SpecialItemTriggerDefinition,
-) : ItemTrigger(space, playerMapper, BingoPlugin.eventRegistry, callback, null) {
+) : ItemTrigger(space, playerMapper, BingoPlugin.eventRegistry, consumer, null) {
 
     override val revertible = triggerDefinition.revertible
 

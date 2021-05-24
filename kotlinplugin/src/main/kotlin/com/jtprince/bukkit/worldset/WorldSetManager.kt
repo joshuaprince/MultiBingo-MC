@@ -52,7 +52,7 @@ class WorldSetManager(
     ) {
         HandlerList.unregisterAll(listener)
         for (worldSet in worldSetNameMap.values) {
-            worldSet.unload(saveWorlds, onTeleportPlayerOut)
+            unload(worldSet, saveWorlds, onTeleportPlayerOut)
         }
     }
 
@@ -139,7 +139,9 @@ class WorldSetManager(
 
     /**
      * Find the WorldSet that contains a certain World, or `null` if the World is not a part of a
-     * WorldSet.
+     * WorldSet tracked by this WorldSetManager. This includes the default Overworld, Nether, and
+     * End in a standard server, as well as any worlds that were created by other plugins or other
+     * WorldSetManagers.
      */
     fun worldSetOf(world: World): WorldSet? = worldSetWorldMap[world]
 }

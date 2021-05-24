@@ -1,6 +1,5 @@
-package com.jtprince.bingo.kplugin.game
+package com.jtprince.bingo.kplugin.game.web
 
-import com.jtprince.bingo.kplugin.board.Space
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.webclient.model.WebModelPlayerBoard
 
@@ -11,8 +10,8 @@ import com.jtprince.bingo.kplugin.webclient.model.WebModelPlayerBoard
  * The data maintained here is not authoritative; the web backend maintains the authoritative
  * version.
  */
-class PlayerBoardCache(val owner: BingoPlayer) {
-    private val knownMarkings = mutableMapOf<Int, Space.Marking>()
+internal class PlayerBoardCache(val owner: BingoPlayer) {
+    private val knownMarkings = mutableMapOf<Int, WebBackedSpace.Marking>()
     private var ignoredSpaceIds = setOf<Int>()
 
     /**
@@ -20,7 +19,7 @@ class PlayerBoardCache(val owner: BingoPlayer) {
      */
     fun updateFromWeb(webPlayerBoard: WebModelPlayerBoard) {
         for (marking in webPlayerBoard.markings) {
-            knownMarkings[marking.spaceId] = Space.Marking.valueOf(marking.color)
+            knownMarkings[marking.spaceId] = WebBackedSpace.Marking.valueOf(marking.color)
         }
 
         ignoredSpaceIds = webPlayerBoard.markings
@@ -34,27 +33,27 @@ class PlayerBoardCache(val owner: BingoPlayer) {
      * @return The new marking that should be sent, or null if no marking should be sent (either
      *         because we aren't tracking this space or because it is already marked that way)
      */
-    fun canSendMarking(spaceId: Int, goalType: Space.GoalType, satisfied: Boolean): Space.Marking? {
+    fun canSendMarking(spaceId: Int, goalType: WebBackedSpace.GoalType, satisfied: Boolean): WebBackedSpace.Marking? {
         val currentMarking = knownMarkings[spaceId] ?: return null
 
         if (spaceId in ignoredSpaceIds) return null
 
         val newMarking = when(goalType) {
-            Space.GoalType.DEFAULT -> {
+            WebBackedSpace.GoalType.DEFAULT -> {
                 when {
                     satisfied -> {
-                        Space.Marking.COMPLETE
+                        WebBackedSpace.Marking.COMPLETE
                     }
-                    currentMarking == Space.Marking.COMPLETE -> {
-                        Space.Marking.REVERTED
+                    currentMarking == WebBackedSpace.Marking.COMPLETE -> {
+                        WebBackedSpace.Marking.REVERTED
                     }
                     else -> {
                         null
                     }
                 }
             }
-            Space.GoalType.NEGATIVE -> {
-                if (satisfied) Space.Marking.INVALIDATED else Space.Marking.NOT_INVALIDATED
+            WebBackedSpace.GoalType.NEGATIVE -> {
+                if (satisfied) WebBackedSpace.Marking.INVALIDATED else WebBackedSpace.Marking.NOT_INVALIDATED
             }
         }
 

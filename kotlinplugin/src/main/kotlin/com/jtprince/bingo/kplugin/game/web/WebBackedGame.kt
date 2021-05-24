@@ -1,4 +1,4 @@
-package com.jtprince.bingo.kplugin.game
+package com.jtprince.bingo.kplugin.game.web
 
 import com.jtprince.bingo.kplugin.BingoConfig
 import com.jtprince.bingo.kplugin.BingoPlugin
@@ -8,7 +8,8 @@ import com.jtprince.bingo.kplugin.Messages.bingoTellError
 import com.jtprince.bingo.kplugin.Messages.bingoTellNotReady
 import com.jtprince.bingo.kplugin.PluginParity
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
-import com.jtprince.bingo.kplugin.board.Space
+import com.jtprince.bingo.kplugin.game.BingoGame
+import com.jtprince.bingo.kplugin.game.GameEffects
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.webclient.WebBackedWebsocketClient
 import com.jtprince.bingo.kplugin.webclient.WebMessageRelay
@@ -29,11 +30,14 @@ class WebBackedGame(
     private val clientId = "KotlinPlugin${hashCode() % 10000}:" +
             players.map(BingoPlayer::slugName).joinToString(",")
     private val websocketClient = WebBackedWebsocketClient(
-        gameCode, clientId, this::receiveMessage,
+        gameCode, clientId, this::receiveWebsocketMessage,
         this::receiveFailedConnection
     )
     private val messageRelay = WebMessageRelay(websocketClient)
     private lateinit var pluginParity: PluginParity
+
+    private val spaces = mutableMapOf<Int, WebBackedSpace>()
+    val playerManager = PlayerManager(players)
     private val playerBoardCache = players.associateWith(::PlayerBoardCache)
 
     /* Both of the following must be ready for the game to be put in the "READY" state */
@@ -122,30 +126,36 @@ class WebBackedGame(
     }
 
     override fun signalDestroy(sender: CommandSender?) {
-        // Spaces are destroyed in the superclass.
-        sender?.bingoTell("Game destroyed.")
+        for (space in spaces.values) {
+            space.destroy()
+        }
+        playerManager.destroy()
         messageRelay.destroy()
         websocketClient.destroy()
         startEffects.destroy()
+        sender?.bingoTell("Game destroyed.")
     }
 
-    override fun receiveAutomark(bingoPlayer: BingoPlayer, space: AutomatedSpace, satisfied: Boolean) {
+    override fun receiveAutoMark(player: BingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
         if (state != State.RUNNING) return
 
-        if (space !is Space) {
+        if (space !is WebBackedSpace) {
             BingoPlugin.logger.severe(
-                "Got automark for space of type ${space::class}, which is not of expected Space type.")
+                "Got auto-mark for space of type ${space::class}, " +
+                        "which is not of expected type WebBackedSpace."
+            )
             return
         }
 
-        /* Not filtered - first must filter to ensure no excessive backend requests. */
-        val cache = playerBoardCache[bingoPlayer] ?: return
-        val newMarking = cache.canSendMarking(space.spaceId, space.goalType, satisfied) ?: return
+        /* This callback is not filtered, and may be called after every time the player completes
+         * the goal. We should filter to ensure no excessive backend requests. */
+        val cache = playerBoardCache[player] ?: return
+        val newMarking = cache.canSendMarking(space.spaceId, space.goalType, fulfilled) ?: return
 
-        websocketClient.sendMarkSpace(bingoPlayer.name, space.spaceId, newMarking.value)
+        websocketClient.sendMarkSpace(player.name, space.spaceId, newMarking.value)
     }
 
-    private fun receiveMessage(msg: WebsocketRxMessage) {
+    private fun receiveWebsocketMessage(msg: WebsocketRxMessage) {
         msg.board?.run(this::receiveBoard)
         msg.pboards?.run(this::receivePlayerBoards)
         msg.gameState?.run(this::receiveGameState)
@@ -165,22 +175,20 @@ class WebBackedGame(
             return
         }
 
-        for (webSpace in board.spaces) {
-            val newSpace = Space(webSpace.spaceId, webSpace.goalId,
-                Space.GoalType.ofString(webSpace.goalType), webSpace.text, webSpace.variables)
+        for (webModelSpace in board.spaces) {
+            val newSpace = WebBackedSpace(webModelSpace, playerManager, this)
             spaces[newSpace.spaceId] = newSpace
-            newSpace.startListening(playerManager, this::receiveAutomark)
         }
 
-        val autoSpaces = spaces.values.filter(Space::automarking)
+        val autoSpaces = spaces.values.filter(WebBackedSpace::hasAutoMarkTrigger)
         BingoPlugin.logger.info("Automated goals: " +
-                autoSpaces.map(Space::goalId).sorted().joinToString(", "))
+                autoSpaces.map(WebBackedSpace::goalId).sorted().joinToString(", "))
 
-        val autoMarkMap = HashMap<String, List<Int>>()
-        for (player in playerManager.localPlayers) {
-            autoMarkMap[player.name] = autoSpaces.map(Space::spaceId)
-        }
-        websocketClient.sendAutoMarks(autoMarkMap)
+        /* Tell webserver that we are marking these spaces for all local players */
+        val autoSpaceIds = autoSpaces.map { s -> s.spaceId }
+        websocketClient.sendAutoMarks(
+            playerManager.localPlayers.map(BingoPlayer::name).associateWith { autoSpaceIds }
+        )
     }
 
     private fun receivePlayerBoards(playerBoards: List<WebModelPlayerBoard>) {

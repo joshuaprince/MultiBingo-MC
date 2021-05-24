@@ -1,4 +1,4 @@
-package com.jtprince.bingo.kplugin.game
+package com.jtprince.bingo.kplugin.game.web
 
 import com.jtprince.bingo.kplugin.BingoConfig
 import com.jtprince.bingo.kplugin.BingoPlugin
@@ -44,7 +44,7 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      * A list of BingoPlayers that are participating in this game. This includes all
      * remote players (i.e. that are not logged in to this server).
      */
-    override val allPlayers: Collection<BingoPlayer>
+    override val players: Collection<BingoPlayer>
         get() = localPlayersMap.values + remotePlayers
 
     /**
@@ -79,7 +79,7 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      * @return The BingoPlayer object, or null if the player is not found and createRemote == false.
      */
     fun bingoPlayer(name: String, createRemote: Boolean): BingoPlayer? {
-        val player = allPlayers.find { bp -> bp.name == name || bp.slugName == name }
+        val player = players.find { bp -> bp.name == name || bp.slugName == name }
         if (player != null || !createRemote) return player
 
         /* Player does not exist. Create a new one. */
@@ -139,7 +139,7 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      */
     fun destroy() {
         for (ws in playerWorldSetMap.values) {
-            ws.unload(BingoConfig.saveWorlds) { playerInWorldSet ->
+            ws.manager?.unload(ws, BingoConfig.saveWorlds) { playerInWorldSet ->
                 playerInWorldSet.bingoTell("The game is over, returning you to the spawn world.")
             }
         }

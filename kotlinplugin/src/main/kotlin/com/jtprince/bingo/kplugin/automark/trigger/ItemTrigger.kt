@@ -1,5 +1,6 @@
 package com.jtprince.bingo.kplugin.automark.trigger
 
+import com.jtprince.bingo.kplugin.automark.AutoMarkConsumer
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.automark.BingoInventory
 import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
@@ -13,7 +14,7 @@ open class ItemTrigger internal constructor(
     val space: AutomatedSpace,
     private val playerMapper: EventPlayerMapper,
     private val listener: BukkitEventRegistry?,
-    private val callback: Callback?,
+    private val consumer: AutoMarkConsumer?,
     private val definition: ItemTriggerYaml.Definition?,  /* Nullable so SpecialItemTrigger overrides */
 ) : AutoMarkTrigger() {
 
@@ -36,7 +37,7 @@ open class ItemTrigger internal constructor(
         val satisfied = satisfiedBy(player.inventory)
 
         if (revertible || satisfied) {
-            callback?.trigger(player, space, satisfied)
+            consumer?.receiveAutoMark(player, space, satisfied)
         }
     }
 

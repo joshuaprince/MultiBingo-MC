@@ -1,11 +1,11 @@
 package com.jtprince.bingo.kplugin
 
 import com.jtprince.bingo.kplugin.Messages.bingoTellError
-import com.jtprince.bingo.kplugin.automark.trigger.AutoMarkTrigger
 import com.jtprince.bingo.kplugin.automark.MissingVariableException
 import com.jtprince.bingo.kplugin.automark.definitions.TriggerDefinition
 import com.jtprince.bingo.kplugin.game.BingoGame
-import com.jtprince.bingo.kplugin.game.WebBackedGameProto
+import com.jtprince.bingo.kplugin.game.web.WebBackedGame
+import com.jtprince.bingo.kplugin.game.web.WebBackedGameProto
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.*
@@ -80,7 +80,7 @@ object Commands {
             })
         val goCmd = CommandAPICommand("go")
             .withArguments(CustomArgument("player") { input: String ->
-                val currentGame = BingoGame.currentGame
+                val currentGame = BingoGame.currentGame as? WebBackedGame
                     ?: throw CustomArgumentException(
                         MessageBuilder("No games running.")
                     )
@@ -93,9 +93,10 @@ object Commands {
                     return@CustomArgument player
                 }
             }.overrideSuggestions { _ ->
-                val currentGame = BingoGame.currentGame
-                return@overrideSuggestions currentGame?.playerManager?.localPlayers?.
-                    map(BingoPlayer::slugName)?.toTypedArray() ?: arrayOf()
+                val currentGame = BingoGame.currentGame as? WebBackedGame
+                    ?: return@overrideSuggestions emptyArray()
+                return@overrideSuggestions currentGame.playerManager.localPlayers.
+                    map(BingoPlayer::slugName).toTypedArray()
             })
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->
                 commandGo(sender, args[0] as BingoPlayer)
@@ -162,8 +163,8 @@ object Commands {
         if (destination == null) {
             sender.teleport(Bukkit.getWorlds()[0].spawnLocation)
         } else {
-            val loc = BingoGame.currentGame?.playerManager?.worldSet(destination)?.
-                    world(World.Environment.NORMAL)?.spawnLocation
+            val game = BingoGame.currentGame as? WebBackedGame?
+            val loc = game?.playerManager?.worldSet(destination)?.world(World.Environment.NORMAL)?.spawnLocation
 
             if (loc == null) {
                 sender.bingoTellError("Couldn't send you to that player's world.")

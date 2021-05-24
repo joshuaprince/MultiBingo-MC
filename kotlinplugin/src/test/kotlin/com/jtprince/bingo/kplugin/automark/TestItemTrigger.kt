@@ -161,7 +161,7 @@ class TestItemTrigger {
     private val mockEventPlayerMapper = object: EventPlayerMapper {
         /* No need for a full implementation, we're just testing satisfiedBy in this test */
         override fun mapEvent(event: Event): BingoPlayer? = null
-        override val allPlayers: Collection<BingoPlayer> = emptyList()
+        override val players: Collection<BingoPlayer> = emptyList()
     }
 
     private fun makeTrigger(goalId: String, vars: SetVariables = emptyMap()): ItemTrigger {

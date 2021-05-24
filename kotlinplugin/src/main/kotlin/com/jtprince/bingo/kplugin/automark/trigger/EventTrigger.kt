@@ -1,5 +1,6 @@
 package com.jtprince.bingo.kplugin.automark.trigger
 
+import com.jtprince.bingo.kplugin.automark.AutoMarkConsumer
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
 import com.jtprince.bingo.kplugin.automark.TimedGoalReverter
@@ -11,7 +12,7 @@ class EventTrigger<EventType : Event> internal constructor(
     val space: AutomatedSpace,
     private val eventRegistry: BukkitEventRegistry,
     private val playerMapper: EventPlayerMapper,
-    private val callback: Callback,
+    private val consumer: AutoMarkConsumer,
     private val triggerDefinition: EventTriggerDefinition<EventType>,
 ) : AutoMarkTrigger() {
 
@@ -22,7 +23,7 @@ class EventTrigger<EventType : Event> internal constructor(
 
     private val timedReverter: TimedGoalReverter? = when (triggerDefinition.revertAfterTicks) {
         null -> null
-        else -> TimedGoalReverter(triggerDefinition.revertAfterTicks, callback)
+        else -> TimedGoalReverter(triggerDefinition.revertAfterTicks, consumer)
     }
 
     override fun destroy() {
@@ -41,7 +42,7 @@ class EventTrigger<EventType : Event> internal constructor(
 
         /* Event triggers are never revertible. */
         if (satisfied) {
-            callback.trigger(player, space, satisfied)
+            consumer.receiveAutoMark(player, space, satisfied)
             timedReverter?.revertLater(player, space)
         }
     }

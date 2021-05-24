@@ -1,19 +1,15 @@
 package com.jtprince.bukkit.worldset
 
+import org.bukkit.Bukkit
 import org.bukkit.World
-import org.bukkit.entity.Player
 
 /**
  * A WorldSet is a container for 3 portal-linked Worlds (an Overworld, Nether, and End) that can be
  * indexed by Environment.
- *
- * WorldSets are only created by the WorldSet module. Worlds that are generated externally, such as
- * the initial Overworld/Nether/End created on a standard Bukkit server, will NOT be grouped into a
- * WorldSet.
  */
 class WorldSet internal constructor(
     val code: String,
-    private val manager: WorldSetManager,
+    val manager: WorldSetManager?,
     private val map: Map<World.Environment, World>
 ) {
     /**
@@ -27,13 +23,21 @@ class WorldSet internal constructor(
      */
     val worlds: Collection<World> = map.values
 
-    /**
-     * Unload all Worlds within a WorldSet. Behaves identically to the function in WorldSetManager
-     * with `this` as the first argument.
-     *
-     * @see WorldSetManager.unload
-     */
-    fun unload(saveWorlds: Boolean, onTeleportPlayerOut: ((player: Player) -> Unit)? = null) {
-        manager.unload(this, saveWorlds, onTeleportPlayerOut)
+    companion object {
+        /**
+         * Get the WorldSet describing the default Overworld, Nether, and End generated at Bukkit
+         * startup.
+         *
+         * Since the connectivity between these worlds is handled automatically, these worlds are
+         * never tracked by any WorldSetManager.
+         */
+        val defaultWorldSet: WorldSet
+            get() {
+                @Suppress("UNCHECKED_CAST")  /* No filterValuesNotNull with type safety */
+                val map = WorldSetManager.ENVIRONMENTS.keys.associateWith {
+                        env -> Bukkit.getWorlds().find { w -> w.environment == env }
+                }.filterValues { it != null } as Map<World.Environment, World>
+                return WorldSet("", null, map)
+            }
     }
 }

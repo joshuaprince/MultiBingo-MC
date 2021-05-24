@@ -1,4 +1,4 @@
-package com.jtprince.bingo.kplugin.game
+package com.jtprince.bingo.kplugin.game.web
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -7,6 +7,7 @@ import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.Messages
 import com.jtprince.bingo.kplugin.Messages.bingoTellNotReady
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
+import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import org.bukkit.command.CommandSender
 
@@ -46,9 +47,9 @@ class WebBackedGameProto(
         // Nothing to do.
     }
 
-    override fun receiveAutomark(bingoPlayer: BingoPlayer, space: AutomatedSpace, satisfied: Boolean) {
+    override fun receiveAutoMark(player: BingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
         BingoPlugin.logger.severe(
-            "Received an automarking for ${bingoPlayer.name} during a Proto Game... " +
+            "Received an automarking for ${player.name} during a Proto Game... " +
                     "that shouldn't be possible, nag the developer."
         )
     }

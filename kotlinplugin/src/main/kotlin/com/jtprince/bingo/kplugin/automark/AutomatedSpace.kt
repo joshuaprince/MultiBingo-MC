@@ -9,4 +9,6 @@ interface AutomatedSpace {
     val spaceId: Int
     val variables: SetVariables
     val playerProgress: MutableMap<BingoPlayer, PlayerTriggerProgress>
+
+    fun destroy()
 }

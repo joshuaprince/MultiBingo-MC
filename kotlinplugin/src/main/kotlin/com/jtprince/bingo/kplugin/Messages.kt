@@ -160,6 +160,28 @@ object Messages {
                 .append(Component.text(" is the winner!"))
             announceWithHeader(component)
         }
+
+        bingoAnnounce(Component.empty()
+            .append(
+                Component.text("[Spectate World]")
+                    .color(NamedTextColor.LIGHT_PURPLE)
+                    .decorate(TextDecoration.UNDERLINED)
+                    .clickEvent(ClickEvent.runCommand("/bingo spectate"))
+                    .hoverEvent(HoverEvent.showText(Component.text(
+                        "Click to enter Spectator mode. Click again to go back to Survival."
+                    )))
+            )
+            .append(Component.text(" "))
+            .append(
+                Component.text("[Go to Spawn]")
+                    .color(NamedTextColor.YELLOW)
+                    .decorate(TextDecoration.UNDERLINED)
+                    .clickEvent(ClickEvent.runCommand("/bingo go spawn"))
+                    .hoverEvent(HoverEvent.showText(Component.text(
+                        "Click to return to the server's spawn world."
+                    )))
+            )
+        )
     }
 
     fun Audience.bingoTellNotReady() {

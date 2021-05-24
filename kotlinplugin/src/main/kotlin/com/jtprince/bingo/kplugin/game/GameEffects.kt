@@ -45,7 +45,6 @@ class GameEffects(
 
     fun doEndEffects(winner: BingoPlayer?) {
         BingoPlugin.server.scheduler.scheduleSyncDelayedTask(BingoPlugin) {
-            playerManager.bukkitPlayers.forEach { it.gameMode = GameMode.SPECTATOR }
             winner?.bukkitPlayers?.forEach {
                 FireworkUtils.spawnSeveralFireworks(BingoPlugin, it)
             }

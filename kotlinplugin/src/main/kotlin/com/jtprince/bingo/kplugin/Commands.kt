@@ -14,6 +14,7 @@ import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder
 import dev.jorel.commandapi.executors.CommandExecutor
 import dev.jorel.commandapi.executors.PlayerCommandExecutor
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -73,6 +74,11 @@ object Commands {
                 commandDestroy(sender)
             })
 
+        val spectateCmd = CommandAPICommand("spectate")
+            .executesPlayer(PlayerCommandExecutor { sender: Player, _: Array<Any> ->
+                commandSpectate(sender)
+            })
+
         val goSpawnCmd = CommandAPICommand("go")
             .withArguments(LiteralArgument("spawn"))
             .executesPlayer(PlayerCommandExecutor { sender: Player, _: Array<Any> ->
@@ -123,6 +129,7 @@ object Commands {
         root.withSubcommand(startCmd)
         root.withSubcommand(endCmd)
         root.withSubcommand(destroyCmd)
+        root.withSubcommand(spectateCmd)
         root.withSubcommand(goCmd)
         root.withSubcommand(goSpawnCmd)
         if (BingoConfig.debug) {
@@ -157,6 +164,19 @@ object Commands {
     private fun commandDestroy(sender: CommandSender) {
         /* Must call the Manager function directly so currentGame can be set to null */
         BingoGame.destroyCurrentGame(sender, true)
+    }
+
+    private fun commandSpectate(sender: Player) {
+        if (BingoGame.currentGame?.state != BingoGame.State.DONE) {
+            sender.bingoTellError("You can only spectate your world after a game is over.")
+            return
+        }
+
+        if (sender.gameMode == GameMode.SPECTATOR) {
+            sender.gameMode = GameMode.SURVIVAL
+        } else {
+            sender.gameMode = GameMode.SPECTATOR
+        }
     }
 
     private fun commandGo(sender: Player, destination: BingoPlayer?) {

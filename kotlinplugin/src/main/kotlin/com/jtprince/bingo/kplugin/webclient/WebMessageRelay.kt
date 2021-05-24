@@ -29,7 +29,7 @@ class WebMessageRelay(
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onChat(event: AsyncChatEvent) {
-        val msg = event.composer().composeChat(event.player, event.player.displayName(), event.message())
+        val msg = event.renderer().render(event.player, event.player.displayName(), event.message(), event.player)
         client.sendMessage(GsonComponentSerializer.gson().serialize(msg))
     }
 

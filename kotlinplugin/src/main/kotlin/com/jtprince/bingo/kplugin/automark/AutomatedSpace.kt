@@ -1,6 +1,6 @@
 package com.jtprince.bingo.kplugin.automark
 
-import com.jtprince.bingo.kplugin.board.SetVariables
+import com.jtprince.bingo.kplugin.game.SetVariables
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 
 interface AutomatedSpace {

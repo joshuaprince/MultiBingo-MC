@@ -1,7 +1,7 @@
 package com.jtprince.bingo.kplugin.webclient.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.jtprince.bingo.kplugin.board.SetVariables
+import com.jtprince.bingo.kplugin.game.SetVariables
 
 class WebModelSpace(
     @JsonProperty("goal_id") val goalId: String,

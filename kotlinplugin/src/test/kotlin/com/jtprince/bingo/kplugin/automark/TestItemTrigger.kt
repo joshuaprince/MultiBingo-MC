@@ -2,7 +2,7 @@ package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.automark.definitions.ItemTriggerYaml
 import com.jtprince.bingo.kplugin.automark.trigger.ItemTrigger
-import com.jtprince.bingo.kplugin.board.SetVariables
+import com.jtprince.bingo.kplugin.game.SetVariables
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import org.bukkit.Material
 import org.bukkit.event.Event

@@ -34,7 +34,7 @@ class WebBackedGame(
         this::receiveFailedConnection
     )
     private val messageRelay = WebMessageRelay(websocketClient)
-    private lateinit var pluginParity: PluginParity
+    private var pluginParity: PluginParity? = null
 
     private val spaces = mutableMapOf<Int, WebBackedSpace>()
     val playerManager = PlayerManager(players)
@@ -94,17 +94,19 @@ class WebBackedGame(
             playerManager.worldSet(it).world(World.Environment.NORMAL)
         } ?: return
 
-        pluginParity = PluginParity(gameCode, anyPlayerWorld, sendEcho = { settings ->
+        val newPluginParity = PluginParity(gameCode, anyPlayerWorld, sendEcho = { settings ->
             websocketClient.sendPluginParity(true, settings)
         })
 
         if (BingoConfig.debug) {
-            for (setting in pluginParity.getMySettings()) {
+            for (setting in newPluginParity.getMySettings()) {
                 BingoPlugin.logger.info("[Parity] ${setting.key} = ${setting.value}")
             }
         }
 
-        websocketClient.sendPluginParity(false, pluginParity.getMySettings())
+        websocketClient.sendPluginParity(false, newPluginParity.getMySettings())
+
+        pluginParity = newPluginParity
     }
 
     override fun signalStart(sender: CommandSender?) {
@@ -160,7 +162,7 @@ class WebBackedGame(
         msg.pboards?.run(this::receivePlayerBoards)
         msg.gameState?.run(this::receiveGameState)
         msg.messageRelay?.run(messageRelay::receive)
-        msg.pluginParity?.run(pluginParity::receiveSettings)
+        pluginParity?.let { msg.pluginParity?.run(it::receiveSettings) }
     }
 
     private fun receiveFailedConnection() {

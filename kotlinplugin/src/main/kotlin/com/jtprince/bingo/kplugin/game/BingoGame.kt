@@ -3,7 +3,6 @@ package com.jtprince.bingo.kplugin.game
 import com.jtprince.bingo.kplugin.Messages.bingoTellError
 import com.jtprince.bingo.kplugin.automark.AutoMarkConsumer
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
-import com.jtprince.bingo.kplugin.board.SetVariables
 import com.jtprince.bingo.kplugin.game.debug.DebugGame
 import com.jtprince.bingo.kplugin.game.web.WebBackedGame
 import com.jtprince.bingo.kplugin.game.web.WebBackedGameProto

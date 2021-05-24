@@ -130,6 +130,7 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
 
         playerWorldSetMap[player] = worldSet
         for (w in worldSet.worlds) {
+
             worldPlayerMap[w] = player
         }
     }

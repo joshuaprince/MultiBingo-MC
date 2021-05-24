@@ -5,8 +5,8 @@ import com.jtprince.bingo.kplugin.Messages.bingoTell
 import com.jtprince.bingo.kplugin.Messages.bingoTellError
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
-import com.jtprince.bingo.kplugin.board.SetVariables
 import com.jtprince.bingo.kplugin.game.BingoGame
+import com.jtprince.bingo.kplugin.game.SetVariables
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.command.CommandSender

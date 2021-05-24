@@ -26,6 +26,7 @@ dependencies {
     shadow("com.destroystokyo.paper", "paper-api", "$paperVersion-R0.1-SNAPSHOT")
 
     implementation(kotlin("stdlib", kotlinVersion))
+    implementation(kotlin("stdlib-jdk7", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))
     implementation("io.ktor", "ktor-client-core", ktorVersion)
     implementation("io.ktor", "ktor-client-websockets", ktorVersion)

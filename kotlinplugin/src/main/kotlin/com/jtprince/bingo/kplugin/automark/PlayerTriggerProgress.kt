@@ -1,7 +1,7 @@
 package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.Messages.bingoTellGoalProgress
-import com.jtprince.bingo.kplugin.board.SetVariables
+import com.jtprince.bingo.kplugin.game.SetVariables
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 import kotlin.reflect.KClass
 

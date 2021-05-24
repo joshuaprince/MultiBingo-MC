@@ -3,7 +3,7 @@ package com.jtprince.bingo.kplugin.game.debug
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.automark.PlayerTriggerProgress
 import com.jtprince.bingo.kplugin.automark.trigger.AutoMarkTriggerFactory
-import com.jtprince.bingo.kplugin.board.SetVariables
+import com.jtprince.bingo.kplugin.game.SetVariables
 import com.jtprince.bingo.kplugin.player.BingoPlayer
 
 class DebugSpace(

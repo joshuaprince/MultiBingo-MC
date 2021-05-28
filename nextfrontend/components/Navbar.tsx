@@ -1,7 +1,7 @@
-import Tippy from "@tippyjs/react"
+import React from "react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
-import React from "react"
+import Tippy from "@tippyjs/react"
 
 import styles from "../styles/Layout.module.scss"
 

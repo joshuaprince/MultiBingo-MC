@@ -1,11 +1,12 @@
-import classNames from "classnames"
 import React from "react"
+import classNames from "classnames"
+import { $enum } from "ts-enum-util"
+
+import { sendMarkBoard } from "api"
+
+import { Color } from "interface/IPlayerBoard"
 
 import styles from "styles/ColorPicker.module.scss"
-
-import { $enum } from "ts-enum-util"
-import { sendMarkBoard } from "../../api"
-import { Color } from "../../interface/IPlayerBoard"
 
 type IProps = {
   spaceId: number

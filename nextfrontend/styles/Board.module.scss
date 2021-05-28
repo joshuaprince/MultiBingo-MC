@@ -122,18 +122,18 @@ $hex-clip-path-vert: polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0);
 
 /***** END SHAPES *****/
 
-.space.covertMarked {
+.space.bordered {
   .square & {
-    border: 1px solid crimson;
+    border: 1px solid var(--border-color);
     .spaceInner {
-      outline: 3px solid crimson;
+      outline: 3px solid var(--border-color);
     }
   }
 
   .hexagonHorz &, .hexagonVert & {
-    background: crimson;
+    background: var(--border-color);
     .spaceInner {
-      outline: 2px solid crimson;
+      outline: 2px solid var(--border-color);
       left: 3px;
       top: 3px;
       height: calc(100% - 6px);
@@ -142,7 +142,7 @@ $hex-clip-path-vert: polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0);
   }
 }
 
-.revealed .space.editable {
+.revealed .space.clickable {
   cursor: pointer;
 
   &:hover {

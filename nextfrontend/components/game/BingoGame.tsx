@@ -1,19 +1,21 @@
-import React, { useCallback, useEffect } from 'react'
+import React from 'react'
 import { useMediaQuery } from "react-responsive"
 import useWebSocket, { ReadyState } from "react-use-websocket"
 
-import styles from "styles/Game.module.scss"
-import { getWebSocketUrl, onApiMessage, updateWebSocket } from "../../api"
-import { IBoard } from "../../interface/IBoard"
-import { IGameMessage } from "../../interface/IGameMessage"
-import { IPlayerBoard } from "../../interface/IPlayerBoard"
+import { getWebSocketUrl, onApiMessage, updateWebSocket } from "api"
+
+import { BoardShape, IBoard } from "interface/IBoard"
+import { IGameMessage } from "interface/IGameMessage"
+import { IPlayerBoard } from "interface/IPlayerBoard"
 
 import { BoardContainer } from "./BoardContainer"
 import { BoardSkeleton } from "./BoardSkeleton"
 import { CornerLoadingSpinner } from "./CornerLoadingSpinner"
 import { ResponsiveContext } from './ResponsiveContext'
-import { SecondaryBoardsContainer } from "./SecondaryBoardsContainer"
+import { SecondaryBoardsAllContainer } from "./SecondaryBoardsAllContainer"
 import { TapModeSelector } from "./TapModeSelector"
+
+import styles from "styles/Game.module.scss"
 
 type IProps = {
   gameCode: string
@@ -33,8 +35,18 @@ export const BingoGame: React.FunctionComponent<IProps> = (props: IProps) => {
     query: "(hover: none)"
   })
   const [state, setState] = React.useState<IBingoGameState>(() => getInitialState(isTapOnly))
+  const isHexagonVertical = useMediaQuery({
+    query: "(max-width: 600px)"
+  })
+  const orientation = (() => {
+    if (state.board?.shape == BoardShape.SQUARE) {
+      return "square"
+    } else {
+      return isHexagonVertical ? "hexagon-vertical" : "hexagon-horizontal"
+    }
+  })()
 
-  const socketUrl = useCallback(() => getWebSocketUrl(props.gameCode, props.playerName),
+  const socketUrl = React.useCallback(() => getWebSocketUrl(props.gameCode, props.playerName),
     [props.gameCode, props.playerName])
   const {
     lastJsonMessage,
@@ -46,13 +58,13 @@ export const BingoGame: React.FunctionComponent<IProps> = (props: IProps) => {
   })
 
   /* Update `connecting` state entry and API's websocket */
-  useEffect(() => {
+  React.useEffect(() => {
     setState(s => ({...s, connecting: (readyState !== ReadyState.OPEN)}))
     updateWebSocket(getWebSocket())
   }, [getWebSocket, readyState])
 
   /* React to incoming messages */
-  useEffect(() => {
+  React.useEffect(() => {
     onApiMessage(setState, lastJsonMessage)
   }, [lastJsonMessage])
 
@@ -72,8 +84,17 @@ export const BingoGame: React.FunctionComponent<IProps> = (props: IProps) => {
           <TapModeSelector/>
         }
         {state.board && <>
-          <BoardContainer isPrimary={true} gameCode={props.gameCode} board={state.board} playerBoard={primaryPlayer} />
-          <SecondaryBoardsContainer gameCode={props.gameCode} board={state.board} playerBoards={secondaryPlayers}/>
+          <BoardContainer
+            gameCode={props.gameCode}
+            board={state.board}
+            playerBoard={primaryPlayer}
+            orientation={orientation}
+          />
+          <SecondaryBoardsAllContainer
+            board={state.board}
+            playerBoards={secondaryPlayers}
+            orientation={orientation}
+          />
         </>}
         {!state.board &&
           <BoardSkeleton/>

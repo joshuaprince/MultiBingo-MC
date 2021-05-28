@@ -1,9 +1,9 @@
-import { FormLabel, Switch } from "@chakra-ui/react"
 import React from "react"
-
-import styles from "styles/Game.module.scss"
+import { FormLabel, Switch } from "@chakra-ui/react"
 
 import { ResponsiveContext } from "./ResponsiveContext"
+
+import styles from "styles/Game.module.scss"
 
 export const TapModeSelector: React.FC = () => {
   const { tapToMark, setTapToMark } = React.useContext(ResponsiveContext)

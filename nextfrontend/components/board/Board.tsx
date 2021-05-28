@@ -1,63 +1,61 @@
-import classNames from "classnames"
-import { Space } from "components/board/Space"
-
-import { BoardShape, IBoard } from "interface/IBoard"
-import { IPlayerBoard, IPlayerBoardMarking } from "interface/IPlayerBoard"
 import React from "react"
-import { useMediaQuery } from "react-responsive"
+import { Button } from "@chakra-ui/react"
+import classNames from "classnames"
 
 import styles from "styles/Board.module.scss"
-import { RevealButton } from "./RevealButton"
+
+export type BoardOrientation = "square" | "hexagon-horizontal" | "hexagon-vertical"
 
 type IProps = {
-  board: IBoard
-  playerBoard?: IPlayerBoard
-  isPrimary: boolean
+  /**
+   * Shape and direction to display the board.
+   */
+  orientation: BoardOrientation
+
+  /**
+   * If true, the board will be blurred and display a "Reveal" button if `onRevealButton` is also
+   * set.
+   */
+  isObscured: boolean
+
+  /**
+   * If set, displays a "Reveal" button in the center of the board that calls this callback when
+   * the button is clicked.
+   */
+  onRevealButton?: () => void
+
+  /**
+   * Extra CSS class to add to the Board div.
+   */
+  className?: string
 }
 
-export const Board: React.FunctionComponent<IProps> = (props: IProps) => {
-  const isVertical = useMediaQuery({
-    query: "(max-width: 600px)"
-  })
+export const Board: React.FunctionComponent<IProps> = (props) => {
+  const obscuredClass = props.isObscured ? styles.obscured : styles.revealed
 
-  const primaryClass = props.isPrimary ? styles.primary : styles.secondary
-  const obscuredClass = props.board.obscured ? styles.obscured : styles.revealed
-
-  let shapeClass: string
-  switch (props.board.shape) {
-    case BoardShape.SQUARE:
-      shapeClass = styles.square
-      break
-    case BoardShape.HEXAGON:
-      shapeClass = isVertical ? styles.hexagonVert : styles.hexagonHorz
-      break
-  }
+  const shapeClass = (() => {
+    if (props.orientation === "square") {
+      return styles.square
+    } else if (props.orientation === "hexagon-vertical") {
+      return styles.hexagonVert
+    } else {
+      return styles.hexagonHorz
+    }
+  })()
 
   return (
-    <div className={classNames(styles.board, primaryClass, obscuredClass, shapeClass)}>
-      {props.isPrimary && props.board.obscured &&
-        <RevealButton/>
+    <div className={classNames(styles.board, props.className, obscuredClass, shapeClass)}>
+      {props.isObscured && props.onRevealButton &&
+        <Button
+          size="lg"
+          colorScheme="blue"
+          className={styles.revealButton}
+          onClick={props.onRevealButton}
+        >
+          Reveal Board
+        </Button>
       }
-      {props.board.spaces.map(spc => {
-        const marking: IPlayerBoardMarking | undefined =
-          props.playerBoard?.markings.find(pbm => pbm.space_id === spc.space_id)
-        const win: boolean = !!(props.playerBoard?.win?.find(n => n === spc.space_id))
-        const editable = !!(props.playerBoard && !props.board.obscured && props.isPrimary)
-
-        return (
-          <Space
-            key={spc.space_id}
-            space={spc}
-            shape={props.board.shape}
-            marking={marking}
-            winning={win}
-            obscured={props.board.obscured}
-            editable={editable}
-            isPrimary={props.isPrimary}
-            isVertical={isVertical}
-          />
-        )
-      })}
+      {props.children}
     </div>
   )
 }

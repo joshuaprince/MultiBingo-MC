@@ -1,3 +1,4 @@
+import React from "react"
 import {
   Button,
   Modal,
@@ -8,12 +9,12 @@ import {
   ModalHeader,
   ModalOverlay
 } from "@chakra-ui/react"
-import React from "react"
+
+import { ISpace } from "interface/ISpace"
+
+import { ColorPicker } from "./ColorPicker"
 
 import styles from "styles/SpaceTouchModal.module.scss"
-
-import { ISpace } from "../../interface/ISpace"
-import { ColorPicker } from "./ColorPicker"
 
 type IProps = {
   isOpen: boolean

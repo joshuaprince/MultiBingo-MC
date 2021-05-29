@@ -16,7 +16,7 @@ type IProps = {
    * If true, the board will be blurred and display a "Reveal" button if `onRevealButton` is also
    * set.
    */
-  isObscured: boolean
+  isObscured?: boolean
 
   /**
    * If set, displays a "Reveal" button in the center of the board that calls this callback when

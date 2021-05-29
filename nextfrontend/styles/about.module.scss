@@ -1,3 +1,25 @@
 .container {
   margin-top: 20px;
+  h2 {
+    margin-bottom: 0.5em;
+  }
+  p {
+    margin-bottom: 1.5em;
+  }
+}
+
+.board {
+  width: 95%;
+  max-width: 500px;
+  margin: auto auto 1.5em;
+}
+
+.flexy {
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.flexy .board {
+  max-width: 300px;
+  margin: 0 0 1.5em;
 }

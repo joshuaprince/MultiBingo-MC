@@ -5,7 +5,7 @@ import com.jtprince.bingo.kplugin.automark.MissingVariableException
 import com.jtprince.bingo.kplugin.automark.definitions.TriggerDefinition
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.game.web.WebBackedGame
-import com.jtprince.bingo.kplugin.game.web.WebBackedGameProto
+import com.jtprince.bingo.kplugin.game.web.WebGameSettings
 import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.GreedyStringArgument
@@ -30,14 +30,14 @@ object Commands {
         val prepareCmd = CommandAPICommand("prepare")
             .withAliases("p")
             .executes(CommandExecutor { sender: CommandSender, _: Array<Any> ->
-                commandPrepare(sender, WebBackedGameProto.WebGameSettings())
+                commandPrepare(sender, WebGameSettings())
             })
         // Game code form
         val prepareCmdGameCode = CommandAPICommand("prepare")
             .withAliases("p")
             .withArguments(StringArgument("gameCode"))
             .executes(CommandExecutor { sender: CommandSender, args: Array<Any> ->
-                val settings = WebBackedGameProto.WebGameSettings(gameCode = args[0] as String)
+                val settings = WebGameSettings(gameCode = args[0] as String)
                 commandPrepare(sender, settings)
             })
         // Shape-only form
@@ -45,7 +45,7 @@ object Commands {
             .withAliases("p")
             .withArguments(shapeArg)
             .executes(CommandExecutor { sender: CommandSender, args: Array<Any> ->
-                val settings = WebBackedGameProto.WebGameSettings(shape = args[0] as String)
+                val settings = WebGameSettings(shape = args[0] as String)
                 commandPrepare(sender, settings)
             })
         // +Forced goals
@@ -53,7 +53,7 @@ object Commands {
             .withAliases("p")
             .withArguments(shapeArg, forcedArg)
             .executes(CommandExecutor { sender: CommandSender, args: Array<Any> ->
-                val settings = WebBackedGameProto.WebGameSettings(
+                val settings = WebGameSettings(
                     shape = args[0] as String,
                     forcedGoals = (args[1] as String).split(" "))
                 commandPrepare(sender, settings)
@@ -140,7 +140,7 @@ object Commands {
         root.register()
     }
 
-    private fun commandPrepare(sender: CommandSender, settings: WebBackedGameProto.WebGameSettings) {
+    private fun commandPrepare(sender: CommandSender, settings: WebGameSettings) {
         BingoGame.prepareNewWebGame(sender, settings)
     }
 

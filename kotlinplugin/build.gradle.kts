@@ -28,6 +28,7 @@ dependencies {
     implementation(kotlin("stdlib", kotlinVersion))
     implementation(kotlin("stdlib-jdk7", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))
+    implementation("org.apache.httpcomponents", "httpclient", "4.5.13")
     implementation("io.ktor", "ktor-client-core", ktorVersion)
     implementation("io.ktor", "ktor-client-websockets", ktorVersion)
     implementation("io.ktor", "ktor-client-cio", ktorVersion)

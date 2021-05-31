@@ -1,7 +1,8 @@
 package com.jtprince.bingo.kplugin
 
 import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
-import io.ktor.http.*
+import org.apache.http.client.utils.URIBuilder
+import java.net.URI
 
 object BingoConfig {
     val debug: Boolean
@@ -11,35 +12,35 @@ object BingoConfig {
         BingoPlugin.config.getString("web_url") ?: throw NoSuchFieldException("No web_url is configured!")
     }
 
-    fun boardCreateUrl(): Url {
-        val builder = URLBuilder(webUrl)
-        builder.path("rest", "generate_board")
+    fun boardCreateUrl(): URI {
+        val builder = URIBuilder(webUrl)
+        builder.setPathSegments("rest", "generate_board")
         return builder.build()
     }
 
-    fun gameUrl(gameCode: String, forPlayer: LocalBingoPlayer): Url {
-        val builder = URLBuilder(webUrl)
-        builder.path("game", gameCode)
-        builder.parameters["name"] = forPlayer.name
+    fun gameUrl(gameCode: String, forPlayer: LocalBingoPlayer): URI {
+        val builder = URIBuilder(webUrl)
+        builder.setPathSegments("game", gameCode)
+        builder.setParameter("name", forPlayer.name)
         return builder.build()
     }
 
-    fun webPingUrl(): Url {
-        val builder = URLBuilder(webUrl)
-        builder.path("ping")
+    fun webPingUrl(): URI {
+        val builder = URIBuilder(webUrl)
+        builder.setPathSegments("ping")
         return builder.build()
     }
 
     val saveWorlds: Boolean
         get() = BingoPlugin.config.getBoolean("save_worlds", true)
 
-    fun websocketUrl(gameCode: String, clientId: String): Url {
-        val builder = URLBuilder(webUrl)
-        builder.path("ws", "board-plugin", gameCode, clientId)
-        builder.protocol = when(builder.protocol) {
-            URLProtocol.HTTP -> URLProtocol.WS
-            URLProtocol.HTTPS -> URLProtocol.WSS
-            else -> throw IllegalArgumentException("Invalid web URL protocol ${builder.protocol}")
+    fun websocketUrl(gameCode: String, clientId: String): URI {
+        val builder = URIBuilder(webUrl)
+        builder.setPathSegments("ws", "board-plugin", gameCode, clientId)
+        builder.scheme = when(builder.scheme) {
+            "http" -> "ws"
+            "https" -> "wss"
+            else -> throw IllegalArgumentException("Invalid web URL protocol ${builder.scheme}")
         }
 
         return builder.build()

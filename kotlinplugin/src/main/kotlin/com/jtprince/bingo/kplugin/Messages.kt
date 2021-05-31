@@ -6,7 +6,6 @@ import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import com.jtprince.bingo.kplugin.player.LocalBingoPlayerTeam
 import com.jtprince.util.ChatUtils
-import io.ktor.http.*
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
@@ -101,7 +100,7 @@ object Messages {
     fun bingoAnnounceGameReady(gameCode: String, players: Collection<LocalBingoPlayer>, starters: Audience) {
         for (p in players) {
             // Game link for this specific player
-            val url: Url = BingoConfig.gameUrl(gameCode, p)
+            val url = BingoConfig.gameUrl(gameCode, p)
             val component = Component.empty()
                 .append(
                     Component.text("[Open Board]")

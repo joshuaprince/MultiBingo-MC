@@ -6,6 +6,7 @@ import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.game.debug.DebugGame
 import com.jtprince.bingo.kplugin.game.web.WebBackedGame
 import com.jtprince.bingo.kplugin.game.web.WebBackedGameProto
+import com.jtprince.bingo.kplugin.game.web.WebGameSettings
 import com.jtprince.bingo.kplugin.player.BingoPlayerFactory
 import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import com.jtprince.bingo.kplugin.webclient.WebHttpClient
@@ -56,8 +57,7 @@ abstract class BingoGame(
             currentGame = null
         }
 
-        fun prepareNewWebGame(creator: CommandSender,
-                              settings: WebBackedGameProto.WebGameSettings) {
+        fun prepareNewWebGame(creator: CommandSender, settings: WebGameSettings) {
             destroyCurrentGame(creator)
             val newGame = WebBackedGameProto(creator, settings)
             currentGame = newGame

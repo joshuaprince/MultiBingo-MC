@@ -3,7 +3,8 @@ package com.jtprince.bingo.kplugin
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.player.BingoPlayer
-import com.jtprince.bingo.kplugin.player.BingoPlayerTeam
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayerTeam
 import com.jtprince.util.ChatUtils
 import io.ktor.http.*
 import net.kyori.adventure.audience.Audience
@@ -85,9 +86,9 @@ object Messages {
         announceWithHeader(component)
     }
 
-    fun bingoAnnounceWorldsGenerated(players: Collection<BingoPlayer>) {
+    fun bingoAnnounceWorldsGenerated(players: Collection<LocalBingoPlayer>) {
         val playersCpnt = ChatUtils.commaSeparated(
-            players.map(BingoPlayer::formattedName))
+            players.map(LocalBingoPlayer::formattedName))
         val component = Component
             .text("Bingo worlds have been generated for ")
             .append(
@@ -97,7 +98,7 @@ object Messages {
         announceWithHeader(component)
     }
 
-    fun bingoAnnounceGameReady(gameCode: String, players: Collection<BingoPlayer>, starters: Audience) {
+    fun bingoAnnounceGameReady(gameCode: String, players: Collection<LocalBingoPlayer>, starters: Audience) {
         for (p in players) {
             // Game link for this specific player
             val url: Url = BingoConfig.gameUrl(gameCode, p)
@@ -188,13 +189,13 @@ object Messages {
         bingoTellError("The game is not ready to be started!")
     }
 
-    fun bingoTellTeams(players: Collection<BingoPlayer>) {
+    fun bingoTellTeams(players: Collection<LocalBingoPlayer>) {
         for (bp in players) {
-            if (bp is BingoPlayerTeam) {
+            if (bp is LocalBingoPlayerTeam) {
                 val component = Component.text("You are playing on team ")
-                    .append(bp.formattedName)
+                    .append(bp.formattedName.decorate(TextDecoration.BOLD))
                     .append(Component.text("!"))
-                Audience.audience(bp.bukkitPlayers).sendMessage(component)
+                bp.bingoTell(component)
             }
         }
     }

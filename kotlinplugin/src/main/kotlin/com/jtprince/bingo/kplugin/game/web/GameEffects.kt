@@ -1,9 +1,8 @@
-package com.jtprince.bingo.kplugin.game
+package com.jtprince.bingo.kplugin.game.web
 
 import com.jtprince.bingo.kplugin.BingoPlugin
-import com.jtprince.bingo.kplugin.game.web.PlayerManager
 import com.jtprince.bingo.kplugin.player.BingoPlayer
-import com.jtprince.bingo.kplugin.player.BingoPlayerRemote
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import io.github.skepter.utils.FireworkUtils
 import org.bukkit.GameMode
@@ -45,7 +44,7 @@ class GameEffects(
 
     fun doEndEffects(winner: BingoPlayer?) {
         BingoPlugin.server.scheduler.scheduleSyncDelayedTask(BingoPlugin) {
-            winner?.bukkitPlayers?.forEach {
+            (winner as? LocalBingoPlayer)?.bukkitPlayers?.forEach {
                 FireworkUtils.spawnSeveralFireworks(BingoPlugin, it)
             }
         }
@@ -76,8 +75,7 @@ class GameEffects(
         BingoPlugin.server.dispatchCommand(consoleSender, "clear @a")
     }
 
-    private fun teleportToWorld(player: BingoPlayer, worldSet: WorldSet) {
-        if (player is BingoPlayerRemote) return
+    private fun teleportToWorld(player: LocalBingoPlayer, worldSet: WorldSet) {
         val world = worldSet.world(World.Environment.NORMAL)
         world.time = 0
         player.bukkitPlayers.forEach { p -> p.teleport(world.spawnLocation) }

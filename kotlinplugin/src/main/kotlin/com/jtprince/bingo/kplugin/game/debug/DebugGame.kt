@@ -7,7 +7,7 @@ import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.game.SetVariables
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -19,11 +19,12 @@ import org.bukkit.event.Event
  */
 class DebugGame(
     creator: Player,
-    players: Collection<BingoPlayer>,
+    val players: Collection<LocalBingoPlayer>,
     val goalId: String,
     variables: SetVariables,
-) : BingoGame(creator, "DebugGame", players), EventPlayerMapper {
+) : BingoGame(creator, "DebugGame"), EventPlayerMapper {
     override var state: State = State.RUNNING
+    override val localPlayers = players
 
     val space = DebugSpace(this, goalId, variables)
 
@@ -44,7 +45,7 @@ class DebugGame(
         sender?.bingoTell("Debug Game destroyed.")
     }
 
-    override fun receiveAutoMark(player: BingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
+    override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
         if (fulfilled) {
             player.bingoTell("You have activated ${space.text}.")
         } else {
@@ -52,8 +53,8 @@ class DebugGame(
         }
     }
 
-    override fun mapEvent(event: Event): BingoPlayer? =
+    override fun mapEvent(event: Event): LocalBingoPlayer? =
         players.find { p -> creator in p.bukkitPlayers }
 
-    override fun worldSet(player: BingoPlayer): WorldSet = WorldSet.defaultWorldSet
+    override fun worldSet(player: LocalBingoPlayer): WorldSet = WorldSet.defaultWorldSet
 }

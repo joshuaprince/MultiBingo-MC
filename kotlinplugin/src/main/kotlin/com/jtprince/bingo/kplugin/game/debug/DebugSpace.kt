@@ -4,7 +4,7 @@ import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.automark.PlayerTriggerProgress
 import com.jtprince.bingo.kplugin.automark.trigger.AutoMarkTriggerFactory
 import com.jtprince.bingo.kplugin.game.SetVariables
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 
 class DebugSpace(
     val game: DebugGame,
@@ -17,7 +17,7 @@ class DebugSpace(
 
     override val text = goalId + (if (variables.isEmpty()) "" else variables.toString())
     override val spaceId = lastUsedId++
-    override val playerProgress: MutableMap<BingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
+    override val playerProgress: MutableMap<LocalBingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
 
     val triggers = AutoMarkTriggerFactory().create(this, game, game)
 

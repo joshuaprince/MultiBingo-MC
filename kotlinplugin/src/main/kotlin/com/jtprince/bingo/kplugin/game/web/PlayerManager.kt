@@ -5,8 +5,8 @@ import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.Messages.bingoTell
 import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
 import com.jtprince.bingo.kplugin.player.BingoPlayer
-import com.jtprince.bingo.kplugin.player.BingoPlayerRemote
-import com.jtprince.bingo.kplugin.player.BingoRemotePlayerUnsupportedException
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
+import com.jtprince.bingo.kplugin.player.RemoteBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.World
 import org.bukkit.entity.Player
@@ -25,9 +25,12 @@ import java.util.*
 /**
  * Single-game container for all players in that game and functionality relating to them.
  */
-class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
-    private val localPlayersMap: HashMap<UUID, BingoPlayer> = run {
-        val ret = HashMap<UUID, BingoPlayer>()
+class PlayerManager(localPlayers: Collection<LocalBingoPlayer>) : EventPlayerMapper {
+    /**
+     * Bukkit Player UUID -> BingoPlayer that contains that Player
+     */
+    private val localPlayersMap: HashMap<UUID, LocalBingoPlayer> = run {
+        val ret = HashMap<UUID, LocalBingoPlayer>()
         for (p in localPlayers) {
             for (op in p.offlinePlayers) {
                 ret[op.uniqueId] = p
@@ -35,23 +38,23 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
         }
         ret
     }
-    private val remotePlayers = HashSet<BingoPlayer>()
+    private val remotePlayers = HashSet<RemoteBingoPlayer>()
 
-    internal val playerWorldSetMap = HashMap<BingoPlayer, WorldSet>()
-    internal val worldPlayerMap = HashMap<World, BingoPlayer>()
+    internal val playerWorldSetMap = HashMap<LocalBingoPlayer, WorldSet>()
+    internal val worldPlayerMap = HashMap<World, LocalBingoPlayer>()
 
     /**
      * A list of BingoPlayers that are participating in this game. This includes all
      * remote players (i.e. that are not logged in to this server).
      */
-    override val players: Collection<BingoPlayer>
+    val players: Collection<BingoPlayer>
         get() = localPlayersMap.values + remotePlayers
 
     /**
      * Return a list of BingoPlayers that are participating in this game and playing on this
      * server (i.e. does not include Remote players)
      */
-    val localPlayers: Collection<BingoPlayer>
+    override val localPlayers: Collection<LocalBingoPlayer>
         get() = localPlayersMap.values
 
     /**
@@ -66,27 +69,33 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      * @param player The Bukkit Player to check.
      * @return The BingoPlayer object, or null if this Player is not part of this game.
      */
-    fun bingoPlayer(player: Player): BingoPlayer? {
+    fun bingoPlayer(player: Player): LocalBingoPlayer? {
         return localPlayersMap[player.uniqueId]
     }
 
     /**
-     * Find a BingoPlayer with a given name. If there is no player with the given name on this
-     * server, a BingoPlayerRemote will be returned.
+     * Find a BingoPlayer with a given name.
      * @param name String to look for.
-     * @param createRemote If true, this function will create a RemoteBingoPlayer if the player was
-     *                     not found.
-     * @return The BingoPlayer object, or null if the player is not found and createRemote == false.
      */
-    fun bingoPlayer(name: String, createRemote: Boolean): BingoPlayer? {
-        val player = players.find { bp -> bp.name == name || bp.slugName == name }
-        if (player != null || !createRemote) return player
+    fun bingoPlayer(name: String): BingoPlayer? {
+        return players.find { bp -> bp.name == name }
+    }
 
-        /* Player does not exist. Create a new one. */
-        BingoPlugin.logger.info("Creating new Remote player $name.")
-        val newBingoPlayer = BingoPlayerRemote(name)
-        remotePlayers.add(newBingoPlayer)
-        return newBingoPlayer
+    /**
+     * Find a BingoPlayer with a given name. If there is no player with the given name on this
+     * server, a RemoteBingoPlayer will always be returned.
+     * @param name String to look for.
+     * @return The BingoPlayer object, or a new RemoteBingoPlayer if this player has never been
+     *         seen before.
+     */
+    fun bingoPlayerOrCreateRemote(name: String): BingoPlayer {
+        return bingoPlayer(name) ?: run {
+            /* Player does not exist. Create a new one. */
+            BingoPlugin.logger.info("Creating new Remote player $name.")
+            val newBingoPlayer = RemoteBingoPlayer(name)
+            remotePlayers.add(newBingoPlayer)
+            newBingoPlayer
+        }
     }
 
     /**
@@ -94,21 +103,17 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      * @param world The World to check.
      * @return The BingoPlayer object, or null if this World is not part of this game.
      */
-    fun bingoPlayer(world: World): BingoPlayer? {
+    fun bingoPlayer(world: World): LocalBingoPlayer? {
         return worldPlayerMap[world]
     }
 
     /**
      * Find the set of worlds this Bingo Player is given to play in for this game.
      * @param player A Local BingoPlayer.
-     * @return The player's WorldSet, or null if the player does not have one.
+     * @return The player's WorldSet.
+     * @throws RuntimeException If there is no WorldSet for this Player.
      */
-    override fun worldSet(player: BingoPlayer) : WorldSet {
-        if (player is BingoPlayerRemote) {
-            throw BingoRemotePlayerUnsupportedException(
-                "Tried to get WorldSet for remote player ${player.name}")
-        }
-
+    override fun worldSet(player: LocalBingoPlayer) : WorldSet {
         return playerWorldSetMap[player] ?: throw RuntimeException(
             "Failed to get WorldSet for ${player.name}")
     }
@@ -117,22 +122,18 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      * Create worlds for a given player.
      * @param player Player to create worlds for.
      */
-    fun prepareWorldSet(gameCode: String, player: BingoPlayer) {
-        if (player is BingoPlayerRemote) {
-            BingoPlugin.logger.severe("Tried to create WorldSet for remote player ${player.name}")
-            return
-        }
-
+    fun prepareWorldSet(gameCode: String, player: LocalBingoPlayer): WorldSet {
         val worldSet = BingoPlugin.worldSetManager.createWorldSet(
-            worldSetCode = "${gameCode}_${player.slugName}",
+            worldSetCode = "${gameCode}_${player.slugName()}",
             seed = gameCode
         )
 
         playerWorldSetMap[player] = worldSet
         for (w in worldSet.worlds) {
-
             worldPlayerMap[w] = player
         }
+
+        return worldSet
     }
 
     /**
@@ -150,7 +151,7 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
      * Determine which BingoPlayer an Event is associated with, for determining who to
      * potentially automark for.
      */
-    override fun mapEvent(event: Event): BingoPlayer? {
+    override fun mapEvent(event: Event): LocalBingoPlayer? {
         return when (event) {
             is PlayerEvent -> bingoPlayer(event.player)
             is WorldEvent -> bingoPlayer(event.world)
@@ -167,5 +168,9 @@ class PlayerManager(localPlayers: Collection<BingoPlayer>) : EventPlayerMapper {
                 null
             }
         }
+    }
+
+    private fun BingoPlayer.slugName(): String {
+        return name.filter { ch -> ch.isLetterOrDigit() }
     }
 }

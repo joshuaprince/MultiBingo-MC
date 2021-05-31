@@ -1,13 +1,13 @@
 package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.BingoPlugin
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import org.bukkit.Bukkit
 
 internal class TimedGoalReverter(private val ticks: Int, val consumer: AutoMarkConsumer) {
-    private var taskIdMap = mutableMapOf<Pair<BingoPlayer, Int>, Int>()
+    private var taskIdMap = mutableMapOf<Pair<LocalBingoPlayer, Int>, Int>()
 
-    fun revertLater(player: BingoPlayer, space: AutomatedSpace) {
+    fun revertLater(player: LocalBingoPlayer, space: AutomatedSpace) {
         taskIdMap[player to space.spaceId]?.let {
             /* If we're already planning to revert this player/space combo, cancel that task */
             Bukkit.getScheduler().cancelTask(it)

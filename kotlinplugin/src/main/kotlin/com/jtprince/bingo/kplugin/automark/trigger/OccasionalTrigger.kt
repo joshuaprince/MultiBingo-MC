@@ -33,7 +33,7 @@ class OccasionalTrigger internal constructor(
     }
 
     private fun invoke() {
-        for (player in playerMapper.players) {
+        for (player in playerMapper.localPlayers) {
             val worlds = playerMapper.worldSet(player)
             val satisfied = triggerDefinition.function(
                 OccasionalTriggerDefinition.Parameters(player, worlds, this))

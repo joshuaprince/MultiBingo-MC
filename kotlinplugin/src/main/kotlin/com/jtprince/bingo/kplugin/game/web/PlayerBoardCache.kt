@@ -1,16 +1,16 @@
 package com.jtprince.bingo.kplugin.game.web
 
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import com.jtprince.bingo.kplugin.webclient.model.WebModelPlayerBoard
 
 /**
- * Class to maintain the Plugin-side latest known markings on a single Player's board, and decide
- * whether we can send a marking to the web.
+ * Class to maintain the Plugin-side latest known markings on a single Local Player's board, and
+ * decide whether we can send a marking to the web.
  *
  * The data maintained here is not authoritative; the web backend maintains the authoritative
  * version.
  */
-internal class PlayerBoardCache(val owner: BingoPlayer) {
+internal class PlayerBoardCache(val owner: LocalBingoPlayer) {
     private val knownMarkings = mutableMapOf<Int, WebBackedSpace.Marking>()
     private var ignoredSpaceIds = setOf<Int>()
 

@@ -6,11 +6,12 @@
 
 package com.jtprince.bingo.kplugin.automark.definitions
 
-import com.jtprince.bingo.kplugin.automark.*
+import com.jtprince.bingo.kplugin.automark.BingoInventory
+import com.jtprince.bingo.kplugin.automark.PlayerTriggerProgress
 import com.jtprince.bingo.kplugin.automark.trigger.EventTrigger
 import com.jtprince.bingo.kplugin.automark.trigger.OccasionalTrigger
 import com.jtprince.bingo.kplugin.automark.trigger.SpecialItemTrigger
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.event.Event
 import kotlin.reflect.KClass
@@ -128,7 +129,7 @@ internal class EventTriggerDefinition<EventType: Event>(
 ) : TriggerDslDefinition(neededVars) {
     class Parameters<EventType: Event>(
         val event: EventType,
-        val player: BingoPlayer,
+        val player: LocalBingoPlayer,
         val trigger: EventTrigger<EventType>,
     ) {
         val goalId = trigger.space.goalId
@@ -145,7 +146,7 @@ internal class OccasionalTriggerDefinition(
     val function: (Parameters) -> Boolean
 ) : TriggerDslDefinition(neededVars) {
     class Parameters(
-        val player: BingoPlayer,
+        val player: LocalBingoPlayer,
         val worlds: WorldSet,
         val trigger: OccasionalTrigger,
     ) {

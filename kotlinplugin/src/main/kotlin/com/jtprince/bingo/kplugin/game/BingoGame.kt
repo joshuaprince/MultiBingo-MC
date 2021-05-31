@@ -6,8 +6,8 @@ import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.game.debug.DebugGame
 import com.jtprince.bingo.kplugin.game.web.WebBackedGame
 import com.jtprince.bingo.kplugin.game.web.WebBackedGameProto
-import com.jtprince.bingo.kplugin.player.BingoPlayer
 import com.jtprince.bingo.kplugin.player.BingoPlayerFactory
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import com.jtprince.bingo.kplugin.webclient.WebHttpClient
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -15,7 +15,6 @@ import org.bukkit.entity.Player
 abstract class BingoGame(
     val creator: CommandSender,
     val gameCode: String,
-    val players: Collection<BingoPlayer>
 ) : AutoMarkConsumer {
     enum class State {
         BOARD_GENERATING,
@@ -41,7 +40,7 @@ abstract class BingoGame(
     abstract fun signalEnd(sender: CommandSender?)
     protected abstract fun signalDestroy(sender: CommandSender?)
 
-    abstract override fun receiveAutoMark(player: BingoPlayer, space: AutomatedSpace,
+    abstract override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace,
                                           fulfilled: Boolean)
 
     companion object Manager {

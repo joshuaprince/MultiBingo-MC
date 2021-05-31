@@ -6,11 +6,12 @@ import com.jtprince.bingo.kplugin.automark.definitions.TriggerDefinition
 import com.jtprince.bingo.kplugin.game.BingoGame
 import com.jtprince.bingo.kplugin.game.web.WebBackedGame
 import com.jtprince.bingo.kplugin.game.web.WebBackedGameProto
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import dev.jorel.commandapi.CommandAPICommand
-import dev.jorel.commandapi.arguments.*
-import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException
-import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder
+import dev.jorel.commandapi.arguments.GreedyStringArgument
+import dev.jorel.commandapi.arguments.LiteralArgument
+import dev.jorel.commandapi.arguments.MultiLiteralArgument
+import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.executors.CommandExecutor
 import dev.jorel.commandapi.executors.PlayerCommandExecutor
 import org.bukkit.Bukkit
@@ -84,7 +85,7 @@ object Commands {
             .executesPlayer(PlayerCommandExecutor { sender: Player, _: Array<Any> ->
                 commandGo(sender,null)
             })
-        val goCmd = CommandAPICommand("go")
+        /*val goCmd = CommandAPICommand("go")
             .withArguments(CustomArgument("player") { input: String ->
                 val currentGame = BingoGame.currentGame as? WebBackedGame
                     ?: throw CustomArgumentException(
@@ -102,11 +103,11 @@ object Commands {
                 val currentGame = BingoGame.currentGame as? WebBackedGame
                     ?: return@overrideSuggestions emptyArray()
                 return@overrideSuggestions currentGame.playerManager.localPlayers.
-                    map(BingoPlayer::slugName).toTypedArray()
+                    map(LocalBingoPlayer::slugName).toTypedArray()
             })
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->
-                commandGo(sender, args[0] as BingoPlayer)
-            })
+                commandGo(sender, args[0] as LocalBingoPlayer)
+            })*/
 
         val goalIdsArg = StringArgument("goalId")
             .overrideSuggestions { _ -> TriggerDefinition.allAutomatedGoals.toTypedArray() }
@@ -130,7 +131,7 @@ object Commands {
         root.withSubcommand(endCmd)
         root.withSubcommand(destroyCmd)
         root.withSubcommand(spectateCmd)
-        root.withSubcommand(goCmd)
+        //root.withSubcommand(goCmd)  TODO
         root.withSubcommand(goSpawnCmd)
         if (BingoConfig.debug) {
             root.withSubcommand(debugCmd)
@@ -179,7 +180,7 @@ object Commands {
         }
     }
 
-    private fun commandGo(sender: Player, destination: BingoPlayer?) {
+    private fun commandGo(sender: Player, destination: LocalBingoPlayer?) {
         if (destination == null) {
             sender.teleport(Bukkit.getWorlds()[0].spawnLocation)
         } else {

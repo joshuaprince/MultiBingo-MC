@@ -1,6 +1,5 @@
 package com.jtprince.bukkit.worldset
 
-import com.jtprince.bingo.kplugin.BingoPlugin
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
@@ -74,7 +73,7 @@ class WorldSetManager(
         ENVIRONMENTS.onEachIndexed { index, (env, dim) ->
             val creator = WorldCreator.name("world_${prefix}_${worldSetCode}_${dim}")
 
-            val template: World = BingoPlugin.server.worlds[index]
+            val template: World = plugin.server.worlds[index]
             creator.copy(template)
             creator.seed(seed)
 

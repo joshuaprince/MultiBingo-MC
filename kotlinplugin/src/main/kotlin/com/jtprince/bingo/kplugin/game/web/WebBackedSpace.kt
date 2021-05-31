@@ -6,7 +6,7 @@ import com.jtprince.bingo.kplugin.automark.EventPlayerMapper
 import com.jtprince.bingo.kplugin.automark.PlayerTriggerProgress
 import com.jtprince.bingo.kplugin.automark.trigger.AutoMarkTrigger
 import com.jtprince.bingo.kplugin.automark.trigger.AutoMarkTriggerFactory
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import com.jtprince.bingo.kplugin.webclient.model.WebModelSpace
 
 class WebBackedSpace(
@@ -52,5 +52,5 @@ class WebBackedSpace(
         triggers.forEach(AutoMarkTrigger::destroy)
     }
 
-    override val playerProgress: MutableMap<BingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
+    override val playerProgress: MutableMap<LocalBingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
 }

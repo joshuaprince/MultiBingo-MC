@@ -1,5 +1,6 @@
 package com.jtprince.bingo.kplugin.player
 
+import net.kyori.adventure.text.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -10,8 +11,8 @@ object BingoPlayerFactory {
      * Create Bingo Players based on all players currently on the server, organizing them into
      * teams if they are on a Scoreboard team.
      */
-    fun createPlayers(): Collection<BingoPlayer> {
-        val ret = HashSet<BingoPlayer>()
+    fun createPlayers(): Collection<LocalBingoPlayer> {
+        val ret = HashSet<LocalBingoPlayer>()
 
         // Create a mapping from Player -> Team (or null)
         val playerTeamMap = HashMap<Player, Team?>()
@@ -30,7 +31,7 @@ object BingoPlayerFactory {
             val team = playerTeamMap[p]
             if (team == null) {
                 // No team, add the player to a BingoPlayerSingle
-                ret.add(BingoPlayerSingle(p))
+                ret.add(LocalBingoPlayerSingle(p))
             } else {
                 // Player is on a team. Add to teamPlayerMap
                 if (!teamPlayerMap.containsKey(team)) {
@@ -42,7 +43,10 @@ object BingoPlayerFactory {
 
         // Create all BingoPlayerTeams.
         for ((team, players) in teamPlayerMap) {
-            val bpt = BingoPlayerTeam(team.displayName(), players)
+            val bpt = LocalBingoPlayerTeam(
+                TextComponent.ofChildren(team.displayName().color(team.color())),
+                players
+            )
             ret.add(bpt)
         }
 

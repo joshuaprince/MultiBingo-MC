@@ -3,7 +3,7 @@ package com.jtprince.bingo.kplugin.automark
 import com.jtprince.bingo.kplugin.automark.definitions.ItemTriggerYaml
 import com.jtprince.bingo.kplugin.automark.trigger.ItemTrigger
 import com.jtprince.bingo.kplugin.game.SetVariables
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import org.bukkit.Material
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
@@ -160,8 +160,8 @@ class TestItemTrigger {
 
     private val mockEventPlayerMapper = object: EventPlayerMapper {
         /* No need for a full implementation, we're just testing satisfiedBy in this test */
-        override fun mapEvent(event: Event): BingoPlayer? = null
-        override val players: Collection<BingoPlayer> = emptyList()
+        override fun mapEvent(event: Event): LocalBingoPlayer? = null
+        override val players: Collection<LocalBingoPlayer> = emptyList()
     }
 
     private fun makeTrigger(goalId: String, vars: SetVariables = emptyMap()): ItemTrigger {

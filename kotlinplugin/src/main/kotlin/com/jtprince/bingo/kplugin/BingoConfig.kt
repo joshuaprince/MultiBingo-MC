@@ -1,6 +1,6 @@
 package com.jtprince.bingo.kplugin
 
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import io.ktor.http.*
 
 object BingoConfig {
@@ -17,7 +17,7 @@ object BingoConfig {
         return builder.build()
     }
 
-    fun gameUrl(gameCode: String, forPlayer: BingoPlayer): Url {
+    fun gameUrl(gameCode: String, forPlayer: LocalBingoPlayer): Url {
         val builder = URLBuilder(webUrl)
         builder.path("game", gameCode)
         builder.parameters["name"] = forPlayer.name

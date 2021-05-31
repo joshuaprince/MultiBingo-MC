@@ -2,7 +2,7 @@ package com.jtprince.bingo.kplugin.automark
 
 import com.jtprince.bingo.kplugin.Messages.bingoTellGoalProgress
 import com.jtprince.bingo.kplugin.game.SetVariables
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import kotlin.reflect.KClass
 
 /**
@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
  */
 class PlayerTriggerProgress(
     private val space: AutomatedSpace,
-    private val notifyPlayer: BingoPlayer,
+    private val notifyPlayer: LocalBingoPlayer,
     private val vars: SetVariables
 ) {
     private var highestProgress = 0

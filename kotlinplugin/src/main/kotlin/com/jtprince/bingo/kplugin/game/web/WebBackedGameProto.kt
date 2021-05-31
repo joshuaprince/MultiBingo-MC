@@ -8,7 +8,7 @@ import com.jtprince.bingo.kplugin.Messages
 import com.jtprince.bingo.kplugin.Messages.bingoTellNotReady
 import com.jtprince.bingo.kplugin.automark.AutomatedSpace
 import com.jtprince.bingo.kplugin.game.BingoGame
-import com.jtprince.bingo.kplugin.player.BingoPlayer
+import com.jtprince.bingo.kplugin.player.LocalBingoPlayer
 import org.bukkit.command.CommandSender
 
 /**
@@ -17,7 +17,7 @@ import org.bukkit.command.CommandSender
 class WebBackedGameProto(
     creator: CommandSender,
     val settings: WebGameSettings,
-) : BingoGame(creator, "CreatingGame", emptySet()) {
+) : BingoGame(creator, "CreatingGame") {
 
     override var state: State = State.BOARD_GENERATING
 
@@ -47,7 +47,7 @@ class WebBackedGameProto(
         // Nothing to do.
     }
 
-    override fun receiveAutoMark(player: BingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
+    override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
         BingoPlugin.logger.severe(
             "Received an automarking for ${player.name} during a Proto Game... " +
                     "that shouldn't be possible, nag the developer."

@@ -75,6 +75,11 @@ object Commands {
                 commandDestroy(sender)
             })
 
+        val retryCmd = CommandAPICommand("retry")
+            .executes(CommandExecutor { sender: CommandSender, _: Array<Any> ->
+                commandRetry(sender)
+            })
+
         val spectateCmd = CommandAPICommand("spectate")
             .executesPlayer(PlayerCommandExecutor { sender: Player, _: Array<Any> ->
                 commandSpectate(sender)
@@ -130,6 +135,7 @@ object Commands {
         root.withSubcommand(startCmd)
         root.withSubcommand(endCmd)
         root.withSubcommand(destroyCmd)
+        root.withSubcommand(retryCmd)
         root.withSubcommand(spectateCmd)
         //root.withSubcommand(goCmd)  TODO
         root.withSubcommand(goSpawnCmd)
@@ -165,6 +171,14 @@ object Commands {
     private fun commandDestroy(sender: CommandSender) {
         /* Must call the Manager function directly so currentGame can be set to null */
         BingoGame.destroyCurrentGame(sender, true)
+    }
+
+    private fun commandRetry(sender: CommandSender) {
+        if (BingoGame.currentGame !is WebBackedGame) {
+            sender.bingoTellError("No game to retry connecting to!")
+            return
+        }
+        (BingoGame.currentGame as WebBackedGame).signalRetry(sender)
     }
 
     private fun commandSpectate(sender: Player) {

@@ -30,7 +30,7 @@ class WebBackedGame(
     private val clientId = "KotlinPlugin${hashCode() % 10000}:" +
             localPlayers.map(BingoPlayer::name).joinToString(",")
     private val websocketClient = WebBackedWebsocketClient(
-        gameCode, clientId, this::receiveWebsocketMessage,
+        gameCode, clientId, this::receiveWebsocketOpened, this::receiveWebsocketMessage,
         this::receiveFailedConnection
     )
     private val messageRelay = WebMessageRelay(websocketClient)
@@ -52,10 +52,7 @@ class WebBackedGame(
     private var winner: BingoPlayer? = null
 
     init {
-        websocketClient.connect {
-            websocketReady = true
-            tryToMoveToReady()
-        }
+        websocketClient.connect()
         generateWorlds()
     }
 
@@ -138,6 +135,16 @@ class WebBackedGame(
         sender?.bingoTell("Game destroyed.")
     }
 
+    fun signalRetry(sender: CommandSender?) {
+        if (state != State.FAILED) {
+            sender?.bingoTellError("You can only retry a connection after a connection error.")
+            return
+        }
+
+        sender?.bingoTell("Retrying connection...")
+        websocketClient.retry()
+    }
+
     override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
         if (state != State.RUNNING) return
 
@@ -155,6 +162,11 @@ class WebBackedGame(
         val newMarking = cache.canSendMarking(space.spaceId, space.goalType, fulfilled) ?: return
 
         websocketClient.sendMarkSpace(player.name, space.spaceId, newMarking.value)
+    }
+
+    private fun receiveWebsocketOpened() {
+        websocketReady = true
+        tryToMoveToReady()
     }
 
     private fun receiveWebsocketMessage(msg: WebsocketRxMessage) {

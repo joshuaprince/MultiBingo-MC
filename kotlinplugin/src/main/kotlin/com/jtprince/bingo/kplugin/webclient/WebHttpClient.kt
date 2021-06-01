@@ -64,7 +64,7 @@ object WebHttpClient {
                     }
                 }
             } catch (e: Exception) {
-                BingoPlugin.logger.log(Level.SEVERE, "Failed to generate board", e)
+                BingoPlugin.logger.log(Level.SEVERE, "Failed to generate board: ${e.localizedMessage}")
             }
 
             whenDoneAsync(gameCodeOrError)
@@ -83,7 +83,7 @@ object WebHttpClient {
                 }
                 BingoPlugin.logger.info("Successfully made a request to $url.")
             } catch (e: Exception) {
-                BingoPlugin.logger.log(Level.SEVERE, "Failed to communicate with $url.", e)
+                BingoPlugin.logger.log(Level.SEVERE, "Failed to communicate with $url: ${e.localizedMessage}")
             }
         }
     }

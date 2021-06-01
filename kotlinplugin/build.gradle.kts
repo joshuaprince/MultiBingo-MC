@@ -20,7 +20,6 @@ repositories {
 dependencies {
     val kotlinVersion = "1.5.0"
     val paperVersion = "1.16.5"
-    val ktorVersion = "1.5.4"
     val jacksonVersion = "2.12.3"
 
     shadow("com.destroystokyo.paper", "paper-api", "$paperVersion-R0.1-SNAPSHOT")
@@ -29,10 +28,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk7", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))
     implementation("org.apache.httpcomponents", "httpclient", "4.5.13")
-    implementation("io.ktor", "ktor-client-core", ktorVersion)
-    implementation("io.ktor", "ktor-client-websockets", ktorVersion)
-    implementation("io.ktor", "ktor-client-cio", ktorVersion)
-    implementation("io.ktor", "ktor-client-jackson", ktorVersion)
+    implementation("org.java-websocket", "Java-WebSocket", "1.5.2")
     implementation("dev.jorel.CommandAPI", "commandapi-shade", "5.12")
     implementation("com.fasterxml.jackson.core", "jackson-core", jacksonVersion)
     implementation("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", jacksonVersion)
@@ -78,5 +74,6 @@ tasks {
 
     named<ShadowJar>("shadowJar") {
         archiveFileName.set("MultiBingo.jar")
+        minimize()
     }
 }

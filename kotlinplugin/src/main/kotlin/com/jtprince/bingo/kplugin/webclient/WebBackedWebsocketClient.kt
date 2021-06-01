@@ -5,140 +5,132 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.jtprince.bingo.kplugin.BingoConfig
 import com.jtprince.bingo.kplugin.BingoPlugin
 import com.jtprince.bingo.kplugin.PluginParity
-import io.ktor.client.*
-import io.ktor.client.features.websocket.*
-import io.ktor.http.cio.websocket.*
-import io.ktor.utils.io.errors.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.sendBlocking
 import org.bukkit.Bukkit
+import org.bukkit.scheduler.BukkitTask
+import org.java_websocket.client.WebSocketClient
+import org.java_websocket.framing.CloseFrame
+import org.java_websocket.handshake.ServerHandshake
+import java.util.*
 import java.util.logging.Level
 
 class WebBackedWebsocketClient(
     private val gameCode: String,
     internal val clientId: String,
+    private val onFirstOpen: () -> Unit,
     private val onReceive: (WebsocketRxMessage) -> Unit,
     private val onFailure: () -> Unit,
-) {
+) : WebSocketClient(BingoConfig.websocketUrl(gameCode, clientId)) {
+    companion object {
+        const val RECONNECT_ATTEMPTS = 10
+        const val RECONNECT_SECONDS_BETWEEN_ATTEMPTS = 5
+    }
+
     private val mapper = jacksonObjectMapper()
-    private val client = HttpClient {
-        install(WebSockets)
-    }
-    private var connectionJob: Job? = null
-    private val url = BingoConfig.websocketUrl(gameCode, clientId)
 
-    private val txQueue = Channel<WebsocketTxMessage>(32, BufferOverflow.DROP_OLDEST) {
-        BingoPlugin.logger.severe("Dropping websocket message ${it.action}")
+    private val txQueue: Queue<WebsocketTxMessage> = LinkedList()
+
+    private var reconnectTask: BukkitTask? = null
+    private var connectedBefore = false
+    private var connectAttemptsRemaining = RECONNECT_ATTEMPTS
+
+    override fun onOpen(handshakedata: ServerHandshake) {
+        BingoPlugin.logger.info("Successfully connected to game $gameCode.")
+
+        if (!connectedBefore) {
+            onFirstOpen()
+            connectedBefore = true
+        }
+
+        connectAttemptsRemaining = RECONNECT_ATTEMPTS
+        flushTxQueue()
     }
 
-    private var shouldReconnect = true
-    private var connectAttemptsRemaining = 10
+    override fun onMessage(message: String) {
+        try {
+            val msg = mapper.readValue<WebsocketRxMessage>(message)
+            onReceive(msg)
+        } catch (e: Exception) {
+            BingoPlugin.logger.log(Level.SEVERE, "Could not receive websocket message", e)
+        }
+    }
+
+    override fun onClose(code: Int, reason: String, remote: Boolean) {
+        if (code == CloseFrame.NORMAL && !remote) {
+            /* Normal close initiated by us, do nothing. */
+            return
+        }
+
+        if (connectAttemptsRemaining > 0) {
+            /* Attempt to reconnect if we didn't want this socket to close yet. */
+            BingoPlugin.logger.warning("Lost connection to the backend. Retrying in " +
+                    "$RECONNECT_SECONDS_BETWEEN_ATTEMPTS seconds.")
+
+            reconnectTask?.cancel()
+            reconnectTask = Bukkit.getScheduler().runTaskLaterAsynchronously(BingoPlugin, { ->
+                BingoPlugin.logger.info("Attempting reconnection...")
+                connectAttemptsRemaining--
+                reconnect()
+            }, RECONNECT_SECONDS_BETWEEN_ATTEMPTS.toLong() * 20)
+        } else {
+            BingoPlugin.logger.warning("Could not connect to the backend after " +
+                    "$RECONNECT_ATTEMPTS attempts.")
+            onFailure()
+        }
+    }
+
+    override fun onError(ex: Exception) {
+        BingoPlugin.logger.log(Level.SEVERE, "Websocket error: ${ex.localizedMessage}")
+    }
 
     fun destroy() {
-        shouldReconnect= false
-        connectionJob?.cancel()
-        client.close()
+        close()
+        reconnectTask?.cancel()
         BingoPlugin.logger.info("Websocket closed for game $gameCode")
     }
 
-    fun connect(onSuccess: () -> Unit) {
-        Bukkit.getScheduler().runTaskAsynchronously(BingoPlugin) { ->
-            runBlocking {
-                connectionJob = launch { connectLoop(onSuccess) }
-            }
+    fun retry() {
+        reconnect()
+    }
+
+    private fun flushTxQueue() {
+        while (!txQueue.isEmpty() && isOpen) {
+            val msg = txQueue.peek()
+            send(mapper.writeValueAsString(msg))
+            txQueue.remove()  // after send so the message is kept on error
         }
     }
 
-    private suspend fun connectLoop(onSuccess: () -> Unit) {
-        var connectedBefore = false
-        while (shouldReconnect) {
-            BingoPlugin.logger.info((if (connectedBefore) "Reconnecting" else "Connecting") +
-                    " to game $gameCode...")
-            try {
-                client.ws(url.toString()) {
-                    BingoPlugin.logger.info("Successfully connected to game $gameCode.")
-                    if (!connectedBefore) {
-                        connectedBefore = true
-                        onSuccess()
-                    }
-                    connectAttemptsRemaining = 10
-                    val rxJob = launch { rxLoop() }
-                    val txJob = launch { txLoop() }
-
-                    joinAll(rxJob, txJob)
-                    BingoPlugin.logger.info("Connection to game $gameCode was closed.")
-                }
-            } catch (e: IOException) {
-                BingoPlugin.logger.warning(
-                    "Error in connection to game $gameCode: ${e.localizedMessage}")
-            }
-
-            if (connectAttemptsRemaining-- <= 0) {
-                BingoPlugin.logger.severe("Ran out of connection attempts.")
-                onFailure()
-                break
-            }
-
-            // Wait to try reconnecting
-            delay(5000)
-        }
-    }
-
-    private suspend fun ClientWebSocketSession.rxLoop() {
-        while (true) {
-            val frame = incoming.receive()
-            if (frame !is Frame.Text) {
-                println("Unknown message type ${frame::class}")
-                continue
-            }
-
-            try {
-                val msg = mapper.readValue<WebsocketRxMessage>(frame.readText())
-                onReceive(msg)
-            } catch (e: Exception) {
-                BingoPlugin.logger.log(Level.SEVERE, "Could not receive websocket message", e)
-            }
-        }
-    }
-
-    private suspend fun ClientWebSocketSession.txLoop() {
-        while (true) {
-            val frame = txQueue.receive()
-            @Suppress("BlockingMethodInNonBlockingContext")  // TODO?
-            val text = withContext(Dispatchers.IO) { mapper.writeValueAsString(frame) }
-            send(Frame.Text(text))
-            BingoPlugin.logger.fine("Tx message: $text")
-        }
+    private fun send(msg: WebsocketTxMessage) {
+        txQueue.add(msg)
+        flushTxQueue()
     }
 
     fun sendStartGame() {
         /* Does not actually block since channel is set to drop on full */
-        txQueue.sendBlocking(TxMessageGameState(true))
+        send(TxMessageGameState(true))
     }
 
     fun sendEndGame() {
-        txQueue.sendBlocking(TxMessageGameState(false))
+        send(TxMessageGameState(false))
     }
 
     fun sendRevealBoard() {
-        txQueue.sendBlocking(TxMessageRevealBoard())
+        send(TxMessageRevealBoard())
     }
 
     fun sendMarkSpace(player: String, spaceId: Int, marking: Int) {
-        txQueue.sendBlocking(TxMessageMarkSpace(player, spaceId, marking))
+        send(TxMessageMarkSpace(player, spaceId, marking))
     }
 
     fun sendAutoMarks(playerSpaceIdsMap: Map<String, Collection<Int>>) {
-        txQueue.sendBlocking(TxMessageSetAutoMarks(playerSpaceIdsMap))
+        send(TxMessageSetAutoMarks(playerSpaceIdsMap))
     }
 
     fun sendMessage(msgJson: String) {
-        txQueue.sendBlocking(TxMessageMessageRelay(msgJson))
+        send(TxMessageMessageRelay(msgJson))
     }
 
     fun sendPluginParity(isEcho: Boolean, mySettings: PluginParity.Settings) {
-        txQueue.sendBlocking(TxMessagePluginParity(isEcho, mySettings))
+        send(TxMessagePluginParity(isEcho, mySettings))
     }
 }

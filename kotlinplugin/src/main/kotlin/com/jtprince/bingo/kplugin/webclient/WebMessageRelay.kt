@@ -1,20 +1,17 @@
 package com.jtprince.bingo.kplugin.webclient
 
 import com.jtprince.bingo.kplugin.BingoPlugin
-import com.jtprince.bingo.kplugin.Messages
 import com.jtprince.bingo.kplugin.webclient.model.WebModelMessageRelay
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
-import net.kyori.adventure.translation.GlobalTranslator
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
-import java.util.*
 
 class WebMessageRelay(
     private val client: WebBackedWebsocketClient
@@ -33,18 +30,16 @@ class WebMessageRelay(
         client.sendMessage(GsonComponentSerializer.gson().serialize(msg))
     }
 
-    // @EventHandler(priority = EventPriority.MONITOR)  // TODO
+    @EventHandler(priority = EventPriority.MONITOR)
     fun onAdvancement(event: PlayerAdvancementDoneEvent) {
-        if (event.advancement.key.key.contains("recipes/")) return
-        client.sendMessage(
-            GsonComponentSerializer.gson().serialize(Component.translatable(event.advancement.key.toString()))
-        )
+        val msg = event.message() ?: return
+        client.sendMessage(GsonComponentSerializer.gson().serialize(msg))
     }
 
-    // @EventHandler(priority = EventPriority.MONITOR)  // TODO
+    @EventHandler(priority = EventPriority.MONITOR)
     fun onDeath(event: PlayerDeathEvent) {
         val msg = event.deathMessage() ?: return
-        Messages.bingoAnnounce("msg: " + GlobalTranslator.render(msg, Locale.getDefault()))
+        client.sendMessage(GsonComponentSerializer.gson().serialize(msg))
     }
 
     fun receive(message: WebModelMessageRelay) {

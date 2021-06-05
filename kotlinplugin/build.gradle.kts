@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.5.0"
+    kotlin("jvm") version "1.5.10"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("com.palantir.git-version") version "0.12.3"
 }
@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    val kotlinVersion = "1.5.0"
+    val kotlinVersion = "1.5.10"
     val paperVersion = "1.16.5"
     val jacksonVersion = "2.12.3"
 
@@ -74,6 +74,9 @@ tasks {
 
     named<ShadowJar>("shadowJar") {
         archiveFileName.set("MultiBingo.jar")
-        minimize()
+        minimize {
+            // https://thelyfsoshort.io/kotlin-reflection-shadow-jars-minimize-9bd74964c74
+            exclude(dependency("org.jetbrains.kotlin:.*"))
+        }
     }
 }

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+cd "$(dirname "$0")" || (echo "Failed to find easy-server directory." && exit 1)
 
 PAPER_VERSION=1.16.5
 

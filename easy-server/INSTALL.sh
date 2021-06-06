@@ -36,11 +36,11 @@ if [ ! -e eula.txt ]; then
 fi
 
 echo "Building plugin..."
-(cd ../kotlinplugin && ./gradlew assemble)
+(cd .. && ./gradlew :bukkit:assemble)
 
 echo "Adding plugin to server..."
 mkdir -p ./plugins
-cp ../kotlinplugin/build/libs/MultiBingo.jar ./plugins
+cp ../bukkit/build/libs/MultiBingo-Bukkit.jar ./plugins
 
 echo "Install script ran successfully. Press any key to exit."
 read -n 1 -r

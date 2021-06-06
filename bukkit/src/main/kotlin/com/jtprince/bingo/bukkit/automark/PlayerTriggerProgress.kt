@@ -2,7 +2,7 @@ package com.jtprince.bingo.bukkit.automark
 
 import com.jtprince.bingo.bukkit.Messages.bingoTellGoalProgress
 import com.jtprince.bingo.bukkit.game.SetVariables
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import kotlin.reflect.KClass
 
 /**
@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
  */
 class PlayerTriggerProgress(
     private val space: AutomatedSpace,
-    private val notifyPlayer: LocalBingoPlayer,
+    private val notifyPlayer: BukkitBingoPlayer,
     private val vars: SetVariables
 ) {
     private var highestProgress = 0

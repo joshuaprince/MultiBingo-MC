@@ -4,9 +4,9 @@ import com.jtprince.bingo.bukkit.BingoConfig
 import com.jtprince.bingo.bukkit.BingoPlugin
 import com.jtprince.bingo.bukkit.Messages.bingoTell
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
-import com.jtprince.bingo.bukkit.player.BingoPlayer
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
-import com.jtprince.bingo.bukkit.player.RemoteBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.core.player.BingoPlayer
+import com.jtprince.bingo.core.player.RemoteBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.World
 import org.bukkit.entity.Player
@@ -25,12 +25,12 @@ import java.util.*
 /**
  * Single-game container for all players in that game and functionality relating to them.
  */
-class PlayerManager(localPlayers: Collection<LocalBingoPlayer>) : EventPlayerMapper {
+class PlayerManager(localPlayers: Collection<BukkitBingoPlayer>) : EventPlayerMapper {
     /**
      * Bukkit Player UUID -> BingoPlayer that contains that Player
      */
-    private val localPlayersMap: HashMap<UUID, LocalBingoPlayer> = run {
-        val ret = HashMap<UUID, LocalBingoPlayer>()
+    private val localPlayersMap: HashMap<UUID, BukkitBingoPlayer> = run {
+        val ret = HashMap<UUID, BukkitBingoPlayer>()
         for (p in localPlayers) {
             for (op in p.offlinePlayers) {
                 ret[op.uniqueId] = p
@@ -40,8 +40,8 @@ class PlayerManager(localPlayers: Collection<LocalBingoPlayer>) : EventPlayerMap
     }
     private val remotePlayers = HashSet<RemoteBingoPlayer>()
 
-    internal val playerWorldSetMap = HashMap<LocalBingoPlayer, WorldSet>()
-    internal val worldPlayerMap = HashMap<World, LocalBingoPlayer>()
+    internal val playerWorldSetMap = HashMap<BukkitBingoPlayer, WorldSet>()
+    internal val worldPlayerMap = HashMap<World, BukkitBingoPlayer>()
 
     /**
      * A list of BingoPlayers that are participating in this game. This includes all
@@ -54,7 +54,7 @@ class PlayerManager(localPlayers: Collection<LocalBingoPlayer>) : EventPlayerMap
      * Return a list of BingoPlayers that are participating in this game and playing on this
      * server (i.e. does not include Remote players)
      */
-    override val localPlayers: Collection<LocalBingoPlayer>
+    override val localPlayers: Collection<BukkitBingoPlayer>
         get() = localPlayersMap.values
 
     /**
@@ -69,7 +69,7 @@ class PlayerManager(localPlayers: Collection<LocalBingoPlayer>) : EventPlayerMap
      * @param player The Bukkit Player to check.
      * @return The BingoPlayer object, or null if this Player is not part of this game.
      */
-    fun bingoPlayer(player: Player): LocalBingoPlayer? {
+    fun bingoPlayer(player: Player): BukkitBingoPlayer? {
         return localPlayersMap[player.uniqueId]
     }
 
@@ -103,7 +103,7 @@ class PlayerManager(localPlayers: Collection<LocalBingoPlayer>) : EventPlayerMap
      * @param world The World to check.
      * @return The BingoPlayer object, or null if this World is not part of this game.
      */
-    fun bingoPlayer(world: World): LocalBingoPlayer? {
+    fun bingoPlayer(world: World): BukkitBingoPlayer? {
         return worldPlayerMap[world]
     }
 
@@ -113,7 +113,7 @@ class PlayerManager(localPlayers: Collection<LocalBingoPlayer>) : EventPlayerMap
      * @return The player's WorldSet.
      * @throws RuntimeException If there is no WorldSet for this Player.
      */
-    override fun worldSet(player: LocalBingoPlayer) : WorldSet {
+    override fun worldSet(player: BukkitBingoPlayer) : WorldSet {
         return playerWorldSetMap[player] ?: throw RuntimeException(
             "Failed to get WorldSet for ${player.name}")
     }
@@ -122,7 +122,7 @@ class PlayerManager(localPlayers: Collection<LocalBingoPlayer>) : EventPlayerMap
      * Create worlds for a given player.
      * @param player Player to create worlds for.
      */
-    fun prepareWorldSet(gameCode: String, player: LocalBingoPlayer): WorldSet {
+    fun prepareWorldSet(gameCode: String, player: BukkitBingoPlayer): WorldSet {
         val worldSet = BingoPlugin.worldSetManager.createWorldSet(
             worldSetCode = "${gameCode}_${player.slugName()}",
             seed = gameCode
@@ -151,7 +151,7 @@ class PlayerManager(localPlayers: Collection<LocalBingoPlayer>) : EventPlayerMap
      * Determine which BingoPlayer an Event is associated with, for determining who to
      * potentially automark for.
      */
-    override fun mapEvent(event: Event): LocalBingoPlayer? {
+    override fun mapEvent(event: Event): BukkitBingoPlayer? {
         return when (event) {
             is PlayerEvent -> bingoPlayer(event.player)
             is WorldEvent -> bingoPlayer(event.world)

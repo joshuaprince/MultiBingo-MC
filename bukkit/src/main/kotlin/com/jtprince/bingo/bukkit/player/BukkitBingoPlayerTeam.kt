@@ -13,8 +13,10 @@ import java.util.*
 /**
  * A team of 1 or more players that will share a win condition and world.
  */
-class LocalBingoPlayerTeam(private val teamName: TextComponent,
-                           teammates: Collection<OfflinePlayer>) : LocalBingoPlayer() {
+class BukkitBingoPlayerTeam(
+    private val teamName: TextComponent,
+    teammates: Collection<OfflinePlayer>
+) : BukkitBingoPlayer() {
     private val playerUuids: Collection<UUID> = teammates.map(OfflinePlayer::getUniqueId)
 
     override val name: String

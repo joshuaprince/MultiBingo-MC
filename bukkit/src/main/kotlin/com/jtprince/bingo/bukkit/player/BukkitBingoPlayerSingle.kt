@@ -10,7 +10,7 @@ import java.util.*
 /**
  * A bingo player playing alone.
  */
-class LocalBingoPlayerSingle(player: OfflinePlayer) : LocalBingoPlayer() {
+class BukkitBingoPlayerSingle(player: OfflinePlayer) : BukkitBingoPlayer() {
     private val playerUUID: UUID = player.uniqueId
 
     override val name: String

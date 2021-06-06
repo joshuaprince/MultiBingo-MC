@@ -1,6 +1,6 @@
 package com.jtprince.bingo.bukkit
 
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import org.apache.http.client.utils.URIBuilder
 import java.net.URI
 
@@ -18,7 +18,7 @@ object BingoConfig {
         return builder.build()
     }
 
-    fun gameUrl(gameCode: String, forPlayer: LocalBingoPlayer): URI {
+    fun gameUrl(gameCode: String, forPlayer: BukkitBingoPlayer): URI {
         val builder = URIBuilder(webUrl)
         builder.setPathSegments("game", gameCode)
         builder.setParameter("name", forPlayer.name)

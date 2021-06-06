@@ -6,13 +6,13 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Team
 
-object BingoPlayerFactory {
+object BukkitBingoPlayerFactory {
     /**
      * Create Bingo Players based on all players currently on the server, organizing them into
      * teams if they are on a Scoreboard team.
      */
-    fun createPlayers(): Collection<LocalBingoPlayer> {
-        val ret = HashSet<LocalBingoPlayer>()
+    fun createPlayers(): Collection<BukkitBingoPlayer> {
+        val ret = HashSet<BukkitBingoPlayer>()
 
         // Create a mapping from Player -> Team (or null)
         val playerTeamMap = HashMap<Player, Team?>()
@@ -31,7 +31,7 @@ object BingoPlayerFactory {
             val team = playerTeamMap[p]
             if (team == null) {
                 // No team, add the player to a BingoPlayerSingle
-                ret.add(LocalBingoPlayerSingle(p))
+                ret.add(BukkitBingoPlayerSingle(p))
             } else {
                 // Player is on a team. Add to teamPlayerMap
                 if (!teamPlayerMap.containsKey(team)) {
@@ -43,7 +43,7 @@ object BingoPlayerFactory {
 
         // Create all BingoPlayerTeams.
         for ((team, players) in teamPlayerMap) {
-            val bpt = LocalBingoPlayerTeam(
+            val bpt = BukkitBingoPlayerTeam(
                 TextComponent.ofChildren(team.displayName().color(team.color())),
                 players
             )

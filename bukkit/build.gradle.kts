@@ -13,6 +13,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":core"))
+
     val paperVersion = "1.16.5"
     val jacksonVersion = "2.12.3"
 

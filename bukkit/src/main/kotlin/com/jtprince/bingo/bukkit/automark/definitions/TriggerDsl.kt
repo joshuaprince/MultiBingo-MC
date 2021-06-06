@@ -11,7 +11,7 @@ import com.jtprince.bingo.bukkit.automark.PlayerTriggerProgress
 import com.jtprince.bingo.bukkit.automark.trigger.EventTrigger
 import com.jtprince.bingo.bukkit.automark.trigger.OccasionalTrigger
 import com.jtprince.bingo.bukkit.automark.trigger.SpecialItemTrigger
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.event.Event
 import kotlin.reflect.KClass
@@ -129,7 +129,7 @@ internal class EventTriggerDefinition<EventType: Event>(
 ) : TriggerDslDefinition(neededVars) {
     class Parameters<EventType: Event>(
         val event: EventType,
-        val player: LocalBingoPlayer,
+        val player: BukkitBingoPlayer,
         val trigger: EventTrigger<EventType>,
     ) {
         val goalId = trigger.space.goalId
@@ -146,7 +146,7 @@ internal class OccasionalTriggerDefinition(
     val function: (Parameters) -> Boolean
 ) : TriggerDslDefinition(neededVars) {
     class Parameters(
-        val player: LocalBingoPlayer,
+        val player: BukkitBingoPlayer,
         val worlds: WorldSet,
         val trigger: OccasionalTrigger,
     ) {

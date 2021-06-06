@@ -1,6 +1,6 @@
 package com.jtprince.bingo.bukkit.game.web
 
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.bukkit.webclient.model.WebModelPlayerBoard
 
 /**
@@ -10,7 +10,7 @@ import com.jtprince.bingo.bukkit.webclient.model.WebModelPlayerBoard
  * The data maintained here is not authoritative; the web backend maintains the authoritative
  * version.
  */
-internal class PlayerBoardCache(val owner: LocalBingoPlayer) {
+internal class PlayerBoardCache(val owner: BukkitBingoPlayer) {
     private val knownMarkings = mutableMapOf<Int, WebBackedSpace.Marking>()
     private var ignoredSpaceIds = setOf<Int>()
 

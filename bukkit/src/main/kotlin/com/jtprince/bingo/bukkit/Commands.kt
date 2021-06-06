@@ -6,7 +6,7 @@ import com.jtprince.bingo.bukkit.automark.definitions.TriggerDefinition
 import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.game.web.WebBackedGame
 import com.jtprince.bingo.bukkit.game.web.WebGameSettings
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.GreedyStringArgument
 import dev.jorel.commandapi.arguments.LiteralArgument
@@ -108,10 +108,10 @@ object Commands {
                 val currentGame = BingoGame.currentGame as? WebBackedGame
                     ?: return@overrideSuggestions emptyArray()
                 return@overrideSuggestions currentGame.playerManager.localPlayers.
-                    map(LocalBingoPlayer::slugName).toTypedArray()
+                    map(BukkitBingoPlayer::slugName).toTypedArray()
             })
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->
-                commandGo(sender, args[0] as LocalBingoPlayer)
+                commandGo(sender, args[0] as BukkitBingoPlayer)
             })*/
 
         val goalIdsArg = StringArgument("goalId")
@@ -194,7 +194,7 @@ object Commands {
         }
     }
 
-    private fun commandGo(sender: Player, destination: LocalBingoPlayer?) {
+    private fun commandGo(sender: Player, destination: BukkitBingoPlayer?) {
         if (destination == null) {
             sender.teleport(Bukkit.getWorlds()[0].spawnLocation)
         } else {

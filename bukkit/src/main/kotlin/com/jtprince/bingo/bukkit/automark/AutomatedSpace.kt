@@ -1,14 +1,14 @@
 package com.jtprince.bingo.bukkit.automark
 
 import com.jtprince.bingo.bukkit.game.SetVariables
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 
 interface AutomatedSpace {
     val goalId: String
     val text: String
     val spaceId: Int
     val variables: SetVariables
-    val playerProgress: MutableMap<LocalBingoPlayer, PlayerTriggerProgress>
+    val playerProgress: MutableMap<BukkitBingoPlayer, PlayerTriggerProgress>
 
     fun destroy()
 }

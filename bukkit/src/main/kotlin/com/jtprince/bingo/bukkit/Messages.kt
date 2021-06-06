@@ -2,9 +2,9 @@ package com.jtprince.bingo.bukkit
 
 import com.jtprince.bingo.bukkit.automark.AutomatedSpace
 import com.jtprince.bingo.bukkit.game.BingoGame
-import com.jtprince.bingo.bukkit.player.BingoPlayer
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayerTeam
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayerTeam
+import com.jtprince.bingo.core.player.BingoPlayer
 import com.jtprince.util.ChatUtils
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
@@ -85,9 +85,9 @@ object Messages {
         announceWithHeader(component)
     }
 
-    fun bingoAnnounceWorldsGenerated(players: Collection<LocalBingoPlayer>) {
+    fun bingoAnnounceWorldsGenerated(players: Collection<BukkitBingoPlayer>) {
         val playersCpnt = ChatUtils.commaSeparated(
-            players.map(LocalBingoPlayer::formattedName))
+            players.map(BukkitBingoPlayer::formattedName))
         val component = Component
             .text("Bingo worlds have been generated for ")
             .append(
@@ -97,7 +97,7 @@ object Messages {
         announceWithHeader(component)
     }
 
-    fun bingoAnnounceGameReady(gameCode: String, players: Collection<LocalBingoPlayer>, starters: Audience) {
+    fun bingoAnnounceGameReady(gameCode: String, players: Collection<BukkitBingoPlayer>, starters: Audience) {
         for (p in players) {
             // Game link for this specific player
             val url = BingoConfig.gameUrl(gameCode, p)
@@ -188,9 +188,9 @@ object Messages {
         bingoTellError("The game is not ready to be started!")
     }
 
-    fun bingoTellTeams(players: Collection<LocalBingoPlayer>) {
+    fun bingoTellTeams(players: Collection<BukkitBingoPlayer>) {
         for (bp in players) {
-            if (bp is LocalBingoPlayerTeam) {
+            if (bp is BukkitBingoPlayerTeam) {
                 val component = Component.text("You are playing on team ")
                     .append(bp.formattedName.decorate(TextDecoration.BOLD))
                     .append(Component.text("!"))

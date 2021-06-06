@@ -7,8 +7,8 @@ import com.jtprince.bingo.bukkit.game.debug.DebugGame
 import com.jtprince.bingo.bukkit.game.web.WebBackedGame
 import com.jtprince.bingo.bukkit.game.web.WebBackedGameProto
 import com.jtprince.bingo.bukkit.game.web.WebGameSettings
-import com.jtprince.bingo.bukkit.player.BingoPlayerFactory
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayerFactory
 import com.jtprince.bingo.bukkit.webclient.WebHttpClient
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -41,7 +41,7 @@ abstract class BingoGame(
     abstract fun signalEnd(sender: CommandSender?)
     protected abstract fun signalDestroy(sender: CommandSender?)
 
-    abstract override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace,
+    abstract override fun receiveAutoMark(player: BukkitBingoPlayer, space: AutomatedSpace,
                                           fulfilled: Boolean)
 
     companion object Manager {
@@ -75,7 +75,7 @@ abstract class BingoGame(
 
                 if (protoGame.state == State.BOARD_GENERATING) {
                     // Only move to the WebBackedGame if nothing else changed in the meantime.
-                    val bingoPlayers = BingoPlayerFactory.createPlayers()
+                    val bingoPlayers = BukkitBingoPlayerFactory.createPlayers()
                     currentGame = WebBackedGame(creator, gameCode, bingoPlayers)
                 }
             }
@@ -83,7 +83,7 @@ abstract class BingoGame(
 
         fun prepareDebugGame(creator: Player, goalId: String, variables: SetVariables) {
             destroyCurrentGame(creator)
-            val newGame = DebugGame(creator, BingoPlayerFactory.createPlayers(), goalId, variables)
+            val newGame = DebugGame(creator, BukkitBingoPlayerFactory.createPlayers(), goalId, variables)
             currentGame = newGame
         }
     }

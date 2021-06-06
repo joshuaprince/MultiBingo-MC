@@ -6,7 +6,7 @@ import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
 import com.jtprince.bingo.bukkit.automark.PlayerTriggerProgress
 import com.jtprince.bingo.bukkit.automark.trigger.AutoMarkTrigger
 import com.jtprince.bingo.bukkit.automark.trigger.AutoMarkTriggerFactory
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.bukkit.webclient.model.WebModelSpace
 
 class WebBackedSpace(
@@ -52,5 +52,5 @@ class WebBackedSpace(
         triggers.forEach(AutoMarkTrigger::destroy)
     }
 
-    override val playerProgress: MutableMap<LocalBingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
+    override val playerProgress: MutableMap<BukkitBingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
 }

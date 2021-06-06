@@ -9,21 +9,21 @@ import com.jtprince.bingo.bukkit.Messages.bingoTellNotReady
 import com.jtprince.bingo.bukkit.PluginParity
 import com.jtprince.bingo.bukkit.automark.AutomatedSpace
 import com.jtprince.bingo.bukkit.game.BingoGame
-import com.jtprince.bingo.bukkit.player.BingoPlayer
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.bukkit.webclient.WebBackedWebsocketClient
 import com.jtprince.bingo.bukkit.webclient.WebMessageRelay
 import com.jtprince.bingo.bukkit.webclient.WebsocketRxMessage
 import com.jtprince.bingo.bukkit.webclient.model.WebModelBoard
 import com.jtprince.bingo.bukkit.webclient.model.WebModelGameState
 import com.jtprince.bingo.bukkit.webclient.model.WebModelPlayerBoard
+import com.jtprince.bingo.core.player.BingoPlayer
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 
 class WebBackedGame(
     creator: CommandSender,
     gameCode: String,
-    localPlayers: Collection<LocalBingoPlayer>
+    localPlayers: Collection<BukkitBingoPlayer>
 ) : BingoGame(creator, gameCode) {
 
     override var state: State = State.WAITING_FOR_WEBSOCKET
@@ -145,7 +145,7 @@ class WebBackedGame(
         websocketClient.retry()
     }
 
-    override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
+    override fun receiveAutoMark(player: BukkitBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
         if (state != State.RUNNING) return
 
         if (space !is WebBackedSpace) {
@@ -201,7 +201,7 @@ class WebBackedGame(
         /* Tell webserver that we are marking these spaces for all local players */
         val autoSpaceIds = autoSpaces.map { s -> s.spaceId }
         websocketClient.sendAutoMarks(
-            playerManager.localPlayers.map(LocalBingoPlayer::name).associateWith { autoSpaceIds }
+            playerManager.localPlayers.map(BukkitBingoPlayer::name).associateWith { autoSpaceIds }
         )
     }
 

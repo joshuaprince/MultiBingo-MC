@@ -1,6 +1,6 @@
 package com.jtprince.bingo.bukkit.automark
 
-import com.jtprince.bingo.bukkit.player.LocalBingoPlayer
+import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.event.Event
 
@@ -13,9 +13,9 @@ interface EventPlayerMapper {
      * Determine which BingoPlayer an Event is associated with, for determining who to potentially
      * automark for. If no Bingo Player was involved with this event, returns null.
      */
-    fun mapEvent(event: Event): LocalBingoPlayer?
+    fun mapEvent(event: Event): BukkitBingoPlayer?
 
-    val localPlayers: Collection<LocalBingoPlayer>
+    val localPlayers: Collection<BukkitBingoPlayer>
 
-    fun worldSet(player: LocalBingoPlayer) : WorldSet
+    fun worldSet(player: BukkitBingoPlayer) : WorldSet
 }

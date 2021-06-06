@@ -42,5 +42,13 @@ echo "Adding plugin to server..."
 mkdir -p ./plugins
 cp ../bukkit/build/libs/MultiBingo-Bukkit.jar ./plugins
 
+echo "Configuring server settings..."
+for template in *.template; do
+  base=$(basename "$template" .template)
+  if [ ! -e "$base" ]; then
+    cp "$template" "$base"
+  fi
+done
+
 echo "Install script ran successfully. Press any key to exit."
 read -n 1 -r

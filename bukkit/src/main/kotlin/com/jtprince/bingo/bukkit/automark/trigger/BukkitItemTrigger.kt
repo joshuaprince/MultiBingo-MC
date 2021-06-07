@@ -2,10 +2,10 @@ package com.jtprince.bingo.bukkit.automark.trigger
 
 import com.jtprince.bingo.bukkit.automark.BingoInventory
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
-import com.jtprince.bingo.bukkit.automark.definitions.ItemTriggerYaml
 import com.jtprince.bingo.core.automark.AutoMarkConsumer
 import com.jtprince.bingo.core.automark.AutoMarkTrigger
 import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bingo.core.automark.ItemTriggerYaml
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack

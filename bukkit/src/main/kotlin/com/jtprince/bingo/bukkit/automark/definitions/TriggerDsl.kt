@@ -12,6 +12,7 @@ import com.jtprince.bingo.bukkit.automark.trigger.BukkitOccasionalTrigger
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitSpecialItemTrigger
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.automark.PlayerTriggerProgress
+import com.jtprince.bingo.core.automark.TriggerDefinition
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.event.Event
 import kotlin.reflect.KClass
@@ -34,9 +35,6 @@ class TriggerDslRegistry private constructor(
             return builder.build()
         }
     }
-
-    val allAutomatedGoals
-        get() = regs.keys
 }
 
 /**

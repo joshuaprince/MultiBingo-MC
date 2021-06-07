@@ -50,7 +50,7 @@ import org.bukkit.potion.PotionEffectType
 import org.spigotmc.event.entity.EntityMountEvent
 import java.util.*
 
-val dslRegistry = TriggerDslRegistry {
+val BukkitDslTriggers = TriggerDslRegistry {
     eventTrigger<EntityMountEvent>("jm_2_creepers_boat") {
         // 2 Creepers in the same Boat
         @Suppress("ReplaceSizeCheckWithIsNotEmpty")

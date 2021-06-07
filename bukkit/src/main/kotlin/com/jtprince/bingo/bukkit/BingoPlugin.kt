@@ -1,6 +1,8 @@
 package com.jtprince.bingo.bukkit
 
+import com.jtprince.bingo.bukkit.automark.definitions.BukkitDslTriggers
 import com.jtprince.bingo.bukkit.game.BingoGame
+import com.jtprince.bingo.core.automark.TriggerDefinition
 import com.jtprince.bingo.core.webclient.WebHttpClient
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import com.jtprince.bukkit.worldset.WorldSetManager
@@ -21,6 +23,7 @@ class BingoPluginClass : JavaPlugin() {
     val scheduler = BukkitBingoScheduler(this)
     lateinit var httpClient: WebHttpClient
     lateinit var eventRegistry: BukkitEventRegistry
+    lateinit var triggerDefinitionRegistry: TriggerDefinition.Registry
     lateinit var worldSetManager: WorldSetManager
 
     override fun onEnable() {
@@ -31,6 +34,10 @@ class BingoPluginClass : JavaPlugin() {
         httpClient = WebHttpClient(BingoConfig.boardCreateUrl(), BingoConfig.webPingUrl(), logger, scheduler)
         worldSetManager = WorldSetManager(this, "bingo", baseWorld = { Bukkit.getWorlds()[0] })
         eventRegistry = BukkitEventRegistry(this)
+
+        triggerDefinitionRegistry = TriggerDefinition.Registry()
+        triggerDefinitionRegistry.registerAll(BukkitDslTriggers)
+        triggerDefinitionRegistry.registerItemTriggers()
 
         httpClient.pingBackend()
     }

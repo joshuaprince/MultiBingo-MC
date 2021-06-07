@@ -1,7 +1,6 @@
 package com.jtprince.bingo.bukkit
 
 import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellError
-import com.jtprince.bingo.bukkit.automark.definitions.TriggerDefinition
 import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.game.web.WebBackedGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
@@ -115,7 +114,7 @@ object Commands {
             })*/
 
         val goalIdsArg = StringArgument("goalId")
-            .overrideSuggestions { _ -> TriggerDefinition.allAutomatedGoals.toTypedArray() }
+            .overrideSuggestions { _ -> BingoPlugin.triggerDefinitionRegistry.registeredGoalIds.toTypedArray() }
         val debugCmd = CommandAPICommand("debug")
             .withArguments(goalIdsArg)
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->

@@ -1,16 +1,13 @@
-package com.jtprince.bingo.bukkit.automark.definitions
+package com.jtprince.bingo.core.automark
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.jtprince.bingo.bukkit.BingoPlugin
 import com.jtprince.bingo.core.SetVariables
-import com.jtprince.bingo.core.automark.MissingVariableException
 import java.io.IOException
 import java.io.InputStream
-import java.util.logging.Level
 
 
 /**
@@ -18,16 +15,16 @@ import java.util.logging.Level
  * specifications of these files, see README.md in this file's directory.
  */
 class ItemTriggerYaml private constructor(
-    @JsonProperty("item_triggers") private val rootMatchGroups: Map<String, MatchGroup>
+    @JsonProperty("item_triggers") rootMatchGroups: Map<String, MatchGroup>
 ) {
     class Definition internal constructor(
-        internal val rootMatchGroup: MatchGroup
+        val rootMatchGroup: MatchGroup  // TODO: Make internal, move necessary logic to this module
     ) : TriggerDefinition {
         override val neededVars: Array<String>
             get() = rootMatchGroup.neededVars
     }
 
-    private val definitionCache = mutableMapOf<String, Definition?>()
+    val definitions = rootMatchGroups.entries.associate { (k, v) -> (k to Definition(v)) }
 
     companion object {
         val defaultYaml: ItemTriggerYaml by lazy {
@@ -44,23 +41,10 @@ class ItemTriggerYaml private constructor(
             return try {
                 yaml.readValue(yamlFile, ItemTriggerYaml::class.java)
             } catch (e: IOException) {
-                BingoPlugin.logger.log(Level.SEVERE, "Could not parse item triggers yaml", e)
+                // BingoPlugin.logger.log(Level.SEVERE, "Could not parse item triggers yaml", e)
+                    //TODO DI?
                 ItemTriggerYaml(emptyMap())  // Return an empty YAML
             }
-        }
-    }
-
-    val allAutomatedGoals: Set<String>
-        get() = rootMatchGroups.keys
-
-    /**
-     * Get the specifications for the Item Trigger that is configured for a given goal ID. If the
-     * goal ID is not present in item_triggers.yml, returns null. The return value is an Item Match
-     * Group that can be considered the Root Item Match Group for this goal ID.
-     */
-    operator fun get(goalId: String): Definition? {
-        return definitionCache.getOrPut(goalId) {
-            rootMatchGroups[goalId]?.let { Definition(it) }
         }
     }
 
@@ -77,7 +61,7 @@ class ItemTriggerYaml private constructor(
         private val names: List<Regex> = names?.map{ s -> Regex(s) } ?: emptyList()
         private val unique: Variable = Variable(unique, 1)
         private val total: Variable = Variable(total, 1)
-        internal val children: List<MatchGroup> = children ?: emptyList()
+        val children: List<MatchGroup> = children ?: emptyList()
 
         val neededVars: Array<String>
             get() {

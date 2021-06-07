@@ -1,3 +1,3 @@
-package com.jtprince.bingo.bukkit.game
+package com.jtprince.bingo.core
 
 typealias SetVariables = Map<String, Int>

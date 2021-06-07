@@ -1,4 +1,4 @@
-package com.jtprince.bingo.bukkit.webclient.model
+package com.jtprince.bingo.core.webclient.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty

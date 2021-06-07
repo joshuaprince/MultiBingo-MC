@@ -1,7 +1,7 @@
 package com.jtprince.bingo.bukkit
 
 import com.jtprince.bingo.bukkit.game.BingoGame
-import com.jtprince.bingo.bukkit.webclient.WebHttpClient
+import com.jtprince.bingo.core.webclient.WebHttpClient
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import com.jtprince.bukkit.worldset.WorldSetManager
 import dev.jorel.commandapi.CommandAPI
@@ -18,6 +18,8 @@ class BingoPluginClass : JavaPlugin() {
         pluginInstance = this
     }
 
+    val scheduler = BukkitBingoScheduler(this)
+    lateinit var httpClient: WebHttpClient
     lateinit var eventRegistry: BukkitEventRegistry
     lateinit var worldSetManager: WorldSetManager
 
@@ -26,10 +28,11 @@ class BingoPluginClass : JavaPlugin() {
         Commands.registerCommands()
         saveDefaultConfig()
 
-        WebHttpClient.pingBackend()
-
+        httpClient = WebHttpClient(BingoConfig.boardCreateUrl(), BingoConfig.webPingUrl(), logger, scheduler)
         worldSetManager = WorldSetManager(this, "bingo", baseWorld = { Bukkit.getWorlds()[0] })
         eventRegistry = BukkitEventRegistry(this)
+
+        httpClient.pingBackend()
     }
 
     override fun onLoad() {

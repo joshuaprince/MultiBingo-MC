@@ -1,8 +1,8 @@
-package com.jtprince.bingo.bukkit.webclient
+package com.jtprince.bingo.core.webclient
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import com.jtprince.bingo.bukkit.PluginParity
+import java.io.Serializable
 
 abstract class WebsocketTxMessage(
     @JsonProperty("action") val action: Action
@@ -41,5 +41,5 @@ class TxMessageMessageRelay(  // Oh boy, this is a good one to rename.
 
 class TxMessagePluginParity(
     @JsonProperty("is_echo") val isEcho: Boolean,
-    @JsonProperty("my_settings") val mySettings: PluginParity.Settings,
+    @JsonProperty("my_settings") val mySettings: Map<String, Serializable>,
 ) : WebsocketTxMessage(Action.PLUGIN_PARITY)

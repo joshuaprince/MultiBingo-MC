@@ -1,15 +1,16 @@
 package com.jtprince.bingo.bukkit.game
 
+import com.jtprince.bingo.bukkit.BingoPlugin
 import com.jtprince.bingo.bukkit.Messages.bingoTellError
 import com.jtprince.bingo.bukkit.automark.AutoMarkConsumer
 import com.jtprince.bingo.bukkit.automark.AutomatedSpace
 import com.jtprince.bingo.bukkit.game.debug.DebugGame
 import com.jtprince.bingo.bukkit.game.web.WebBackedGame
 import com.jtprince.bingo.bukkit.game.web.WebBackedGameProto
-import com.jtprince.bingo.bukkit.game.web.WebGameSettings
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayerFactory
-import com.jtprince.bingo.bukkit.webclient.WebHttpClient
+import com.jtprince.bingo.core.SetVariables
+import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -62,7 +63,7 @@ abstract class BingoGame(
             val newGame = WebBackedGameProto(creator, settings)
             currentGame = newGame
 
-            WebHttpClient.generateBoard(settings) { gameCode ->
+            BingoPlugin.httpClient.generateBoard(settings) { gameCode ->
                 val protoGame = currentGame ?: return@generateBoard
 
                 if (gameCode == null) {

@@ -1,8 +1,8 @@
 package com.jtprince.bingo.bukkit.automark
 
 import com.jtprince.bingo.bukkit.Messages.bingoTellGoalProgress
-import com.jtprince.bingo.bukkit.game.SetVariables
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.core.SetVariables
 import kotlin.reflect.KClass
 
 /**

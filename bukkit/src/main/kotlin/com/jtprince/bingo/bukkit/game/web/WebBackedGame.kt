@@ -1,22 +1,18 @@
 package com.jtprince.bingo.bukkit.game.web
 
-import com.jtprince.bingo.bukkit.BingoConfig
-import com.jtprince.bingo.bukkit.BingoPlugin
-import com.jtprince.bingo.bukkit.Messages
+import com.jtprince.bingo.bukkit.*
 import com.jtprince.bingo.bukkit.Messages.bingoTell
 import com.jtprince.bingo.bukkit.Messages.bingoTellError
 import com.jtprince.bingo.bukkit.Messages.bingoTellNotReady
-import com.jtprince.bingo.bukkit.PluginParity
 import com.jtprince.bingo.bukkit.automark.AutomatedSpace
 import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
-import com.jtprince.bingo.bukkit.webclient.WebBackedWebsocketClient
-import com.jtprince.bingo.bukkit.webclient.WebMessageRelay
-import com.jtprince.bingo.bukkit.webclient.WebsocketRxMessage
-import com.jtprince.bingo.bukkit.webclient.model.WebModelBoard
-import com.jtprince.bingo.bukkit.webclient.model.WebModelGameState
-import com.jtprince.bingo.bukkit.webclient.model.WebModelPlayerBoard
 import com.jtprince.bingo.core.player.BingoPlayer
+import com.jtprince.bingo.core.webclient.WebBackedWebsocketClient
+import com.jtprince.bingo.core.webclient.WebsocketRxMessage
+import com.jtprince.bingo.core.webclient.model.WebModelBoard
+import com.jtprince.bingo.core.webclient.model.WebModelGameState
+import com.jtprince.bingo.core.webclient.model.WebModelPlayerBoard
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 
@@ -30,8 +26,10 @@ class WebBackedGame(
     private val clientId = "KotlinPlugin${hashCode() % 10000}:" +
             localPlayers.map(BingoPlayer::name).joinToString(",")
     private val websocketClient = WebBackedWebsocketClient(
-        gameCode, clientId, this::receiveWebsocketOpened, this::receiveWebsocketMessage,
-        this::receiveFailedConnection
+        gameCode, clientId,
+        BingoConfig.websocketUrl(gameCode, clientId), this::receiveWebsocketOpened,
+        this::receiveWebsocketMessage, this::receiveFailedConnection,
+        BingoPlugin.logger, BingoPlugin.scheduler
     )
     private val messageRelay = WebMessageRelay(websocketClient)
     private var pluginParity: PluginParity? = null

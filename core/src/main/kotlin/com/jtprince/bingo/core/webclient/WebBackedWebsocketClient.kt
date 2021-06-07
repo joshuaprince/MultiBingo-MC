@@ -1,25 +1,27 @@
-package com.jtprince.bingo.bukkit.webclient
+package com.jtprince.bingo.core.webclient
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.jtprince.bingo.bukkit.BingoConfig
-import com.jtprince.bingo.bukkit.BingoPlugin
-import com.jtprince.bingo.bukkit.PluginParity
-import org.bukkit.Bukkit
-import org.bukkit.scheduler.BukkitTask
+import com.jtprince.bingo.core.scheduler.Scheduler
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.framing.CloseFrame
 import org.java_websocket.handshake.ServerHandshake
+import java.io.Serializable
+import java.net.URI
 import java.util.*
 import java.util.logging.Level
+import java.util.logging.Logger
 
 class WebBackedWebsocketClient(
     private val gameCode: String,
-    internal val clientId: String,
+    val clientId: String,
+    websocketUrl: URI,  // TODO: Move URL building logic here and remove as a param
     private val onFirstOpen: () -> Unit,
     private val onReceive: (WebsocketRxMessage) -> Unit,
     private val onFailure: () -> Unit,
-) : WebSocketClient(BingoConfig.websocketUrl(gameCode, clientId)) {
+    private val logger: Logger, // TODO: DI
+    private val scheduler: Scheduler, // TODO: DI
+) : WebSocketClient(websocketUrl) {
     companion object {
         const val RECONNECT_ATTEMPTS = 10
         const val RECONNECT_SECONDS_BETWEEN_ATTEMPTS = 5
@@ -29,12 +31,12 @@ class WebBackedWebsocketClient(
 
     private val txQueue: Queue<WebsocketTxMessage> = LinkedList()
 
-    private var reconnectTask: BukkitTask? = null
+    private var reconnectTask: Scheduler.Task? = null
     private var connectedBefore = false
     private var connectAttemptsRemaining = RECONNECT_ATTEMPTS
 
     override fun onOpen(handshakedata: ServerHandshake) {
-        BingoPlugin.logger.info("Successfully connected to game $gameCode.")
+        logger.info("Successfully connected to game $gameCode.")
 
         if (!connectedBefore) {
             onFirstOpen()
@@ -50,7 +52,7 @@ class WebBackedWebsocketClient(
             val msg = mapper.readValue<WebsocketRxMessage>(message)
             onReceive(msg)
         } catch (e: Exception) {
-            BingoPlugin.logger.log(Level.SEVERE, "Could not receive websocket message", e)
+            logger.log(Level.SEVERE, "Could not receive websocket message", e)
         }
     }
 
@@ -62,30 +64,30 @@ class WebBackedWebsocketClient(
 
         if (connectAttemptsRemaining > 0) {
             /* Attempt to reconnect if we didn't want this socket to close yet. */
-            BingoPlugin.logger.warning("Lost connection to the backend. Retrying in " +
+            logger.warning("Lost connection to the backend. Retrying in " +
                     "$RECONNECT_SECONDS_BETWEEN_ATTEMPTS seconds.")
 
             reconnectTask?.cancel()
-            reconnectTask = Bukkit.getScheduler().runTaskLaterAsynchronously(BingoPlugin, { ->
-                BingoPlugin.logger.info("Attempting reconnection...")
+            reconnectTask = scheduler.scheduleAsync(RECONNECT_SECONDS_BETWEEN_ATTEMPTS.toLong() * 20) {
+                logger.info("Attempting reconnection...")
                 connectAttemptsRemaining--
                 reconnect()
-            }, RECONNECT_SECONDS_BETWEEN_ATTEMPTS.toLong() * 20)
+            }
         } else {
-            BingoPlugin.logger.warning("Could not connect to the backend after " +
+            logger.warning("Could not connect to the backend after " +
                     "$RECONNECT_ATTEMPTS attempts.")
             onFailure()
         }
     }
 
     override fun onError(ex: Exception) {
-        BingoPlugin.logger.log(Level.SEVERE, "Websocket error: ${ex.localizedMessage}")
+        logger.log(Level.SEVERE, "Websocket error: ${ex.localizedMessage}")
     }
 
     fun destroy() {
         close()
         reconnectTask?.cancel()
-        BingoPlugin.logger.info("Websocket closed for game $gameCode")
+        logger.info("Websocket closed for game $gameCode")
     }
 
     fun retry() {
@@ -130,7 +132,7 @@ class WebBackedWebsocketClient(
         send(TxMessageMessageRelay(msgJson))
     }
 
-    fun sendPluginParity(isEcho: Boolean, mySettings: PluginParity.Settings) {
+    fun sendPluginParity(isEcho: Boolean, mySettings: Map<String, Serializable>) {
         send(TxMessagePluginParity(isEcho, mySettings))
     }
 }

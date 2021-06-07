@@ -1,7 +1,7 @@
-package com.jtprince.bingo.bukkit.webclient
+package com.jtprince.bingo.bukkit
 
-import com.jtprince.bingo.bukkit.BingoPlugin
-import com.jtprince.bingo.bukkit.webclient.model.WebModelMessageRelay
+import com.jtprince.bingo.core.webclient.WebBackedWebsocketClient
+import com.jtprince.bingo.core.webclient.model.WebModelMessageRelay
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.HoverEvent

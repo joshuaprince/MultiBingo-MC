@@ -1,7 +1,7 @@
-package com.jtprince.bingo.bukkit.webclient
+package com.jtprince.bingo.core.webclient
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.jtprince.bingo.bukkit.webclient.model.*
+import com.jtprince.bingo.core.webclient.model.*
 
 class WebsocketRxMessage(
     @JsonProperty("board") val board: WebModelBoard?,

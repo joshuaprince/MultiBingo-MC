@@ -1,6 +1,6 @@
 package com.jtprince.bingo.bukkit
 
-import com.jtprince.bingo.bukkit.webclient.model.WebModelPluginParity
+import com.jtprince.bingo.core.webclient.model.WebModelPluginParity
 import org.bukkit.GameRule
 import org.bukkit.World
 import java.io.Serializable

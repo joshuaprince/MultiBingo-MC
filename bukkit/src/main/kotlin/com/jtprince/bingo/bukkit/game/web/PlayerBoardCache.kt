@@ -1,7 +1,7 @@
 package com.jtprince.bingo.bukkit.game.web
 
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
-import com.jtprince.bingo.bukkit.webclient.model.WebModelPlayerBoard
+import com.jtprince.bingo.core.webclient.model.WebModelPlayerBoard
 
 /**
  * Class to maintain the Plugin-side latest known markings on a single Local Player's board, and

@@ -1,11 +1,10 @@
-package com.jtprince.bingo.bukkit.webclient
+package com.jtprince.bingo.core.webclient
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.jtprince.bingo.bukkit.BingoConfig
-import com.jtprince.bingo.bukkit.BingoPlugin
-import com.jtprince.bingo.bukkit.game.web.WebGameSettings
+import com.jtprince.bingo.core.scheduler.Scheduler
+import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import org.apache.http.HttpStatus
 import org.apache.http.client.HttpResponseException
 import org.apache.http.client.methods.HttpGet
@@ -13,10 +12,16 @@ import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClientBuilder
-import org.bukkit.Bukkit
+import java.net.URI
 import java.util.logging.Level
+import java.util.logging.Logger
 
-object WebHttpClient {
+class WebHttpClient(
+    private val boardCreateUrl: URI,  // TODO: Determine internally
+    private val pingUrl: URI,  // TODO: Determine internally
+    private val logger: Logger,  // TODO: DI
+    private val scheduler: Scheduler,  // TODO: DI
+) {
     private val httpClient = HttpClientBuilder.create().build()
     private val objectMapper = jacksonObjectMapper()
 
@@ -31,11 +36,11 @@ object WebHttpClient {
     )
 
     fun generateBoard(settings: WebGameSettings, whenDoneAsync: (gameCode: String?) -> Unit) {
-        Bukkit.getScheduler().runTaskAsynchronously(BingoPlugin) { ->
+        scheduler.scheduleAsync { ->
             var gameCodeOrError: String? = null
             /* HTTP request is blocking */
             try {
-                val request = HttpPost(BingoConfig.boardCreateUrl())
+                val request = HttpPost(boardCreateUrl)
                 val settingsJson = objectMapper.writeValueAsString(settings)
                 request.entity = StringEntity(settingsJson, ContentType.APPLICATION_JSON)
                 httpClient.execute(request).use { response ->
@@ -53,9 +58,7 @@ object WebHttpClient {
                         )
                         if (err.gameCodeErrors.any { it.contains("already exists") }) {
                             gameCodeOrError = settings.gameCode
-                            BingoPlugin.logger.info(
-                                "Board $gameCodeOrError already exists on the server. Using it."
-                            )
+                            logger.info("Board $gameCodeOrError already exists on the server. Using it.")
                         } else {
                             throw HttpResponseException(code, "Unknown Bad Request response")
                         }
@@ -64,7 +67,7 @@ object WebHttpClient {
                     }
                 }
             } catch (e: Exception) {
-                BingoPlugin.logger.log(Level.SEVERE, "Failed to generate board: ${e.localizedMessage}")
+                logger.log(Level.SEVERE, "Failed to generate board: ${e.localizedMessage}")
             }
 
             whenDoneAsync(gameCodeOrError)
@@ -72,8 +75,8 @@ object WebHttpClient {
     }
 
     fun pingBackend() {
-        Bukkit.getScheduler().runTaskAsynchronously(BingoPlugin) { ->
-            val url = BingoConfig.webPingUrl()
+        scheduler.scheduleAsync {
+            val url = pingUrl
             try {
                 val response = httpClient.execute(HttpGet(url))
                 response.use {
@@ -81,9 +84,9 @@ object WebHttpClient {
                         throw HttpResponseException(it.statusLine.statusCode, "Unexpected status code")
                     }
                 }
-                BingoPlugin.logger.info("Successfully made a request to $url.")
+                logger.info("Successfully made a request to $url.")
             } catch (e: Exception) {
-                BingoPlugin.logger.log(Level.SEVERE, "Failed to communicate with $url: ${e.localizedMessage}")
+                logger.log(Level.SEVERE, "Failed to communicate with $url: ${e.localizedMessage}")
             }
         }
     }

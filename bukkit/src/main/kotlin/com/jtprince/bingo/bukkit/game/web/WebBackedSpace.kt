@@ -7,7 +7,7 @@ import com.jtprince.bingo.bukkit.automark.PlayerTriggerProgress
 import com.jtprince.bingo.bukkit.automark.trigger.AutoMarkTrigger
 import com.jtprince.bingo.bukkit.automark.trigger.AutoMarkTriggerFactory
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
-import com.jtprince.bingo.bukkit.webclient.model.WebModelSpace
+import com.jtprince.bingo.core.webclient.model.WebModelSpace
 
 class WebBackedSpace(
     modelSpace: WebModelSpace,

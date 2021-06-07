@@ -6,6 +6,7 @@ import com.jtprince.bingo.bukkit.Messages.bingoTellNotReady
 import com.jtprince.bingo.bukkit.automark.AutomatedSpace
 import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import org.bukkit.command.CommandSender
 
 /**

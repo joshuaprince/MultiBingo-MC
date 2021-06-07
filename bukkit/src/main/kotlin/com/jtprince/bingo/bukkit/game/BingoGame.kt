@@ -1,15 +1,15 @@
 package com.jtprince.bingo.bukkit.game
 
 import com.jtprince.bingo.bukkit.BingoPlugin
-import com.jtprince.bingo.bukkit.Messages.bingoTellError
-import com.jtprince.bingo.bukkit.automark.AutoMarkConsumer
-import com.jtprince.bingo.bukkit.automark.AutomatedSpace
+import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellError
 import com.jtprince.bingo.bukkit.game.debug.DebugGame
 import com.jtprince.bingo.bukkit.game.web.WebBackedGame
 import com.jtprince.bingo.bukkit.game.web.WebBackedGameProto
-import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayerFactory
 import com.jtprince.bingo.core.SetVariables
+import com.jtprince.bingo.core.automark.AutoMarkConsumer
+import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -42,7 +42,7 @@ abstract class BingoGame(
     abstract fun signalEnd(sender: CommandSender?)
     protected abstract fun signalDestroy(sender: CommandSender?)
 
-    abstract override fun receiveAutoMark(player: BukkitBingoPlayer, space: AutomatedSpace,
+    abstract override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace,
                                           fulfilled: Boolean)
 
     companion object Manager {

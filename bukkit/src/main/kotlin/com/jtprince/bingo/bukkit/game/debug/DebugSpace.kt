@@ -1,10 +1,10 @@
 package com.jtprince.bingo.bukkit.game.debug
 
-import com.jtprince.bingo.bukkit.automark.AutomatedSpace
-import com.jtprince.bingo.bukkit.automark.PlayerTriggerProgress
-import com.jtprince.bingo.bukkit.automark.trigger.AutoMarkTriggerFactory
-import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.bukkit.automark.trigger.BukkitAutoMarkTriggerFactory
 import com.jtprince.bingo.core.SetVariables
+import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bingo.core.automark.PlayerTriggerProgress
+import com.jtprince.bingo.core.player.LocalBingoPlayer
 
 class DebugSpace(
     val game: DebugGame,
@@ -17,9 +17,10 @@ class DebugSpace(
 
     override val text = goalId + (if (variables.isEmpty()) "" else variables.toString())
     override val spaceId = lastUsedId++
-    override val playerProgress: MutableMap<BukkitBingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
+    override val playerProgress: MutableMap<LocalBingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
 
-    val triggers = AutoMarkTriggerFactory().create(this, game, game)
+    private val triggerFactory = BukkitAutoMarkTriggerFactory(game)
+    private val triggers = triggerFactory.create(this, game)
 
     override fun destroy() {
         for (trigger in triggers) {

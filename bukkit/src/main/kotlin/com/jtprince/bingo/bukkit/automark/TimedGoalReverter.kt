@@ -2,6 +2,8 @@ package com.jtprince.bingo.bukkit.automark
 
 import com.jtprince.bingo.bukkit.BingoPlugin
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.core.automark.AutoMarkConsumer
+import com.jtprince.bingo.core.automark.AutomatedSpace
 import org.bukkit.Bukkit
 
 internal class TimedGoalReverter(private val ticks: Int, val consumer: AutoMarkConsumer) {

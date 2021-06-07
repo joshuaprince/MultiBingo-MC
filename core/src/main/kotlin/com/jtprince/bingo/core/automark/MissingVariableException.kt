@@ -1,4 +1,4 @@
-package com.jtprince.bingo.bukkit.automark
+package com.jtprince.bingo.core.automark
 
 /**
  * Raised when an automated trigger relies on a variable, but that variable does not exist in

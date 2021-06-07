@@ -1,23 +1,24 @@
 package com.jtprince.bingo.bukkit.automark.trigger
 
-import com.jtprince.bingo.bukkit.automark.AutoMarkConsumer
-import com.jtprince.bingo.bukkit.automark.AutomatedSpace
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
 import com.jtprince.bingo.bukkit.automark.TimedGoalReverter
 import com.jtprince.bingo.bukkit.automark.definitions.OccasionalTriggerDefinition
+import com.jtprince.bingo.core.automark.AutoMarkConsumer
+import com.jtprince.bingo.core.automark.AutoMarkTrigger
+import com.jtprince.bingo.core.automark.AutomatedSpace
 import org.bukkit.plugin.Plugin
 
 /**
  * Defines a Trigger that is called at a regular interval to check if a player has completed a
  * goal.
  */
-class OccasionalTrigger internal constructor(
+class BukkitOccasionalTrigger internal constructor(
     val space: AutomatedSpace,
     private val plugin: Plugin,
     private val playerMapper: EventPlayerMapper,
     private val consumer: AutoMarkConsumer,
     private val triggerDefinition: OccasionalTriggerDefinition,
-) : AutoMarkTrigger() {
+) : AutoMarkTrigger {
 
     private val taskId = plugin.server.scheduler.scheduleSyncRepeatingTask(
             plugin, this::invoke, triggerDefinition.ticks.toLong(), triggerDefinition.ticks.toLong())

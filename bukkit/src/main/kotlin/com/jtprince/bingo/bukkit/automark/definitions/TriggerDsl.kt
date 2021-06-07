@@ -7,11 +7,11 @@
 package com.jtprince.bingo.bukkit.automark.definitions
 
 import com.jtprince.bingo.bukkit.automark.BingoInventory
-import com.jtprince.bingo.bukkit.automark.PlayerTriggerProgress
-import com.jtprince.bingo.bukkit.automark.trigger.EventTrigger
-import com.jtprince.bingo.bukkit.automark.trigger.OccasionalTrigger
-import com.jtprince.bingo.bukkit.automark.trigger.SpecialItemTrigger
+import com.jtprince.bingo.bukkit.automark.trigger.BukkitEventTrigger
+import com.jtprince.bingo.bukkit.automark.trigger.BukkitOccasionalTrigger
+import com.jtprince.bingo.bukkit.automark.trigger.BukkitSpecialItemTrigger
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.core.automark.PlayerTriggerProgress
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.event.Event
 import kotlin.reflect.KClass
@@ -130,7 +130,7 @@ internal class EventTriggerDefinition<EventType: Event>(
     class Parameters<EventType: Event>(
         val event: EventType,
         val player: BukkitBingoPlayer,
-        val trigger: EventTrigger<EventType>,
+        val trigger: BukkitEventTrigger<EventType>,
     ) {
         val goalId = trigger.space.goalId
         val vars = trigger.space.variables
@@ -148,7 +148,7 @@ internal class OccasionalTriggerDefinition(
     class Parameters(
         val player: BukkitBingoPlayer,
         val worlds: WorldSet,
-        val trigger: OccasionalTrigger,
+        val trigger: BukkitOccasionalTrigger,
     ) {
         val vars = trigger.space.variables
         val playerState
@@ -163,7 +163,7 @@ internal class SpecialItemTriggerDefinition(
 ) : TriggerDslDefinition(neededVars) {
     class Parameters(
         val inventory: BingoInventory,
-        trigger: SpecialItemTrigger,
+        trigger: BukkitSpecialItemTrigger,
     ) {
         val vars = trigger.space.variables
     }

@@ -19,7 +19,7 @@ import com.jtprince.bingo.bukkit.automark.ActivationHelpers.get4x4Art
 import com.jtprince.bingo.bukkit.automark.ActivationHelpers.inVillage
 import com.jtprince.bingo.bukkit.automark.ActivationHelpers.isCompletedMap
 import com.jtprince.bingo.bukkit.automark.ActivationHelpers.throughNight
-import com.jtprince.bingo.bukkit.automark.MissingVariableException
+import com.jtprince.bingo.core.automark.MissingVariableException
 import com.jtprince.util.KotlinUtils.decrement
 import com.jtprince.util.KotlinUtils.increment
 import io.papermc.paper.event.player.PlayerTradeEvent

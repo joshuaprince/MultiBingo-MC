@@ -1,6 +1,5 @@
 package com.jtprince.bingo.bukkit
 
-import com.jtprince.bingo.bukkit.automark.AutomatedSpace
 import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayerTeam
@@ -16,7 +15,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Bukkit
 import java.net.URL
 
-object Messages {
+object BukkitMessages {
     private val COLOR_HEADER: TextColor = NamedTextColor.GOLD
     private val COLOR_TEXT: TextColor = NamedTextColor.AQUA
 
@@ -37,6 +36,7 @@ object Messages {
     }
 
     private fun sendWithHeader(a: Audience, component: Component) {
+        // TODO: Moved to Core Messages, but still in use here for game code access
         a.sendMessage(component.withBingoHeader())
     }
 
@@ -119,19 +119,6 @@ object Messages {
             .clickEvent(ClickEvent.runCommand("/bingo start"))
             .hoverEvent(Component.text("Start Game (/bingo start)"))
         sendWithHeader(starters, component)
-    }
-
-    fun Audience.bingoTellGoalProgress(space: AutomatedSpace, progress: Int, towards: Int) {
-        val number = Component.text("$progress/$towards")
-            .color(NamedTextColor.WHITE)
-            .decoration(TextDecoration.ITALIC, false)
-        val component = Component.text("Progress: ")
-            .append(number)
-            .append(Component.text("  [${space.text}]"))
-            .color(NamedTextColor.GRAY)
-            .decorate(TextDecoration.ITALIC)
-            .hoverEvent(HoverEvent.showText(Component.text(space.text)))
-        sendWithHeader(this, component)
     }
 
     fun bingoAnnouncePlayerMarking(player: BingoPlayer, spaceText: String, invalidated: Boolean) {

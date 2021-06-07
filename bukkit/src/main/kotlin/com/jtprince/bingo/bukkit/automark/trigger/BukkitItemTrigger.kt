@@ -1,22 +1,23 @@
 package com.jtprince.bingo.bukkit.automark.trigger
 
-import com.jtprince.bingo.bukkit.automark.AutoMarkConsumer
-import com.jtprince.bingo.bukkit.automark.AutomatedSpace
 import com.jtprince.bingo.bukkit.automark.BingoInventory
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
 import com.jtprince.bingo.bukkit.automark.definitions.ItemTriggerYaml
+import com.jtprince.bingo.core.automark.AutoMarkConsumer
+import com.jtprince.bingo.core.automark.AutoMarkTrigger
+import com.jtprince.bingo.core.automark.AutomatedSpace
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
 import kotlin.math.min
 
-open class ItemTrigger internal constructor(
+open class BukkitItemTrigger internal constructor(
     val space: AutomatedSpace,
     private val playerMapper: EventPlayerMapper,
     private val listener: BukkitEventRegistry?,
     private val consumer: AutoMarkConsumer?,
     private val definition: ItemTriggerYaml.Definition?,  /* Nullable so SpecialItemTrigger overrides */
-) : AutoMarkTrigger() {
+) : AutoMarkTrigger {
 
     protected open val revertible = true
 

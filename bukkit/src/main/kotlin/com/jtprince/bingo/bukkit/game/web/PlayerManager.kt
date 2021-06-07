@@ -2,7 +2,7 @@ package com.jtprince.bingo.bukkit.game.web
 
 import com.jtprince.bingo.bukkit.BingoConfig
 import com.jtprince.bingo.bukkit.BingoPlugin
-import com.jtprince.bingo.bukkit.Messages.bingoTell
+import com.jtprince.bingo.bukkit.BukkitMessages.bingoTell
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.player.BingoPlayer

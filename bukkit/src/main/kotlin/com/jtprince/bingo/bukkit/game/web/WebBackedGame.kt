@@ -1,13 +1,15 @@
 package com.jtprince.bingo.bukkit.game.web
 
 import com.jtprince.bingo.bukkit.*
-import com.jtprince.bingo.bukkit.Messages.bingoTell
-import com.jtprince.bingo.bukkit.Messages.bingoTellError
-import com.jtprince.bingo.bukkit.Messages.bingoTellNotReady
-import com.jtprince.bingo.bukkit.automark.AutomatedSpace
+import com.jtprince.bingo.bukkit.BukkitMessages.bingoTell
+import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellError
+import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellNotReady
+import com.jtprince.bingo.bukkit.automark.trigger.BukkitAutoMarkTriggerFactory
 import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.core.automark.AutomatedSpace
 import com.jtprince.bingo.core.player.BingoPlayer
+import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bingo.core.webclient.WebBackedWebsocketClient
 import com.jtprince.bingo.core.webclient.WebsocketRxMessage
 import com.jtprince.bingo.core.webclient.model.WebModelBoard
@@ -37,6 +39,7 @@ class WebBackedGame(
     private val spaces = mutableMapOf<Int, WebBackedSpace>()
     val playerManager = PlayerManager(localPlayers)
     private val playerBoardCache = localPlayers.associateWith(::PlayerBoardCache)
+    private var triggerFactory = BukkitAutoMarkTriggerFactory(playerManager)
 
     /* Both of the following must be ready for the game to be put in the "READY" state */
     private var websocketReady = false
@@ -56,9 +59,9 @@ class WebBackedGame(
 
     private fun generateWorlds() {
         BingoPlugin.server.scheduler.runTask(BingoPlugin) { ->
-            Messages.bingoAnnouncePreparingGame(gameCode)
+            BukkitMessages.bingoAnnouncePreparingGame(gameCode)
             val players = playerManager.localPlayers
-            Messages.bingoTellTeams(players)
+            BukkitMessages.bingoTellTeams(players)
             for (p in players) {
                 playerManager.prepareWorldSet(gameCode, p)
                 /* Allow for early destruction. */
@@ -66,7 +69,7 @@ class WebBackedGame(
             }
 
             BingoPlugin.logger.info("Finished generating " + players.size + " worlds")
-            Messages.bingoAnnounceWorldsGenerated(players)
+            BukkitMessages.bingoAnnounceWorldsGenerated(players)
             worldsReady = true
             tryToMoveToReady()
         }
@@ -78,7 +81,7 @@ class WebBackedGame(
             !worldsReady -> state = State.WORLDS_GENERATING
             else -> {
                 state = State.READY
-                Messages.bingoAnnounceGameReady(gameCode, playerManager.localPlayers, creator)
+                BukkitMessages.bingoAnnounceGameReady(gameCode, playerManager.localPlayers, creator)
                 startPluginParity()
             }
         }
@@ -143,7 +146,7 @@ class WebBackedGame(
         websocketClient.retry()
     }
 
-    override fun receiveAutoMark(player: BukkitBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
+    override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
         if (state != State.RUNNING) return
 
         if (space !is WebBackedSpace) {
@@ -177,7 +180,7 @@ class WebBackedGame(
 
     private fun receiveFailedConnection() {
         state = State.FAILED
-        Messages.bingoAnnounceGameFailed()
+        BukkitMessages.bingoAnnounceGameFailed()
         // TODO: `/bingo retry` command?
     }
 
@@ -188,7 +191,7 @@ class WebBackedGame(
         }
 
         for (webModelSpace in board.spaces) {
-            val newSpace = WebBackedSpace(webModelSpace, playerManager, this)
+            val newSpace = WebBackedSpace(triggerFactory, webModelSpace, this)
             spaces[newSpace.spaceId] = newSpace
         }
 
@@ -233,7 +236,7 @@ class WebBackedGame(
                         return
                     }
                 }
-                Messages.bingoAnnouncePlayerMarking(player, msg.goalText, invalidate)
+                BukkitMessages.bingoAnnouncePlayerMarking(player, msg.goalText, invalidate)
             }
             is WebModelGameState.End -> {
                 if (state != State.RUNNING && state != State.COUNTING_DOWN) {
@@ -246,7 +249,7 @@ class WebBackedGame(
                 state = State.DONE
 
                 val winner = msg.winner?.let { playerManager.bingoPlayer(it) }
-                Messages.bingoAnnounceEnd(winner)
+                BukkitMessages.bingoAnnounceEnd(winner)
                 startEffects.doEndEffects(winner)
             }
         }

@@ -1,20 +1,21 @@
 package com.jtprince.bingo.bukkit.automark.trigger
 
-import com.jtprince.bingo.bukkit.automark.AutoMarkConsumer
-import com.jtprince.bingo.bukkit.automark.AutomatedSpace
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
 import com.jtprince.bingo.bukkit.automark.TimedGoalReverter
 import com.jtprince.bingo.bukkit.automark.definitions.EventTriggerDefinition
+import com.jtprince.bingo.core.automark.AutoMarkConsumer
+import com.jtprince.bingo.core.automark.AutoMarkTrigger
+import com.jtprince.bingo.core.automark.AutomatedSpace
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import org.bukkit.event.Event
 
-class EventTrigger<EventType : Event> internal constructor(
+class BukkitEventTrigger<EventType : Event> internal constructor(
     val space: AutomatedSpace,
     private val eventRegistry: BukkitEventRegistry,
     private val playerMapper: EventPlayerMapper,
     private val consumer: AutoMarkConsumer,
     private val triggerDefinition: EventTriggerDefinition<EventType>,
-) : AutoMarkTrigger() {
+) : AutoMarkTrigger {
 
     private val listenerRegistryId = eventRegistry.register(triggerDefinition.eventType,
         BukkitEventRegistry.Callback(triggerDefinition.eventType) {

@@ -1,17 +1,12 @@
 package com.jtprince.bingo.bukkit.game.web
 
-import com.jtprince.bingo.bukkit.automark.AutoMarkConsumer
-import com.jtprince.bingo.bukkit.automark.AutomatedSpace
-import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
-import com.jtprince.bingo.bukkit.automark.PlayerTriggerProgress
-import com.jtprince.bingo.bukkit.automark.trigger.AutoMarkTrigger
-import com.jtprince.bingo.bukkit.automark.trigger.AutoMarkTriggerFactory
-import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.core.automark.*
+import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bingo.core.webclient.model.WebModelSpace
 
 class WebBackedSpace(
+    triggerFactory: AutoMarkTriggerFactory,
     modelSpace: WebModelSpace,
-    playerMapper: EventPlayerMapper,
     autoMarkConsumer: AutoMarkConsumer,
 ) : AutomatedSpace {
     override val goalId = modelSpace.goalId
@@ -20,8 +15,7 @@ class WebBackedSpace(
     override val variables = modelSpace.variables
     val goalType = GoalType.ofString(modelSpace.goalType)
 
-    private var triggers: Collection<AutoMarkTrigger> =
-        AutoMarkTriggerFactory().create(this, playerMapper, autoMarkConsumer)
+    private var triggers: Collection<AutoMarkTrigger> = triggerFactory.create(this, autoMarkConsumer)
     val hasAutoMarkTrigger: Boolean
         get() = triggers.isNotEmpty()
 
@@ -52,5 +46,5 @@ class WebBackedSpace(
         triggers.forEach(AutoMarkTrigger::destroy)
     }
 
-    override val playerProgress: MutableMap<BukkitBingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
+    override val playerProgress: MutableMap<LocalBingoPlayer, PlayerTriggerProgress> by lazy { mutableMapOf() }
 }

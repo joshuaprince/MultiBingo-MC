@@ -1,14 +1,14 @@
-package com.jtprince.bingo.bukkit.automark
+package com.jtprince.bingo.core.automark
 
-import com.jtprince.bingo.bukkit.Messages.bingoTellGoalProgress
-import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.core.Messages.bingoTellGoalProgress
 import com.jtprince.bingo.core.SetVariables
+import com.jtprince.bingo.core.player.LocalBingoPlayer
 import kotlin.reflect.KClass
 
 /**
  * Container for one BingoPlayer's progress towards a single Auto Mark Trigger. This should only
  * be used by goals that require a persistent state to be tracked between actions that the player
- * can do, such as performing an Event more than once.
+ * can do, such as performing an action more than once.
  *
  * @param notifyPlayer The BingoPlayer that owns this Progress, and who will be notified as they
  *                     make progress.
@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
  */
 class PlayerTriggerProgress(
     private val space: AutomatedSpace,
-    private val notifyPlayer: BukkitBingoPlayer,
+    private val notifyPlayer: LocalBingoPlayer,
     private val vars: SetVariables
 ) {
     private var highestProgress = 0

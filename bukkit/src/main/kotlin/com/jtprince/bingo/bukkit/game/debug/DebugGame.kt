@@ -1,13 +1,14 @@
 package com.jtprince.bingo.bukkit.game.debug
 
-import com.jtprince.bingo.bukkit.Messages
-import com.jtprince.bingo.bukkit.Messages.bingoTell
-import com.jtprince.bingo.bukkit.Messages.bingoTellError
-import com.jtprince.bingo.bukkit.automark.AutomatedSpace
+import com.jtprince.bingo.bukkit.BukkitMessages
+import com.jtprince.bingo.bukkit.BukkitMessages.bingoTell
+import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellError
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
 import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.SetVariables
+import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -29,7 +30,7 @@ class DebugGame(
     val space = DebugSpace(this, goalId, variables)
 
     init {
-        Messages.bingoAnnounce("Now debugging goal $goalId.")
+        BukkitMessages.bingoAnnounce("Now debugging goal $goalId.")
     }
 
     override fun signalStart(sender: CommandSender?) {
@@ -45,7 +46,7 @@ class DebugGame(
         sender?.bingoTell("Debug Game destroyed.")
     }
 
-    override fun receiveAutoMark(player: BukkitBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
+    override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
         if (fulfilled) {
             player.bingoTell("You have activated ${space.text}.")
         } else {

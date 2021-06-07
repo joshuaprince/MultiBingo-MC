@@ -1,6 +1,6 @@
 # Item Trigger Specification Format
 
-Automated item triggers allow the Bukkit plugin to automatically determine 
+Automated item triggers allow Bingo implementations to automatically determine 
 whether a player has item(s) in their inventory that satisfy a space on the 
 board. Item collection goals can take many forms. Therefore, it is important 
 that the format for specifying exactly what the player needs is flexible.
@@ -9,7 +9,7 @@ that the format for specifying exactly what the player needs is flexible.
 
 All item triggers are defined in the item_triggers.yml file, located at
 ```
-kotlinplugin/src/main/resources/item_triggers.yml
+resources/item_triggers.yml
 ```
 
 At the file's root is a dictionary called `item_triggers`. Keys in this
@@ -174,7 +174,8 @@ player has `total` items.
 
 ### Item attributes (enchantments, potion effects, durability)
 
-No support yet - it's coming.
+No support here - try out Special Item Triggers, specified in the Bukkit trigger
+DSL.
 
 ## Internal Mechanism
 

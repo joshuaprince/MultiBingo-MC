@@ -1,23 +1,48 @@
 package com.jtprince.bingo.bukkit.automark.trigger
 
 import com.jtprince.bingo.bukkit.BingoPlugin
-import com.jtprince.bingo.bukkit.automark.BingoInventory
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
 import com.jtprince.bingo.bukkit.automark.definitions.SpecialItemTriggerDefinition
 import com.jtprince.bingo.core.automark.AutoMarkConsumer
+import com.jtprince.bingo.core.automark.AutoMarkTrigger
 import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
+import org.bukkit.event.Event
+import org.bukkit.inventory.PlayerInventory
 
 class BukkitSpecialItemTrigger internal constructor(
-    space: AutomatedSpace,
-    playerMapper: EventPlayerMapper,
-    consumer: AutoMarkConsumer,
+    val space: AutomatedSpace,
+    private val playerMapper: EventPlayerMapper,
+    private val consumer: AutoMarkConsumer,
     private val triggerDefinition: SpecialItemTriggerDefinition,
-) : BukkitItemTrigger(space, playerMapper, BingoPlugin.eventRegistry, consumer, null) {
+) : AutoMarkTrigger {
 
-    override val revertible = triggerDefinition.revertible
+    private val listener = BingoPlugin.eventRegistry
+    private val revertible = triggerDefinition.revertible
 
-    override fun satisfiedBy(inventory: BingoInventory): Boolean {
+    private val listenerRegistryId = listener.registerInventoryChange(
+        BukkitEventRegistry.Callback(Event::class) {
+            eventRaised(it)
+        })
+
+    private fun satisfiedBy(inventories: Collection<PlayerInventory>): Boolean {
         return triggerDefinition.function(
-            SpecialItemTriggerDefinition.Parameters(inventory, this))
+            SpecialItemTriggerDefinition.Parameters(inventories, this))
+    }
+
+    override fun destroy() {
+        listenerRegistryId.let { listener.unregister(it) }
+    }
+
+    /**
+     * Listener callback that is called EVERY time anyone on the server's inventory changes.
+     */
+    private fun eventRaised(event: Event) {
+        val player = playerMapper.mapEvent(event) ?: return
+        val satisfied = satisfiedBy(player.bukkitInventories)
+
+        if (revertible || satisfied) {
+            consumer.receiveAutoMark(player, space, satisfied)
+        }
     }
 }

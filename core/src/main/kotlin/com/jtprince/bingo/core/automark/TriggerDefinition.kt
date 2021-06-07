@@ -1,5 +1,7 @@
 package com.jtprince.bingo.core.automark
 
+import com.jtprince.bingo.core.automark.itemtrigger.ItemTriggerYaml
+
 /**
  * A static mapping from one or more goal IDs to some abstract way of defining how that goal ID can
  * be marked automatically.

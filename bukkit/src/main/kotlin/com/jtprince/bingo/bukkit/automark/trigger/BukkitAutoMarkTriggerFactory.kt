@@ -6,6 +6,7 @@ import com.jtprince.bingo.bukkit.automark.definitions.EventTriggerDefinition
 import com.jtprince.bingo.bukkit.automark.definitions.OccasionalTriggerDefinition
 import com.jtprince.bingo.bukkit.automark.definitions.SpecialItemTriggerDefinition
 import com.jtprince.bingo.core.automark.*
+import com.jtprince.bingo.core.automark.itemtrigger.ItemTriggerYaml
 
 class BukkitAutoMarkTriggerFactory(
     private var playerMapper: EventPlayerMapper,
@@ -33,7 +34,7 @@ class BukkitAutoMarkTriggerFactory(
 
             val newTrigger = when (triggerDef) {
                 is ItemTriggerYaml.Definition ->
-                    BukkitItemTrigger(space, playerMapper, BingoPlugin.eventRegistry, consumer, triggerDef)
+                    BukkitItemTrigger(space, triggerDef, playerMapper, BingoPlugin.eventRegistry, consumer)
                 is EventTriggerDefinition<*> ->
                     BukkitEventTrigger(space, BingoPlugin.eventRegistry, playerMapper, consumer, triggerDef)
                 is OccasionalTriggerDefinition ->

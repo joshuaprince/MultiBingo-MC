@@ -6,7 +6,6 @@
 
 package com.jtprince.bingo.bukkit.automark.definitions
 
-import com.jtprince.bingo.bukkit.automark.BingoInventory
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitEventTrigger
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitOccasionalTrigger
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitSpecialItemTrigger
@@ -15,6 +14,7 @@ import com.jtprince.bingo.core.automark.PlayerTriggerProgress
 import com.jtprince.bingo.core.automark.TriggerDefinition
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.event.Event
+import org.bukkit.inventory.PlayerInventory
 import kotlin.reflect.KClass
 
 /**
@@ -160,9 +160,10 @@ internal class SpecialItemTriggerDefinition(
     val function: (Parameters) -> Boolean
 ) : TriggerDslDefinition(neededVars) {
     class Parameters(
-        val inventory: BingoInventory,
+        val inventories: Collection<PlayerInventory>,
         trigger: BukkitSpecialItemTrigger,
     ) {
         val vars = trigger.space.variables
+        val allItems = inventories.flatten()
     }
 }

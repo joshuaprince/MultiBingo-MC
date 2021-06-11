@@ -17,12 +17,17 @@ import com.jtprince.bingo.core.webclient.model.WebModelGameState
 import com.jtprince.bingo.core.webclient.model.WebModelPlayerBoard
 import org.bukkit.World
 import org.bukkit.command.CommandSender
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import java.util.logging.Logger
 
 class WebBackedGame(
     creator: CommandSender,
     gameCode: String,
     localPlayers: Collection<BukkitBingoPlayer>
-) : BingoGame(creator, gameCode) {
+) : BingoGame(creator, gameCode), KoinComponent {
+    private val plugin: BingoPlugin by inject()
+    private val logger: Logger by inject()
 
     override var state: State = State.WAITING_FOR_WEBSOCKET
     private val clientId = "KotlinPlugin${hashCode() % 10000}:" +
@@ -31,7 +36,7 @@ class WebBackedGame(
         gameCode, clientId,
         BingoConfig.websocketUrl(gameCode, clientId), this::receiveWebsocketOpened,
         this::receiveWebsocketMessage, this::receiveFailedConnection,
-        BingoPlugin.logger, BingoPlugin.scheduler
+        logger, plugin.scheduler
     )
     private val messageRelay = WebMessageRelay(websocketClient)
     private var pluginParity: PluginParity? = null
@@ -58,7 +63,7 @@ class WebBackedGame(
     }
 
     private fun generateWorlds() {
-        BingoPlugin.server.scheduler.runTask(BingoPlugin) { ->
+        plugin.server.scheduler.runTask(plugin) { ->
             BukkitMessages.bingoAnnouncePreparingGame(gameCode)
             val players = playerManager.localPlayers
             BukkitMessages.bingoTellTeams(players)
@@ -68,7 +73,7 @@ class WebBackedGame(
                 if (state == State.DESTROYING) return@runTask
             }
 
-            BingoPlugin.logger.info("Finished generating " + players.size + " worlds")
+            logger.info("Finished generating " + players.size + " worlds")
             BukkitMessages.bingoAnnounceWorldsGenerated(players)
             worldsReady = true
             tryToMoveToReady()
@@ -98,7 +103,7 @@ class WebBackedGame(
 
         if (BingoConfig.debug) {
             for (setting in newPluginParity.getMySettings()) {
-                BingoPlugin.logger.info("[Parity] ${setting.key} = ${setting.value}")
+                logger.info("[Parity] ${setting.key} = ${setting.value}")
             }
         }
 
@@ -150,7 +155,7 @@ class WebBackedGame(
         if (state != State.RUNNING) return
 
         if (space !is WebBackedSpace) {
-            BingoPlugin.logger.severe(
+            logger.severe(
                 "Got auto-mark for space of type ${space::class}, " +
                         "which is not of expected type WebBackedSpace."
             )
@@ -186,7 +191,7 @@ class WebBackedGame(
 
     private fun receiveBoard(board: WebModelBoard) {
         if (spaces.isNotEmpty()) {
-            BingoPlugin.logger.fine("Received another board, ignoring it.")  // TODO
+            logger.fine("Received another board, ignoring it.")  // TODO
             return
         }
 
@@ -196,7 +201,7 @@ class WebBackedGame(
         }
 
         val autoSpaces = spaces.values.filter(WebBackedSpace::hasAutoMarkTrigger)
-        BingoPlugin.logger.info("Automated goals: " +
+        logger.info("Automated goals: " +
                 autoSpaces.map(WebBackedSpace::goalId).sorted().joinToString(", "))
 
         /* Tell webserver that we are marking these spaces for all local players */
@@ -217,7 +222,7 @@ class WebBackedGame(
         return when (msg) {
             is WebModelGameState.Start -> {
                 if (state != State.READY) {
-                    BingoPlugin.logger.warning(
+                    logger.warning(
                         "Web backend sent a Start Game message when game is not ready. Ignoring."
                     )
                     return
@@ -232,7 +237,7 @@ class WebBackedGame(
                     "complete" -> false
                     "invalidate" -> true
                     else -> run {
-                        BingoPlugin.logger.severe("Unknown game_state marking_type ${msg.markingType}")
+                        logger.severe("Unknown game_state marking_type ${msg.markingType}")
                         return
                     }
                 }
@@ -240,7 +245,7 @@ class WebBackedGame(
             }
             is WebModelGameState.End -> {
                 if (state != State.RUNNING && state != State.COUNTING_DOWN) {
-                    BingoPlugin.logger.warning(
+                    logger.warning(
                         "Web backend sent an End Game message when game is not running. Ignoring."
                     )
                     return

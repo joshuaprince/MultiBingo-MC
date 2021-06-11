@@ -7,6 +7,10 @@ import kotlin.math.min
  * A concrete ItemTrigger instance, which means that all variables are set. With this combination
  * of a definition + variables, we can test a player's inventory to determine whether they have
  * satisfied the trigger - see [satisfiedBy].
+ *
+ * This class does not implement [com.jtprince.bingo.core.automark.AutoMarkTrigger]. Platforms
+ * should implement their own PlatformItemTrigger class that composes this one, and use this class
+ * to calculate whether a platform-specific inventory satisfies a trigger.
  */
 class ItemTrigger(
     private val definition: ItemTriggerYaml.Definition,

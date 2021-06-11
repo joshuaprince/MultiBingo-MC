@@ -6,6 +6,7 @@
 
 package com.jtprince.bingo.bukkit.automark.definitions
 
+import com.jtprince.bingo.bukkit.BingoPlugin
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitEventTrigger
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitOccasionalTrigger
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitSpecialItemTrigger
@@ -15,6 +16,8 @@ import com.jtprince.bingo.core.automark.TriggerDefinition
 import com.jtprince.bukkit.worldset.WorldSet
 import org.bukkit.event.Event
 import org.bukkit.inventory.PlayerInventory
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import kotlin.reflect.KClass
 
 /**
@@ -40,8 +43,10 @@ class TriggerDslRegistry private constructor(
 /**
  * Used to build a [TriggerDslRegistry] in a domain-specific language (DSL) style.
  */
-internal class TriggerDslRegistryBuilder {
+internal class TriggerDslRegistryBuilder : KoinComponent {
     private val triggers = mutableMapOf<String, MutableList<TriggerDslDefinition>>()
+
+    internal val plugin: BingoPlugin by inject()
 
     internal fun ids(vararg goalIds: String) = arrayOf(*goalIds)
     internal fun vars(vararg variableNames: String) = arrayOf(*variableNames)

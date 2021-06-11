@@ -7,10 +7,14 @@ import com.jtprince.bingo.bukkit.automark.definitions.OccasionalTriggerDefinitio
 import com.jtprince.bingo.bukkit.automark.definitions.SpecialItemTriggerDefinition
 import com.jtprince.bingo.core.automark.*
 import com.jtprince.bingo.core.automark.itemtrigger.ItemTriggerYaml
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class BukkitAutoMarkTriggerFactory(
     private var playerMapper: EventPlayerMapper,
-) : AutoMarkTriggerFactory {
+) : AutoMarkTriggerFactory, KoinComponent {
+    private val plugin: BingoPlugin by inject()
+    
     /**
      * Create concrete automated triggers for a goal, such that whenever a player completes that
      * goal, a callback will be fired.
@@ -23,7 +27,7 @@ class BukkitAutoMarkTriggerFactory(
     ): Collection<AutoMarkTrigger> {
         val ret = mutableSetOf<AutoMarkTrigger>()
 
-        val triggerDefs = BingoPlugin.triggerDefinitionRegistry[space.goalId]
+        val triggerDefs = plugin.triggerDefinitionRegistry[space.goalId]
         for (triggerDef in triggerDefs) {
             /* Ensure variables needed for this trigger definition are specified */
             for (neededVar in triggerDef.neededVars) {
@@ -34,15 +38,15 @@ class BukkitAutoMarkTriggerFactory(
 
             val newTrigger = when (triggerDef) {
                 is ItemTriggerYaml.Definition ->
-                    BukkitItemTrigger(space, triggerDef, playerMapper, BingoPlugin.eventRegistry, consumer)
+                    BukkitItemTrigger(space, triggerDef, playerMapper, plugin.eventRegistry, consumer)
                 is EventTriggerDefinition<*> ->
-                    BukkitEventTrigger(space, BingoPlugin.eventRegistry, playerMapper, consumer, triggerDef)
+                    BukkitEventTrigger(space, plugin.eventRegistry, playerMapper, consumer, triggerDef)
                 is OccasionalTriggerDefinition ->
-                    BukkitOccasionalTrigger(space, BingoPlugin, playerMapper, consumer, triggerDef)
+                    BukkitOccasionalTrigger(space, plugin, playerMapper, consumer, triggerDef)
                 is SpecialItemTriggerDefinition ->
                     BukkitSpecialItemTrigger(space, playerMapper, consumer, triggerDef)
                 else -> {
-                    BingoPlugin.logger.warning("Unknown trigger definition: $triggerDef")
+                    plugin.logger.warning("Unknown trigger definition: $triggerDef")
                     null
                 }
             }

@@ -24,8 +24,10 @@ allprojects {
             implementation(kotlin("stdlib", kotlinVersion))
             implementation(kotlin("stdlib-jdk7", kotlinVersion))
             implementation(kotlin("reflect", kotlinVersion))
+            implementation("io.insert-koin", "koin-core", "3.0.2")
             testImplementation(kotlin("test-junit5"))
             testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+            testImplementation("io.insert-koin", "koin-test", "3.0.2")
             testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
         }
 

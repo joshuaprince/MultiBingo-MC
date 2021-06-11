@@ -12,12 +12,16 @@ import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class WebMessageRelay(
     private val client: WebBackedWebsocketClient
-) : Listener {
+) : Listener, KoinComponent {
+    private val plugin: BingoPlugin by inject()
+
     init {
-        BingoPlugin.server.pluginManager.registerEvents(this, BingoPlugin)
+        plugin.server.pluginManager.registerEvents(this, plugin)
     }
 
     fun destroy() {
@@ -50,6 +54,6 @@ class WebMessageRelay(
 
         val msg = GsonComponentSerializer.gson().deserialize(message.json)
             .hoverEvent(HoverEvent.showText(Component.text("Bingo relayed from ${message.sender}")))
-        BingoPlugin.server.sendMessage(msg)
+        plugin.server.sendMessage(msg)
     }
 }

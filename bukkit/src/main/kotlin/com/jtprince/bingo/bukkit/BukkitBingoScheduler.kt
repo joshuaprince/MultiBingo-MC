@@ -1,14 +1,16 @@
 package com.jtprince.bingo.bukkit
 
 import com.jtprince.bingo.core.scheduler.Scheduler
-import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
+import org.koin.java.KoinJavaComponent.inject
 
 /**
  * Wrapper for the [org.bukkit.scheduler.BukkitScheduler] scheduler for asynchronously dispatching
  * tasks.
  */
-class BukkitBingoScheduler(private val plugin: Plugin): Scheduler {
+class BukkitBingoScheduler : Scheduler {
+    val plugin by inject<BingoPlugin>(BingoPlugin::class.java)
+
     private class BukkitBingoTask(
         private val bukkitTask: BukkitTask
     ): Scheduler.Task {

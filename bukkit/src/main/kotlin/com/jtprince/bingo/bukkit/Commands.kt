@@ -18,9 +18,13 @@ import org.bukkit.GameMode
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import kotlin.random.Random
 
-object Commands {
+object Commands : KoinComponent {
+    private val plugin: BingoPlugin by inject()
+
     fun registerCommands() {
         val shapeArg = MultiLiteralArgument("square", "hexagon")
         val forcedArg = GreedyStringArgument("forcedGoals")
@@ -114,7 +118,7 @@ object Commands {
             })*/
 
         val goalIdsArg = StringArgument("goalId")
-            .overrideSuggestions { _ -> BingoPlugin.triggerDefinitionRegistry.registeredGoalIds.toTypedArray() }
+            .overrideSuggestions { _ -> plugin.triggerDefinitionRegistry.registeredGoalIds.toTypedArray() }
         val debugCmd = CommandAPICommand("debug")
             .withArguments(goalIdsArg)
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->

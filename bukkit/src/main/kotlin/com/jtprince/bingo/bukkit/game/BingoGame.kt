@@ -13,6 +13,8 @@ import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 abstract class BingoGame(
     val creator: CommandSender,
@@ -45,7 +47,9 @@ abstract class BingoGame(
     abstract override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace,
                                           fulfilled: Boolean)
 
-    companion object Manager {
+    companion object Manager : KoinComponent {
+        private val plugin: BingoPlugin by inject()
+
         var currentGame: BingoGame? = null
             private set
 
@@ -63,7 +67,7 @@ abstract class BingoGame(
             val newGame = WebBackedGameProto(creator, settings)
             currentGame = newGame
 
-            BingoPlugin.httpClient.generateBoard(settings) { gameCode ->
+            plugin.httpClient.generateBoard(settings) { gameCode ->
                 val protoGame = currentGame ?: return@generateBoard
 
                 if (gameCode == null) {

@@ -3,16 +3,20 @@ package com.jtprince.bingo.bukkit
 import com.jtprince.bingo.core.webclient.model.WebModelPluginParity
 import org.bukkit.GameRule
 import org.bukkit.World
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.Serializable
+import java.util.logging.Logger
 
 class PluginParity(
     private val gameCode: String,
     private val overworld: World,
     private val sendEcho: (mySettings: Settings) -> Unit
-) {
+) : KoinComponent {
     class Settings(val map: Map<String, Serializable>) : Map<String, Serializable> by map
 
-    private val logger = BingoPlugin.logger
+    private val plugin: BingoPlugin by inject()
+    private val logger: Logger by inject()
 
     private val printedMismatchClientIds = mutableSetOf<String>()
 
@@ -37,7 +41,7 @@ class PluginParity(
         }
 
         val entityTrackingSettings = mutableMapOf<String, Serializable>()
-        val trackingSection = BingoPlugin.server.spigot().spigotConfig.getConfigurationSection(
+        val trackingSection = plugin.server.spigot().spigotConfig.getConfigurationSection(
             "world-settings.default.entity-tracking-range")
         trackingSection?.getValues(false)?.forEach {
             entityTrackingSettings["Entity Tracking Range ${it.key}"] = it.value as Serializable
@@ -46,8 +50,8 @@ class PluginParity(
         val otherSettings = mapOf(
             "Difficulty" to overworld.difficulty.name,
             "Generate Structures" to overworld.canGenerateStructures(),
-            "MultiBingo plugin version" to BingoPlugin.description.version,
-            "View Distance" to BingoPlugin.server.viewDistance,
+            "MultiBingo plugin version" to plugin.description.version,
+            "View Distance" to plugin.server.viewDistance,
         )
 
         return Settings(gameRuleSettings + entityTrackingSettings + otherSettings)

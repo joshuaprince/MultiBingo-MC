@@ -11,6 +11,8 @@ import org.bukkit.Statistic
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Container for applying all the fancy effects when a game starts and ends - countdown sequence,
@@ -19,7 +21,9 @@ import org.bukkit.potion.PotionEffectType
 class GameEffects(
     private val playerManager: PlayerManager,
     private val startSequenceDone: () -> Unit,
-) {
+) : KoinComponent {
+    private val plugin: BingoPlugin by inject()
+
     private val bukkitPlayers = playerManager.bukkitPlayers
     private var countdown = 0
 
@@ -27,7 +31,7 @@ class GameEffects(
     private var countdownTaskId: Int? = null
 
     fun doStartEffects() {
-        BingoPlugin.server.scheduler.scheduleSyncDelayedTask(BingoPlugin) {
+        plugin.server.scheduler.scheduleSyncDelayedTask(plugin) {
             val length = 7 * 20
 
             wipe()
@@ -36,23 +40,23 @@ class GameEffects(
             countdown = 7
             doCountdown()
 
-            startSeqDoneTaskId = BingoPlugin.server.scheduler.scheduleSyncDelayedTask(
-                BingoPlugin, { startSeqDoneTaskId = null ; startSequenceDone() }, length.toLong()
+            startSeqDoneTaskId = plugin.server.scheduler.scheduleSyncDelayedTask(
+                plugin, { startSeqDoneTaskId = null ; startSequenceDone() }, length.toLong()
             )
         }
     }
 
     fun doEndEffects(winner: BingoPlayer?) {
-        BingoPlugin.server.scheduler.scheduleSyncDelayedTask(BingoPlugin) {
+        plugin.server.scheduler.scheduleSyncDelayedTask(plugin) {
             (winner as? BukkitBingoPlayer)?.bukkitPlayers?.forEach {
-                FireworkUtils.spawnSeveralFireworks(BingoPlugin, it)
+                FireworkUtils.spawnSeveralFireworks(plugin, it)
             }
         }
     }
 
     fun destroy() {
-        startSeqDoneTaskId?.also { BingoPlugin.server.scheduler.cancelTask(it) }
-        countdownTaskId?.also { BingoPlugin.server.scheduler.cancelTask(it) }
+        startSeqDoneTaskId?.also { plugin.server.scheduler.cancelTask(it) }
+        countdownTaskId?.also { plugin.server.scheduler.cancelTask(it) }
     }
 
     private fun wipe() {
@@ -70,9 +74,9 @@ class GameEffects(
             }
         }
 
-        val consoleSender = BingoPlugin.server.consoleSender
-        BingoPlugin.server.dispatchCommand(consoleSender, "advancement revoke @a everything")
-        BingoPlugin.server.dispatchCommand(consoleSender, "clear @a")
+        val consoleSender = plugin.server.consoleSender
+        plugin.server.dispatchCommand(consoleSender, "advancement revoke @a everything")
+        plugin.server.dispatchCommand(consoleSender, "clear @a")
     }
 
     private fun teleportToWorld(player: BukkitBingoPlayer, worldSet: WorldSet) {
@@ -90,8 +94,8 @@ class GameEffects(
         }
         this.countdown--
         if (this.countdown > 0) {
-            countdownTaskId = BingoPlugin.server.scheduler.scheduleSyncDelayedTask(
-                BingoPlugin, ::doCountdown, 20
+            countdownTaskId = plugin.server.scheduler.scheduleSyncDelayedTask(
+                plugin, ::doCountdown, 20
             )
         }
     }

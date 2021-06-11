@@ -2,6 +2,6 @@ name: MultiBingo
 version: KT-${version}
 author: Joshua Prince
 website: "bingo.jtprince.com"
-main: com.jtprince.bingo.bukkit.BingoPluginClass
+main: com.jtprince.bingo.bukkit.BingoPlugin
 api-version: "1.13"
 load: STARTUP

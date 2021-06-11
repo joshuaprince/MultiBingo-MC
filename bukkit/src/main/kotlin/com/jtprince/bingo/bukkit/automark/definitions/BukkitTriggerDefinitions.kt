@@ -11,7 +11,6 @@
 
 package com.jtprince.bingo.bukkit.automark.definitions
 
-import com.jtprince.bingo.bukkit.BingoPlugin
 import com.jtprince.bingo.bukkit.automark.ActivationHelpers
 import com.jtprince.bingo.bukkit.automark.ActivationHelpers.FISH_ENTITIES
 import com.jtprince.bingo.bukkit.automark.ActivationHelpers.containsQuantity
@@ -312,7 +311,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
         // Finish by jumping from top to bottom of the world
         for (player in player.bukkitPlayers) {
             if (player.location.y >= 256) {
-                player.setMetadata("lastTickAtHeightLimit", FixedMetadataValue(BingoPlugin, Bukkit.getCurrentTick()))
+                player.setMetadata("lastTickAtHeightLimit", FixedMetadataValue(plugin, Bukkit.getCurrentTick()))
             }
         }
         false
@@ -320,7 +319,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
     eventTrigger<PlayerDeathEvent>("jm_finish_jump_world", revertAfterTicks = 60) {
         // Finish by jumping from top to bottom of the world
         val lastTickAtHeightLimit = event.entity.getMetadata("lastTickAtHeightLimit")
-            .find { it.owningPlugin == BingoPlugin }?.asInt() ?: return@eventTrigger false
+            .find { it.owningPlugin == plugin }?.asInt() ?: return@eventTrigger false
         event.entity.lastDamageCause?.cause == EntityDamageEvent.DamageCause.FALL
                 && event.entity.location.block.getRelative(BlockFace.DOWN).type == Material.BEDROCK
                 && (Bukkit.getCurrentTick() - lastTickAtHeightLimit) < 200
@@ -583,13 +582,13 @@ val BukkitDslTriggers = TriggerDslRegistry {
              *  occasionalTrigger to be considered hanged. */
             if (!entity.isOnGround) {
                 val hangTime = entity.getMetadata("bingoHangTime")
-                    .find { it.owningPlugin == BingoPlugin }?.asInt() ?: 0
-                entity.setMetadata("bingoHangTime", FixedMetadataValue(BingoPlugin, hangTime + 1))
+                    .find { it.owningPlugin == plugin }?.asInt() ?: 0
+                entity.setMetadata("bingoHangTime", FixedMetadataValue(plugin, hangTime + 1))
                 if (hangTime > 2) {
                     return@occasionalTrigger true
                 }
             } else {
-                entity.setMetadata("bingoHangTime", FixedMetadataValue(BingoPlugin, 0))
+                entity.setMetadata("bingoHangTime", FixedMetadataValue(plugin, 0))
             }
         }
         false

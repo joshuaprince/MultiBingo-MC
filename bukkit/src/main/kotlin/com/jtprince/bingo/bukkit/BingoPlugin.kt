@@ -10,17 +10,25 @@ import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIConfig
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
-val BingoPlugin: BingoPluginClass
-    get() = pluginInstance
-private lateinit var pluginInstance: BingoPluginClass
+class BingoPlugin : JavaPlugin() {
+    private companion object {
+        private lateinit var pluginInstance: BingoPlugin
+    }
 
-class BingoPluginClass : JavaPlugin() {
     init {
         pluginInstance = this
     }
 
-    val scheduler = BukkitBingoScheduler(this)
+    /* DI Module */
+    private val bingoPluginModule = module {
+        single { pluginInstance }
+        single { pluginInstance.logger }
+    }
+
+    val scheduler = BukkitBingoScheduler()
     lateinit var httpClient: WebHttpClient
     lateinit var eventRegistry: BukkitEventRegistry
     lateinit var triggerDefinitionRegistry: TriggerDefinition.Registry
@@ -43,6 +51,10 @@ class BingoPluginClass : JavaPlugin() {
     }
 
     override fun onLoad() {
+        startKoin {
+            modules(bingoPluginModule)
+        }
+
         val debug =  BingoConfig.debug
 
         if (debug) {

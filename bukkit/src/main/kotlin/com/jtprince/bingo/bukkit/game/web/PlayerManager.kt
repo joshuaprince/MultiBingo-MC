@@ -20,12 +20,16 @@ import org.bukkit.event.player.PlayerEvent
 import org.bukkit.event.vehicle.VehicleEvent
 import org.bukkit.event.weather.WeatherEvent
 import org.bukkit.event.world.WorldEvent
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.*
 
 /**
  * Single-game container for all players in that game and functionality relating to them.
  */
-class PlayerManager(localPlayers: Collection<BukkitBingoPlayer>) : EventPlayerMapper {
+class PlayerManager(localPlayers: Collection<BukkitBingoPlayer>) : EventPlayerMapper, KoinComponent {
+    private val plugin: BingoPlugin by inject()
+
     /**
      * Bukkit Player UUID -> BingoPlayer that contains that Player
      */
@@ -91,7 +95,7 @@ class PlayerManager(localPlayers: Collection<BukkitBingoPlayer>) : EventPlayerMa
     fun bingoPlayerOrCreateRemote(name: String): BingoPlayer {
         return bingoPlayer(name) ?: run {
             /* Player does not exist. Create a new one. */
-            BingoPlugin.logger.info("Creating new Remote player $name.")
+            plugin.logger.info("Creating new Remote player $name.")
             val newBingoPlayer = RemoteBingoPlayer(name)
             remotePlayers.add(newBingoPlayer)
             newBingoPlayer
@@ -123,7 +127,7 @@ class PlayerManager(localPlayers: Collection<BukkitBingoPlayer>) : EventPlayerMa
      * @param player Player to create worlds for.
      */
     fun prepareWorldSet(gameCode: String, player: BukkitBingoPlayer): WorldSet {
-        val worldSet = BingoPlugin.worldSetManager.createWorldSet(
+        val worldSet = plugin.worldSetManager.createWorldSet(
             worldSetCode = "${gameCode}_${player.slugName()}",
             seed = gameCode
         )
@@ -163,7 +167,7 @@ class PlayerManager(localPlayers: Collection<BukkitBingoPlayer>) : EventPlayerMa
             is VehicleEvent -> bingoPlayer(event.vehicle.world)
             is WeatherEvent -> bingoPlayer(event.world)
             else -> run {
-                BingoPlugin.logger.warning("Received a ${event::class}, but don't know " +
+                plugin.logger.warning("Received a ${event::class}, but don't know " +
                         "how to assign it to a Bingo Player")
                 null
             }

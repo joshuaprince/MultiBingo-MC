@@ -5,8 +5,14 @@ import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.automark.AutoMarkConsumer
 import com.jtprince.bingo.core.automark.AutomatedSpace
 import org.bukkit.Bukkit
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-internal class TimedGoalReverter(private val ticks: Int, val consumer: AutoMarkConsumer) {
+internal class TimedGoalReverter(
+    private val ticks: Int,
+    private val consumer: AutoMarkConsumer
+) : KoinComponent {
+    private val plugin: BingoPlugin by inject()
     private var taskIdMap = mutableMapOf<Pair<BukkitBingoPlayer, Int>, Int>()
 
     fun revertLater(player: BukkitBingoPlayer, space: AutomatedSpace) {
@@ -15,7 +21,7 @@ internal class TimedGoalReverter(private val ticks: Int, val consumer: AutoMarkC
             Bukkit.getScheduler().cancelTask(it)
         }
 
-        taskIdMap[player to space.spaceId] = Bukkit.getScheduler().scheduleSyncDelayedTask(BingoPlugin, {
+        taskIdMap[player to space.spaceId] = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, {
             consumer.receiveAutoMark(player, space, false)
         }, ticks.toLong())
     }

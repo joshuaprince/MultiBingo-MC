@@ -9,15 +9,18 @@ import com.jtprince.bingo.core.automark.AutomatedSpace
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import org.bukkit.event.Event
 import org.bukkit.inventory.PlayerInventory
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class BukkitSpecialItemTrigger internal constructor(
     val space: AutomatedSpace,
     private val playerMapper: EventPlayerMapper,
     private val consumer: AutoMarkConsumer,
     private val triggerDefinition: SpecialItemTriggerDefinition,
-) : AutoMarkTrigger {
+) : AutoMarkTrigger, KoinComponent {
 
-    private val listener = BingoPlugin.eventRegistry
+    private val plugin: BingoPlugin by inject()
+    private val listener = plugin.eventRegistry
     private val revertible = triggerDefinition.revertible
 
     private val listenerRegistryId = listener.registerInventoryChange(

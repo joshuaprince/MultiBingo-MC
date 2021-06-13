@@ -142,7 +142,7 @@ object Commands : KoinComponent {
         root.withSubcommand(spectateCmd)
         //root.withSubcommand(goCmd)  TODO
         root.withSubcommand(goSpawnCmd)
-        if (BingoConfig.debug) {
+        if (plugin.bingoConfig.debug) {
             root.withSubcommand(debugCmd)
             root.withSubcommand(debugCmdVars)
         }

@@ -1,28 +1,17 @@
-package com.jtprince.bingo.bukkit
+package com.jtprince.bingo.core.webclient
 
-import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
+import com.jtprince.bingo.core.player.BingoPlayer
 import org.apache.http.client.utils.URIBuilder
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import java.net.URI
 
-object BingoConfig : KoinComponent {
-    private val plugin: BingoPlugin by inject()
-
-    val debug: Boolean
-        get() = plugin.config.getBoolean("debug", false)
-
-    private val webUrl: String by lazy {
-        plugin.config.getString("web_url") ?: throw NoSuchFieldException("No web_url is configured!")
-    }
-
+class BingoUrlFormatter(private val webUrl: String) {  // TODO: Make internal
     fun boardCreateUrl(): URI {
         val builder = URIBuilder(webUrl)
         builder.setPathSegments("rest", "generate_board")
         return builder.build()
     }
 
-    fun gameUrl(gameCode: String, forPlayer: BukkitBingoPlayer): URI {
+    fun gameUrl(gameCode: String, forPlayer: BingoPlayer): URI {
         val builder = URIBuilder(webUrl)
         builder.setPathSegments("game", gameCode)
         builder.setParameter("name", forPlayer.name)
@@ -34,9 +23,6 @@ object BingoConfig : KoinComponent {
         builder.setPathSegments("ping")
         return builder.build()
     }
-
-    val saveWorlds: Boolean
-        get() = plugin.config.getBoolean("save_worlds", true)
 
     fun websocketUrl(gameCode: String, clientId: String): URI {
         val builder = URIBuilder(webUrl)

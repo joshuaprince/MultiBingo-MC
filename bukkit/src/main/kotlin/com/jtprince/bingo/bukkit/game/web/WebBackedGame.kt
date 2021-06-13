@@ -1,9 +1,12 @@
 package com.jtprince.bingo.bukkit.game.web
 
-import com.jtprince.bingo.bukkit.*
+import com.jtprince.bingo.bukkit.BingoPlugin
+import com.jtprince.bingo.bukkit.BukkitMessages
 import com.jtprince.bingo.bukkit.BukkitMessages.bingoTell
 import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellError
 import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellNotReady
+import com.jtprince.bingo.bukkit.PluginParity
+import com.jtprince.bingo.bukkit.WebMessageRelay
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitAutoMarkTriggerFactory
 import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
@@ -33,10 +36,8 @@ class WebBackedGame(
     private val clientId = "KotlinPlugin${hashCode() % 10000}:" +
             localPlayers.map(BingoPlayer::name).joinToString(",")
     private val websocketClient = WebBackedWebsocketClient(
-        gameCode, clientId,
-        BingoConfig.websocketUrl(gameCode, clientId), this::receiveWebsocketOpened,
-        this::receiveWebsocketMessage, this::receiveFailedConnection,
-        logger, plugin.scheduler
+        clientId, gameCode, plugin.bingoCore.urlFormatter, plugin.scheduler,
+        this::receiveWebsocketOpened, this::receiveWebsocketMessage, this::receiveFailedConnection
     )
     private val messageRelay = WebMessageRelay(websocketClient)
     private var pluginParity: PluginParity? = null
@@ -101,7 +102,7 @@ class WebBackedGame(
             websocketClient.sendPluginParity(true, settings)
         })
 
-        if (BingoConfig.debug) {
+        if (plugin.bingoConfig.debug) {
             for (setting in newPluginParity.getMySettings()) {
                 logger.info("[Parity] ${setting.key} = ${setting.value}")
             }

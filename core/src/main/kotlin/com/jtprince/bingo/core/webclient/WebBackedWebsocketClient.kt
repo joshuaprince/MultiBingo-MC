@@ -6,22 +6,24 @@ import com.jtprince.bingo.core.scheduler.Scheduler
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.framing.CloseFrame
 import org.java_websocket.handshake.ServerHandshake
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.Serializable
-import java.net.URI
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
 class WebBackedWebsocketClient(
-    private val gameCode: String,
     val clientId: String,
-    websocketUrl: URI,  // TODO: Move URL building logic here and remove as a param
+    private val gameCode: String,
+    private val urlFormatter: BingoUrlFormatter,
+    private val scheduler: Scheduler,
     private val onFirstOpen: () -> Unit,
     private val onReceive: (WebsocketRxMessage) -> Unit,
     private val onFailure: () -> Unit,
-    private val logger: Logger, // TODO: DI
-    private val scheduler: Scheduler, // TODO: DI
-) : WebSocketClient(websocketUrl) {
+) : WebSocketClient(urlFormatter.websocketUrl(gameCode, clientId)), KoinComponent {
+    private val logger: Logger by inject()
+
     companion object {
         const val RECONNECT_ATTEMPTS = 10
         const val RECONNECT_SECONDS_BETWEEN_ATTEMPTS = 5
@@ -135,4 +137,6 @@ class WebBackedWebsocketClient(
     fun sendPluginParity(isEcho: Boolean, mySettings: Map<String, Serializable>) {
         send(TxMessagePluginParity(isEcho, mySettings))
     }
+
+
 }

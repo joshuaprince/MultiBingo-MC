@@ -1,6 +1,5 @@
 package com.jtprince.bingo.bukkit.game.web
 
-import com.jtprince.bingo.bukkit.BingoConfig
 import com.jtprince.bingo.bukkit.BingoPlugin
 import com.jtprince.bingo.bukkit.BukkitMessages.bingoTell
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
@@ -145,7 +144,7 @@ class PlayerManager(localPlayers: Collection<BukkitBingoPlayer>) : EventPlayerMa
      */
     fun destroy() {
         for (ws in playerWorldSetMap.values) {
-            ws.manager?.unload(ws, BingoConfig.saveWorlds) { playerInWorldSet ->
+            ws.manager?.unload(ws, plugin.bingoConfig.saveWorlds) { playerInWorldSet ->
                 playerInWorldSet.bingoTell("The game is over, returning you to the spawn world.")
             }
         }

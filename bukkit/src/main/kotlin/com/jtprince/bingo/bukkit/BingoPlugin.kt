@@ -2,8 +2,8 @@ package com.jtprince.bingo.bukkit
 
 import com.jtprince.bingo.bukkit.automark.definitions.BukkitDslTriggers
 import com.jtprince.bingo.bukkit.game.BingoGame
+import com.jtprince.bingo.core.BingoCore
 import com.jtprince.bingo.core.automark.TriggerDefinition
-import com.jtprince.bingo.core.webclient.WebHttpClient
 import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
 import com.jtprince.bukkit.worldset.WorldSetManager
 import dev.jorel.commandapi.CommandAPI
@@ -29,7 +29,8 @@ class BingoPlugin : JavaPlugin() {
     }
 
     val scheduler = BukkitBingoScheduler()
-    lateinit var httpClient: WebHttpClient
+    lateinit var bingoConfig: BukkitBingoConfig
+    lateinit var bingoCore: BingoCore
     lateinit var eventRegistry: BukkitEventRegistry
     lateinit var triggerDefinitionRegistry: TriggerDefinition.Registry
     lateinit var worldSetManager: WorldSetManager
@@ -39,15 +40,13 @@ class BingoPlugin : JavaPlugin() {
         Commands.registerCommands()
         saveDefaultConfig()
 
-        httpClient = WebHttpClient(BingoConfig.boardCreateUrl(), BingoConfig.webPingUrl(), logger, scheduler)
+        bingoCore = BingoCore(bingoConfig, scheduler)
         worldSetManager = WorldSetManager(this, "bingo", baseWorld = { Bukkit.getWorlds()[0] })
         eventRegistry = BukkitEventRegistry(this)
 
         triggerDefinitionRegistry = TriggerDefinition.Registry()
         triggerDefinitionRegistry.registerAll(BukkitDslTriggers)
         triggerDefinitionRegistry.registerItemTriggers()
-
-        httpClient.pingBackend()
     }
 
     override fun onLoad() {
@@ -55,7 +54,8 @@ class BingoPlugin : JavaPlugin() {
             modules(bingoPluginModule)
         }
 
-        val debug =  BingoConfig.debug
+        bingoConfig = BukkitBingoConfig(config)
+        val debug =  bingoConfig.debug
 
         if (debug) {
             logger.info("Debug mode is enabled.")
@@ -69,6 +69,6 @@ class BingoPlugin : JavaPlugin() {
     override fun onDisable() {
         BingoGame.destroyCurrentGame(Bukkit.getConsoleSender())
         eventRegistry.unregisterAll()
-        worldSetManager.destroy(BingoConfig.saveWorlds)
+        worldSetManager.destroy(bingoConfig.saveWorlds)
     }
 }

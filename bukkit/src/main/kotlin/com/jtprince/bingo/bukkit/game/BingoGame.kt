@@ -67,7 +67,7 @@ abstract class BingoGame(
             val newGame = WebBackedGameProto(creator, settings)
             currentGame = newGame
 
-            plugin.httpClient.generateBoard(settings) { gameCode ->
+            plugin.bingoCore.httpClient.generateBoard(settings) { gameCode ->
                 val protoGame = currentGame ?: return@generateBoard
 
                 if (gameCode == null) {

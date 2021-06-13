@@ -13,9 +13,13 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Bukkit
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.net.URL
 
-object BukkitMessages {
+object BukkitMessages : KoinComponent {
+    private val plugin: BingoPlugin by inject()
+
     private val COLOR_HEADER: TextColor = NamedTextColor.GOLD
     private val COLOR_TEXT: TextColor = NamedTextColor.AQUA
 
@@ -100,7 +104,7 @@ object BukkitMessages {
     fun bingoAnnounceGameReady(gameCode: String, players: Collection<BukkitBingoPlayer>, starters: Audience) {
         for (p in players) {
             // Game link for this specific player
-            val url = BingoConfig.gameUrl(gameCode, p)
+            val url = plugin.bingoCore.urlFormatter.gameUrl(gameCode, p)
             val component = Component.empty()
                 .append(
                     Component.text("[Open Board]")

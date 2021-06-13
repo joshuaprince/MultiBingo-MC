@@ -12,16 +12,19 @@ import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClientBuilder
-import java.net.URI
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class WebHttpClient(
-    private val boardCreateUrl: URI,  // TODO: Determine internally
-    private val pingUrl: URI,  // TODO: Determine internally
-    private val logger: Logger,  // TODO: DI
-    private val scheduler: Scheduler,  // TODO: DI
-) {
+class WebHttpClient internal constructor(
+    private val scheduler: Scheduler,
+    private val urlFormatter: BingoUrlFormatter,
+) : KoinComponent {
+    private val logger: Logger by inject()
+    private val boardCreateUrl = urlFormatter.boardCreateUrl()
+    private val pingUrl = urlFormatter.webPingUrl()
+
     private val httpClient = HttpClientBuilder.create().build()
     private val objectMapper = jacksonObjectMapper()
 

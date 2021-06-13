@@ -104,7 +104,7 @@ object BukkitMessages : KoinComponent {
     fun bingoAnnounceGameReady(gameCode: String, players: Collection<BukkitBingoPlayer>, starters: Audience) {
         for (p in players) {
             // Game link for this specific player
-            val url = plugin.bingoCore.urlFormatter.gameUrl(gameCode, p)
+            val url = plugin.core.urlFormatter.gameUrl(gameCode, p)
             val component = Component.empty()
                 .append(
                     Component.text("[Open Board]")

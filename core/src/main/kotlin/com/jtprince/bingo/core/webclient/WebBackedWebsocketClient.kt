@@ -2,7 +2,7 @@ package com.jtprince.bingo.core.webclient
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.jtprince.bingo.core.scheduler.Scheduler
+import com.jtprince.bingo.core.platform.Scheduler
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.framing.CloseFrame
 import org.java_websocket.handshake.ServerHandshake

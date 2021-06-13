@@ -1,15 +1,14 @@
-package com.jtprince.bingo.bukkit
+package com.jtprince.bingo.bukkit.platform
 
-import com.jtprince.bingo.core.BingoConfig
+import com.jtprince.bingo.core.platform.Config
 import org.bukkit.configuration.file.FileConfiguration
-import org.koin.core.component.KoinComponent
 
 /**
  * Implementation of Bingo configuration provider that uses Bukkit's plugin config YAML.
  */
 class BukkitBingoConfig(
     private val pluginConfig: FileConfiguration
-) : BingoConfig, KoinComponent {
+) : Config {
     override val debug: Boolean
         get() = pluginConfig.getBoolean("debug", false)
 

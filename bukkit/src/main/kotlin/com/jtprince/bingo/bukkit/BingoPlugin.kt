@@ -1,11 +1,8 @@
 package com.jtprince.bingo.bukkit
 
-import com.jtprince.bingo.bukkit.automark.definitions.BukkitDslTriggers
 import com.jtprince.bingo.bukkit.game.BingoGame
+import com.jtprince.bingo.bukkit.platform.BukkitBingoPlatform
 import com.jtprince.bingo.core.BingoCore
-import com.jtprince.bingo.core.automark.TriggerDefinition
-import com.jtprince.bukkit.eventregistry.BukkitEventRegistry
-import com.jtprince.bukkit.worldset.WorldSetManager
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIConfig
 import org.bukkit.Bukkit
@@ -28,25 +25,16 @@ class BingoPlugin : JavaPlugin() {
         single { pluginInstance.logger }
     }
 
-    val scheduler = BukkitBingoScheduler()
-    lateinit var bingoConfig: BukkitBingoConfig
-    lateinit var bingoCore: BingoCore
-    lateinit var eventRegistry: BukkitEventRegistry
-    lateinit var triggerDefinitionRegistry: TriggerDefinition.Registry
-    lateinit var worldSetManager: WorldSetManager
+    val platform = BukkitBingoPlatform(this)
+    val core = BingoCore(platform)
 
     override fun onEnable() {
         CommandAPI.onEnable(this)
         Commands.registerCommands()
         saveDefaultConfig()
 
-        bingoCore = BingoCore(bingoConfig, scheduler)
-        worldSetManager = WorldSetManager(this, "bingo", baseWorld = { Bukkit.getWorlds()[0] })
-        eventRegistry = BukkitEventRegistry(this)
-
-        triggerDefinitionRegistry = TriggerDefinition.Registry()
-        triggerDefinitionRegistry.registerAll(BukkitDslTriggers)
-        triggerDefinitionRegistry.registerItemTriggers()
+        platform.onEnable()
+        core.onEnable()
     }
 
     override fun onLoad() {
@@ -54,9 +42,7 @@ class BingoPlugin : JavaPlugin() {
             modules(bingoPluginModule)
         }
 
-        bingoConfig = BukkitBingoConfig(config)
-        val debug =  bingoConfig.debug
-
+        val debug = platform.config.debug
         if (debug) {
             logger.info("Debug mode is enabled.")
         }
@@ -68,7 +54,6 @@ class BingoPlugin : JavaPlugin() {
 
     override fun onDisable() {
         BingoGame.destroyCurrentGame(Bukkit.getConsoleSender())
-        eventRegistry.unregisterAll()
-        worldSetManager.destroy(bingoConfig.saveWorlds)
+        platform.onDisable()
     }
 }

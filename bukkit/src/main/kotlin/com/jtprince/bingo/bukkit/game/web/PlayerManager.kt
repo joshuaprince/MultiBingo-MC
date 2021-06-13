@@ -126,7 +126,7 @@ class PlayerManager(localPlayers: Collection<BukkitBingoPlayer>) : EventPlayerMa
      * @param player Player to create worlds for.
      */
     fun prepareWorldSet(gameCode: String, player: BukkitBingoPlayer): WorldSet {
-        val worldSet = plugin.worldSetManager.createWorldSet(
+        val worldSet = plugin.platform.worldSetManager.createWorldSet(
             worldSetCode = "${gameCode}_${player.slugName()}",
             seed = gameCode
         )
@@ -144,7 +144,7 @@ class PlayerManager(localPlayers: Collection<BukkitBingoPlayer>) : EventPlayerMa
      */
     fun destroy() {
         for (ws in playerWorldSetMap.values) {
-            ws.manager?.unload(ws, plugin.bingoConfig.saveWorlds) { playerInWorldSet ->
+            ws.manager?.unload(ws, plugin.platform.config.saveWorlds) { playerInWorldSet ->
                 playerInWorldSet.bingoTell("The game is over, returning you to the spawn world.")
             }
         }

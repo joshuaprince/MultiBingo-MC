@@ -3,7 +3,7 @@ package com.jtprince.bingo.core.webclient
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.jtprince.bingo.core.scheduler.Scheduler
+import com.jtprince.bingo.core.platform.Scheduler
 import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import org.apache.http.HttpStatus
 import org.apache.http.client.HttpResponseException

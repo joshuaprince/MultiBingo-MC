@@ -36,7 +36,7 @@ class WebBackedGame(
     private val clientId = "KotlinPlugin${hashCode() % 10000}:" +
             localPlayers.map(BingoPlayer::name).joinToString(",")
     private val websocketClient = WebBackedWebsocketClient(
-        clientId, gameCode, plugin.bingoCore.urlFormatter, plugin.scheduler,
+        clientId, gameCode, plugin.core.urlFormatter, plugin.platform.scheduler,
         this::receiveWebsocketOpened, this::receiveWebsocketMessage, this::receiveFailedConnection
     )
     private val messageRelay = WebMessageRelay(websocketClient)
@@ -102,7 +102,7 @@ class WebBackedGame(
             websocketClient.sendPluginParity(true, settings)
         })
 
-        if (plugin.bingoConfig.debug) {
+        if (plugin.platform.config.debug) {
             for (setting in newPluginParity.getMySettings()) {
                 logger.info("[Parity] ${setting.key} = ${setting.value}")
             }

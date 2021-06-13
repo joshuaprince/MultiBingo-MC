@@ -1,4 +1,4 @@
-package com.jtprince.bingo.core.scheduler
+package com.jtprince.bingo.core.platform
 
 /**
  * An interface for scheduling asynchronous tasks and potentially canceling them.

@@ -118,7 +118,7 @@ object Commands : KoinComponent {
             })*/
 
         val goalIdsArg = StringArgument("goalId")
-            .overrideSuggestions { _ -> plugin.triggerDefinitionRegistry.registeredGoalIds.toTypedArray() }
+            .overrideSuggestions { _ -> plugin.platform.triggerDefinitionRegistry.registeredGoalIds.toTypedArray() }
         val debugCmd = CommandAPICommand("debug")
             .withArguments(goalIdsArg)
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->
@@ -142,7 +142,7 @@ object Commands : KoinComponent {
         root.withSubcommand(spectateCmd)
         //root.withSubcommand(goCmd)  TODO
         root.withSubcommand(goSpawnCmd)
-        if (plugin.bingoConfig.debug) {
+        if (plugin.platform.config.debug) {
             root.withSubcommand(debugCmd)
             root.withSubcommand(debugCmdVars)
         }

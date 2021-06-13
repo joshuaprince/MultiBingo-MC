@@ -27,7 +27,7 @@ class BukkitAutoMarkTriggerFactory(
     ): Collection<AutoMarkTrigger> {
         val ret = mutableSetOf<AutoMarkTrigger>()
 
-        val triggerDefs = plugin.triggerDefinitionRegistry[space.goalId]
+        val triggerDefs = plugin.platform.triggerDefinitionRegistry[space.goalId]
         for (triggerDef in triggerDefs) {
             /* Ensure variables needed for this trigger definition are specified */
             for (neededVar in triggerDef.neededVars) {
@@ -38,9 +38,9 @@ class BukkitAutoMarkTriggerFactory(
 
             val newTrigger = when (triggerDef) {
                 is ItemTriggerYaml.Definition ->
-                    BukkitItemTrigger(space, triggerDef, playerMapper, plugin.eventRegistry, consumer)
+                    BukkitItemTrigger(space, triggerDef, playerMapper, plugin.platform.eventRegistry, consumer)
                 is EventTriggerDefinition<*> ->
-                    BukkitEventTrigger(space, plugin.eventRegistry, playerMapper, consumer, triggerDef)
+                    BukkitEventTrigger(space, plugin.platform.eventRegistry, playerMapper, consumer, triggerDef)
                 is OccasionalTriggerDefinition ->
                     BukkitOccasionalTrigger(space, plugin, playerMapper, consumer, triggerDef)
                 is SpecialItemTriggerDefinition ->

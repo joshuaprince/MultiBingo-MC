@@ -20,7 +20,7 @@ class BukkitSpecialItemTrigger internal constructor(
 ) : AutoMarkTrigger, KoinComponent {
 
     private val plugin: BingoPlugin by inject()
-    private val listener = plugin.eventRegistry
+    private val listener = plugin.platform.eventRegistry
     private val revertible = triggerDefinition.revertible
 
     private val listenerRegistryId = listener.registerInventoryChange(

@@ -13,6 +13,8 @@ import org.bukkit.plugin.Plugin
  * worlds to be created, allows for the creation of "World Sets" - combinations of linked Overworld,
  * Nether, and End worlds.
  *
+ * You must call [onEnable] during or after the Bukkit plugin's onEnable for listeners to work.
+ *
  * @param plugin Plugin instance used to create Event handlers.
  * @param prefix String that will be appended to the names of all Worlds created by this manager.
  * @param baseWorld Function to get the World that will be used to derive basic settings for
@@ -36,7 +38,7 @@ class WorldSetManager(
 
     private val listener: WorldSetManagerListener = WorldSetManagerListener(this)
 
-    init {
+    fun onEnable() {
         plugin.server.pluginManager.registerEvents(listener, plugin)
     }
 

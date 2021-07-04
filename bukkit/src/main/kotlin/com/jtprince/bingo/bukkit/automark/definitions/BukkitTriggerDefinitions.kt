@@ -409,6 +409,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
     eventTrigger<StructureGrowEvent>("jm_grow_mushroom") {
         // Grow a huge mushroom
         event.species in ActivationHelpers.MUSHROOMS
+                && event.blocks.size > 1  // If unsuccessful, `blocks` contains only the mushroom
     }
 
     eventTrigger<BlockPlaceEvent>("jm_ice_magma") {

@@ -45,7 +45,7 @@ class BukkitSpecialItemTrigger internal constructor(
         val satisfied = satisfiedBy(player.bukkitInventories)
 
         if (revertible || satisfied) {
-            consumer.receiveAutoMark(player, space, satisfied)
+            consumer.receiveAutoMark(AutoMarkConsumer.Activation(player, space, satisfied))
         }
     }
 }

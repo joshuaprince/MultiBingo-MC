@@ -43,7 +43,7 @@ class BukkitEventTrigger<EventType : Event> internal constructor(
 
         /* Event triggers are never revertible. */
         if (satisfied) {
-            consumer.receiveAutoMark(player, space, satisfied)
+            consumer.receiveAutoMark(AutoMarkConsumer.Activation(player, space, satisfied))
             timedReverter?.revertLater(player, space)
         }
     }

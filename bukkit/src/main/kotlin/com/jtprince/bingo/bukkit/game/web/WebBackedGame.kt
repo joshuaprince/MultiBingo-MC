@@ -9,10 +9,9 @@ import com.jtprince.bingo.bukkit.PluginParity
 import com.jtprince.bingo.bukkit.WebMessageRelay
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitAutoMarkTriggerFactory
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
-import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bingo.core.automark.AutoMarkConsumer
 import com.jtprince.bingo.core.game.BingoGame
 import com.jtprince.bingo.core.player.BingoPlayer
-import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bingo.core.webclient.WebBackedWebsocketClient
 import com.jtprince.bingo.core.webclient.WebsocketRxMessage
 import com.jtprince.bingo.core.webclient.model.WebModelBoard
@@ -152,9 +151,10 @@ class WebBackedGame(
         websocketClient.retry()
     }
 
-    override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
+    override fun receiveAutoMark(activation: AutoMarkConsumer.Activation) {
         if (state != State.RUNNING) return
 
+        val space = activation.space
         if (space !is WebBackedSpace) {
             logger.severe(
                 "Got auto-mark for space of type ${space::class}, " +
@@ -165,10 +165,10 @@ class WebBackedGame(
 
         /* This callback is not filtered, and may be called after every time the player completes
          * the goal. We should filter to ensure no excessive backend requests. */
-        val cache = playerBoardCache[player] ?: return
-        val newMarking = cache.canSendMarking(space.spaceId, space.goalType, fulfilled) ?: return
+        val cache = playerBoardCache[activation.player] ?: return
+        val newMarking = cache.canSendMarking(space.spaceId, space.goalType, activation.fulfilled) ?: return
 
-        websocketClient.sendMarkSpace(player.name, space.spaceId, newMarking.value)
+        websocketClient.sendMarkSpace(activation.player.name, space.spaceId, newMarking.value)
     }
 
     private fun receiveWebsocketOpened() {

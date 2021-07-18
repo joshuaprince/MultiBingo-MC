@@ -41,7 +41,7 @@ class BukkitOccasionalTrigger internal constructor(
 
             /* Occasional triggers are never revertible. */
             if (satisfied) {
-                consumer.receiveAutoMark(player, space, true)
+                consumer.receiveAutoMark(AutoMarkConsumer.Activation(player, space, true))
                 timedReverter?.revertLater(player, space)
             }
         }

@@ -22,7 +22,7 @@ internal class TimedGoalReverter(
         }
 
         taskIdMap[player to space.spaceId] = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, {
-            consumer.receiveAutoMark(player, space, false)
+            consumer.receiveAutoMark(AutoMarkConsumer.Activation(player, space, false))
         }, ticks.toLong())
     }
 

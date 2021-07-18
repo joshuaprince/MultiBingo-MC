@@ -2,9 +2,8 @@ package com.jtprince.bingo.bukkit.game.web
 
 import com.jtprince.bingo.bukkit.BukkitMessages
 import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellNotReady
-import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bingo.core.automark.AutoMarkConsumer
 import com.jtprince.bingo.core.game.BingoGame
-import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import net.kyori.adventure.audience.Audience
 import org.koin.core.component.KoinComponent
@@ -35,9 +34,9 @@ class WebBackedGameProto(
         // Nothing to do.
     }
 
-    override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
+    override fun receiveAutoMark(activation: AutoMarkConsumer.Activation) {
         logger.severe(
-            "Received an automarking for ${player.name} during a Proto Game... " +
+            "Received an automarking for ${activation.player.name} during a Proto Game... " +
                     "that shouldn't be possible, nag the developer."
         )
     }

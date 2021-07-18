@@ -6,9 +6,8 @@ import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellError
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.SetVariables
-import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bingo.core.automark.AutoMarkConsumer
 import com.jtprince.bingo.core.game.BingoGame
-import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
 import net.kyori.adventure.audience.Audience
 import org.bukkit.event.Event
@@ -45,11 +44,11 @@ class DebugGame(
         sender?.bingoTell("Debug Game destroyed.")
     }
 
-    override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace, fulfilled: Boolean) {
-        if (fulfilled) {
-            player.bingoTell("You have activated ${space.text}.")
+    override fun receiveAutoMark(activation: AutoMarkConsumer.Activation) {
+        if (activation.fulfilled) {
+            activation.player.bingoTell("You have activated ${space.text}.")
         } else {
-            player.bingoTellError("You have reverted ${space.text}.")
+            activation.player.bingoTellError("You have reverted ${space.text}.")
         }
     }
 

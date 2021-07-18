@@ -1,8 +1,6 @@
 package com.jtprince.bingo.core.game
 
 import com.jtprince.bingo.core.automark.AutoMarkConsumer
-import com.jtprince.bingo.core.automark.AutomatedSpace
-import com.jtprince.bingo.core.player.LocalBingoPlayer
 import net.kyori.adventure.audience.Audience
 
 abstract class BingoGame(
@@ -33,6 +31,5 @@ abstract class BingoGame(
     abstract fun signalEnd(sender: Audience?)
     protected abstract fun signalDestroy(sender: Audience?)
 
-    abstract override fun receiveAutoMark(player: LocalBingoPlayer, space: AutomatedSpace,
-                                          fulfilled: Boolean)
+    abstract override fun receiveAutoMark(activation: AutoMarkConsumer.Activation)
 }

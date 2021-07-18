@@ -118,7 +118,9 @@ object Commands : KoinComponent {
             })*/
 
         val goalIdsArg = StringArgument("goalId")
-            .overrideSuggestions { _ -> plugin.platform.triggerDefinitionRegistry.registeredGoalIds.toTypedArray() }
+        goalIdsArg.replaceSuggestions {
+            plugin.platform.triggerDefinitionRegistry.registeredGoalIds.toTypedArray()
+        }
         val debugCmd = CommandAPICommand("debug")
             .withArguments(goalIdsArg)
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->

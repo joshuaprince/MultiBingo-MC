@@ -48,7 +48,7 @@ class BingoPlugin : JavaPlugin() {
         }
 
         val cfg = CommandAPIConfig()
-        cfg.verboseOutput = debug
+        cfg.verboseOutput(debug)
         CommandAPI.onLoad(cfg)
     }
 

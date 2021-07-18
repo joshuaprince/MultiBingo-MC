@@ -22,7 +22,7 @@ dependencies {
 
     implementation("org.apache.httpcomponents", "httpclient", "4.5.13")  // TODO remove
     implementation("org.java-websocket", "Java-WebSocket", "1.5.2")  // TODO remove
-    implementation("dev.jorel.CommandAPI", "commandapi-shade", "5.12")
+    implementation("dev.jorel.CommandAPI", "commandapi-shade", "6.1.0")
     implementation("com.fasterxml.jackson.core", "jackson-core", jacksonVersion)  // TODO remove
     implementation("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", jacksonVersion)  // TODO remove
     implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", jacksonVersion)  // TODO remove

@@ -75,8 +75,6 @@ class WebBackedGame(
         websocketClient.sendRevealBoard()
     }
 
-    private var winner: BingoPlayer? = null
-
     init {
         websocketClient.connect()
         generateWorlds()

@@ -27,7 +27,7 @@ object BukkitMessages : KoinComponent {
         .color(COLOR_HEADER).decoration(TextDecoration.BOLD, true)
 
     private fun Component.withBingoHeader(): Component {
-        val gameCode = GameManager.currentGame?.gameCode
+        val gameCode = GameManager.currentGame?.name
         var builder = Component.empty().color(COLOR_TEXT)
         builder = if (gameCode != null) {
             builder.append(HEADER.hoverEvent(HoverEvent.showText(Component.text(

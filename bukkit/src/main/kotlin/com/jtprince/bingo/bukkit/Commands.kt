@@ -5,7 +5,7 @@ import com.jtprince.bingo.bukkit.game.GameManager
 import com.jtprince.bingo.bukkit.game.web.WebBackedGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.automark.MissingVariableException
-import com.jtprince.bingo.core.game.BingoGame
+import com.jtprince.bingo.core.game.StatefulGame
 import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.GreedyStringArgument
@@ -162,12 +162,22 @@ object Commands : KoinComponent {
             return
         }
 
+        if (game !is StatefulGame) {
+            sender.bingoTellError("${game.name} is not a type of game that can be started.")
+            return
+        }
+
         game.signalStart(sender)
     }
 
     private fun commandEnd(sender: CommandSender) {
         val game = GameManager.currentGame ?: run {
             sender.bingoTellError("No game is running!")
+            return
+        }
+
+        if (game !is StatefulGame) {
+            sender.bingoTellError("${game.name} is not a type of game that can be ended.")
             return
         }
 
@@ -188,7 +198,8 @@ object Commands : KoinComponent {
     }
 
     private fun commandSpectate(sender: Player) {
-        if (GameManager.currentGame?.state != BingoGame.State.DONE) {
+        val game = GameManager.currentGame
+        if (game !is StatefulGame || !game.canSpectate()) {
             sender.bingoTellError("You can only spectate your world after a game is over.")
             return
         }

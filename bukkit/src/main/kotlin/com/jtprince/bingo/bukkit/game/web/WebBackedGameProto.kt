@@ -1,7 +1,5 @@
 package com.jtprince.bingo.bukkit.game.web
 
-import com.jtprince.bingo.bukkit.BukkitMessages
-import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellNotReady
 import com.jtprince.bingo.core.automark.AutoMarkConsumer
 import com.jtprince.bingo.core.game.BingoGame
 import com.jtprince.bingo.core.webclient.model.WebGameSettings
@@ -14,23 +12,13 @@ import java.util.logging.Logger
  * A Bingo Game that does not yet have a WebSocket connection, because it is still being created.
  */
 class WebBackedGameProto(
-    creator: Audience,
+    override val creator: Audience,
     val settings: WebGameSettings,
-) : BingoGame(creator, "CreatingGame"), KoinComponent {
+) : BingoGame, KoinComponent {
+    override val name: String = "Game Generating..."
     private val logger: Logger by inject()
 
-    override var state: State = State.BOARD_GENERATING
-
-    override fun signalStart(sender: Audience?) {
-        sender?.bingoTellNotReady()
-    }
-
-    override fun signalEnd(sender: Audience?) {
-        state = State.DONE
-        BukkitMessages.bingoAnnounceEnd(null)
-    }
-
-    override fun signalDestroy(sender: Audience?) {
+    override fun destroy(sender: Audience?) {
         // Nothing to do.
     }
 

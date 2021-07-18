@@ -11,6 +11,7 @@ import com.jtprince.bingo.bukkit.automark.trigger.BukkitAutoMarkTriggerFactory
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.automark.AutoMarkConsumer
 import com.jtprince.bingo.core.game.BingoGame
+import com.jtprince.bingo.core.game.StatefulGame
 import com.jtprince.bingo.core.player.BingoPlayer
 import com.jtprince.bingo.core.webclient.WebBackedWebsocketClient
 import com.jtprince.bingo.core.webclient.WebsocketRxMessage
@@ -24,31 +25,50 @@ import org.koin.core.component.inject
 import java.util.logging.Logger
 
 class WebBackedGame(
-    creator: Audience,
-    gameCode: String,
+    override val creator: Audience,
+    private val gameCode: String,
     localPlayers: Collection<BukkitBingoPlayer>
-) : BingoGame(creator, gameCode), KoinComponent {
+) : BingoGame, StatefulGame, KoinComponent {
+
+    /* Game Identification */
+    override val name: String
+        get() = gameCode
+    private val clientId = "KotlinPlugin${hashCode() % 10000}:" +
+            localPlayers.map(BingoPlayer::name).joinToString(",")
+
+    /* Game State Machine */
+    enum class State {
+        BOARD_GENERATING,
+        WAITING_FOR_WEBSOCKET,
+        WORLDS_GENERATING,
+        READY,
+        COUNTING_DOWN,
+        RUNNING,
+        DONE,
+        FAILED,
+        DESTROYING
+    }
+    var state: State = State.WAITING_FOR_WEBSOCKET
+    /* Both of the following must be ready for the game to be put in the "READY" state */
+    private var websocketReady = false
+    private var worldsReady = false
+
+    /* Library (Injected) Classes */
     private val plugin: BingoPlugin by inject()
     private val logger: Logger by inject()
 
-    override var state: State = State.WAITING_FOR_WEBSOCKET
-    private val clientId = "KotlinPlugin${hashCode() % 10000}:" +
-            localPlayers.map(BingoPlayer::name).joinToString(",")
+    /* Composed Classes */
     private val websocketClient = WebBackedWebsocketClient(
         clientId, gameCode, plugin.core.urlFormatter, plugin.platform.scheduler,
         this::receiveWebsocketOpened, this::receiveWebsocketMessage, this::receiveFailedConnection
     )
     private val messageRelay = WebMessageRelay(websocketClient)
     private var pluginParity: PluginParity? = null
+    val playerManager = PlayerManager(localPlayers)
 
     private val spaces = mutableMapOf<Int, WebBackedSpace>()
-    val playerManager = PlayerManager(localPlayers)
     private val playerBoardCache = localPlayers.associateWith(::PlayerBoardCache)
     private var triggerFactory = BukkitAutoMarkTriggerFactory(playerManager)
-
-    /* Both of the following must be ready for the game to be put in the "READY" state */
-    private var websocketReady = false
-    private var worldsReady = false
 
     private val startEffects = GameEffects(playerManager) {
         state = State.RUNNING
@@ -130,7 +150,12 @@ class WebBackedGame(
         websocketClient.sendEndGame()
     }
 
-    override fun signalDestroy(sender: Audience?) {
+    override fun canSpectate(): Boolean {
+        return state == State.DONE
+    }
+
+    override fun destroy(sender: Audience?) {
+        // TODO: Consider moving sender notification out of this
         for (space in spaces.values) {
             space.destroy()
         }

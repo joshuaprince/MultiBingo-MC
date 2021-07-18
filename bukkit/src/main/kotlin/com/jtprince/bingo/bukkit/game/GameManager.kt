@@ -24,7 +24,7 @@ object GameManager : KoinComponent {
             sender.bingoTellError("No game to destroy!")
             return
         }
-        currentGame?.destroyCurrentGame(sender)
+        currentGame?.destroy(sender)
         currentGame = null
     }
 
@@ -40,15 +40,15 @@ object GameManager : KoinComponent {
                 creator.bingoTellError(
                     "Board generation failed. Check the server log for errors."
                 )
-                protoGame.state = BingoGame.State.FAILED
+                // protoGame.state = BingoGame.State.FAILED TODO
                 return@generateBoard
             }
 
-            if (protoGame.state == BingoGame.State.BOARD_GENERATING) {
+            // if (protoGame.state == BingoGame.State.BOARD_GENERATING) { TODO
                 // Only move to the WebBackedGame if nothing else changed in the meantime.
                 val bingoPlayers = BukkitBingoPlayerFactory.createPlayers()
                 currentGame = WebBackedGame(creator, gameCode, bingoPlayers)
-            }
+            // }
         }
     }
 

@@ -17,12 +17,12 @@ import org.bukkit.event.Event
  * Does not communicate with the web backend.
  */
 class DebugGame(
-    creator: Audience,
+    override val creator: Audience,
     val players: Collection<BukkitBingoPlayer>,
-    val goalId: String,
+    goalId: String,
     variables: SetVariables,
-) : BingoGame(creator, "DebugGame"), EventPlayerMapper {
-    override var state: State = State.RUNNING
+) : BingoGame, EventPlayerMapper {
+    override val name: String = "Debug Game ($goalId)"
     override val localPlayers = players
 
     val space = DebugSpace(this, goalId, variables)
@@ -31,15 +31,7 @@ class DebugGame(
         BukkitMessages.bingoAnnounce("Now debugging goal $goalId.")
     }
 
-    override fun signalStart(sender: Audience?) {
-        sender?.bingoTell("Debug game is active; no need to start it.")
-    }
-
-    override fun signalEnd(sender: Audience?) {
-        signalDestroy(sender)
-    }
-
-    override fun signalDestroy(sender: Audience?) {
+    override fun destroy(sender: Audience?) {
         space.destroy()
         sender?.bingoTell("Debug Game destroyed.")
     }

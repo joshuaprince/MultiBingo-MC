@@ -4,14 +4,13 @@ import com.jtprince.bingo.bukkit.BukkitMessages
 import com.jtprince.bingo.bukkit.BukkitMessages.bingoTell
 import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellError
 import com.jtprince.bingo.bukkit.automark.EventPlayerMapper
-import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.SetVariables
 import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bingo.core.game.BingoGame
 import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bukkit.worldset.WorldSet
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
+import net.kyori.adventure.audience.Audience
 import org.bukkit.event.Event
 
 /**
@@ -19,7 +18,7 @@ import org.bukkit.event.Event
  * Does not communicate with the web backend.
  */
 class DebugGame(
-    creator: Player,
+    creator: Audience,
     val players: Collection<BukkitBingoPlayer>,
     val goalId: String,
     variables: SetVariables,
@@ -33,15 +32,15 @@ class DebugGame(
         BukkitMessages.bingoAnnounce("Now debugging goal $goalId.")
     }
 
-    override fun signalStart(sender: CommandSender?) {
+    override fun signalStart(sender: Audience?) {
         sender?.bingoTell("Debug game is active; no need to start it.")
     }
 
-    override fun signalEnd(sender: CommandSender?) {
+    override fun signalEnd(sender: Audience?) {
         signalDestroy(sender)
     }
 
-    override fun signalDestroy(sender: CommandSender?) {
+    override fun signalDestroy(sender: Audience?) {
         space.destroy()
         sender?.bingoTell("Debug Game destroyed.")
     }

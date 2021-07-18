@@ -8,9 +8,9 @@ import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellNotReady
 import com.jtprince.bingo.bukkit.PluginParity
 import com.jtprince.bingo.bukkit.WebMessageRelay
 import com.jtprince.bingo.bukkit.automark.trigger.BukkitAutoMarkTriggerFactory
-import com.jtprince.bingo.bukkit.game.BingoGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.automark.AutomatedSpace
+import com.jtprince.bingo.core.game.BingoGame
 import com.jtprince.bingo.core.player.BingoPlayer
 import com.jtprince.bingo.core.player.LocalBingoPlayer
 import com.jtprince.bingo.core.webclient.WebBackedWebsocketClient
@@ -18,14 +18,14 @@ import com.jtprince.bingo.core.webclient.WebsocketRxMessage
 import com.jtprince.bingo.core.webclient.model.WebModelBoard
 import com.jtprince.bingo.core.webclient.model.WebModelGameState
 import com.jtprince.bingo.core.webclient.model.WebModelPlayerBoard
+import net.kyori.adventure.audience.Audience
 import org.bukkit.World
-import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.logging.Logger
 
 class WebBackedGame(
-    creator: CommandSender,
+    creator: Audience,
     gameCode: String,
     localPlayers: Collection<BukkitBingoPlayer>
 ) : BingoGame(creator, gameCode), KoinComponent {
@@ -113,7 +113,7 @@ class WebBackedGame(
         pluginParity = newPluginParity
     }
 
-    override fun signalStart(sender: CommandSender?) {
+    override fun signalStart(sender: Audience?) {
         if (state != State.READY) {
             sender?.bingoTellNotReady()
             return
@@ -122,7 +122,7 @@ class WebBackedGame(
         websocketClient.sendStartGame()
     }
 
-    override fun signalEnd(sender: CommandSender?) {
+    override fun signalEnd(sender: Audience?) {
         if (state <= State.READY) {
             sender?.bingoTellError("The game is not running!")
             return
@@ -131,7 +131,7 @@ class WebBackedGame(
         websocketClient.sendEndGame()
     }
 
-    override fun signalDestroy(sender: CommandSender?) {
+    override fun signalDestroy(sender: Audience?) {
         for (space in spaces.values) {
             space.destroy()
         }
@@ -142,7 +142,7 @@ class WebBackedGame(
         sender?.bingoTell("Game destroyed.")
     }
 
-    fun signalRetry(sender: CommandSender?) {
+    fun signalRetry(sender: Audience?) {
         if (state != State.FAILED) {
             sender?.bingoTellError("You can only retry a connection after a connection error.")
             return

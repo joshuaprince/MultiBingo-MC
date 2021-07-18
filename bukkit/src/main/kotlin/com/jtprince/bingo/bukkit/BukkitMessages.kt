@@ -1,6 +1,6 @@
 package com.jtprince.bingo.bukkit
 
-import com.jtprince.bingo.bukkit.game.BingoGame
+import com.jtprince.bingo.bukkit.game.GameManager
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayerTeam
 import com.jtprince.bingo.core.player.BingoPlayer
@@ -27,7 +27,7 @@ object BukkitMessages : KoinComponent {
         .color(COLOR_HEADER).decoration(TextDecoration.BOLD, true)
 
     private fun Component.withBingoHeader(): Component {
-        val gameCode = BingoGame.currentGame?.gameCode
+        val gameCode = GameManager.currentGame?.gameCode
         var builder = Component.empty().color(COLOR_TEXT)
         builder = if (gameCode != null) {
             builder.append(HEADER.hoverEvent(HoverEvent.showText(Component.text(

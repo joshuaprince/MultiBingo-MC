@@ -1,10 +1,11 @@
 package com.jtprince.bingo.bukkit
 
 import com.jtprince.bingo.bukkit.BukkitMessages.bingoTellError
-import com.jtprince.bingo.bukkit.game.BingoGame
+import com.jtprince.bingo.bukkit.game.GameManager
 import com.jtprince.bingo.bukkit.game.web.WebBackedGame
 import com.jtprince.bingo.bukkit.player.BukkitBingoPlayer
 import com.jtprince.bingo.core.automark.MissingVariableException
+import com.jtprince.bingo.core.game.BingoGame
 import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.GreedyStringArgument
@@ -152,11 +153,11 @@ object Commands : KoinComponent {
     }
 
     private fun commandPrepare(sender: CommandSender, settings: WebGameSettings) {
-        BingoGame.prepareNewWebGame(sender, settings)
+        GameManager.prepareNewWebGame(sender, settings)
     }
 
     private fun commandStart(sender: CommandSender) {
-        val game = BingoGame.currentGame ?: run {
+        val game = GameManager.currentGame ?: run {
             sender.bingoTellError("No game is prepared! Use /bingo prepare")
             return
         }
@@ -165,7 +166,7 @@ object Commands : KoinComponent {
     }
 
     private fun commandEnd(sender: CommandSender) {
-        val game = BingoGame.currentGame ?: run {
+        val game = GameManager.currentGame ?: run {
             sender.bingoTellError("No game is running!")
             return
         }
@@ -175,19 +176,19 @@ object Commands : KoinComponent {
 
     private fun commandDestroy(sender: CommandSender) {
         /* Must call the Manager function directly so currentGame can be set to null */
-        BingoGame.destroyCurrentGame(sender, true)
+        GameManager.destroyCurrentGame(sender, true)
     }
 
     private fun commandRetry(sender: CommandSender) {
-        if (BingoGame.currentGame !is WebBackedGame) {
+        if (GameManager.currentGame !is WebBackedGame) {
             sender.bingoTellError("No game to retry connecting to!")
             return
         }
-        (BingoGame.currentGame as WebBackedGame).signalRetry(sender)
+        (GameManager.currentGame as WebBackedGame).signalRetry(sender)
     }
 
     private fun commandSpectate(sender: Player) {
-        if (BingoGame.currentGame?.state != BingoGame.State.DONE) {
+        if (GameManager.currentGame?.state != BingoGame.State.DONE) {
             sender.bingoTellError("You can only spectate your world after a game is over.")
             return
         }
@@ -203,7 +204,7 @@ object Commands : KoinComponent {
         if (destination == null) {
             sender.teleport(Bukkit.getWorlds()[0].spawnLocation)
         } else {
-            val game = BingoGame.currentGame as? WebBackedGame?
+            val game = GameManager.currentGame as? WebBackedGame?
             val loc = game?.playerManager?.worldSet(destination)?.world(World.Environment.NORMAL)?.spawnLocation
 
             if (loc == null) {
@@ -226,7 +227,7 @@ object Commands : KoinComponent {
         val goalId = args[0]
 
         try {
-            BingoGame.prepareDebugGame(sender, goalId, vars.toMap())
+            GameManager.prepareDebugGame(sender, goalId, vars.toMap())
         } catch (ex: MissingVariableException) {
             val randomNum = Random.nextInt(10) + 1
             sender.bingoTellError(

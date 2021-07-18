@@ -1,6 +1,6 @@
 package com.jtprince.bingo.bukkit
 
-import com.jtprince.bingo.bukkit.game.BingoGame
+import com.jtprince.bingo.bukkit.game.GameManager
 import com.jtprince.bingo.bukkit.platform.BukkitBingoPlatform
 import com.jtprince.bingo.core.BingoCore
 import dev.jorel.commandapi.CommandAPI
@@ -53,7 +53,7 @@ class BingoPlugin : JavaPlugin() {
     }
 
     override fun onDisable() {
-        BingoGame.destroyCurrentGame(Bukkit.getConsoleSender())
+        GameManager.destroyCurrentGame(Bukkit.getConsoleSender())
         platform.onDisable()
     }
 }

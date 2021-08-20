@@ -169,6 +169,6 @@ internal class SpecialItemTriggerDefinition(
         trigger: BukkitSpecialItemTrigger,
     ) {
         val vars = trigger.space.variables
-        val allItems = inventories.flatten()
+        val allItems = inventories.flatten().filterNotNull()
     }
 }

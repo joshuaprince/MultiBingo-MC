@@ -116,7 +116,7 @@ object ActivationHelpers {
      */
     fun Inventory.containsQuantity(quantity: Int): Boolean {
         var q = 0
-        for (i in contents) {
+        for (i in contents.orEmpty()) {
             if (i != null) {
                 q += i.amount
             }

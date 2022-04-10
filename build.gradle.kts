@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.21"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("com.palantir.git-version") version "0.12.3"
+    kotlin("jvm") version "1.6.20"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.palantir.git-version") version "0.15.0"
 }
 
 val gitVersion: groovy.lang.Closure<String> by extra
@@ -20,8 +20,8 @@ allprojects {
 
     plugins.withType<KotlinPluginWrapper>().whenObjectAdded {
         dependencies {
-            val kotlinVersion = "1.5.21"
-            val koinVersion = "3.1.2"
+            val kotlinVersion = "1.6.20"
+            val koinVersion = "3.1.6"
             implementation(kotlin("stdlib", kotlinVersion))
             implementation(kotlin("stdlib-jdk7", kotlinVersion))
             implementation(kotlin("reflect", kotlinVersion))
@@ -33,7 +33,7 @@ allprojects {
         }
 
         tasks.withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = "16"
+            kotlinOptions.jvmTarget = "17"
         }
 
         tasks.withType<ShadowJar> {

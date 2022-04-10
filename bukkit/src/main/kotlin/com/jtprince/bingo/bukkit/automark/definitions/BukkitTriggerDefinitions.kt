@@ -93,8 +93,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
             val types = setOf("leather", "golden", "iron", "chainmail", "diamond", "netherite")
             val counts = types.associateWith { 0 }.toMutableMap()
 
-            @Suppress("UselessCallOnCollection") // Bukkit annotation on `armorContents` is incorrect
-            for (armor in playerInv.armorContents.filterNotNull()) {
+            playerInv.armorContents.orEmpty().filterNotNull().forEach { armor ->
                 var type: String? = null
                 for (t in types) {
                     if (armor.type.key.key.contains(t)) {
@@ -113,8 +112,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
         inventories.any { playerInv ->
             val colorsFound = HashSet<Color>()
 
-            @Suppress("UselessCallOnCollection") // Bukkit annotation on `armorContents` is incorrect
-            val leatherArmor = playerInv.armorContents.filterNotNull().filter {
+            val leatherArmor = playerInv.armorContents.orEmpty().filterNotNull().filter {
                 ActivationHelpers.LEATHER_ARMOR.contains(it.type)
             }
 
@@ -176,7 +174,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
     eventTrigger<InventoryCloseEvent>("jm_carpet_llama") {
         // Put a Carpet on a Llama
         event.inventory.holder is Llama
-                && event.inventory.contents.filterNotNull().any {
+                && event.inventory.contents.orEmpty().filterNotNull().any {
             Tag.CARPETS.isTagged(it.type)
         }
     }
@@ -230,7 +228,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
             .filterNot { it.second.isEmpty() }
             .toSet()
 
-        shields.size >= vars["var"] ?: throw MissingVariableException("var")
+        shields.size >= (vars["var"] ?: throw MissingVariableException("var"))
     }
 
     eventTrigger<BlockBreakEvent>("jm_dig_bedrock") {
@@ -310,7 +308,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
     occasionalTrigger("jm_finish_jump_world", ticks = 5) {
         // Finish by jumping from top to bottom of the world
         for (player in player.bukkitPlayers) {
-            if (player.location.y >= 256) {
+            if (player.location.y >= player.world.maxHeight - 2) {
                 player.setMetadata("lastTickAtHeightLimit", FixedMetadataValue(plugin, Bukkit.getCurrentTick()))
             }
         }
@@ -322,7 +320,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
             .find { it.owningPlugin == plugin }?.asInt() ?: return@eventTrigger false
         event.entity.lastDamageCause?.cause == EntityDamageEvent.DamageCause.FALL
                 && event.entity.location.block.getRelative(BlockFace.DOWN).type == Material.BEDROCK
-                && (Bukkit.getCurrentTick() - lastTickAtHeightLimit) < 200
+                && (Bukkit.getCurrentTick() - lastTickAtHeightLimit) < 300
     }
 
     occasionalTrigger("jm_finish_spawnpoint", ticks = 20, revertAfterTicks = 40) {
@@ -333,6 +331,17 @@ val BukkitDslTriggers = TriggerDslRegistry {
             it.inventory.contains(Material.COMPASS)
                     && it.world.environment == World.Environment.NORMAL
                     && it.location.distanceSquared(spawnLocIgnoreY) < 5
+        }
+    }
+
+    occasionalTrigger("jtp18_finish_far_away", vars = vars("var"), ticks = 20, revertAfterTicks = 40) {
+        // Finish $var,000 or more blocks from the world spawn point
+        val distance = vars["var"]?.times(1000) ?: throw MissingVariableException("var")
+        player.bukkitPlayers.any {
+            val spawnLocIgnoreY = it.world.spawnLocation
+            spawnLocIgnoreY.y = it.location.y
+            it.world.environment == World.Environment.NORMAL
+                    && it.location.distanceSquared(spawnLocIgnoreY) >= (distance * distance)
         }
     }
 
@@ -379,6 +388,11 @@ val BukkitDslTriggers = TriggerDslRegistry {
         event.item?.type == Material.CACTUS
                 && event.clickedBlock?.type == Material.FLOWER_POT
                 && event.action == Action.RIGHT_CLICK_BLOCK
+    }
+
+    eventTrigger<EntityDamageEvent>("jtp18_freeze_damage") {
+        // Fall in Powder Snow and take freezing damage
+        event.cause == EntityDamageEvent.DamageCause.FREEZE
     }
 
     eventTrigger<EntityDeathEvent>("jm_get_skeleton_bow") {
@@ -613,6 +627,13 @@ val BukkitDslTriggers = TriggerDslRegistry {
                 && event.action == Action.RIGHT_CLICK_BLOCK
     }
 
+    eventTrigger<EntityChangeBlockEvent>("jtp18_mob_through_dripleaf") {
+        // Make a hostile mob fall through a Big Dripleaf
+        event.entity is Monster
+                && event.block.type == Material.BIG_DRIPLEAF
+                && event.entity.location.getNearbyPlayers(20.0).isNotEmpty()
+    }
+
     eventTrigger<CreatureSpawnEvent>("jm_nether_fish") {
         // Get a fish into the nether
         // Going through a portal still fires this event, so no need for other EventTriggers.
@@ -637,8 +658,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
 
     specialItemTrigger("jm_never_armor_any", revertible = false) {
         // Never use armor
-        @Suppress("UselessCallOnCollection") // Bukkit annotation on `armorContents` is incorrect
-        inventories.any { playerInv -> playerInv.armorContents.filterNotNull().any() }
+        inventories.any { playerInv -> playerInv.armorContents.orEmpty().filterNotNull().any() }
     }
 
     eventTrigger<BlockBreakEvent>("jm_never_axe") {
@@ -665,14 +685,12 @@ val BukkitDslTriggers = TriggerDslRegistry {
 
     specialItemTrigger("jm_never_chestplates", revertible = false) {
         // Never wear chestplates
-        @Suppress("SENSELESS_COMPARISON") // Bukkit annotation on `armorContents` is incorrect
-        inventories.any { playerInv -> playerInv.armorContents[2] != null }
+        inventories.any { playerInv -> playerInv.armorContents?.get(2) != null }
     }
 
     eventTrigger<CraftItemEvent>("jm_never_coal") {
         // Never use coal
-        @Suppress("UselessCallOnCollection") // Bukkit annotation on `matrix` is incorrect
-        event.inventory.matrix.filterNotNull().any { it.type == Material.COAL }
+        event.inventory.matrix.orEmpty().filterNotNull().any { it.type == Material.COAL }
     }
     eventTrigger<FurnaceBurnEvent>("jm_never_coal") {
         // Never use coal
@@ -749,6 +767,12 @@ val BukkitDslTriggers = TriggerDslRegistry {
     eventTrigger<PlayerBedLeaveEvent>("jm_sleep_village") {
         // Sleep in a village
         event.throughNight() && event.player.location.inVillage()
+    }
+
+    eventTrigger<PlayerInteractEvent>("jtp18_spyglass") {
+        // Look through a Spyglass
+        event.item?.type == Material.SPYGLASS
+                && event.action in setOf(Action.RIGHT_CLICK_BLOCK, Action.RIGHT_CLICK_AIR)
     }
 
     eventTrigger<EntityTameEvent>("jtp_tame_cat") {

@@ -413,6 +413,7 @@ item_triggers:
       - minecraft:cookie
       - minecraft:dried_kelp
       - minecraft:enchanted_golden_apple
+      - minecraft:glow_berries
       - minecraft:golden_apple
       - minecraft:golden_carrot
       - minecraft:honey_bottle
@@ -456,6 +457,36 @@ item_triggers:
   jm_firework_star:
     name: minecraft:firework_star
 
+  jtp18_amethyst_shard:
+    name: minecraft:amethyst_shard
+
+  jtp18_flowering_azalea:
+    total: $var
+    name: minecraft:flowering_azalea
+
+  jtp18_copper_blocks:
+    total: $var
+    name:
+      - minecraft:copper_block
+      - minecraft:exposed_copper
+      - minecraft:weathered_copper
+      - minecraft:oxidized_copper
+      - minecraft:cut_copper
+      - minecraft:exposed_cut_copper
+      - minecraft:weathered_cut_copper
+      - minecraft:oxidized_cut_copper
+      - minecraft:waxed_copper_block
+      - minecraft:waxed_exposed_copper
+      - minecraft:waxed_weathered_copper
+      - minecraft:waxed_oxidized_copper
+      - minecraft:waxed_cut_copper
+      - minecraft:waxed_exposed_cut_copper
+      - minecraft:waxed_weathered_cut_copper
+      - minecraft:waxed_oxidized_cut_copper
+
+  jtp18_bucket_axolotl:
+    name: minecraft:axolotl_bucket
+
   jm_edible_items_hard:
     unique: $var
     name:
@@ -469,6 +500,7 @@ item_triggers:
       - minecraft:cookie
       - minecraft:dried_kelp
       - minecraft:enchanted_golden_apple
+      - minecraft:glow_berries
       - minecraft:golden_apple
       - minecraft:golden_carrot
       - minecraft:honey_bottle
@@ -659,7 +691,9 @@ item_triggers:
 
   jm_item_frames:
     total: $var
-    name: minecraft:item_frame
+    name:
+      - minecraft:item_frame
+      - minecraft:glow_item_frame
 
   jm_diamond_items:
     unique: $var
@@ -729,3 +763,23 @@ item_triggers:
 
   jm_cookie:
     name: minecraft:cookie
+
+  jtp18_copper_blocks_hard:
+    total: $var
+    name:
+      - minecraft:copper_block
+      - minecraft:exposed_copper
+      - minecraft:weathered_copper
+      - minecraft:oxidized_copper
+      - minecraft:cut_copper
+      - minecraft:exposed_cut_copper
+      - minecraft:weathered_cut_copper
+      - minecraft:oxidized_cut_copper
+      - minecraft:waxed_copper_block
+      - minecraft:waxed_exposed_copper
+      - minecraft:waxed_weathered_copper
+      - minecraft:waxed_oxidized_copper
+      - minecraft:waxed_cut_copper
+      - minecraft:waxed_exposed_cut_copper
+      - minecraft:waxed_weathered_cut_copper
+      - minecraft:waxed_oxidized_cut_copper

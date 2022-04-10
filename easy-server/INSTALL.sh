@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 cd "$(dirname "$0")" || (echo "Failed to find easy-server directory." && exit 1)
 
-PAPER_VERSION=1.18
-PAPER_BUILD_FALLBACK=283  # Used if JQ is not installed or latest build check fails
+PAPER_VERSION=1.18.2
+PAPER_BUILD=283
 
 onerror() {
   echo "Failure running install script. Press any key to exit."
@@ -15,18 +15,8 @@ trap onerror ERR
 echo "Pulling latest Bingo version..."
 git pull --rebase --autostash
 
-echo "Downloading latest Paper ${PAPER_VERSION} server..."
-# v2 download API adapted from: https://www.reddit.com/r/admincraft/comments/r20rcf/how_to_download_the_latest_version_of_paper_using/hm45qkx/
-API=https://papermc.io/api/v2
-latest_build="$(curl -sX GET "$API"/projects/paper/version_group/"$PAPER_VERSION"/builds -H 'accept: application/json' | jq '.builds [-1].build' || true)"
-if [ "$latest_build" ]; then
-  echo "Downloading latest Paper build $latest_build."
-else
-  latest_build=PAPER_BUILD_FALLBACK
-  echo "Falling back to Paper build $PAPER_BUILD_FALLBACK."
-fi
-download_url="$API"/projects/paper/versions/"$PAPER_VERSION"/builds/"$latest_build"/downloads/paper-"$PAPER_VERSION"-"$latest_build".jar
-curl -sS -o paper.jar "$download_url"
+echo "Downloading Paper ${PAPER_VERSION} server, build $PAPER_BUILD..."
+curl -fsS -o paper.jar "https://papermc.io/api/v2/projects/paper/versions/$PAPER_VERSION/builds/$PAPER_BUILD/downloads/paper-$PAPER_VERSION-$PAPER_BUILD.jar"
 
 echo "Checking for Java..."
 if ( ! command -v java ); then

@@ -27,7 +27,7 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", jacksonVersion)  // TODO remove
     implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", jacksonVersion)  // TODO remove
 
-    testImplementation("com.destroystokyo.paper", "paper-api", "$paperVersion-R0.1-SNAPSHOT")
+    testImplementation("io.papermc.paper", "paper-api", "$paperVersion-R0.1-SNAPSHOT")
 }
 
 tasks.test {

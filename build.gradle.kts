@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.20"
+    kotlin("jvm") version "1.7.20"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("com.palantir.git-version") version "0.15.0"
 }
@@ -20,8 +20,8 @@ allprojects {
 
     plugins.withType<KotlinPluginWrapper>().whenObjectAdded {
         dependencies {
-            val kotlinVersion = "1.6.20"
-            val koinVersion = "3.1.6"
+            val kotlinVersion = "1.7.20"
+            val koinVersion = "3.2.2"
             implementation(kotlin("stdlib", kotlinVersion))
             implementation(kotlin("stdlib-jdk7", kotlinVersion))
             implementation(kotlin("reflect", kotlinVersion))

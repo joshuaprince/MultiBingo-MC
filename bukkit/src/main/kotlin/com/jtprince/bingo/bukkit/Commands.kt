@@ -8,6 +8,7 @@ import com.jtprince.bingo.core.automark.MissingVariableException
 import com.jtprince.bingo.core.game.StatefulGame
 import com.jtprince.bingo.core.webclient.model.WebGameSettings
 import dev.jorel.commandapi.CommandAPICommand
+import dev.jorel.commandapi.arguments.ArgumentSuggestions
 import dev.jorel.commandapi.arguments.GreedyStringArgument
 import dev.jorel.commandapi.arguments.LiteralArgument
 import dev.jorel.commandapi.arguments.MultiLiteralArgument
@@ -119,9 +120,9 @@ object Commands : KoinComponent {
             })*/
 
         val goalIdsArg = StringArgument("goalId")
-        goalIdsArg.replaceSuggestions {
+        goalIdsArg.replaceSuggestions(ArgumentSuggestions.strings {
             plugin.platform.triggerDefinitionRegistry.registeredGoalIds.toTypedArray()
-        }
+        })
         val debugCmd = CommandAPICommand("debug")
             .withArguments(goalIdsArg)
             .executesPlayer(PlayerCommandExecutor { sender: Player, args: Array<Any> ->

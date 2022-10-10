@@ -49,6 +49,7 @@ import org.bukkit.potion.PotionEffectType
 import org.spigotmc.event.entity.EntityMountEvent
 import java.util.*
 
+@Suppress("RemoveExplicitTypeArguments")
 val BukkitDslTriggers = TriggerDslRegistry {
     eventTrigger<EntityMountEvent>("jm_2_creepers_boat") {
         // 2 Creepers in the same Boat
@@ -93,7 +94,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
             val types = setOf("leather", "golden", "iron", "chainmail", "diamond", "netherite")
             val counts = types.associateWith { 0 }.toMutableMap()
 
-            playerInv.armorContents.orEmpty().filterNotNull().forEach { armor ->
+            playerInv.armorContents.filterNotNull().forEach { armor ->
                 var type: String? = null
                 for (t in types) {
                     if (armor.type.key.key.contains(t)) {
@@ -112,7 +113,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
         inventories.any { playerInv ->
             val colorsFound = HashSet<Color>()
 
-            val leatherArmor = playerInv.armorContents.orEmpty().filterNotNull().filter {
+            val leatherArmor = playerInv.armorContents.filterNotNull().filter {
                 ActivationHelpers.LEATHER_ARMOR.contains(it.type)
             }
 
@@ -174,8 +175,8 @@ val BukkitDslTriggers = TriggerDslRegistry {
     eventTrigger<InventoryCloseEvent>("jm_carpet_llama") {
         // Put a Carpet on a Llama
         event.inventory.holder is Llama
-                && event.inventory.contents.orEmpty().filterNotNull().any {
-            Tag.CARPETS.isTagged(it.type)
+                && event.inventory.contents.filterNotNull().any {
+            Tag.WOOL_CARPETS.isTagged(it.type)
         }
     }
 
@@ -658,7 +659,7 @@ val BukkitDslTriggers = TriggerDslRegistry {
 
     specialItemTrigger("jm_never_armor_any", revertible = false) {
         // Never use armor
-        inventories.any { playerInv -> playerInv.armorContents.orEmpty().filterNotNull().any() }
+        inventories.any { playerInv -> playerInv.armorContents.filterNotNull().any() }
     }
 
     eventTrigger<BlockBreakEvent>("jm_never_axe") {
@@ -685,12 +686,14 @@ val BukkitDslTriggers = TriggerDslRegistry {
 
     specialItemTrigger("jm_never_chestplates", revertible = false) {
         // Never wear chestplates
-        inventories.any { playerInv -> playerInv.armorContents?.get(2) != null }
+        inventories.any { playerInv ->
+            playerInv.armorContents[2] != null
+        }
     }
 
     eventTrigger<CraftItemEvent>("jm_never_coal") {
         // Never use coal
-        event.inventory.matrix.orEmpty().filterNotNull().any { it.type == Material.COAL }
+        event.inventory.matrix.filterNotNull().any { it.type == Material.COAL }
     }
     eventTrigger<FurnaceBurnEvent>("jm_never_coal") {
         // Never use coal

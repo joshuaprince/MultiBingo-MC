@@ -1,6 +1,6 @@
 package com.jtprince.bingo.bukkit.player
 
-import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -44,7 +44,7 @@ object BukkitBingoPlayerFactory {
         // Create all BingoPlayerTeams.
         for ((team, players) in teamPlayerMap) {
             val bpt = BukkitBingoPlayerTeam(
-                TextComponent.ofChildren(team.displayName().color(team.color())),
+                Component.textOfChildren(team.displayName().color(team.color())),
                 players
             )
             ret.add(bpt)

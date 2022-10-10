@@ -4,7 +4,7 @@ import com.jtprince.util.ChatUtils
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.event.HoverEvent
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -20,7 +20,7 @@ class BukkitBingoPlayerTeam(
     private val playerUuids: Collection<UUID> = teammates.map(OfflinePlayer::getUniqueId)
 
     override val name: String
-        get() = PlainComponentSerializer.plain().serialize(teamName)
+        get() = PlainTextComponentSerializer.plainText().serialize(teamName)
 
     override val formattedName: TextComponent
         get() {

@@ -47,7 +47,7 @@ val dumpAutomatedGoals = task("dumpAutomatedGoals", JavaExec::class) {
     inputs.dir("src/main/resources")
     outputs.file(outfile)
 
-    main = "com.jtprince.bingo.bukkit.automark.definitions.AutomatedGoalList"
+    mainClass.set("com.jtprince.bingo.bukkit.automark.definitions.AutomatedGoalList")
     classpath = sourceSets.main.get().runtimeClasspath + sourceSets.main.get().compileClasspath
     args(outfile)
 }

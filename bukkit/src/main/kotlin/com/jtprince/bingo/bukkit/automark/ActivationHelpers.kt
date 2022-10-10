@@ -1,19 +1,24 @@
 package com.jtprince.bingo.bukkit.automark
 
 import net.kyori.adventure.text.Component
-import org.bukkit.*
+import org.bukkit.Art
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.TreeType
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Painting
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerBedLeaveEvent
+import org.bukkit.generator.structure.Structure
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.MapMeta
 import org.bukkit.map.MapCanvas
 import org.bukkit.map.MapRenderer
 import org.bukkit.map.MapView
+import java.awt.Color
 
 object ActivationHelpers {
     val SKELETON_DROPPED_BOW = Component.text("Dropped by a Skeleton")
@@ -37,6 +42,7 @@ object ActivationHelpers {
 
     /* Consumables that do not invalidate either of the above: Potions, Honey, Milk, Cake (block) */
 
+    @Suppress("unused")
     val TORCHES = setOf(
         Material.TORCH, Material.WALL_TORCH, Material.SOUL_TORCH, Material.SOUL_WALL_TORCH,
         Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH
@@ -79,13 +85,20 @@ object ActivationHelpers {
     )
 
     fun Location.inVillage(): Boolean {
-        val nearestVillage = world.locateNearestStructure(
-            this, StructureType.VILLAGE, 8, false
-        ) ?: return false
+        val villageStructures = arrayOf(
+            Structure.VILLAGE_DESERT, Structure.VILLAGE_PLAINS, Structure.VILLAGE_SAVANNA,
+            Structure.VILLAGE_SNOWY, Structure.VILLAGE_TAIGA
+        )
 
-        // locateNearestStructure returns Y=0. Only calculate horizontal distance
-        nearestVillage.y = y
-        return distance(nearestVillage) < 100
+        return villageStructures.any { type ->
+            val searchResult = world.locateNearestStructure(
+                this, type, 8, false
+            ) ?: return false
+
+            // locateNearestStructure returns Y=0. Only calculate horizontal distance
+            searchResult.location.y = y
+            return distance(searchResult.location) < 100
+        }
     }
 
     /**
@@ -115,13 +128,7 @@ object ActivationHelpers {
      * Determine whether an Inventory contains x or more total items.
      */
     fun Inventory.containsQuantity(quantity: Int): Boolean {
-        var q = 0
-        for (i in contents.orEmpty()) {
-            if (i != null) {
-                q += i.amount
-            }
-        }
-        return q >= quantity
+        return contents.filterNotNull().sumOf { it.amount } >= quantity
     }
 
     /**
@@ -149,7 +156,7 @@ object ActivationHelpers {
             for (x in 0..127) {
                 for (y in 0..127) {
                     totalPixels++
-                    if (canvas.getBasePixel(x, y).toInt() != 0) {
+                    if (canvas.getBasePixelColor(x, y) != Color.BLACK) {
                         mappedPixels++
                     }
                 }

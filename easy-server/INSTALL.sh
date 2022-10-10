@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 cd "$(dirname "$0")" || (echo "Failed to find easy-server directory." && exit 1)
 
-PAPER_VERSION=1.18.2
-PAPER_BUILD=283
+PAPER_VERSION=1.19.2
+PAPER_BUILD=201
 
 onerror() {
   echo "Failure running install script. Press any key to exit."

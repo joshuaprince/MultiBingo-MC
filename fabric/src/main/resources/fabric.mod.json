@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "multibingo",
+  "version": "0.0.1",
+  "name": "MultiBingo",
+  "description": "MultiBingo game",
+  "authors": [
+    "Joshua Prince"
+  ],
+  "contact": {
+    "homepage": "https://bingo.jtprince.com/",
+    "issues": "https://github.com/joshuaprince/MultiBingo-MC/issues",
+    "sources": "https://github.com/joshuaprince/MultiBingo-MC"
+  },
+  "license": "AGPL-3.0",
+  "icon": "assets/multibingo/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "com.jtprince.multibingo.fabric.FabricMain"
+      }
+    ]
+  },
+  "mixins": [
+    "multibingo.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.11",
+    "fabric-api": ">=0.68.0+1.19.2",
+    "fabric-language-kotlin": ">=1.8.6+kotlin.1.7.21",
+    "minecraft": ">=1.19.2",
+    "java": ">=17"
+  }
+}

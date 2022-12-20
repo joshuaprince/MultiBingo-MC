@@ -1,16 +1,17 @@
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    kotlin("jvm")
-    id("com.github.johnrengelman.shadow")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.gitversion)
+    alias(libs.plugins.shadow)
 }
 
 dependencies {
-    val jacksonVersion = "2.13.2"
+    implementation(libs.adventure.api)
 
-    compileOnly("net.kyori", "adventure-api", "4.11.0")
-
-    implementation("org.apache.httpcomponents", "httpclient", "4.5.13")
-    implementation("org.java-websocket", "Java-WebSocket", "1.5.2")
-    implementation("com.fasterxml.jackson.core", "jackson-core", jacksonVersion)
-    implementation("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", jacksonVersion)
-    implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", jacksonVersion)
+    implementation(libs.jackson.core)
+    implementation(libs.jackson.kotlin)
+    implementation(libs.jackson.yaml)
+    implementation(libs.kotlinx.coroutines)
+    implementation(libs.okhttp)
+    implementation(libs.websocket)
 }

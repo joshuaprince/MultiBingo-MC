@@ -1,7 +1,6 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.gitversion)
     alias(libs.plugins.shadow)
 
     alias(libs.plugins.fabric.loom)
@@ -10,18 +9,18 @@ plugins {
 dependencies {
     implementation(project(":core"))
 
-    // TODO: Define these somewhere externally
-    // TODO: Link these in fabric.mod.json
-    minecraft("com.mojang", "minecraft", "1.19.2")
+    minecraft("com.mojang", "minecraft", properties["minecraft_version"] as String)
     mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc", "fabric-loader", "0.14.11")
-    modImplementation("net.fabricmc.fabric-api", "fabric-api", "0.68.0+1.19.2")
-    modImplementation("net.fabricmc", "fabric-language-kotlin", "1.8.6+kotlin.1.7.21")
-    modImplementation(include("net.kyori:adventure-platform-fabric:5.5.1")!!)
+    modImplementation("net.fabricmc", "fabric-loader", properties["loader_version"] as String)
+    modImplementation("net.fabricmc.fabric-api", "fabric-api", properties["fabric_version"] as String)
+    modImplementation("net.fabricmc", "fabric-language-kotlin", properties["fabric_kotlin_version"] as String)
+    modImplementation(include("net.kyori", "adventure-platform-fabric", properties["adventure_fabric_version"] as String))
 }
 
 tasks {
     processResources {
-        filesMatching("*.mixins.json") { expand(mutableMapOf("java" to "17")) }
+        filesMatching("*.json") {
+            expand(project.properties)
+        }
     }
 }

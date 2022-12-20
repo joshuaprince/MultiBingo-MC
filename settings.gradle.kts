@@ -1,5 +1,5 @@
 rootProject.name = "MultiBingo-MC"
-include("core", "bukkit", "fabric")
+include("core", "fabric")
 
 pluginManagement {
     repositories {
@@ -21,20 +21,19 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            plugin("fabric-loom", "fabric-loom").version("1.0-SNAPSHOT")
-            plugin("gitversion", "com.palantir.git-version").version("0.15.0")
-            plugin("kotlin-jvm", "org.jetbrains.kotlin.jvm").version("1.7.21")
-            plugin("shadow", "com.github.johnrengelman.shadow").version("7.1.2")
+            plugin("fabric-loom", "fabric-loom").version(extra.properties["loom_version"] as String)
+            plugin("kotlin-jvm", "org.jetbrains.kotlin.jvm").version(extra.properties["kotlin_version"] as String)
+            plugin("shadow", "com.github.johnrengelman.shadow").version(extra.properties["shadow_version"] as String)
 
-            library("adventure-api", "net.kyori", "adventure-api").version("4.12.0")
-//            library("adventure-fabric", "net.kyori", "adventure-platform-fabric").version("5.6.0")
-            library("jackson-core", "com.fasterxml.jackson.core", "jackson-core").version("2.14.1")
-            library("jackson-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin").version("2.14.1")
-            library("jackson-yaml", "com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml").version("2.14.1")
-            library("kotlinx-coroutines", "org.jetbrains.kotlinx", "kotlinx-coroutines-core").version("1.6.4")
-            library("okhttp", "com.squareup.okhttp3", "okhttp").version("5.0.0-alpha.10")
-            library("paper-api", "io.papermc.paper", "paper-api").version("1.19.2-R0.1-SNAPSHOT")
-            library("websocket", "org.java-websocket", "Java-WebSocket").version("1.5.3")
+            library("adventure-api", "net.kyori", "adventure-api").version(extra.properties["adventure_api_version"] as String)
+//            library("adventure-fabric", "net.kyori", "adventure-platform-fabric").version(extra.properties["adventure_fabric_version"] as String)
+            library("jackson-core", "com.fasterxml.jackson.core", "jackson-core").version(extra.properties["jackson_version"] as String)
+            library("jackson-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin").version(extra.properties["jackson_version"] as String)
+            library("jackson-yaml", "com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml").version(extra.properties["jackson_version"] as String)
+            library("kotlinx-coroutines", "org.jetbrains.kotlinx", "kotlinx-coroutines-core").version(extra.properties["kotlinx_version"] as String)
+            library("okhttp", "com.squareup.okhttp3", "okhttp").version(extra.properties["okhttp_version"] as String)
+            library("paper-api", "io.papermc.paper", "paper-api").version(extra.properties["paper_api_version"] as String)
+            library("websocket", "org.java-websocket", "Java-WebSocket").version(extra.properties["websocket_version"] as String)
         }
     }
 }

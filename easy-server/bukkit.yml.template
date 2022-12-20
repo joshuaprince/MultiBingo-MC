@@ -1,6 +1,0 @@
-spawn-limits:
-  monsters: 70
-  animals: 10
-  water-animals: 15
-  water-ambient: 20
-  ambient: 15
